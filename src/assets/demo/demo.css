@@ -1434,7 +1434,7 @@
 @media screen and (max-width: 991px) {
   .section-navbars .navbar-collapse,
   .header-1 .navbar-collapse,
-  .header-2 .navbar-collapse,
+  /* .header-2 .navbar-collapse, */
   .header-3 .navbar-collapse {
     display: none !important;
   }

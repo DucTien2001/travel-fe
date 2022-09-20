@@ -1,54 +1,62 @@
 /*eslint-disable*/
-import React from "react";
-// import { Link } from "react-router-dom";
-// import { useHistory } from "react-router-dom";
-// reactstrap components
+import {useState, useEffect, memo} from "react";
 import {
-  Button,
   Collapse,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
-  NavbarBrand,
-  Navbar,
   NavItem,
+  Navbar,
   Nav,
   Container,
-  UncontrolledTooltip,
 } from "reactstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faBook, faLocationDot, faPlane, faHotel, 
+  faAddressCard,
+  faCalendarCheck, 
+  faLandmarkDome,
+  faEarthAsia } from '@fortawesome/free-solid-svg-icons';
+import clsx from "clsx";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import classes from "./styles.module.scss";
-// import EmployerButton from "components/Common/ContractorButton";
+import SignOutButton from "components/common/buttons/SignOutButton";
+const WhiteNavbar = memo(() => {
+  const [collapseOpen, setCollapseOpen] = useState(false);
+  const [navbarColor, setNavbarColor] = useState(" navbar-transparent");
 
-function WhiteNavbar() {
-  const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const handleCollapseNavbar = () => {
+    if (window.innerWidth <= 991) {
+      document.documentElement.classList.toggle("nav-open");
+      setCollapseOpen(!collapseOpen);
+    }
+  };
 
+  useEffect(() => {
+    const updateNavbarColor = () => {
+      if (
+        document.documentElement.scrollTop > 10 ||
+        document.body.scrollTop > 10
+      ) {
+        setNavbarColor("");
+      } else {
+        setNavbarColor(" navbar-transparent");
+      }
+    };
+    window.addEventListener("scroll", updateNavbarColor);
+    return () => {
+      window.removeEventListener("scroll", updateNavbarColor);
+    };
+  }, []);
   return (
     <>
-      {collapseOpen ? (
-        <div
-          id="bodyClick"
-          onClick={() => {
-            document.documentElement.classList.toggle("nav-open");
-            setCollapseOpen(false);
-          }}
-        />
-      ) : null}
-      <Navbar className="bg-white fixed-top" expand="lg">
+      <Navbar className={clsx("fixed-top", navbarColor, classes.navbarWrapper)} expand="lg">
         <Container className={classes.container}>
-          <div className="navbar-translate">
-            {/* <NavbarBrand to="/" tag={Link} id="navbar-brand"> */}
-            <Link href="/">Necta</Link>
-            {/* </NavbarBrand> */}
-            {/* <UncontrolledTooltip target="navbar-brand">
-              Simplifying Contracting
-            </UncontrolledTooltip> */}
+          <div className={clsx("navbar-translate", classes.navLogoName)}>
+            <Link href="/">TRAVELIX</Link>
             <button
-              onClick={() => {
-                document.documentElement.classList.toggle("nav-open");
-                setCollapseOpen(!collapseOpen);
-              }}
+              onClick={handleCollapseNavbar}
               aria-expanded={collapseOpen}
               className="navbar-toggler"
             >
@@ -57,8 +65,8 @@ function WhiteNavbar() {
               <span className="navbar-toggler-bar bottom-bar"></span>
             </button>
           </div>
-          <Collapse isOpen={collapseOpen} navbar>
-            <Nav className="ml-auto" id="ceva" navbar>
+          <Collapse isOpen={collapseOpen} navbar className={classes.collapseMobile}>
+            <Nav className={clsx("ml-auto", classes.navWrapperMenu)} id="ceva" navbar>
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
@@ -69,15 +77,23 @@ function WhiteNavbar() {
                   nav
                   onClick={(e) => e.preventDefault()}
                 >
-                  <i className="now-ui-icons design_app"></i>
-                  <p>Components</p>
+                 <FontAwesomeIcon icon={faLocationDot} className={classes.iconNav}/>
+                  <p>Services</p>
                 </DropdownToggle>
-                <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" right>
-                  <DropdownItem>
+                <DropdownMenu aria-labelledby="navbarDropdownMenuLink1">
+                  <DropdownItem className={classes.dropdownItem}>
                     <Link href="/">
                       <a>
-                        <i className="now-ui-icons design_image"></i>
-                        Presentation
+                        <FontAwesomeIcon icon={faPlane} className={classes.iconNav}/>
+                        Tour
+                      </a>
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem className={classes.dropdownItem}>
+                    <Link href="/">
+                      <a>
+                        <FontAwesomeIcon icon={faHotel} className={classes.iconNav}/>
+                        Hotel
                       </a>
                     </Link>
                   </DropdownItem>
@@ -93,18 +109,15 @@ function WhiteNavbar() {
                   nav
                   onClick={(e) => e.preventDefault()}
                 >
-                  <i
-                    aria-hidden={true}
-                    className="now-ui-icons files_paper"
-                  ></i>
-                  <p>Sections</p>
+                  <FontAwesomeIcon icon={faBook} className={classes.iconNav}/>
+                  <p>About us</p>
                 </DropdownToggle>
-                <DropdownMenu aria-labelledby="navbarDropdownMenuLink" right>
-                  <DropdownItem>
+                <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
+                  <DropdownItem className={classes.dropdownItem}>
                     <Link href="/">
                       <a>
-                        <i className="now-ui-icons shopping_box"></i>
-                        Headers
+                        <FontAwesomeIcon icon={faLandmarkDome} className={classes.iconNav}/>
+                        Story
                       </a>
                     </Link>
                   </DropdownItem>
@@ -120,32 +133,52 @@ function WhiteNavbar() {
                   nav
                   onClick={(e) => e.preventDefault()}
                 >
-                  <i
-                    aria-hidden={true}
-                    className="now-ui-icons design_image"
-                  ></i>
-                  <p>Examples</p>
+                  <FontAwesomeIcon icon={faUser} className={classes.iconNav}/>
+                  <p>Profile</p>
                 </DropdownToggle>
-                <DropdownMenu aria-labelledby="navbarDropdownMenuLink" right>
-                  <DropdownItem>
+                <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
+                  <DropdownItem className="noti-title" header tag="div">
+                        <h6 className={classes.headerTitle}>Welcome!</h6>
+                      </DropdownItem>
+                  <DropdownItem className={classes.dropdownItem}>
                     <Link href="/about">
                       <a>
-                        <i className="now-ui-icons business_bulb-63"></i>
-                        About-us
+                        <FontAwesomeIcon icon={faAddressCard} className={classes.iconNav}/>
+                        My profile
                       </a>
                     </Link>
                   </DropdownItem>
+                  <DropdownItem className={classes.dropdownItem}>
+                    <Link href="/about">
+                      <a>
+                        <FontAwesomeIcon icon={faCalendarCheck} className={classes.iconNav}/>
+                        Activity
+                      </a>
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem className={classes.dropdownItem}>
+                    <Link href="/about">
+                      <a>
+                        <FontAwesomeIcon icon={faEarthAsia} className={classes.iconNav}/>
+                        Languages
+                      </a>
+                    </Link> 
+                    <div className={classes.menuLanguages}>
+                        <div>English</div>
+                        <div>VietNamese</div>
+                    </div>
+                  </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              {/* <NavItem>
-              <EmployerButton/>
-              </NavItem> */}
+              <NavItem>
+              <SignOutButton/>
+              </NavItem>
             </Nav>
           </Collapse>
         </Container>
       </Navbar>
     </>
   );
-}
+}) 
 
 export default WhiteNavbar;

@@ -1,0 +1,98 @@
+.root {
+    text-transform: none;
+    padding: 12px 24px !important;
+    display: flex;
+    .dotContainer {
+      span {
+        display: inline-block;
+        vertical-align: middle;
+        width: 5px;
+        height: 5px;
+        background: #FFFFFF;
+        border-radius: 50%;
+        margin-right: 2px;
+      }
+    span:first-child {
+      margin-left: 10px;
+    }
+    span:nth-child(2) {
+        opacity: 0.6;
+      }
+    span:nth-child(3) {
+        opacity: 0.4;
+      }
+  }
+}
+  .btnPrimary {
+    background: var(--violet-color) !important;
+    color: #FFFFFF;
+    &:hover {
+      background: var(--violet-light-color) !important;
+    }
+    &[class~=Mui-disabled] {
+      background: var(--eerie-black-5);
+      color: var(--eerie-black-40); 
+    }
+  }
+  .btnSecondary {
+    background: var(--orange-color) !important;
+    color: #FFFFFF;
+    &:hover {
+      background: var(--orange-light-color) !important;
+    }
+    &[class~=Mui-disabled] {
+      background: var(--eerie-black-5);
+      color: var(--eerie-black-40); 
+    }
+  }
+  .btnOutlined {
+    background: var(--violet-color)!important;
+    border: 3px solid  #ffff !important;
+    color: #ffff !important; 
+    .dotContainer {
+      span {
+        background: #ffff !important;
+      }
+    }
+    &:hover {
+      background: var(--violet-light-color)!important;
+    }
+    &[class~=Mui-disabled] {
+      background: var(--eerie-black-5);
+      color: var(--eerie-black-40); 
+    }
+  }
+  
+  .btnLinear {
+    background: linear-gradient(120deg, rgb(250, 158, 27), rgb(141, 79, 255), rgb(250, 158, 27));
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: 200%;
+    transition: 0.5s;
+    box-shadow: 2px 3px 4px rgb(0 0 0 / 70%);
+    color: #ffff;
+    &:hover {
+      background-position: right !important;
+    }
+    &[class~=Mui-disabled] {
+      background: var(--eerie-black-5);
+      color: var(--eerie-black-40);  
+    }
+  }
+  
+  .btnRaised {
+    background: var(--violet-color) !important;
+    border: 1px solid transparent;
+    box-shadow: 2px 3px 4px rgb(0 0 0 / 70%);
+    color: #FFFFFF;
+    &:hover {
+      background: var(--violet-light-color) !important;
+      box-shadow: 2px 3px 4px rgb(0 0 0 / 70%);
+    }
+    &[class~=Mui-disabled] {
+      background: var(--eerie-black-5);
+      color: var(--eerie-black-40);
+    }
+  }

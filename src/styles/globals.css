@@ -1,14 +1,27 @@
 html,
+:root {
+  --white-color: #ffff;
+  --violet-transparent-color:rgba(54,19,84,.85);
+  --violet-color: #350a4e;
+  --violet-light-color:#4a1a67;
+  --text-color: #9A9A9A;
+  --orange-color: #fa9e1b;
+  --orange-light-color: #e7a64c;
+  --linear-primary-color: linear-gradient(to right, rgb(250, 158, 27), rgb(141, 79, 255));
+  --linear-second-color: linear-gradient(#650eb6 0%, #000 80%);
+  --eerie-black-5:#1c1c1c0d;
+  --gray-40: #A4A4A4;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
+  text-decoration: none;  
 }
 
 * {

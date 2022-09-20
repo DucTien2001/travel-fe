@@ -1,0 +1,90 @@
+.imgWrapper {
+    position: relative;
+    height: 100%;
+    img {
+        height: 100%;
+        object-fit: cover;
+    }
+    @media only screen and (min-width:768px) and (max-width:1024px){
+        img {
+            height: 65%;
+            object-fit: cover;
+        }
+    }
+}
+
+.tagTitle {
+    position: absolute;
+    padding: 10px 20px;
+    background: var(--orange-color);
+    top: 179px;
+    left: 0;
+    p {
+        margin: 0;
+        color: var(--white-color);
+        font-weight: 500;
+        font-size:12px;
+        text-transform: uppercase;
+    }
+    @media only screen and (max-width:1024px) {
+        display: none;
+    }
+}
+.cardBody {
+    padding:0;
+    h6 {
+        color: var(--violet-color);
+    }
+    @media only screen and (max-width:600px) {
+        padding:1.5rem;
+    }
+}
+
+.titleSection {
+    color: var(--violet-color);
+    text-transform: uppercase;
+}
+.title {
+    color: var(--orange-color);
+    font-weight: 600;
+    span {
+        font-size:12px;
+    }
+    .tagMobile {
+        display: none;
+        font-size:18px;
+        font-weight: 700;
+        margin-bottom: 0;
+        text-transform: uppercase;
+        @media only screen and (max-width:1024px) {
+            display: block;
+        }
+    }
+}
+
+.offerContentLike {
+    margin-top:10px;
+}
+.offerContentLike svg{
+    margin: 0 2px 16px;
+}
+.offerContentLike svg:nth-child(1) {
+    color: #ffeb8d;
+}
+.offerContentLike svg:nth-child(2) {
+    color: #fed46b;
+}
+.offerContentLike svg:nth-child(3) {
+    color: #fbb53d;
+}
+.offerContentLike svg:nth-child(4) {
+    color: #fa9e1b;
+}
+.offerContentLike svg:nth-child(5) {
+    color: #f38f04;
+}
+
+.btn {
+    display: flex;
+    justify-content:center;
+}

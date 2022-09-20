@@ -10,7 +10,7 @@ const WhiteNavbar = dynamic(
 const Home: NextPage = () => {
   return (
     <>
-      <WhiteNavbar />
+      {/* <WhiteNavbar /> */}
       <LandingPage/>
     </>
   );

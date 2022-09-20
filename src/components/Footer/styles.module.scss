@@ -1,0 +1,88 @@
+.root {
+    background: var(--violet-color);
+    padding: 48px 100px;
+    @media only screen and (max-width: 768px) {
+        display: none;
+      }
+}
+
+.titleFollow {
+    p {
+        color: var(--white-color);
+        text-transform: uppercase;
+        font-weight:700;
+    }
+}
+.contentFollow {
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+    .itemFollow {
+        padding: 8px 0;
+        cursor: pointer;
+        color: var(--white-color);
+        svg {
+            margin-right: 10px;
+        }
+    }
+    .itemFollow:hover {
+        color: var(--orange-color);
+    }
+}
+
+.infoBodyListContact {
+    padding-top:16px;
+    padding-left: 28px;
+}
+.infoContact {
+    display: flex;
+    align-items: center;
+    color: var(--white-color);
+    div {
+        display: flex;
+        font-size: 14px;
+        margin-bottom: 12px;
+        align-items: center;
+        a {
+             color: var(--white-color);      
+        }
+        a:hover {
+            color: var(--orange-color);      
+       }
+    }
+}
+.infoContact svg{
+    font-size:25px;
+    color:var(--orange-color);
+    margin-right:20px;
+}
+
+.contact-link-info{
+    text-decoration: none;
+}
+
+.subFooter {
+    padding: 30px;
+    border: 1px solid var(--orange-color);
+    p {
+        color: var(--white-color);
+    }
+}
+
+.rootBottom {
+    background-color: #1f0733;
+    width: 100%;
+    padding: 12px;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+        color: var(--white-color);
+        font-size:12px;
+        margin-bottom:0;
+    }
+}
