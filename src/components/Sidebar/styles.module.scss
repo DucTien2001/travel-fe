@@ -1,0 +1,41 @@
+
+.navbarWrapper {
+    padding: 0;
+}
+
+.collapseWrapper {
+    display: block;
+    width: 100%;
+    margin: 0;
+}
+.collapseLink {
+    padding-left: 12px;
+}
+.container {
+    padding: 0;
+}
+.listItemNav {
+    width: 100%;
+    display: block;
+     li {
+        cursor: pointer;
+        width: 100%;   
+        padding: 16px 0 16px 24px;
+        span {
+            color: var(--violet-color);
+            font-size: 16px;
+            margin-left: 8px;
+        }
+        svg {
+            color: var(--violet-color);
+        }
+        a {
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        &:hover {
+            background-color: rgba(237, 237, 237, 0.8);
+        }
+     }
+}

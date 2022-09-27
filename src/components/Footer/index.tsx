@@ -65,6 +65,11 @@ const Footer = memo(() => {
                 </Row>
             </Col>
             <Col>
+                <Row>
+                  <Col className={classes.titleContact}>
+                    <p>Contact us</p>
+                  </Col>
+                </Row>
               <ul className={classes.infoBodyListContact}>
                     <li className={classes.infoContact}>
                       <div>    

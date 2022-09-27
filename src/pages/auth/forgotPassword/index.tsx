@@ -1,0 +1,118 @@
+import type { NextPage } from "next";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  CardHeader,
+  CardBody,
+  Form,
+} from "reactstrap";
+import { useState, useMemo } from "react";
+import clsx from "clsx";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useTranslation } from "react-i18next";
+import classes from "./styles.module.scss";
+import Button, {BtnType} from "components/common/buttons/Button";
+import TransparentNavbar from "components/Navbars/TransparentNavbar";
+import Footer from "components/Footer";
+import LayoutAuth from "components/Layout/DefaultLayout";
+import InputTextField from "components/common/inputs/InputTextField";
+import Link from "next/link";
+
+interface ForgotPasswordForm { 
+    email: string;
+}
+
+const Login: NextPage = () => {
+  const { t, i18n } = useTranslation();
+
+  const schema = useMemo(() => {
+    return yup.object().shape({
+        email: yup.string()
+        .email("Please enter a valid email address")
+        .required("Email is required"),
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [i18n.language] );
+  
+  const {
+      register,
+      handleSubmit,
+      formState: { errors },
+      reset,
+      } = useForm<ForgotPasswordForm>({
+        resolver: yupResolver(schema),
+        mode: "onChange",
+  });
+
+  const clearForm = () => {
+    reset({
+        email: "",
+    })
+  }
+
+  const _onSubmit = (data: ForgotPasswordForm) => {
+      console.log(data);
+      clearForm();
+  }
+    return (
+      <div className="main-content">
+        <TransparentNavbar/>
+        <div className={clsx("header page-header-image", classes.headerWrapper)}>
+          <Container className={classes.container}>
+            <div className="header-body text-center mb-7">
+              <Row className="justify-content-center">
+                <Col lg="5" md="6">
+                  <h1 className="text-white">Welcome!</h1>
+                </Col>
+              </Row>
+              <Container className="mt--8 pb-5">
+                <Row className="justify-content-center">
+                  <Col lg="5" md="7">
+                    <Card className={clsx("shadow", classes.card)}>
+                    <CardHeader>
+                      <div className={clsx("text-center mt-4", classes.headerContainer)}>
+                        <p>Forgot password</p>
+                        <span>No worries! Just enter your email and we will send you a reset password link.</span>
+                      </div>
+                    </CardHeader>
+                    <CardBody className="px-lg-5">
+                      <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
+                        <InputTextField
+                        label="Email address"
+                        placeholder="Enter your email"
+                        type="text"
+                        inputRef={register("email")}
+                        errorMessage={errors.email?.message}
+                        />
+                        <div className={classes.btnContainer}>
+                          <Button btnType={BtnType.Linear} type="submit">
+                            Send recovery email
+                          </Button>
+                        </div>
+                      </Form>
+                        <Row className="mt-3">
+                          <Col xs="12">
+                            <Link href="/auth/login">
+                              <a>
+                              <span>Back to login page</span>
+                              </a>
+                            </Link>
+                          </Col>
+                        </Row>
+                    </CardBody>
+                    </Card>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
+          </Container>
+        </div>
+        <Footer/>
+      </div>
+    )
+};
+export default Login;

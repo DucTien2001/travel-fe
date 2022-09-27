@@ -6,6 +6,7 @@ html,
   --violet-light-color:#4a1a67;
   --text-color: #9A9A9A;
   --orange-color: #fa9e1b;
+  --danger-color: #FF3636;
   --orange-light-color: #e7a64c;
   --linear-primary-color: linear-gradient(to right, rgb(250, 158, 27), rgb(141, 79, 255));
   --linear-second-color: linear-gradient(#650eb6 0%, #000 80%);

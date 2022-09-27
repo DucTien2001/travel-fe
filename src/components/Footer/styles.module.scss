@@ -7,6 +7,17 @@
 }
 
 .titleFollow {
+    display: flex;
+    justify-content: center;
+    p {
+        color: var(--white-color);
+        text-transform: uppercase;
+        font-weight:700;
+    }
+}
+
+.titleContact {
+    padding-left: 85px;
     p {
         color: var(--white-color);
         text-transform: uppercase;
@@ -14,6 +25,7 @@
     }
 }
 .contentFollow {
+    margin-top: 7px;
     ul {
         list-style: none;
         padding-left: 0;
@@ -22,9 +34,14 @@
         padding: 8px 0;
         cursor: pointer;
         color: var(--white-color);
+        padding-left: 100px;
+        margin: auto;
         svg {
             margin-right: 10px;
         }
+        @media only screen and (max-width: 1024px) {
+            padding-left: 20px;
+          }
     }
     .itemFollow:hover {
         color: var(--orange-color);
@@ -63,6 +80,7 @@
 }
 
 .subFooter {
+    margin-top: 60px;
     padding: 30px;
     border: 1px solid var(--orange-color);
     p {

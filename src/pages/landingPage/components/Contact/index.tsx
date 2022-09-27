@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { useMemo, memo } from "react";
 import {
     Card,
     CardHeader,
@@ -17,17 +17,61 @@ import {
   } from "reactstrap";
 import {images} from "configs/images";
 import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useTranslation } from "react-i18next";
 import Button, {BtnType} from "components/common/buttons/Button";
 import Link from "next/link";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapLocation, faPhone, faEnvelopeOpenText, faEarthAmerica } from '@fortawesome/free-solid-svg-icons';
+import InputTextField from "components/common/inputs/InputTextField";
+
+export interface EmailForm { 
+  firstName: string;
+  lastName: string;
+  email: string;
+  message: string;
+}
 
 // eslint-disable-next-line react/display-name
 const Contact = memo(() => {
-  const [first1Focus, setFirst1Focus] = React.useState(false);
-  const [last1Focus, setLast1Focus] = React.useState(false);
-  const [email1Focus, setEmail1Focus] = React.useState(false);
+
+  const { t, i18n } = useTranslation();
+
+  const schema = useMemo(() => {
+    return yup.object().shape({
+        firstName: yup.string().required("Fist name is required"),
+        lastName: yup.string().required("Last name is required"),
+        email: yup.string().email("Please enter a valid email address").required("Email is required"),
+        message: yup.string().required("Message is required"),
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [i18n.language] );
+
+   const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    } = useForm<EmailForm>({
+      resolver: yupResolver(schema),
+      mode: "onChange",
+  });
+
+  const clearForm = () => {
+    reset({
+      firstName: "",
+      lastName: "",
+      email: "",
+      message: "",
+    })
+  }
+
+  const _onSubmit = (data: EmailForm) => {
+      console.log(data);
+      clearForm();
+  }
 
   return (
     <>
@@ -48,94 +92,62 @@ const Contact = memo(() => {
             </Col>
             <Col className="ml-auto mr-auto" md="5">
               <Card className="card-contact card-raised">
-                <Form id="contact-form1" method="post" role="form">
+                <Form id="contact-form1" method="post" role="form" onSubmit={handleSubmit(_onSubmit)}>
                   <CardHeader className="text-center">
                     <CardTitle tag="h4">Contact Us</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Row>
                       <Col className="pr-2" md="6">
-                        <label>First name</label>
-                        <InputGroup
-                          className={first1Focus ? "input-group-focus" : ""}
-                        >
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="now-ui-icons users_circle-08"></i>
-                          </InputGroupText>
-                        </InputGroupAddon>
-                          <Input
-                            aria-label="First Name..."
-                            autoComplete="given-name"
-                            placeholder="First Name..."
-                            type="text"
-                            onFocus={() => setFirst1Focus(true)}
-                            onBlur={() => setFirst1Focus(false)}
-                          ></Input>
-                        </InputGroup>
+                      <InputTextField
+                          label= "First name"
+                          startIcon = { <i className="now-ui-icons users_circle-08"></i>}
+                          placeholder="First Name..."
+                          aria-label="First Name..."
+                          autoComplete="family-name"
+                          type="text"
+                          inputRef={register("firstName")}
+                          errorMessage={errors.firstName?.message}
+                        />
                       </Col>
                       <Col className="pl-2" md="6">
-                        <FormGroup>
-                          <label>Last name</label>
-                          <InputGroup
-                            className={last1Focus ? "input-group-focus" : ""}
-                          >
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="now-ui-icons text_caps-small"></i>
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              aria-label="Last Name..."
-                              autoComplete="family-name"
-                              placeholder="Last Name..."
-                              type="text"
-                              onFocus={() => setLast1Focus(true)}
-                              onBlur={() => setLast1Focus(false)}
-                            ></Input>
-                          </InputGroup>
-                        </FormGroup>
+                        <InputTextField
+                          label= "Last name"
+                          startIcon = {<i className="now-ui-icons text_caps-small"></i>}
+                          placeholder="Last Name..."
+                          aria-label="Last Name..."
+                          autoComplete="family-name"
+                          type="text"
+                          inputRef={register("lastName")}
+                          errorMessage={errors.lastName?.message}
+
+                        />
                       </Col>
                     </Row>
                     <FormGroup>
-                      <label>Email address</label>
-                      <InputGroup
-                        className={email1Focus ? "input-group-focus" : ""}
-                      >
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="now-ui-icons ui-1_email-85"></i>
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          autoComplete="email"
+                      <InputTextField
+                          label= "Email address"
+                          startIcon = {<i className="now-ui-icons ui-1_email-85"></i>}
                           placeholder="Email Here..."
-                          type="email"
-                          onFocus={() => setEmail1Focus(true)}
-                          onBlur={() => setEmail1Focus(false)}
-                        ></Input>
-                      </InputGroup>
+                          aria-label="Email Here..."
+                          autoComplete="family-name"
+                          type="text"
+                          inputRef={register("email")}
+                          errorMessage={errors.email?.message}
+                        />
                     </FormGroup>
                     <FormGroup>
-                      <label>Your message</label>
-                      <Input
-                        id="message"
-                        name="message"
-                        rows="6"
+                      <InputTextField
+                        label= "Your message"
+                        aria-label="Your Message..."
+                        autoComplete="family-name"
                         type="textarea"
-                      ></Input>
+                        inputRef={register("message")}
+                        errorMessage={errors.message?.message}
+                      />
                     </FormGroup>
                     <Row>
-                      <Col md="6">
-                        <FormGroup check>
-                          <Label check>
-                            <Input type="checkbox"></Input>
-                            <span className="form-check-sign"></span>
-                            I&apos;m not a robot
-                          </Label>
-                        </FormGroup>
-                      </Col>
-                      <Col md="6">
+                      <Col md="12">
                         <Button
                           className="btn-round pull-right"
                           btnType={BtnType.Primary}
@@ -174,7 +186,7 @@ const Contact = memo(() => {
       </div>
     </>
   );
-}) 
+});
 
 export default Contact;
   

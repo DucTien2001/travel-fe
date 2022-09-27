@@ -9,9 +9,13 @@ import {
   FormGroup,
   InputProps,
 } from "reactstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEyeSlash, faEye, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 interface Props extends InputProps {
   className?: string;
+  label?: string;
+  showEyes?: boolean;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   inputRef?: any;
@@ -19,19 +23,24 @@ interface Props extends InputProps {
 }
 
 // eslint-disable-next-line react/display-name
-const InputTextField = memo(({className, startIcon, endIcon, inputRef, errorMessage, ...props}: Props) => {
+const InputTextField = memo(({className, label, showEyes, startIcon, endIcon, inputRef, type, errorMessage, ...props}: Props) => {
     const [faFocus, setFaFocus] = useState(false);
 
+    const [toggleEyes, setToggleEyes] = useState(false);
+
+    const handleClick = () => {
+      setToggleEyes(!toggleEyes);
+    }
     const { ref: refInput, ...inputProps } = inputRef || { ref: null };
 
     const renderInput = () => {
       return (
         <Input
           {...inputProps}
-          type="text"
+          type={!toggleEyes ? type : 'text'}
           onFocus={() => setFaFocus(true)}
           onBlur={() => setFaFocus(false)}
-          className={clsx({ "form-control-danger": !!errorMessage })}
+          className={clsx({ "form-control-danger": !!errorMessage }, classes.input)}
           innerRef={refInput}
           {...props}
         />
@@ -46,17 +55,20 @@ const InputTextField = memo(({className, startIcon, endIcon, inputRef, errorMess
           className
         )}
       >
-        {!!startIcon || !!endIcon ? (
-          <InputGroup className={faFocus ? "input-group-focus m-0" : "m-0"}>
+        <label>{label}</label>
+        {!!startIcon || !!showEyes ? (
+          <InputGroup className={faFocus ? "input-group-focus" : ""}>
             {startIcon && (
               <InputGroupAddon addonType="prepend">
                 <InputGroupText>{startIcon}</InputGroupText>
               </InputGroupAddon>
             )}
             {renderInput()}
-            {endIcon && (
+            {showEyes && (
               <InputGroupAddon addonType="append">
-                <InputGroupText>{endIcon}</InputGroupText>
+                <InputGroupText onClick={handleClick} className={classes.iconEyes}>
+                  {toggleEyes  ? <FontAwesomeIcon icon={faEye}/> : <FontAwesomeIcon icon={faEyeSlash}/>}
+                </InputGroupText>
               </InputGroupAddon>
             )}
           </InputGroup>

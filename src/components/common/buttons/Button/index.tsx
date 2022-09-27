@@ -15,7 +15,6 @@ interface ButtonProps extends ButtonPropsReactStrap {
   btnType?: BtnType;
   width?: string;
   padding?: string;
-  borderRadius?:string;
   nowrap?: boolean;
   isDot?: boolean;
 }

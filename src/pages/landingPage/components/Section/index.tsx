@@ -111,7 +111,7 @@ import { faStar} from '@fortawesome/free-solid-svg-icons';
               </Col>
               ))}
           </Row>
-          <Row className={classes.btn}>
+          <Row className={classes.btnViewMore}>
             <Button btnType={BtnType.Linear} isDot={true}>VIEW MORE</Button>
           </Row>
         </Container>
