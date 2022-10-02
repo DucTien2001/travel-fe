@@ -25,7 +25,7 @@ import Link from "next/link";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapLocation, faPhone, faEnvelopeOpenText, faEarthAmerica } from '@fortawesome/free-solid-svg-icons';
-import InputTextField from "components/common/inputs/InputTextField";
+import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 
 export interface EmailForm { 
   firstName: string;
@@ -99,7 +99,7 @@ const Contact = memo(() => {
                   <CardBody>
                     <Row>
                       <Col className="pr-2" md="6">
-                      <InputTextField
+                      <InputTextFieldBorder
                           label= "First name"
                           startIcon = { <i className="now-ui-icons users_circle-08"></i>}
                           placeholder="First Name..."
@@ -111,7 +111,7 @@ const Contact = memo(() => {
                         />
                       </Col>
                       <Col className="pl-2" md="6">
-                        <InputTextField
+                        <InputTextFieldBorder
                           label= "Last name"
                           startIcon = {<i className="now-ui-icons text_caps-small"></i>}
                           placeholder="Last Name..."
@@ -125,7 +125,7 @@ const Contact = memo(() => {
                       </Col>
                     </Row>
                     <FormGroup>
-                      <InputTextField
+                      <InputTextFieldBorder
                           label= "Email address"
                           startIcon = {<i className="now-ui-icons ui-1_email-85"></i>}
                           placeholder="Email Here..."
@@ -137,7 +137,7 @@ const Contact = memo(() => {
                         />
                     </FormGroup>
                     <FormGroup>
-                      <InputTextField
+                      <InputTextFieldBorder
                         label= "Your message"
                         aria-label="Your Message..."
                         autoComplete="family-name"

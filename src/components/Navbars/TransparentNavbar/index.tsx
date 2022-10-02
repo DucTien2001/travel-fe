@@ -87,7 +87,7 @@ const WhiteNavbar = memo(() => {
                 </DropdownToggle>
                 <DropdownMenu aria-labelledby="navbarDropdownMenuLink1">
                   <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/" passHref>
+                    <Link href="/listTour" passHref>
                       <a>
                         <FontAwesomeIcon icon={faPlane} className={classes.iconNav}/>
                         Tour

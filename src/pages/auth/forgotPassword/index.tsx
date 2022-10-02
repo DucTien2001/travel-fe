@@ -16,10 +16,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
-import TransparentNavbar from "components/Navbars/TransparentNavbar";
-import Footer from "components/Footer";
-import LayoutAuth from "components/Layout/DefaultLayout";
-import InputTextField from "components/common/inputs/InputTextField";
+import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Link from "next/link";
 
 interface ForgotPasswordForm { 
@@ -60,7 +57,6 @@ const Login: NextPage = () => {
   }
     return (
       <div className="main-content">
-        <TransparentNavbar/>
         <div className={clsx("header page-header-image", classes.headerWrapper)}>
           <Container className={classes.container}>
             <div className="header-body text-center mb-7">
@@ -81,7 +77,7 @@ const Login: NextPage = () => {
                     </CardHeader>
                     <CardBody className="px-lg-5">
                       <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
-                        <InputTextField
+                        <InputTextFieldBorder
                         label="Email address"
                         placeholder="Enter your email"
                         type="text"
@@ -111,7 +107,6 @@ const Login: NextPage = () => {
             </div>
           </Container>
         </div>
-        <Footer/>
       </div>
     )
 };

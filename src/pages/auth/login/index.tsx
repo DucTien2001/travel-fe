@@ -16,12 +16,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
-import InputTextField from "components/common/inputs/InputTextField";
+import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Google from "components/SocialButton/Google";
 import Link from "next/link";
-import TransparentNavbar from "components/Navbars/TransparentNavbar";
-import Footer from "components/Footer";
-
 interface LoginForm { 
     email: string;
     password: string;
@@ -61,7 +58,6 @@ const Login: NextPage = () => {
   }
     return (
       <div className="main-content">
-        <TransparentNavbar/>
         <div className={clsx("header page-header-image", classes.headerWrapper)}>
           <Container className={classes.container}>
             <div className="header-body text-center mb-7">
@@ -81,14 +77,14 @@ const Login: NextPage = () => {
                     </CardHeader>
                     <CardBody className="px-lg-5">
                       <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
-                        <InputTextField
+                        <InputTextFieldBorder
                         label="User name"
                         placeholder="Enter your username"
                         type="email"
                         inputRef={register("email")}
                         errorMessage={errors.email?.message}
                         />
-                        <InputTextField
+                        <InputTextFieldBorder
                         label="Password"
                         placeholder="Enter your password"
                         type="password"
@@ -130,7 +126,6 @@ const Login: NextPage = () => {
             </div>
           </Container>
         </div>
-        <Footer/>
       </div>
     )
 };

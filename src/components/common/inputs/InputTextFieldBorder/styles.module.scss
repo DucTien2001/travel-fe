@@ -8,16 +8,9 @@
       content: "" !important;
     }
   }
-.label {
-  margin-bottom: 6px;
-  svg {
-    margin-left: 8px;
-  }
-}
+
 .input {
   font-size: 16px;
-  border-radius: 0px !important;
-  background: #ffff;
   &::placeholder{
   font-size: 14px;
   }
@@ -34,8 +27,4 @@
   svg {
     color: var(--danger-color);
   }
-}
-
-.inputGroupText {
-  border-radius: 0 !important;
 }

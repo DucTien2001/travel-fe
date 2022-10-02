@@ -2,6 +2,11 @@
     text-transform: none;
     padding: 12px 24px !important;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    margin: 0;
+    font-weight: 600;
     .dotContainer {
       span {
         display: inline-block;
@@ -29,16 +34,26 @@
     &:hover {
       background: var(--violet-light-color) !important;
     }
-    &[class~=Mui-disabled] {
-      background: var(--eerie-black-5);
-      color: var(--eerie-black-40); 
+    &[class~=disabled] {
+      background: var(--eerie-black-5) !important;
+      color: var(--eerie-black-40) !important;
+      border: 1px solid #cccc; 
+      &:hover {
+        border: 1px solid #cccc; 
+        color: var(--gray-40) !important;
+      }
     }
+    &[class~=active] {
+      background-color: var(--violet-dark-color) !important;
+     }
   }
   .btnSecondary {
     background: var(--orange-color) !important;
     color: #FFFFFF;
     &:hover {
-      background: var(--orange-light-color) !important;
+      background: #ffff !important;
+      border: 1px solid var(--orange-color)!important;
+      color: var(--orange-color) !important;
     }
     &[class~=Mui-disabled] {
       background: var(--eerie-black-5);
@@ -46,21 +61,35 @@
     }
   }
   .btnOutlined {
-    background: var(--violet-color)!important;
-    border: 3px solid  #ffff !important;
-    color: #ffff !important; 
+    background: #ffff !important;
+    color: var(--violet-color) !important; 
+    border: 1px solid var(--violet-color) !important;
+    svg {
+      color: var(--violet-color) !important; 
+    }
     .dotContainer {
       span {
         background: #ffff !important;
       }
     }
     &:hover {
-      background: var(--violet-light-color)!important;
+      background: var(--violet-color)!important;
+      color: #ffff !important;
+      svg {
+        color: #ffff !important;
+      }
     }
     &[class~=Mui-disabled] {
       background: var(--eerie-black-5);
       color: var(--eerie-black-40); 
     }
+    &[class~=active] {
+      background-color: var(--violet-color) !important;
+      color: #ffff !important;
+      svg {
+          color: #ffff !important;
+      }
+     }
   }
   
   .btnLinear {

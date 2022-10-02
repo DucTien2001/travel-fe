@@ -16,12 +16,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
-import InputTextField from "components/common/inputs/InputTextField";
+import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Google from "components/SocialButton/Google";
 import Link from "next/link";
 import { VALIDATION } from "configs/constants";
-import TransparentNavbar from "components/Navbars/TransparentNavbar";
-import Footer from "components/Footer";
 
 interface SignUpForm { 
     firstName: string;
@@ -83,7 +81,6 @@ const Login: NextPage = () => {
   }
     return (
       <div className="main-content">
-        <TransparentNavbar/>
         <div className={clsx("header page-header-image", classes.headerWrapper)}>
           <Container className={classes.container}>
             <div className="header-body text-center mb-7">
@@ -105,7 +102,7 @@ const Login: NextPage = () => {
                       <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
                         <Row>
                             <Col xs={6}>
-                                <InputTextField
+                                <InputTextFieldBorder
                                     label="First name"
                                     placeholder="Your first name"
                                     type="text"
@@ -115,7 +112,7 @@ const Login: NextPage = () => {
                                 />
                             </Col>
                             <Col xs={6}>
-                                <InputTextField
+                                <InputTextFieldBorder
                                     label="Last name"
                                     placeholder="Your last name"
                                     type="text"
@@ -125,7 +122,7 @@ const Login: NextPage = () => {
                                 /> 
                             </Col>
                         </Row>
-                        <InputTextField
+                        <InputTextFieldBorder
                         label="Email"
                         placeholder="Enter your email"
                         type="email"
@@ -133,7 +130,7 @@ const Login: NextPage = () => {
                         autoComplete="off"
                         errorMessage={errors.email?.message}
                         />
-                        <InputTextField
+                        <InputTextFieldBorder
                         label="Password"
                         placeholder="Enter your password"
                         type="password"
@@ -142,7 +139,7 @@ const Login: NextPage = () => {
                         autoComplete="off"
                         errorMessage={errors.password?.message}
                         />
-                        <InputTextField
+                        <InputTextFieldBorder
                         label="Confirm password"
                         placeholder="Enter your confirm password"
                         type="password"
@@ -151,7 +148,7 @@ const Login: NextPage = () => {
                         autoComplete="off"
                         errorMessage={errors.confirmPassword?.message}
                         />
-                        <InputTextField
+                        <InputTextFieldBorder
                         label="Phone"
                         placeholder="Enter your phone"
                         type="text"
@@ -186,7 +183,6 @@ const Login: NextPage = () => {
             </div>
           </Container>
         </div>
-        <Footer/>
       </div>
     )
 };

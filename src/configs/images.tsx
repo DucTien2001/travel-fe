@@ -19,7 +19,7 @@ import footer from "assets/img/footer.png";
 import offer_1 from "assets/img/offer_1.jpg"; 
 import bgUser from "assets/img/bg-user.jpg";
 import login from "assets/img/login.jpg";
-
+import iconSearch from "assets/img/icon-search.jpg";
 
 
 import google from "assets/img/icon/ic-google.svg";
@@ -47,5 +47,6 @@ export const images = {
   offer_1,
   google,
   bgUser,
-  login
+  login,
+  iconSearch
 };

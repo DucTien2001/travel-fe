@@ -1,6 +1,28 @@
 .black {
+    padding-left: 28px;
+    line-height: 20px !important;
     span {
         color: black;
     }
-  }
+
+}
+.formCheckSign {
+    position: relative;
+}
+.formCheckSign::after {
+    position: absolute;
+    width: 20px !important;
+    height: 20px !important;
+    left: -30px !important;
+    top: 0;
+}
+.formCheckSign::before {
+    position: absolute;
+    width: 20px !important;
+    height: 20px !important;
+    left: -30px !important;
+    top:0;
+
+}
+  
   

@@ -1,0 +1,215 @@
+.pageHeader {
+    min-height: 55vh;
+}
+
+.pageHeaderImg {
+    background-image: url("../../assets/img/images-listTour.jpg");
+}
+
+.titleHome {
+    margin-top: 50px;
+    @media only screen and (max-width: 768px) {
+        font-size: 32px;
+      }
+}
+
+.wrapperTitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.titleBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    text-align: center;
+    > div {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    .divider {
+        width: 80%;
+        height: 3px;
+        background-color: #cccc;
+    }
+}
+
+.layoutBtn {
+    width: 100%;
+    margin: 0 !important;
+    margin-right: 16px;
+    font-weight: 700;
+    svg {
+        color: #ffff;
+        font-size: 14px;
+        margin-right: 8px;
+    }
+}
+
+.rowResult {
+    margin-top: 10px;
+}
+
+.resultFound {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    h5 {
+        font-weight: 700;
+        color: var(--violet-color);
+        margin:0;
+        span {
+            margin-left: 8px;
+            color: var(--orange-color);
+        }
+    }
+}
+.resultContainer {
+    display: flex;
+    align-items: center;
+    h5 {
+        font-weight: 700;
+        color: var(--violet-color);
+        margin:0;
+        margin-right: 8px;
+    }
+}
+
+.dropDownResult {
+    margin-right: 8px;
+    .viewResult {
+        background-color: #ffff !important;
+        border: 1px solid var(--violet-color);
+        color: var(--violet-color) !important;
+        margin: 0;
+        border-radius: 15px;
+        padding: 5px 15px;
+        span {
+            margin-right: 4px;
+            font-size: 1.3em;
+            font-weight:700;
+        }
+    }
+}
+
+.rowResultBody {
+    margin-top: 20px;
+    @media only screen and (max-width: 768px) {
+        display: inline;
+        margin-left: 0;
+        margin-right: 0;
+      }
+}
+.listTours {
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+      }
+
+}
+.rowGridView {
+    // display: none;
+}
+.btnResetOption {
+    font-weight: 700;
+    text-transform: uppercase;
+    svg {
+        font-size: 16px;
+        margin-right: 4px;
+    }
+}
+.cardImage{
+    img {
+        cursor: pointer;
+        transform: scale(1);
+        transition: all 0.3s ease-out;
+    }
+    cursor: pointer;
+    transform: scale(1);
+    transition: all 0.3s ease-out;
+}
+
+.cardImage:hover {
+    img {
+    transform: scale(0.97) translateY(-4px);
+    }
+    transform: scale(0.97) translateY(-4px);
+}
+
+.btnControlCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 32px;
+}
+
+
+.offerContentLike {
+    margin-top:10px;
+}
+.offerContentLike svg{
+    margin: 0 2px 16px;
+}
+.offerContentLike svg:nth-child(1) {
+    color: #ffeb8d;
+}
+.offerContentLike svg:nth-child(2) {
+    color: #fed46b;
+}
+.offerContentLike svg:nth-child(3) {
+    color: #fbb53d;
+}
+.offerContentLike svg:nth-child(4) {
+    color: #fa9e1b;
+}
+.offerContentLike svg:nth-child(5) {
+    color: #f38f04;
+}
+
+//===================List View ================
+.rowTour {
+    padding: 24px;
+}
+.rowTour:nth-of-type(even) {
+    background-color: rgba(234, 232, 232, 0.8);
+}
+.btnControlCardList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    button:first-child {
+        margin-bottom: 16px;
+    }
+}
+
+.titleWrapper {
+    h5 {
+        color: var(--violet-color);
+        font-weight: 600;
+    }
+}
+
+.imgTour {
+    display: flex;
+    align-items: center;
+    img {
+        cursor: pointer;
+        transform: scale(1);
+        transition: all 0.3s ease-out;
+        background-position: center;
+        width: 100%;
+    }
+    img:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+        transition: all 0.3s ease-out;
+        background-position: center;
+        width: 100%;
+    }
+}

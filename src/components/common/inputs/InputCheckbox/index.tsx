@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 
 import classes from "./styles.module.scss";
+import clsx from "clsx";
 import { FormGroup, Input, InputProps, Label } from "reactstrap";
 
 interface Props extends InputProps {
@@ -24,7 +25,7 @@ const CustomCheckbox = memo(
             innerRef={refInput}
             {...rest}
           />
-          <span className="form-check-sign" />
+          <span className={clsx("form-check-sign",classes.formCheckSign)} />
           {content}
         </Label>
         <span className="text-danger text-left ml-1 mt-1 d-block">

@@ -17,28 +17,13 @@ import Footer from "components/Footer";
 import {images} from "configs/images";
 import Link from "next/link";
 import Button, {BtnType}from "components/common/buttons/Button";
-import TransparentNavbar from "components/Navbars/TransparentNavbar";
+
 
 const LandingPage: NextPage = () => {
-  const [navbarOpen1, setNavbarOpen1] = useState(false);
-  const [navbarOpen2, setNavbarOpen2] = useState(false);
-  const [navbarOpen3, setNavbarOpen3] = useState(false);
   return (
     <>
-      <TransparentNavbar/>
-      {navbarOpen1 || navbarOpen2 || navbarOpen3 ? (
-        <div
-          id="bodyClick"
-          onClick={() => {
-            document.documentElement.classList.toggle("nav-open");
-            setNavbarOpen1(false);
-            setNavbarOpen2(false);
-            setNavbarOpen3(false);
-          }}
-        />
-      ) : null}
       <div className="cd-section" id="headers">
-      <div className="header-2">
+        <div className="header-2">
           <div className="page-header header-filter">
             <div
               className={clsx("page-header-image", classes.pageHeader)}
@@ -78,7 +63,6 @@ const LandingPage: NextPage = () => {
       <Testimonials/>
       <Contact/>
       <Social/>
-      <Footer/>
     </>
   );
 };
