@@ -10,10 +10,12 @@ import {
 } from "react-hook-form";
 import { FormGroup } from "reactstrap";
 import classes from "./styles.module.scss";
-import DatePicker from "react-datepicker";
+import ReactDatetime from "react-datetime";
+
 
 interface Props {
   label?: string;
+  labelIcon?: React.ReactNode;
   className?: string;
   placeholder?: string;
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrors<any>>;
@@ -24,7 +26,7 @@ interface Props {
 
 // eslint-disable-next-line react/display-name
 const CustomDatePicker = memo(
-  ({ label, className, placeholder, errorMessage, name, handleChange, control, ...rest }: Props) => {
+  ({ label, labelIcon, className, placeholder, errorMessage, name, handleChange, control, ...rest }: Props) => {
     return (
       <FormGroup
         className={clsx(
@@ -41,19 +43,14 @@ const CustomDatePicker = memo(
               render={({ field }) => {
                 return (
                 <>
-                  <label className={classes.label}>{label}</label>
-                  <DatePicker
+                  <label className={classes.label}>{labelIcon} {label}</label>
+                  <ReactDatetime
                     {...field}
                     className={classes.datePickerInput}
-                    placeholderText={placeholder}
-                    selected={field?.value}
-                    onChange={(date) => field?.onChange(date)}
-                    autoComplete="off"
-                    fixedHeight
-                    popperProps={{ strategy: "fixed" }}
-                    dateFormat="dd/MM/yyyy"
-                    showYearDropdown
-                    scrollableYearDropdown
+                    inputProps={{
+                        className: "form-control",
+                        placeholder: `${placeholder}`,
+                      }}
                     {...rest}
                   />
                 </>
@@ -63,14 +60,13 @@ const CustomDatePicker = memo(
           </>
         ) : (
           <>
-            <label className={classes.label}>{label}</label>
-            <DatePicker
+            <label className={classes.label}>{labelIcon} {label}</label>
+            <ReactDatetime
               className={classes.datePickerInput}
-              placeholderText={placeholder}
-              autoComplete="off"
-              fixedHeight
-              showYearDropdown
-              scrollableYearDropdown
+              inputProps={{
+                className: "form-control",
+                placeholder: `${placeholder}`,
+              }}
               {...rest}
             />
           </>

@@ -15,6 +15,7 @@ import { faEyeSlash, faEye, faCircleExclamation } from '@fortawesome/free-solid-
 interface Props extends InputProps {
   className?: string;
   label?: string;
+  optional?: boolean;
   showEyes?: boolean;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
@@ -23,7 +24,7 @@ interface Props extends InputProps {
 }
 
 // eslint-disable-next-line react/display-name
-const InputTextField = memo(({className, label, showEyes, startIcon, endIcon, inputRef, type, errorMessage, ...props}: Props) => {
+const InputTextField = memo(({className, label, optional, showEyes, startIcon, endIcon, inputRef, type, errorMessage, ...props}: Props) => {
     const [faFocus, setFaFocus] = useState(false);
 
     const [toggleEyes, setToggleEyes] = useState(false);
@@ -55,7 +56,7 @@ const InputTextField = memo(({className, label, showEyes, startIcon, endIcon, in
           className
         )}
       >
-        <label>{label}</label>
+        <label>{label} {optional && <span className={classes.optional}>(optional)</span>}</label>
         {!!startIcon || !!showEyes ? (
           <InputGroup className={faFocus ? "input-group-focus" : ""}>
             {startIcon && (

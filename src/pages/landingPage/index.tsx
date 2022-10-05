@@ -12,7 +12,7 @@ import Feature from "./components/Feature";
 import Section from "./components/Section";
 import Testimonials from "./components/Testimonial";
 import Contact from "./components/Contact";
-import Social from "./components/Social";
+import Social from "../../components/Social";
 import Footer from "components/Footer";
 import {images} from "configs/images";
 import Link from "next/link";

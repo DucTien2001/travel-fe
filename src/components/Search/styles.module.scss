@@ -11,6 +11,7 @@
 .searchItemBtn {
     display: flex;
     align-items: center;
+    justify-content: center;
     button {
         display: flex;
         align-items: center;
@@ -33,5 +34,29 @@
     input {
         padding: 16px 18px !important;
         border-radius: 8px !important;
+    }
+}
+.containerInputDate {
+    @media screen and (max-width: 500px) {
+        flex-direction: column;
+    }
+}
+
+.inputDate {
+    label {
+        color: #ffff;
+        font-weight: 700;
+    }
+    > div {
+        background-color: #ffff;
+        border-radius: 8px;
+        > div {
+            margin-top: 20px !important; 
+        }
+    }
+    input {
+        font-size: 14px;
+        border-radius: 8px !important;
+        padding: 19px 18px !important;
     }
 }

@@ -20,7 +20,8 @@ import offer_1 from "assets/img/offer_1.jpg";
 import bgUser from "assets/img/bg-user.jpg";
 import login from "assets/img/login.jpg";
 import iconSearch from "assets/img/icon-search.jpg";
-
+import imagesListTour from "assets/img/images-listTour.jpg";
+import phuQuoc from "assets/img/phuquoc.jpg";
 
 import google from "assets/img/icon/ic-google.svg";
 // import pricing1 from 'assets/img/pricing1.jpg'
@@ -48,5 +49,7 @@ export const images = {
   google,
   bgUser,
   login,
-  iconSearch
+  iconSearch,
+  imagesListTour,
+  phuQuoc,
 };

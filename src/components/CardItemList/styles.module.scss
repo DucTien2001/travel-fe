@@ -1,0 +1,91 @@
+
+//===================List View ================
+
+.offerContentLike {
+    margin-top:10px;
+}
+.offerContentLike svg{
+    margin: 0 2px 16px;
+}
+.offerContentLike svg:nth-child(1) {
+    color: #ffeb8d;
+}
+.offerContentLike svg:nth-child(2) {
+    color: #fed46b;
+}
+.offerContentLike svg:nth-child(3) {
+    color: #fbb53d;
+}
+.offerContentLike svg:nth-child(4) {
+    color: #fa9e1b;
+}
+.offerContentLike svg:nth-child(5) {
+    color: #f38f04;
+}
+
+.rowTour {
+    padding: 24px;
+    @media only screen and (max-width: 768px) {
+        display: inline;
+    }
+}
+.rowTour:nth-of-type(odd) {
+    background-color: rgba(234, 232, 232, 0.8);
+    @media only screen and (max-width: 768px) {
+        background-color: #ffff;
+    }
+}
+.btnControlCardList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    button:first-child {
+        margin-bottom: 16px;
+    }
+    @media only screen and (max-width: 768px) {
+        div {
+            display: flex;
+            button:first-child {
+                margin-bottom: 0;
+                margin-right: 8px;
+            }
+        }
+    }
+}
+
+.titleWrapper {
+    h5 {
+        color: var(--violet-color);
+        font-weight: 600;
+    }
+    @media only screen and (max-width: 768px) {
+        margin-top: 24px;
+    }
+}
+
+.imgTour {
+    display: flex;
+    align-items: center;
+    img {
+        cursor: pointer;
+        transform: scale(1);
+        transition: all 0.3s ease-out;
+        background-position: center;
+        width: 100%;
+    }
+    img:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+        transition: all 0.3s ease-out;
+        background-position: center;
+        width: 100%;
+    }
+    @media only screen and (max-width: 768px) {
+        img {
+            transform: scale(1);
+        }
+        img:hover {
+            transform: scale(1);
+        }
+    }
+}

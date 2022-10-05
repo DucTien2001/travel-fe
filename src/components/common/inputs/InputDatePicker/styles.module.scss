@@ -1,66 +1,36 @@
-.root {
-    text-align: left;
-    &[class~="has-danger"] {
-      &::after {
-        display: none;
-      }
-      [class~="react-select__control"] {
-        border-color: #ffcfcf;
-      }
-    }
-    [class~="react-datepicker-popper"] {
-      z-index: 999;
-    }
-    [class~="react-datepicker__month-text--keyboard-selected"],
-    [class~="react-datepicker__day--keyboard-selected"],
-    [class~="react-datepicker__day--selected"] {
-      background-color: #f96332;
-    }
-    [class~="react-datepicker__header"] {
-      background-color: #ffffff;
-      color: #f96332;
-    }
-    [class~="react-datepicker__current-month"],
-    [class~="react-datepicker__day-name"] {
-      color: #f96332;
-    }
-    [class~="react-datepicker__year-read-view--down-arrow"],
-    [class~="react-datepicker__navigation-icon"]::before {
-      border-color: #f96332;
-    }
-  }
-  
-  .datePickerInput {
-    display: block;
-    width: 100%;
-    background-color: transparent;
-    border: 1px solid #e3e3e3;
-    border-radius: 30px;
-    color: #2c2c2c;
-    height: auto;
-    line-height: normal;
-    font-size: 0.8571em;
-    transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out,
-      background-color 0.3s ease-in-out;
-    box-shadow: none;
-    padding: 10px 18px 10px 18px;
-    &:focus {
-      border: 1px solid #f96332;
-      box-shadow: none;
-      outline: 0 !important;
-      color: #2c2c2c;
-    }
-    &::placeholder {
-      color: #888888;
-      opacity: 0.8;
-    }
-    &:-ms-input-placeholder {
-      color: #888888;
-      opacity: 0.8;
-    }
-    &::-ms-input-placeholder {
-      color: #888888;
-      opacity: 0.8;
+.datePickerInput {
+    input {
+        display: block;
+        width: 100%;
+        background-color: transparent;
+        border: 1px solid #e3e3e3;
+        border-radius: 30px;
+        color: #2c2c2c;
+        height: auto;
+        line-height: normal;
+        font-size: 0.8571em;
+        transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out,
+          background-color 0.3s ease-in-out;
+        box-shadow: none;
+        padding: 10px 18px 10px 18px;
+        &:focus {
+          border: 1px solid #f96332;
+          box-shadow: none;
+          outline: 0 !important;
+          color: #2c2c2c;
+        }
+        &::placeholder {
+          color: #888888;
+          opacity: 0.8;
+        }
+        &:-ms-input-placeholder {
+          color: #888888;
+          opacity: 0.8;
+        }
+        &::-ms-input-placeholder {
+          color: #888888;
+          opacity: 0.8;
+        }
     }
   }
   

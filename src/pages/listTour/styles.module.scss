@@ -1,22 +1,5 @@
-.pageHeader {
+.imgHeader {
     min-height: 55vh;
-}
-
-.pageHeaderImg {
-    background-image: url("../../assets/img/images-listTour.jpg");
-}
-
-.titleHome {
-    margin-top: 50px;
-    @media only screen and (max-width: 768px) {
-        font-size: 32px;
-      }
-}
-
-.wrapperTitle {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 .titleBody {
@@ -38,6 +21,9 @@
         width: 80%;
         height: 3px;
         background-color: #cccc;
+    }
+    p {
+        padding: 32px;
     }
 }
 
@@ -106,6 +92,15 @@
         margin-left: 0;
         margin-right: 0;
       }
+    .btnResetWrapper {
+        @media only screen and (max-width: 768px) {
+            max-width: 100%;
+            margin: 24px 0;
+            button {
+                width: 100%;
+            }
+          }
+    }
 }
 .listTours {
     @media only screen and (max-width: 768px) {
@@ -115,7 +110,71 @@
 }
 .rowGridView {
     // display: none;
+    @media only screen and (max-width: 768px) {
+        display: block;
+      }
 }
+.resultDesktop {
+    @media only screen and (max-width: 768px) {
+        display: none;
+      }
+}
+.resultMobile {
+    @media only screen and (min-width: 1024px) {
+        display: none;
+      }
+      @media only screen and (max-width: 768px) {
+        display: block;
+      }
+}
+.btnLayoutWrapper {
+    padding:0 32px 16px 32px;
+    button:first-child {
+        margin-bottom: 16px !important;
+    }
+}
+.colResultMobile {
+    @media only screen and (min-width: 600px)  and (max-width: 768px) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+    .resultFindMobile {
+        display: flex;
+        justify-content: center;
+        margin-right: 20px;
+        h5{
+            font-weight: 700;
+            color: var(--violet-color);
+            margin-bottom: 0;
+            span {
+                color: var(--orange-color);
+            }
+        };
+        @media only screen and (max-width: 500px) {
+            margin-right:0;
+            margin-bottom: 16px;
+        }
+    }
+    .viewResultPageMobile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        h5 {
+            font-weight: 700;
+            color: var(--violet-color);
+            margin-bottom: 0;
+            margin-right: 8px;
+        }
+    }
+}
+.colBtnLayout {
+    @media only screen and (max-width: 768px) {
+        display: none;
+      }
+}
+
 .btnResetOption {
     font-weight: 700;
     text-transform: uppercase;
@@ -124,92 +183,11 @@
         margin-right: 4px;
     }
 }
-.cardImage{
-    img {
-        cursor: pointer;
-        transform: scale(1);
-        transition: all 0.3s ease-out;
-    }
-    cursor: pointer;
-    transform: scale(1);
-    transition: all 0.3s ease-out;
-}
 
-.cardImage:hover {
-    img {
-    transform: scale(0.97) translateY(-4px);
-    }
-    transform: scale(0.97) translateY(-4px);
-}
 
-.btnControlCard {
+
+.pigination {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 32px;
-}
-
-
-.offerContentLike {
-    margin-top:10px;
-}
-.offerContentLike svg{
-    margin: 0 2px 16px;
-}
-.offerContentLike svg:nth-child(1) {
-    color: #ffeb8d;
-}
-.offerContentLike svg:nth-child(2) {
-    color: #fed46b;
-}
-.offerContentLike svg:nth-child(3) {
-    color: #fbb53d;
-}
-.offerContentLike svg:nth-child(4) {
-    color: #fa9e1b;
-}
-.offerContentLike svg:nth-child(5) {
-    color: #f38f04;
-}
-
-//===================List View ================
-.rowTour {
-    padding: 24px;
-}
-.rowTour:nth-of-type(even) {
-    background-color: rgba(234, 232, 232, 0.8);
-}
-.btnControlCardList {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    button:first-child {
-        margin-bottom: 16px;
-    }
-}
-
-.titleWrapper {
-    h5 {
-        color: var(--violet-color);
-        font-weight: 600;
-    }
-}
-
-.imgTour {
-    display: flex;
-    align-items: center;
-    img {
-        cursor: pointer;
-        transform: scale(1);
-        transition: all 0.3s ease-out;
-        background-position: center;
-        width: 100%;
-    }
-    img:hover {
-        cursor: pointer;
-        transform: scale(1.1);
-        transition: all 0.3s ease-out;
-        background-position: center;
-        width: 100%;
-    }
+    justify-content: end;
+    margin-top: 32px;
 }

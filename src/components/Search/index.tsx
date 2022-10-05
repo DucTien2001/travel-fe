@@ -22,9 +22,16 @@ import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
 import SignOutButton from "components/common/buttons/SignOutButton";
 import InputTextField from "components/common/inputs/InputTextField";
+import InputDatePicker from "components/common/inputs/InputDatePicker";
+import { DatePicker } from "react-rainbow-components";
+import ReactDatetime from "react-datetime";
 
 const Search = memo(() => {
+    const [date, setDate] = useState(new Date());
 
+    function onChange(date: Date) {
+      setDate(date);
+    }
   return (
     <>
         <div className={classes.root}>
@@ -38,22 +45,34 @@ const Search = memo(() => {
                     />
                 </Col>
                 <Col>
-                    <Row xs={2}>
+                    <Row xs={2} className={classes.containerInputDate}>
                         <Col>
-                            <InputTextField
-                            className={classes.inputSearch}
+                            <InputDatePicker
+                            className={classes.inputDate}
                             label="Departure"
                             labelIcon={<FontAwesomeIcon icon={faCalendarDays}/>}
-                            placeholder="dd/mm/yyyy"
+                            name="departure"
+                            timeFormat={false}
+                            inputProps={{
+                                placeholder: "dd/mm/yyyy",
+                              }}
                             />
                         </Col>
                         <Col>
-                            <InputTextField
-                            className={classes.inputSearch}
-                            label="Return"
-                            labelIcon={<FontAwesomeIcon icon={faCalendarDays}/>}
-                            placeholder="dd/mm/yyyy"
-                        />
+                        <InputDatePicker
+                        className={classes.inputDate}
+                        label="Return"
+                        labelIcon={<FontAwesomeIcon icon={faCalendarDays}/>}
+                        inputProps={{
+                          placeholder: "dd/mm/yyyy",
+                        }}
+                        name="return"
+                        timeFormat={false}
+                        >
+                        </InputDatePicker>
+                        {/* <InputDatePicker
+                        name="return"
+                        /> */}
                         </Col>
                     </Row>
                 </Col>

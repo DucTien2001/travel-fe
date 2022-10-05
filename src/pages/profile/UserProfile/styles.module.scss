@@ -1,0 +1,64 @@
+.containerForm {
+    padding: 24px;
+    @media only screen and (max-width: 500px) {
+        padding: 0;
+     }
+}
+
+.personalInfor {
+    display: flex;
+    @media only screen and (max-width: 500px) {
+        margin-bottom: 16px;
+     }
+}
+.information {
+    margin-left: 24px;
+    h4 {
+        font-weight: 700;
+    }
+    @media only screen and (max-width: 500px) {
+        margin-left: 16px;
+     }
+}
+.photoContainer {
+    width: 120px !important;
+    height: 120px  !important;
+    position: relative;
+    img {
+        border-radius: 50%;
+    }
+}
+
+.uploadImage {
+    position: absolute;
+    right: 0%;
+    bottom: 0%;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #EEF0F2;
+    z-index: 2;
+    svg {
+        width: 17.14px;
+        height: 15.43px;
+        color: var(--eerie-black-65);
+    }
+}
+
+.btnSave {
+    border-radius: 30px;
+    margin-top:16px;
+    @media only screen and (max-width: 600px) {
+        width: 100%;
+     }
+}
+
+.nameWrapper {
+    @media only screen and (max-width: 500px) {
+       display: block; 
+    }
+}

@@ -22,20 +22,20 @@ import {
 } from "reactstrap";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGrip, faList, faPlaneDeparture, faPeopleGroup, faCalendarDays, faMagnifyingGlass,
-faSort, faXmark, faStar,
-} from '@fortawesome/free-solid-svg-icons';
+import { faGrip, faList, faXmark, faStar,} from '@fortawesome/free-solid-svg-icons';
 import { NextPage } from "next";
 import { images } from "configs/images";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import InputTextField from "components/common/inputs/InputTextField";
-import InputCheckbox from "components/common/inputs/InputCheckbox";
-import InputDatePicker from "components/common/inputs/InputDatePicker";
+import Social from "components/Social";
+import Pagination from "components/Pagination";
 import Aos from 'aos'
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import Search from "components/Search";
+import SectionHeader from "components/Header/SectionHeader";
+import CardItemGrid from "components/CardItemGrid";
+import CardItemList from "components/CardItemList";
 const Profile : NextPage = () => {
     useEffect(()=>{
         Aos.init({duration:500});
@@ -115,29 +115,23 @@ const Profile : NextPage = () => {
 
     const [viewResult, setViewResult] = useState("1");
 
-    const onChangeView = (e: any) => {
+    const [changeViewLayout, setChangeViewLayout] = useState(false);
+
+    const onChangeViewResult = (e: any) => {
         setViewResult(e.currentTarget.textContent);
+    }
+
+    const onChangeViewLayout = () => {
+        setChangeViewLayout(!changeViewLayout);
     }
 
   return (
     <>
-        <div className="cd-section" id="headers">
-            <div className="header-2">
-                <div className={clsx("page-header header-filter", classes.pageHeader)}>
-                    <div
-                    className={clsx("page-header-image", classes.pageHeaderImg)}
-                    >
-                    </div>
-                    <Container>
-                        <Row>
-                            <Col className="ml-auto mr-auto text-center" md="8">
-                                <h1 className={clsx("title", classes.titleHome)}>MULTI-TOURS</h1>
-                            </Col>  
-                        </Row>
-                    </Container>
-                </div>
-            </div>
-        </div>
+        <SectionHeader
+        title="MULTI-TOURS"
+        src={images.imagesListTour.src}  
+        className={classes.imgHeader}
+        />
         <Search/>
         <Row className={classes.containerBody}>
             <Container>
@@ -151,15 +145,16 @@ const Profile : NextPage = () => {
                         Each private tour is tailor-made to show the very best that Asia has to offer.
                     </p>
                 </Row>
-                <Row>
-                    <Col xs={2}>
-                        <Button className = {classes.layoutBtn} btnType = {BtnType.Outlined} active>
+                {/* ======================= RESULT DESKTOP ===================== */}
+                <Row className={classes.resultDesktop}>
+                    <Col xs={2} className={classes.colBtnLayout}>
+                        <Button className = {clsx(!changeViewLayout ? "active" : null, classes.layoutBtn)} btnType = {BtnType.Outlined} onClick={onChangeViewLayout}>
                             <FontAwesomeIcon icon={faGrip}/>
                             GRID VIEW
                         </Button>
                     </Col>
-                    <Col xs={2}>
-                        <Button className = {classes.layoutBtn} btnType = {BtnType.Outlined}>
+                    <Col xs={2} className={classes.colBtnLayout}>
+                        <Button className = {clsx(changeViewLayout ? "active" : null, classes.layoutBtn)} btnType = {BtnType.Outlined} onClick={onChangeViewLayout}>
                             <FontAwesomeIcon icon={faList}/>
                             LIST VIEW
                         </Button>
@@ -180,10 +175,10 @@ const Profile : NextPage = () => {
                                         <span>{viewResult}</span>
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeView}>
+                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeViewResult}>
                                         <h5>9</h5>
                                     </DropdownItem>
-                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeView}>
+                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeViewResult}>
                                         <h5>10</h5>
                                     </DropdownItem>
                                     </DropdownMenu>
@@ -193,183 +188,86 @@ const Profile : NextPage = () => {
                         </Row>
                     </Col>
                 </Row>
+                {/* ======================= RESULT MOBILE ===================== */}
+                <Row className={classes.resultMobile}> 
+                <div className={classes.btnLayoutWrapper}>
+                            <Button className = {clsx(changeViewLayout ? "active" : null, classes.layoutBtn)} btnType = {BtnType.Outlined} onClick={onChangeViewLayout}>
+                                <FontAwesomeIcon icon={faGrip}/>
+                                GRID VIEW
+                            </Button>
+                            <Button className = {clsx(!changeViewLayout ? "active" : null, classes.layoutBtn)} btnType = {BtnType.Outlined} onClick={onChangeViewLayout}>
+                                <FontAwesomeIcon icon={faList}/>
+                                LIST VIEW
+                            </Button>
+                        </div>
+                    <Col className={classes.colResultMobile}>
+                        <div className={classes.resultFindMobile}>
+                            <h5>RESULTS-FOUND: <span>32</span></h5> 
+                        </div>
+                        <div className={classes.viewResultPageMobile}>
+                            <h5>VIEW: </h5>
+                                <UncontrolledDropdown className={classes.dropDownResult}>
+                                    <DropdownToggle
+                                    caret
+                                    onClick={(e) => e.preventDefault()}
+                                    className={classes.viewResult}
+                                    >
+                                        <span>{viewResult}</span>
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeViewResult}>
+                                        <h5>9</h5>
+                                    </DropdownItem>
+                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeViewResult}>
+                                        <h5>10</h5>
+                                    </DropdownItem>
+                                    </DropdownMenu>
+                                </UncontrolledDropdown>
+                            <h5>PER PAGE</h5> 
+                        </div>
+                    </Col>
+                </Row>
                 <Row className={classes.rowResultBody}>
-                    <Col xs={2}>
+                    <Col xs={2} className={classes.btnResetWrapper}>
                         <Button btnType={BtnType.Outlined} className={classes.btnResetOption}> <FontAwesomeIcon icon={faXmark}/> reset option</Button>
                     </Col>
                     <Col xs={10} className={classes.listTours}>
                         {/* ==================== Grid view ===================== */}                            
-                        <Row  className={classes.rowGridView}>
+                        {!changeViewLayout && (<Row  className={classes.rowGridView}>
                             {listTour.map((tour, index)=> ( 
-                            <Col xs={4} key={index}>
-                                <Link href="/[id]tourDetail">
-                                    <Card className={clsx("card-pricing card-background", classes.cardImage)
-                                    }
-                                    style={{backgroundImage: `url(${tour.image})`,}}
-                                    >
-                                        <CardBody>
-                                            <h5 className="category">{tour.title}</h5>
-                                            <div className={classes.offerContentLike}>
-                                            {[...Array(tour.star)].map((star, index) => {
-                                                return (
-                                                <FontAwesomeIcon icon={faStar} key={index}></FontAwesomeIcon>
-                                                )
-                                            })}
-                                            </div>
-                                            <CardTitle tag="h3">$67</CardTitle>
-                                            <ul>
-                                                <li>{tour.subtitle}</li>
-                                                <li>{tour.subtitle2}</li>
-                                            </ul>
-                                            <div className={classes.btnControlCard}>
-                                                <Button
-                                                className="btn-round"
-                                                btnType={BtnType.Primary}
-                                                >
-                                                View more
-                                                </Button>
-                                                <Link href="/[id]book">
-                                                    <Button
-                                                    className="btn-round"
-                                                    btnType={BtnType.Secondary}
-                                                    >
-                                                    Book now
-                                                    </Button>
-                                                </Link>
-                                            </div>
-                                        </CardBody>
-                                    </Card>
-                                </Link>
-                            </Col>
-                            // <Col>
-                            //     <Link href="/[id]tourDetail">
-                            //         <Card className={clsx("card-pricing card-background", classes.cardImage)
-                            //         }
-                            //         style={{backgroundImage: `url(${tour.image})`,}}
-                            //         >
-                            //             <CardBody>
-                            //                 <h5 className="category">{tour.title}</h5>
-                            //                 <div className={classes.offerContentLike}>
-                            //                 {[...Array(tour.star)].map((star, index) => {
-                            //                     return (
-                            //                     <FontAwesomeIcon icon={faStar} key={index}></FontAwesomeIcon>
-                            //                     )
-                            //                 })}
-                            //                 </div>
-                            //                 <CardTitle tag="h3">$67</CardTitle>
-                            //                 <ul>
-                            //                     <li>{tour.subtitle}</li>
-                            //                     <li>{tour.subtitle2}</li>
-                            //                 </ul>
-                            //                 <div className={classes.btnControlCard}>
-                            //                     <Button
-                            //                     className="btn-round"
-                            //                     btnType={BtnType.Primary}
-                            //                     >
-                            //                     View more
-                            //                     </Button>
-                            //                 <Link href="/[id]book">
-                            //                     <Button
-                            //                     className="btn-round"
-                            //                     btnType={BtnType.Secondary}
-                            //                     >
-                            //                     Book now
-                            //                     </Button>
-                            //                 </Link>
-                            //                 </div>
-                            //             </CardBody>
-                            //         </Card>
-                            //     </Link>
-                            // </Col>
-                            // <Col>
-                            //      <Link href="/[id]tourDetail">
-                            //         <Card className={clsx("card-pricing card-background", classes.cardImage)
-                            //         }
-                            //         style={{backgroundImage: `url(${tour.image})`,}}
-                            //         >
-                            //             <CardBody>
-                            //                 <h5 className="category">{tour.title}</h5>
-                            //                 <div className={classes.offerContentLike}>
-                            //                 {[...Array(tour.star)].map((star, index) => {
-                            //                     return (
-                            //                     <FontAwesomeIcon icon={faStar} key={index}></FontAwesomeIcon>
-                            //                     )
-                            //                 })}
-                            //                 </div>
-                            //                 <CardTitle tag="h3">$67</CardTitle>
-                            //                 <ul>
-                            //                     <li>{tour.subtitle}</li>
-                            //                     <li>{tour.subtitle2}</li>
-                            //                 </ul>
-                            //                 <div className={classes.btnControlCard}>
-                            //                     <Button
-                            //                     className="btn-round"
-                            //                     btnType={BtnType.Primary}
-                            //                     >
-                            //                     View more
-                            //                     </Button>
-                            //                 <Link href="/[id]book">
-                            //                     <Button
-                            //                     className="btn-round"
-                            //                     btnType={BtnType.Secondary}
-                            //                     >
-                            //                     Book now
-                            //                     </Button>
-                            //                 </Link>
-                            //                 </div>
-                            //             </CardBody>
-                            //         </Card>
-                            //     </Link>
-                            // </Col>
+                            <CardItemGrid
+                            key={index}
+                            id = {index}
+                            src = {tour.image}
+                            title = {tour.title}
+                            numberStar = {tour.star}
+                            subTitle1 = {tour.subtitle}
+                            subTitle2 = {tour.subtitle2}
+                            />
                             ))}
-                        </Row>
+                        </Row>)} 
                         {/* ==================== List view ===================== */}
+                        {changeViewLayout && (<div>
                         {listTour.map((tour, index)=> (                         
-                        <Row xs={4} className={classes.rowTour} key={index}>
-                            <Col className={classes.imgTour}>
-                            <Link href="/[id]tourDetail">
-                                <img alt="anh" src={tour.image}></img>
-                            </Link>
-                            </Col>
-                            <Col className={classes.titleWrapper}>
-                                 <h5>{tour.title}</h5>  
-                                 <div className={classes.offerContentLike}>
-                                    {[...Array(tour.star)].map((star, index) => {
-                                        return (
-                                        <FontAwesomeIcon icon={faStar} key={index}></FontAwesomeIcon>
-                                        )
-                                    })}
-                                </div>
-                            </Col>
-                            <Col>
-                                 <ul>
-                                    <li>{tour.subtitle}</li>
-                                    <li>{tour.subtitle2}</li>
-                                </ul>          
-                            </Col>
-                            <Col className={classes.btnControlCardList}>
-                                <div >
-                                    <Button
-                                     className="btn-round"
-                                    btnType={BtnType.Primary}
-                                    >
-                                    View more
-                                    </Button>
-                                    <Link href="/[id]book">
-                                        <Button
-                                         className="btn-round"
-                                        btnType={BtnType.Secondary}
-                                        >
-                                        Book now
-                                        </Button>
-                                    </Link>
-                                </div>          
-                            </Col>
-                        </Row>))} 
+                            <CardItemList
+                            key={index}
+                            id = {index}
+                            src = {tour.image}
+                            title = {tour.title}
+                            numberStar = {tour.star}
+                            subTitle1 = {tour.subtitle}
+                            subTitle2 = {tour.subtitle2}
+                            />
+                        ))} 
+                        </div>)}
+                        <Row className={classes.pigination}>
+                            <Pagination/>
+                        </Row>
                     </Col>
                 </Row>
-            </Container>
+            </Container>    
         </Row>
+        <Social/>
     </>
   );
 }
