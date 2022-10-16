@@ -25,31 +25,132 @@ import CardItemGrid from "components/CardItemGrid";
 
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(()=> {
-    const listTour = [
-        {
-            image: images.bgUser.src,
-            star: 4,
-            title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        },
-        {
-            image: images.bgUser.src,
-            star: 4,
-            title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        
-        },
-        {
-            image: images.bgUser.src,
-            star: 5,
-            title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        
-        },
-    ]
+  const listTour = [
+    {
+        image: images.bgUser.src,
+        star: 4,
+        title: "Nha trang",
+        description: "6 months access to the library",
+        businessHours: "7AM - 10PM",
+        location: "Khanh Hoa",
+        contact: "09324343",
+        price: 70,
+        tags: "Sea",
+        rate: 4,
+        creator: "VietNam",
+    },
+    {
+        image: images.bgUser.src,
+        star: 4,
+        title: "Nha trang",
+        description: "6 months access to the library",
+        businessHours: "7AM - 10PM",
+        location: "Khanh Hoa",
+        contact: "09324343",
+        price: 70,
+        tags: "Sea",
+        rate: 4,
+        creator: "VietNam",
+        isTemporarilyStopWorking: false,
+    },        {
+        image: images.bgUser.src,
+        star: 4,
+        title: "Nha trang",
+        description: "6 months access to the library",
+        businessHours: "7AM - 10PM",
+        location: "Khanh Hoa",
+        contact: "09324343",
+        price: 70,
+        discount: 2,
+        tags: "Sea",
+        rate: 4,
+        creator: "VietNam",
+        isTemporarilyStopWorking: false,
+    },        {
+        image: images.bgUser.src,
+        star: 4,
+        title: "Nha trang",
+        description: "6 months access to the library",
+        businessHours: "7AM - 10PM",
+        location: "Khanh Hoa",
+        contact: "09324343",
+        price: 70,
+        discount: 2,
+        tags: "Sea",
+        rate: 4,
+        creator: "VietNam",
+        isTemporarilyStopWorking: false,
+    },        {
+        image: images.bgUser.src,
+        star: 4,
+        title: "Nha trang",
+        description: "6 months access to the library",
+        businessHours: "7AM - 10PM",
+        location: "Khanh Hoa",
+        contact: "09324343",
+        price: 70,
+        discount: 2,
+        tags: "Sea",
+        rate: 4,
+        creator: "VietNam",
+    },        {
+        image: images.bgUser.src,
+        star: 4,
+        title: "Nha trang",
+        description: "6 months access to the library",
+        businessHours: "7AM - 10PM",
+        location: "Khanh Hoa",
+        contact: "09324343",
+        price: 70,
+        discount: 2,
+        tags: "Sea",
+        rate: 4,
+        creator: "VietNam",
+        isTemporarilyStopWorking: false,
+    },        {
+        image: images.bgUser.src,
+        star: 4,
+        title: "Nha trang",
+        description: "6 months access to the library",
+        businessHours: "7AM - 10PM",
+        location: "Khanh Hoa",
+        contact: "09324343",
+        price: 70,
+        discount: 2,
+        tags: "Sea",
+        rate: 4,
+        creator: "VietNam",
+    },        {
+        image: images.bgUser.src,
+        star: 4,
+        title: "Nha trang",
+        description: "6 months access to the library",
+        businessHours: "7AM - 10PM",
+        location: "Khanh Hoa",
+        contact: "09324343",
+        price: 70,
+        discount: 2,
+        tags: "Sea",
+        rate: 4,
+        creator: "VietNam",
+        isTemporarilyStopWorking: true,
+    },        {
+        image: images.bgUser.src,
+        star: 4,
+        title: "Nha trang",
+        description: "6 months access to the library",
+        businessHours: "7AM - 10PM",
+        location: "Khanh Hoa",
+        contact: "09324343",
+        price: 70,
+        discount: 2,
+        tags: "Sea",
+        rate: 4,
+        creator: "VietNam",
+        isTemporarilyStopWorking: true,
+    },
+
+]
   return (
     <>
         <div className="section related-products" data-background-color="black">
@@ -60,13 +161,21 @@ const ProductPage = memo(()=> {
             <Row>
             {listTour.map((tour, index)=> ( 
                 <CardItemGrid
+                link="listTour"
                 key={index}
                 id = {index}
                 src = {tour.image}
                 title = {tour.title}
-                numberStar = {tour.star}
-                subTitle1 = {tour.subtitle}
-                subTitle2 = {tour.subtitle2}
+                description = {tour.description}
+                businessHours = {tour.businessHours}
+                location ={tour.location}
+                contact={tour.contact}
+                price ={tour.price}
+                discount = {tour.discount}
+                tags={tour.tags}
+                rate={tour.rate}
+                creator={tour.creator}
+                isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
                 />
             ))}
             </Row>

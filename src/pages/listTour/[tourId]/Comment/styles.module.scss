@@ -1,0 +1,30 @@
+.root {
+    background-color: #ffff;
+}
+.rowComment {
+    @media only screen and (max-width: 768px) {
+        display: block;
+    }
+}
+.containerMedia {
+    border: 1px solid #cccc;
+    padding: 16px;
+    @media only screen and (max-width: 768px) {
+        margin-bottom: 16px;
+    }
+}
+
+.btnContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    @media only screen and (max-width: 600px) {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        button {
+            width: 100%;
+        }
+    }
+}

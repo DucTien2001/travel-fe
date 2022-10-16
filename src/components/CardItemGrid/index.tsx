@@ -7,57 +7,79 @@ import {
   CardBody,
   Col,
 } from "reactstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faStar,} from '@fortawesome/free-solid-svg-icons';
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
+import Stars from "components/Stars";
 
 interface Props { 
+    link: string;
     id: number;
     src: string;
     title: string;
-    numberStar: number;
-    subTitle1: string;
-    subTitle2: string;
+    description: string;
+    businessHours: string;
+    location: string;
+    contact: string;
+    price: number;
+    discount?: number;
+    tags?: string;
+    rate: number;
+    creator: string;
+    isTemporarilyStopWorking?: boolean;
+    roomNumber?: string;
+    bookDates?: string;
 }
 
 // eslint-disable-next-line react/display-name
-const ListServices = memo(({id, src, title, numberStar, subTitle1, subTitle2} : Props) => {
+const ListServices = memo(({link, id, src, title, description, businessHours, 
+    location, contact, price, discount, 
+    tags, rate, creator, 
+    isTemporarilyStopWorking, roomNumber, bookDates} : Props) => {
     
   return (
     <>
         <Col xs={4} className={classes.cardItem} key={id}>
-            <Link href={`/listTour/[${id}]`}>
+            <Link href={`/${link}/[${id}]`}>
                 <Card className={clsx("card-pricing card-background", classes.cardImage)}
                 style={{backgroundImage: `url(${src})`,}}
                 >
-                    <CardBody>
-                        <h5 className="category">{title}</h5>
-                        <div className={classes.offerContentLike}>
-                            {[...Array(numberStar)].map((_star, index) => {
-                            return (
-                                <FontAwesomeIcon icon={faStar} key={index}></FontAwesomeIcon>
-                            )
-                            })}
+                    <CardBody className={isTemporarilyStopWorking ? classes.stopCard : classes.cardBody}>
+                         {isTemporarilyStopWorking ? (<div className={classes.stopWorking}>
+                                <span className={classes.stop}>STOP WORKING</span>
+                            </div>) : (<div className={discount ? classes.discountWrapper : classes.noDiscount}>
+                                <span className={classes.percent}>{discount}%</span>
+                                <span className={classes.discount}>DISCOUNT</span>
+                            </div>)}
+                        <h5 className={clsx("category", classes.title)}>{title}{roomNumber} - {location}</h5>
+                        <Stars numberOfStars={rate}/>
+                        <div className={classes.tags}>
+                            <p>{tags}</p>
                         </div>
-                        <CardTitle tag="h3">$67</CardTitle>
+                        <p>{businessHours}{bookDates}</p>
+                        <CardTitle tag="h3">{price}$</CardTitle>
                             <ul>
-                                <li>{subTitle1}</li>
-                                <li>{subTitle2}</li>
+                                <li>{description}</li>
                             </ul>
+                            <div>
+                                <p>{contact} - {creator}</p>
+                            </div>
                             <div className={classes.btnControlCard}>
+                                <Link href="/[id]book">
                                 <Button
-                                className="btn-round"
+                                className={clsx("btn-round", classes.btnView)}
                                 btnType={BtnType.Primary}
+                                disabled={isTemporarilyStopWorking}
                                 >
                                    View more
                                 </Button>
+                                </Link>
                                 <Link href="/[id]book">
                                     <Button
                                     className="btn-round"
                                     btnType={BtnType.Secondary}
+                                    disabled={isTemporarilyStopWorking}
                                     >
                                         Book now
                                     </Button>

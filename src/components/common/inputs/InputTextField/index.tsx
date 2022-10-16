@@ -77,7 +77,7 @@ const InputTextField = memo(({className, label, labelIcon, showEyes, startIcon, 
           renderInput()
         )}
         {errorMessage && (
-          <span className="text-danger ml-2 mt-1 d-block">{errorMessage}</span>
+          <span className={clsx("text-danger ml-2 mt-1 d-block", classes.errorMessage)}>{errorMessage}</span>
         )}
       </FormGroup>
     );

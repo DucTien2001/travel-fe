@@ -21,7 +21,9 @@ import bgUser from "assets/img/bg-user.jpg";
 import login from "assets/img/login.jpg";
 import iconSearch from "assets/img/icon-search.jpg";
 import imagesListTour from "assets/img/images-listTour.jpg";
+import imagesListHotel from "assets/img/images-listHotel.jpg";
 import phuQuoc from "assets/img/phuquoc.jpg";
+import imagesItinerary from "assets/img/icon-itinerary.jpg";
 
 import google from "assets/img/icon/ic-google.svg";
 // import pricing1 from 'assets/img/pricing1.jpg'
@@ -51,5 +53,6 @@ export const images = {
   login,
   iconSearch,
   imagesListTour,
-  phuQuoc,
+  imagesListHotel,
+  phuQuoc,imagesItinerary,
 };

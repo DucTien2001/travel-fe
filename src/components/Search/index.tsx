@@ -23,8 +23,7 @@ import Button, {BtnType} from "components/common/buttons/Button";
 import SignOutButton from "components/common/buttons/SignOutButton";
 import InputTextField from "components/common/inputs/InputTextField";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
-import { DatePicker } from "react-rainbow-components";
-import ReactDatetime from "react-datetime";
+import InputCounter from "components/common/inputs/InputCounter";
 
 const Search = memo(() => {
     const [date, setDate] = useState(new Date());
@@ -70,29 +69,26 @@ const Search = memo(() => {
                         timeFormat={false}
                         >
                         </InputDatePicker>
-                        {/* <InputDatePicker
-                        name="return"
-                        /> */}
                         </Col>
                     </Row>
                 </Col>
                 <Col>
                     <Row xs={2}>
                         <Col>
-                            <InputTextField
+                            {/* <InputCounter
                             className={classes.inputSearch}
                             label="Adult"
                             labelIcon={<FontAwesomeIcon icon={faPeopleGroup}/>}
                             placeholder="1"
-                            />
+                            /> */}
                         </Col>
                         <Col>
-                            <InputTextField
+                            {/* <InputCounter
                             className={classes.inputSearch}
                             label="Children"
                             labelIcon={<FontAwesomeIcon icon={faChildren}/>}
                             placeholder="0"
-                            />
+                            /> */}
                         </Col>
                     </Row>
                 </Col>

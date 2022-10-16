@@ -76,7 +76,7 @@ const UserProfile = memo((props: Props) => {
                 <Divider/>
                 {isEmptyPassword && <p>Your account has not been set a password, please set a password.</p>}
                 <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
-                    <InputTextFieldBorder
+                    {!isEmptyPassword && (<InputTextFieldBorder
                         className="mb-4"
                         label="Current password"
                         name="currentPassword"
@@ -84,7 +84,7 @@ const UserProfile = memo((props: Props) => {
                         type="text"
                         inputRef={register("currentPassword")}
                         errorMessage={errors.currentPassword?.message}
-                    />
+                    />)}
                     <InputTextFieldBorder
                         className="mb-4"
                         label="New password"

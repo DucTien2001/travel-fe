@@ -26,6 +26,7 @@ import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapLocation, faPhone, faEnvelopeOpenText, faEarthAmerica } from '@fortawesome/free-solid-svg-icons';
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
+import InputTextArea from "components/common/inputs/InputTextArea";
 
 export interface EmailForm { 
   firstName: string;
@@ -137,11 +138,10 @@ const Contact = memo(() => {
                         />
                     </FormGroup>
                     <FormGroup>
-                      <InputTextFieldBorder
+                      <InputTextArea
                         label= "Your message"
-                        aria-label="Your Message..."
+                        placeholder="Message Here..."
                         autoComplete="family-name"
-                        type="textarea"
                         inputRef={register("message")}
                         errorMessage={errors.message?.message}
                       />

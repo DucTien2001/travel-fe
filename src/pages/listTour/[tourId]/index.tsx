@@ -1,79 +1,84 @@
 import React, {memo} from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardLink,
-  CardTitle,
-  Collapse,
-  Container,
-  Row,
-  Col,
-  UncontrolledTooltip,
-} from "reactstrap";
 import SectionHeader from "components/Header/SectionHeader";
 import {images} from "configs/images";
-import Carousel from "components/Carousel";
-import classes from "./styles.module.scss";
-import Button, {BtnType} from "components/common/buttons/Button";
 import SectionTour from "./SectionTour";
-import BodyTour from "./BodyTour";
+import Comment from "./Comment";
+import GoogleMapBody from "./GoogleMapBody";
 import RelatedTour from "./RelatedTour";
+import clsx from "clsx";
+import classes from "./styles.module.scss";
 
-const items = [
+const listCmt = [
   {
-    src: images.phuQuoc.src,
-    altText: "",
-    caption: "",
+    user: { 
+      id: 1,
+      email: "khoiyahoo@gmail.com",
+      passWord: "1234",
+      role: "user",
+      avatar: images.michael.src,
+      firstName: "Khoi",
+      lastName: "Dinh",
+      address: "dasd",
+      phoneNumber: "323424242",
+      introduction: "dsadas",
+      isDelete: false,
+      isVerified: false,
+    },
+    comment: "Chuyen di that tuyet voi",
+    date: new Date(),
   },
   {
-    src: images.phuQuoc.src,
-    altText: "",
-    caption: "",
+    user: { 
+      id: 1,
+      email: "khoiyahoo@gmail.com",
+      passWord: "1234",
+      role: "user",
+      avatar: images.michael.src,
+      firstName: "Khoi",
+      lastName: "Dinh",
+      address: "dasd",
+      phoneNumber: "323424242",
+      introduction: "dsadas",
+      isDelete: false,
+      isVerified: false,
+    },
+    comment: "Chuyen di that tuyet voi",
+    date: new Date(),
   },
   {
-    src: images.phuQuoc.src,
-    altText: "",
-    caption: "",
+    user: { 
+      id: 1,
+      email: "khoiyahoo@gmail.com",
+      passWord: "1234",
+      role: "user",
+      avatar: images.michael.src,
+      firstName: "Khoi",
+      lastName: "Dinh",
+      address: "dasd",
+      phoneNumber: "323424242",
+      introduction: "dsadas",
+      isDelete: false,
+      isVerified: false,
+    },
+    comment: "Chuyen di that tuyet voi",
+    date: new Date(),
   },
-  {
-    src: images.phuQuoc.src,
-    altText: "",
-    caption: "",
-  },
-];
+]
+
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(()=> {
-  const [collapses, setCollapses] = React.useState([1]);
-  const changeCollapse = (collapse: number) => {
-    if (collapses.includes(collapse)) {
-      setCollapses(collapses.filter((prop) => prop !== collapse));
-    } else {
-      setCollapses([...collapses, collapse]);
-    }
-  };
-
-  React.useEffect(() => {
-    document.body.classList.add("product-page");
-    document.body.classList.add("sidebar-collapse");
-    document.documentElement.classList.remove("nav-open");
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
-    return function cleanup() {
-      document.body.classList.remove("product-page");
-      document.body.classList.remove("sidebar-collapse");
-    };
-  }, []);
   return (
     <>
-      <div className="wrapper">
+      <div className={clsx("wrapper", classes.root)}>
         <SectionHeader
         title="VIEW TOUR"
         src={images.bgUser.src}
         />
-        <SectionTour/>
-        <BodyTour/>
+        <SectionTour id={0} src={""} title={""} description={""} businessHours={""} location={""} contact={""} price={0} rate={0} creator={""}/>
+        <div className={classes.containerComment}>
+          <Comment comment={listCmt}/>
+        </div>
+        <GoogleMapBody/>
         <RelatedTour/>
       </div>
     </>

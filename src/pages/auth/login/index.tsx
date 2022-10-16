@@ -29,7 +29,7 @@ const Login: NextPage = () => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-        email: yup.string().email("Please enter a valid email address").required("User name is required"),
+        email: yup.string().email("Please enter a valid email address").required("Email is required"),
         password: yup.string().required("Password is required"),
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,8 +78,8 @@ const Login: NextPage = () => {
                     <CardBody className="px-lg-5">
                       <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
                         <InputTextFieldBorder
-                        label="User name"
-                        placeholder="Enter your username"
+                        label="Email"
+                        placeholder="Enter your email"
                         type="email"
                         inputRef={register("email")}
                         errorMessage={errors.email?.message}

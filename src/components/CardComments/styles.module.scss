@@ -1,0 +1,14 @@
+
+.containerMedia {
+    border: 1px solid #cccc;
+    padding: 16px;
+    @media only screen and (max-width: 768px) {
+        margin-bottom: 16px;
+    }
+}
+
+
+.titleName {
+    display: flex;
+    flex-direction: column;
+}

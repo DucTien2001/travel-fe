@@ -1,0 +1,21 @@
+.root {
+    background-color: var(--gray-40);
+}
+
+.headerGoogleMap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    h1 {
+        font-size: 32px;
+        margin-top: 16px;
+        font-weight: 500;
+    }
+}
+
+.bodyGoogleMap {
+    width: 100%;
+    height: 400px;
+    background-color: #fff;
+}

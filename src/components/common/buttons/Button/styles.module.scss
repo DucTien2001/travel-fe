@@ -38,6 +38,7 @@
       background: var(--eerie-black-5) !important;
       color: var(--eerie-black-40) !important;
       border: 1px solid #cccc; 
+      cursor: not-allowed !important;
       &:hover {
         border: 1px solid #cccc; 
         color: var(--gray-40) !important;
@@ -55,9 +56,18 @@
       border: 1px solid var(--orange-color)!important;
       color: var(--orange-color) !important;
     }
-    &[class~=Mui-disabled] {
-      background: var(--eerie-black-5);
-      color: var(--eerie-black-40); 
+    &[class~=disabled] {
+      background: var(--gray-40) !important;
+      cursor: not-allowed !important;
+      svg {
+        color: var(--eerie-black-40) !important; 
+      }
+      border:  1px solid var(--eerie-black-40) !important; 
+      &:hover {
+        background: var(--gray-40) !important;
+        color: #ffff !important;
+
+      }
     }
   }
   .btnOutlined {
@@ -79,9 +89,12 @@
         color: #ffff !important;
       }
     }
-    &[class~=Mui-disabled] {
-      background: var(--eerie-black-5);
-      color: var(--eerie-black-40); 
+    &[class~=disabled] {
+      background: var(--eerie-black-5) !important;
+      svg {
+        color: var(--eerie-black-40) !important; 
+      }
+      border:  1px solid var(--eerie-black-40) !important; 
     }
     &[class~=active] {
       background-color: var(--violet-color) !important;

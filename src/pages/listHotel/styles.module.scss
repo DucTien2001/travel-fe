@@ -1,0 +1,179 @@
+.imgHeader {
+    min-height: 55vh;
+}
+
+.titleBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    text-align: center;
+    > div {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+    }
+    h1 {
+        font-size: 32px;
+    }
+    .divider {
+        width: 80%;
+        height: 3px;
+        background-color: #cccc;
+    }
+    p {
+        padding: 32px;
+    }
+}
+
+.layoutBtn {
+    width: 100%;
+    margin: 0 !important;
+    margin-right: 16px;
+    font-weight: 700;
+    svg {
+        color: #ffff;
+        font-size: 14px;
+        margin-right: 8px;
+    }
+}
+
+.rowResult {
+    margin-top: 10px;
+    display: flex;
+    justify-content: end;
+    h5 {
+        font-weight: 700;
+        color: var(--violet-color);
+        margin:0;
+        span {
+            margin-left: 8px;
+            color: var(--orange-color);
+        }
+    }
+    @media only screen and (max-width: 768px) {
+        margin-top: 24px;
+      }
+}
+
+.dropDownResult {
+    margin-right: 8px;
+    .viewResult {
+        background-color: #ffff !important;
+        border: 1px solid var(--violet-color);
+        color: var(--violet-color) !important;
+        margin: 0;
+        border-radius: 15px;
+        padding: 5px 15px;
+        span {
+            margin-right: 4px;
+            font-size: 1.3em;
+            font-weight:700;
+        }
+    }
+}
+
+.rowResultBody {
+    margin-top: 20px;
+    @media only screen and (max-width: 768px) {
+        display: inline;
+        margin-left: 0;
+        margin-right: 0;
+      }
+    .btnResetWrapper {
+        @media only screen and (max-width: 768px) {
+            max-width: 100%;
+            margin: 24px 0;
+            button {
+                width: 100%;
+            }
+          }
+    }
+}
+.listTours {
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+      }
+
+}
+.rowGridView {
+    // display: none;
+    @media only screen and (max-width: 768px) {
+        display: block;
+      }
+}
+.resultDesktop {
+    @media only screen and (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+}
+
+.btnLayoutWrapper {
+    padding:0 32px 16px 32px;
+    button:first-child {
+        margin-bottom: 16px !important;
+    }
+}
+
+.colBtnLayout {
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+        padding: 0 32px;
+      }
+}
+
+.btnResetOption {
+    font-weight: 700;
+    text-transform: uppercase;
+    svg {
+        font-size: 16px;
+        margin-right: 4px;
+    }
+}
+.inputSearch {
+    margin-top: 16px;
+    label {
+        margin-bottom: 0 !important;
+        font-size: 14px;
+        svg {
+            margin-left: 0;
+        }
+    }
+    span {
+        padding: 6px !important;    
+    }
+    input {
+        padding: 6px !important;
+        font-size: 14px !important;
+
+    }
+}
+
+.inputSearchDate {
+    span {
+        padding: 6px !important;
+    }
+    input {
+        padding: 6px !important;
+        font-size: 14px !important;
+        border-radius: 0 !important;
+    }
+}
+.numberRooms {
+    margin-bottom: 16px;
+}
+.btnSearch {
+    width: 100%;
+}
+.pigination {
+    display: flex;
+    justify-content: end;
+    margin-top: 32px;
+    @media only screen and (max-width: 768px) {
+        justify-content: center;
+      }
+}

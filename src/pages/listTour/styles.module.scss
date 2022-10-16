@@ -41,12 +41,8 @@
 
 .rowResult {
     margin-top: 10px;
-}
-
-.resultFound {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: end;
     h5 {
         font-weight: 700;
         color: var(--violet-color);
@@ -56,16 +52,9 @@
             color: var(--orange-color);
         }
     }
-}
-.resultContainer {
-    display: flex;
-    align-items: center;
-    h5 {
-        font-weight: 700;
-        color: var(--violet-color);
-        margin:0;
-        margin-right: 8px;
-    }
+    @media only screen and (max-width: 768px) {
+        margin-top: 24px;
+      }
 }
 
 .dropDownResult {
@@ -116,62 +105,24 @@
 }
 .resultDesktop {
     @media only screen and (max-width: 768px) {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
 }
-.resultMobile {
-    @media only screen and (min-width: 1024px) {
-        display: none;
-      }
-      @media only screen and (max-width: 768px) {
-        display: block;
-      }
-}
+
 .btnLayoutWrapper {
     padding:0 32px 16px 32px;
     button:first-child {
         margin-bottom: 16px !important;
     }
 }
-.colResultMobile {
-    @media only screen and (min-width: 600px)  and (max-width: 768px) {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
 
-    .resultFindMobile {
-        display: flex;
-        justify-content: center;
-        margin-right: 20px;
-        h5{
-            font-weight: 700;
-            color: var(--violet-color);
-            margin-bottom: 0;
-            span {
-                color: var(--orange-color);
-            }
-        };
-        @media only screen and (max-width: 500px) {
-            margin-right:0;
-            margin-bottom: 16px;
-        }
-    }
-    .viewResultPageMobile {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        h5 {
-            font-weight: 700;
-            color: var(--violet-color);
-            margin-bottom: 0;
-            margin-right: 8px;
-        }
-    }
-}
 .colBtnLayout {
     @media only screen and (max-width: 768px) {
-        display: none;
+        max-width: 100%;
+        padding: 0 32px;
       }
 }
 
@@ -183,11 +134,23 @@
         margin-right: 4px;
     }
 }
-
-
-
+.inputSearch {
+    span {
+        padding: 6px !important;
+    }
+    input {
+        padding: 6px 0 !important;
+        font-size: 14px !important;
+    }
+}
+.btnSearch {
+    width: 100%;
+}
 .pigination {
     display: flex;
     justify-content: end;
     margin-top: 32px;
+    @media only screen and (max-width: 768px) {
+        justify-content: center;
+      }
 }

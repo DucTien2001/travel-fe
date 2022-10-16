@@ -1,28 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import Link  from "next/link";
 // reactstrap components
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardSubtitle,
-  CardText,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
   Container,
   Row,
   Col,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  UncontrolledDropdown,
-
 } from "reactstrap";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGrip, faList, faXmark, faStar,} from '@fortawesome/free-solid-svg-icons';
+import { faGrip, faList, faXmark, faSearch,} from '@fortawesome/free-solid-svg-icons';
 import { NextPage } from "next";
 import { images } from "configs/images";
 import clsx from "clsx";
@@ -31,12 +17,25 @@ import Social from "components/Social";
 import Pagination from "components/Pagination";
 import Aos from 'aos'
 import 'aos/dist/aos.css';
+import InputCheckbox from 'components/common/inputs/InputCheckbox';
+import InputTextField from 'components/common/inputs/InputTextField';
 import Button, {BtnType} from "components/common/buttons/Button";
-import Search from "components/Search";
 import SectionHeader from "components/Header/SectionHeader";
 import CardItemGrid from "components/CardItemGrid";
 import CardItemList from "components/CardItemList";
-const Profile : NextPage = () => {
+import BoxSmallLeft from "components/BoxSmallLeft";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useTranslation } from "react-i18next";
+import { faSlack } from "@fortawesome/free-brands-svg-icons";
+
+interface SearchData {
+    tourName?:string;
+    checkOptions?:boolean;
+}
+
+const ListTours : NextPage = () => {
     useEffect(()=>{
         Aos.init({duration:500});
     },[]);
@@ -46,81 +45,159 @@ const Profile : NextPage = () => {
             image: images.bgUser.src,
             star: 4,
             title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
         },
         {
             image: images.bgUser.src,
             star: 4,
             title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        
-        },
-        {
-            image: images.bgUser.src,
-            star: 5,
-            title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        
-        },
-        {
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: false,
+        },        {
             image: images.bgUser.src,
             star: 4,
             title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        },
-        {
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: false,
+        },        {
             image: images.bgUser.src,
             star: 4,
             title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        
-        },
-        {
-            image: images.bgUser.src,
-            star: 5,
-            title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        
-        },
-        {
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: false,
+        },        {
             image: images.bgUser.src,
             star: 4,
             title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        },
-        {
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+        },        {
             image: images.bgUser.src,
             star: 4,
             title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        
-        },
-        {
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: false,
+        },        {
             image: images.bgUser.src,
-            star: 5,
+            star: 4,
             title: "Nha trang",
-            subtitle: "6 months access to the library",
-            subtitle2: "6 months access to the library", 
-        
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
         },
+
     ]
 
-    const [viewResult, setViewResult] = useState("1");
+    const { t, i18n } = useTranslation();
 
     const [changeViewLayout, setChangeViewLayout] = useState(false);
 
-    const onChangeViewResult = (e: any) => {
-        setViewResult(e.currentTarget.textContent);
+    const schema = useMemo(() => {
+        return yup.object().shape({
+            tourName: yup.string().notRequired(),
+            checkOptions: yup.boolean().notRequired(),
+          });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [i18n.language] );
+      
+      const {
+          register,
+          handleSubmit,
+          reset,
+          } = useForm<SearchData>({
+            resolver: yupResolver(schema),
+            mode: "onChange",
+      });
+    
+    const clearForm = () => {
+        reset({
+            tourName: "",
+            checkOptions: false,
+        })
     }
 
+    const onClearOption = () => {
+        clearForm();
+    }
     const onChangeViewLayout = () => {
         setChangeViewLayout(!changeViewLayout);
     }
@@ -132,11 +209,11 @@ const Profile : NextPage = () => {
         src={images.imagesListTour.src}  
         className={classes.imgHeader}
         />
-        <Search/>
         <Row className={classes.containerBody}>
             <Container>
                 <Row className={classes.titleBody}>
                     <div>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img alt="anh" src={images.iconSearch.src}></img>                
                     </div>
                     <h1>BROWSE OUR MULTI-COUNTRY TOURS</h1>
@@ -147,7 +224,7 @@ const Profile : NextPage = () => {
                 </Row>
                 {/* ======================= RESULT DESKTOP ===================== */}
                 <Row className={classes.resultDesktop}>
-                    <Col xs={2} className={classes.colBtnLayout}>
+                    <Col xs={2} className={clsx("mb-3",classes.colBtnLayout)}>
                         <Button className = {clsx(!changeViewLayout ? "active" : null, classes.layoutBtn)} btnType = {BtnType.Outlined} onClick={onChangeViewLayout}>
                             <FontAwesomeIcon icon={faGrip}/>
                             GRID VIEW
@@ -159,90 +236,78 @@ const Profile : NextPage = () => {
                             LIST VIEW
                         </Button>
                     </Col>
-                    <Col xs={8}> 
-                        <Row xs={2}  className={classes.rowResult}>
-                            <Col className={classes.resultFound}>
-                                <h5>RESULTS-FOUND: <span>32</span></h5>                              
-                            </Col>
-                            <Col className={classes.resultContainer}>
-                                <h5>VIEW: </h5>
-                                <UncontrolledDropdown className={classes.dropDownResult}>
-                                    <DropdownToggle
-                                    caret
-                                    onClick={(e) => e.preventDefault()}
-                                    className={classes.viewResult}
-                                    >
-                                        <span>{viewResult}</span>
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeViewResult}>
-                                        <h5>9</h5>
-                                    </DropdownItem>
-                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeViewResult}>
-                                        <h5>10</h5>
-                                    </DropdownItem>
-                                    </DropdownMenu>
-                                </UncontrolledDropdown>
-                                <h5>PER PAGE</h5> 
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-                {/* ======================= RESULT MOBILE ===================== */}
-                <Row className={classes.resultMobile}> 
-                <div className={classes.btnLayoutWrapper}>
-                            <Button className = {clsx(changeViewLayout ? "active" : null, classes.layoutBtn)} btnType = {BtnType.Outlined} onClick={onChangeViewLayout}>
-                                <FontAwesomeIcon icon={faGrip}/>
-                                GRID VIEW
-                            </Button>
-                            <Button className = {clsx(!changeViewLayout ? "active" : null, classes.layoutBtn)} btnType = {BtnType.Outlined} onClick={onChangeViewLayout}>
-                                <FontAwesomeIcon icon={faList}/>
-                                LIST VIEW
-                            </Button>
-                        </div>
-                    <Col className={classes.colResultMobile}>
-                        <div className={classes.resultFindMobile}>
-                            <h5>RESULTS-FOUND: <span>32</span></h5> 
-                        </div>
-                        <div className={classes.viewResultPageMobile}>
-                            <h5>VIEW: </h5>
-                                <UncontrolledDropdown className={classes.dropDownResult}>
-                                    <DropdownToggle
-                                    caret
-                                    onClick={(e) => e.preventDefault()}
-                                    className={classes.viewResult}
-                                    >
-                                        <span>{viewResult}</span>
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeViewResult}>
-                                        <h5>9</h5>
-                                    </DropdownItem>
-                                    <DropdownItem className={classes.dropdownItem} onClick={onChangeViewResult}>
-                                        <h5>10</h5>
-                                    </DropdownItem>
-                                    </DropdownMenu>
-                                </UncontrolledDropdown>
-                            <h5>PER PAGE</h5> 
-                        </div>
+                    <Col xs={8} className={classes.rowResult}> 
+                        <h5>RESULTS-FOUND: <span>32</span></h5>                              
                     </Col>
                 </Row>
                 <Row className={classes.rowResultBody}>
                     <Col xs={2} className={classes.btnResetWrapper}>
-                        <Button btnType={BtnType.Outlined} className={classes.btnResetOption}> <FontAwesomeIcon icon={faXmark}/> reset option</Button>
+                        <Button btnType={BtnType.Outlined} 
+                        className={classes.btnResetOption}
+                        onClick={onClearOption}> 
+                            <FontAwesomeIcon icon={faXmark}/> reset option
+                        </Button>
+                        <BoxSmallLeft
+                        title="Search tours"
+                        >
+                        <InputTextField
+                        className={classes.inputSearch}
+                        placeholder="Tour name"
+                        name="Tour name"
+                        startIcon={<FontAwesomeIcon icon={faSearch}/>}
+                        inputRef={register("tourName")}
+                        />
+                        <Button btnType={BtnType.Primary} className={classes.btnSearch}>Search</Button>
+                        </BoxSmallLeft>
+                        <BoxSmallLeft
+                        title="Options"
+                        >
+                            <InputCheckbox
+                            content="Sea"
+                            inputRef={register("checkOptions")}
+                            />
+                            <InputCheckbox
+                            content="Shopping"
+                            inputRef={register("checkOptions")}
+                            />
+                            <InputCheckbox
+                            content="3 stars"
+                            inputRef={register("checkOptions")}
+                            />
+                            <InputCheckbox
+                            content="4 stars"
+                            inputRef={register("checkOptions")}
+                            />
+                            <InputCheckbox
+                            content="5 stars"
+                            inputRef={register("checkOptions")}
+                            />
+                            <InputCheckbox
+                            content="Discount"
+                            inputRef={register("checkOptions")}
+                            />
+                        </BoxSmallLeft>
                     </Col>
                     <Col xs={10} className={classes.listTours}>
                         {/* ==================== Grid view ===================== */}                            
                         {!changeViewLayout && (<Row  className={classes.rowGridView}>
                             {listTour.map((tour, index)=> ( 
                             <CardItemGrid
+                            link="listTour"
                             key={index}
                             id = {index}
                             src = {tour.image}
                             title = {tour.title}
-                            numberStar = {tour.star}
-                            subTitle1 = {tour.subtitle}
-                            subTitle2 = {tour.subtitle2}
+                            description = {tour.description}
+                            businessHours = {tour.businessHours}
+                            location ={tour.location}
+                            contact={tour.contact}
+                            price ={tour.price}
+                            discount = {tour.discount}
+                            tags={tour.tags}
+                            rate={tour.rate}
+                            creator={tour.creator}
+                            isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
                             />
                             ))}
                         </Row>)} 
@@ -250,18 +315,26 @@ const Profile : NextPage = () => {
                         {changeViewLayout && (<div>
                         {listTour.map((tour, index)=> (                         
                             <CardItemList
+                            link="listTour"
                             key={index}
                             id = {index}
                             src = {tour.image}
                             title = {tour.title}
-                            numberStar = {tour.star}
-                            subTitle1 = {tour.subtitle}
-                            subTitle2 = {tour.subtitle2}
+                            description = {tour.description}
+                            businessHours = {tour.businessHours}
+                            location ={tour.location}
+                            contact={tour.contact}
+                            price ={tour.price}
+                            discount = {tour.discount}
+                            tags={tour.tags}
+                            rate={tour.rate}
+                            creator={tour.creator}
+                            isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
                             />
                         ))} 
                         </div>)}
                         <Row className={classes.pigination}>
-                            <Pagination/>
+                            <Pagination pages={0}/>
                         </Row>
                     </Col>
                 </Row>
@@ -272,4 +345,4 @@ const Profile : NextPage = () => {
   );
 }
 
-export default Profile;
+export default ListTours;

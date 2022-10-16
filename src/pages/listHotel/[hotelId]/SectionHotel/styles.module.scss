@@ -1,0 +1,16 @@
+.blockquote {
+    border-color: var(--orange-color) !important;
+    color: var(--orange-color) !important;
+    small {
+        color: var(--orange-color) !important;
+        font-weight: 700;
+    }
+}
+
+.nameTour {
+    color: var(--violet-color) !important;
+}   
+
+.price {
+    color: var(--orange-color) !important;
+}

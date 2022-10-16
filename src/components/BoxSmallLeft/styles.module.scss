@@ -1,0 +1,26 @@
+.root {
+    border: 1px solid #cccc;
+    margin-top: 16px; 
+    border-radius: 4px;
+    padding-bottom: 12px;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+    background-color: var(--violet-color);
+    border-top-left-radius: 4px; 
+    border-top-right-radius: 4px; 
+    span {
+        color: #ffff;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 600;
+    }
+}
+
+.body {
+    padding: 0 12px;
+}

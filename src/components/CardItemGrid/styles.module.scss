@@ -1,11 +1,18 @@
 
-
 .cardItem {
+    p {
+        color: #ffff;
+        margin: 0;
+    }
+    
     @media only screen and (max-width: 768px) {
         max-width: 100%;
     }
 }
-
+.stopCard {
+    cursor: not-allowed !important;
+    padding: 48px 20px 20px 20px !important;
+}
 .cardImage{
     img {
         cursor: pointer;
@@ -31,93 +38,71 @@
     padding-top: 32px;
 }
 
+.cardBody {
+    position: relative;
+    padding: 48px 20px 20px 20px !important;
+}
+.discountWrapper {
+    position: absolute;
+    top: 6px;
+    right: 0;
+    min-width: 40px;
+    height: 36px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 216, 64, 0.9);
+    margin-bottom: 16px;
+    padding:0 16px;
+    border-radius: 2px;
+    .percent {
+        color: #ee4d2d;
+        font-size: 16px;
+        font-weight: 700;
+        margin-right: 8px;
+    }
+    .discount {
+        color: #ffff;
+        font-size: 16px;
+        font-weight: 700;
+    }
+}
 
-.offerContentLike {
-    margin-top:10px;
-}
-.offerContentLike svg{
-    margin: 0 2px 16px;
-}
-.offerContentLike svg:nth-child(1) {
-    color: #ffeb8d;
-}
-.offerContentLike svg:nth-child(2) {
-    color: #fed46b;
-}
-.offerContentLike svg:nth-child(3) {
-    color: #fbb53d;
-}
-.offerContentLike svg:nth-child(4) {
-    color: #fa9e1b;
-}
-.offerContentLike svg:nth-child(5) {
-    color: #f38f04;
+.stopWorking {
+    position: absolute;
+    top: 6px;
+    right: 0;
+    min-width: 40px;
+    height: 36px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding:0 16px;
+    border-radius: 2px;
+    background-color: var(--gray-40) !important;
+    margin-bottom: 16px;
+    z-index: 10;
+    .stop {
+        color: #ffff;
+        font-size: 16px;
+        font-weight: 700;
+        margin-right: 8px;
+    }
 }
 
-//===================List View ================
-// .rowTour {
-//     padding: 24px;
-//     @media only screen and (max-width: 768px) {
-//         display: inline;
-//     }
-// }
-// .rowTour:nth-of-type(odd) {
-//     background-color: rgba(234, 232, 232, 0.8);
-//     @media only screen and (max-width: 768px) {
-//         background-color: #ffff;
-//     }
-// }
-// .btnControlCardList {
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     button:first-child {
-//         margin-bottom: 16px;
-//     }
-//     @media only screen and (max-width: 768px) {
-//         div {
-//             display: flex;
-//             button:first-child {
-//                 margin-bottom: 0;
-//                 margin-right: 8px;
-//             }
-//         }
-//     }
-// }
+.noDiscount {
+    display: none;
+}
 
-// .titleWrapper {
-//     h5 {
-//         color: var(--violet-color);
-//         font-weight: 600;
-//     }
-//     @media only screen and (max-width: 768px) {
-//         margin-top: 24px;
-//     }
-// }
 
-// .imgTour {
-//     display: flex;
-//     align-items: center;
-//     img {
-//         cursor: pointer;
-//         transform: scale(1);
-//         transition: all 0.3s ease-out;
-//         background-position: center;
-//         width: 100%;
-//     }
-//     img:hover {
-//         cursor: pointer;
-//         transform: scale(1.1);
-//         transition: all 0.3s ease-out;
-//         background-position: center;
-//         width: 100%;
-//     }
-//     @media only screen and (max-width: 768px) {
-//         img {
-//             transform: scale(1);
-//         }
-//         img:hover {
-//             transform: scale(1);
-//         }
-//     }
-// }
+.tags {
+    margin-top: 8px;
+}
+
+.btnView {
+    &[class~=disabled] {
+        color: #ffff !important;
+    }
+}

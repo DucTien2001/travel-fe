@@ -57,6 +57,7 @@ const LandingPage: NextPage = () => {
       <ListServices/>
       <Feature/>
       <Row>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img alt="section" src={images.section.src}></img>
       </Row>
       <Section/>

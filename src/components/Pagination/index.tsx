@@ -1,7 +1,6 @@
 /*eslint-disable*/
-import { memo} from "react";
+import { memo, Component} from "react";
 import {
-
   Pagination,
   PaginationItem,
   PaginationLink,
@@ -9,12 +8,21 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import classes from "./styles.module.scss";
-
-const CustomPagination = memo(() => {
-
+import { PaginationProps } from "react-rainbow-components/components/Pagination";
+interface Props extends PaginationProps {
+  postPerPage: number;
+  totalPosts: number;
+  paginate: (number: number) => void;
+}
+const CustomPagination = memo((props: Props) => {
+  const {postPerPage, totalPosts, paginate, className} = props;
+  const pageNumbers=[];
+  for (let i = 1; i <= Math.ceil(totalPosts / postPerPage); i++ ){
+    pageNumbers.push(i);
+  }
   return (
     <>
-        <Pagination>
+        <Pagination className={className}>
             <PaginationItem>
                 <PaginationLink
                     aria-label="Previous"
@@ -25,32 +33,18 @@ const CustomPagination = memo(() => {
                     <FontAwesomeIcon icon={faChevronLeft}/>
                     </span>
                   </PaginationLink>
-                </PaginationItem>
+            </PaginationItem>
+            {pageNumbers.map(number => (
                 <PaginationItem>
-                  <PaginationLink
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    1
+                    <PaginationLink
+                      href="#pablo"
+                      onClick={() => paginate(number)}
+                    >
+                      {number}
                   </PaginationLink>
                 </PaginationItem>
-                <PaginationItem className={classes.active}>
-                  <PaginationLink
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    2
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    3
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
+            ))}
+            <PaginationItem>
                   <PaginationLink
                     aria-label="Next"
                     href="#pablo"

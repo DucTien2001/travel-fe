@@ -95,7 +95,7 @@ const WhiteNavbar = memo(() => {
                     </Link>
                   </DropdownItem>
                   <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/" passHref>
+                    <Link href="/listHotel" passHref>
                       <a>
                         <FontAwesomeIcon icon={faHotel} className={classes.iconNav}/>
                         Hotel
