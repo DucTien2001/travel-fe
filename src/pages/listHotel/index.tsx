@@ -88,8 +88,8 @@ const ListHotels : NextPage = () => {
         },        {
             image: images.bgUser.src,
             star: 4,
-            title: "Nha trang",
-            description: "6 months access to the library",
+            title: "Nha trang3",
+            description: "7 months access to the library",
             businessHours: "7AM - 10PM",
             location: "Khanh Hoa",
             contact: "09324343",
@@ -102,8 +102,8 @@ const ListHotels : NextPage = () => {
         },        {
             image: images.bgUser.src,
             star: 4,
-            title: "Nha trang",
-            description: "6 months access to the library",
+            title: "Nha trang2",
+            description: "8 months access to the library",
             businessHours: "7AM - 10PM",
             location: "Khanh Hoa",
             contact: "09324343",
@@ -115,8 +115,8 @@ const ListHotels : NextPage = () => {
         },        {
             image: images.bgUser.src,
             star: 4,
-            title: "Nha trang",
-            description: "6 months access to the library",
+            title: "Nha trang1",
+            description: "9 months access to the library",
             businessHours: "7AM - 10PM",
             location: "Khanh Hoa",
             contact: "09324343",
@@ -129,6 +129,49 @@ const ListHotels : NextPage = () => {
         },        {
             image: images.bgUser.src,
             star: 4,
+            title: "Nha trang12",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang43",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang434",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
             title: "Nha trang",
             description: "6 months access to the library",
             businessHours: "7AM - 10PM",
@@ -139,6 +182,189 @@ const ListHotels : NextPage = () => {
             tags: "Sea",
             rate: 4,
             creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
             star: 4,
@@ -168,7 +394,6 @@ const ListHotels : NextPage = () => {
             creator: "VietNam",
             isTemporarilyStopWorking: true,
         },
-
     ]
 
     const { t, i18n } = useTranslation();
@@ -176,7 +401,7 @@ const ListHotels : NextPage = () => {
     const [changeViewLayout, setChangeViewLayout] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage, setPostsPerPage] = useState(3);
+    const [postsPerPage] = useState(9);
 
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -290,6 +515,7 @@ const ListHotels : NextPage = () => {
                         name="Departure date"
                         timeFormat={false}
                         inputRef={register("departure")}
+                        errorMessage={errors.departure?.message}
                         />
                         <InputDatePicker
                         className={classes.inputSearchDate}
@@ -355,7 +581,8 @@ const ListHotels : NextPage = () => {
                         {!changeViewLayout && (<Row  className={classes.rowGridView}>
                             {currentPosts.map((tour, index)=> ( 
                             <CardItemGrid
-                            link="listHotel"
+                            linkView="listHotel"
+                            linkBook="book"
                             key={index}
                             id = {index}
                             src = {tour.image}
@@ -378,7 +605,8 @@ const ListHotels : NextPage = () => {
                         {listTour.map((tour, index)=> (                         
                             <CardItemList
                             key={index}
-                            link="listHotel"
+                            linkView="listHotel"
+                            linkBook="book"
                             id = {index}
                             src = {tour.image}
                             title = {tour.title}
@@ -400,7 +628,7 @@ const ListHotels : NextPage = () => {
                             postPerPage={postsPerPage}
                             totalPosts={listTour.length}
                             paginate={paginate}
-                            pages={0}/>
+                            />
                         </Row>
                     </Col>
                 </Row>

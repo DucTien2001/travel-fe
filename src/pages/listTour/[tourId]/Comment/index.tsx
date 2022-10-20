@@ -17,7 +17,7 @@ import {Comment} from "models/tour";
 import clsx from "clsx";
 import Pagination from "components/Pagination";
 import CardComment from "components/CardComments";
-import PopupAddComment from "../components/PopupAddComment";
+import PopupAddComment from "components/Popup/PopupAddComment";
 
 interface Props { 
     comment: Comment[],

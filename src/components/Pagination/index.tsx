@@ -5,11 +5,13 @@ import {
   PaginationItem,
   PaginationLink,
 } from "reactstrap";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import classes from "./styles.module.scss";
 import { PaginationProps } from "react-rainbow-components/components/Pagination";
-interface Props extends PaginationProps {
+interface Props {
+  className?:string;
   postPerPage: number;
   totalPosts: number;
   paginate: (number: number) => void;
@@ -35,7 +37,7 @@ const CustomPagination = memo((props: Props) => {
                   </PaginationLink>
             </PaginationItem>
             {pageNumbers.map(number => (
-                <PaginationItem>
+                <PaginationItem key={number}>
                     <PaginationLink
                       href="#pablo"
                       onClick={() => paginate(number)}
@@ -47,7 +49,7 @@ const CustomPagination = memo((props: Props) => {
             <PaginationItem>
                   <PaginationLink
                     aria-label="Next"
-                    href="#pablo"
+                    href="#"
                     onClick={(e) => e.preventDefault()}
                   >
                     <span aria-hidden={true}>

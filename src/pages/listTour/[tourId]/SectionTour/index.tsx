@@ -12,6 +12,7 @@ import {images} from "configs/images";
 import Carousel from "components/Carousel";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
+import Link from "next/link";
 interface Props { 
   id: number;
   src: string;
@@ -203,9 +204,11 @@ const SectionTour = memo(({id, src, title, description, businessHours,
                   </Card>
                 </div>
                 <Row className="justify-content-end">
+                  <Link href={`/book/[${id}]`}>
                   <Button className="mr-3" btnType={BtnType.Primary} isDot={true}>
                     Book now 
                   </Button>
+                  </Link>
                 </Row>
               </Col>
             </Row>

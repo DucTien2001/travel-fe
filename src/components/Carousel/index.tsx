@@ -5,6 +5,7 @@ import {
   Carousel,
   CarouselItem,
   CarouselIndicators,
+  CarouselProps,
 } from "reactstrap";
 
 import classes from "./styles.module.scss";
@@ -13,11 +14,12 @@ import Button, {BtnType} from "components/common/buttons/Button";
 import {Image} from "models/tour";
 
 interface Props { 
+    className?: string;
     images: Image[];
 }
 
 // eslint-disable-next-line react/display-name
-const CustomCarousel = memo(({images} : Props) => {
+const CustomCarousel = memo(({className, images} : Props) => {
     const [activeIndex, setActiveIndex] = React.useState(0);
     const [animating, setAnimating] = React.useState(false);
     const onExiting = () => {
@@ -55,6 +57,7 @@ const CustomCarousel = memo(({images} : Props) => {
   return (
     <React.Fragment>
         <Carousel
+            className={className}
             activeIndex={activeIndex}
             next={next}
             previous={previous}

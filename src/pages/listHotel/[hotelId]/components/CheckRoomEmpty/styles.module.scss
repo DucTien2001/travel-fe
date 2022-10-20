@@ -1,0 +1,88 @@
+
+.root {
+    margin-bottom: 50px;
+}
+.titleCheckEmpty {
+    margin-bottom: 0;
+    font-weight: 700;
+    padding:0 ;
+}
+
+.inputDateContainer {
+    padding: 16px;
+    .inputSearchDate {
+        margin-right: 16px;
+    }
+    @media only screen and (max-width: 768px) {
+        flex-direction: column; 
+        .inputSearchDate {
+            margin-right: 0;
+        }
+     }
+}
+
+.btnContainer {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ margin-top: 10px;
+ svg {
+    font-size: 14px;
+    margin-right: 8px;
+ }
+ @media only screen and (max-width: 768px) {
+    button {
+        width: 100%;
+    }
+ }
+}
+.table {
+    th {
+        
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        border-right: 1px solid #dee2e6 !important;
+    }
+    thead{
+        background-color: var(--violet-color);
+        color: #ffff;
+    }
+}
+
+.roomNumberTitle {
+    width: 17% !important;
+    padding: 16px !important;
+}
+
+.colImg {
+    width: 300px;
+    .imgCarousel {
+        margin: 0;
+        img {
+            width: 100%;
+            max-height: 130px;
+        }
+    }
+}
+.title {
+    padding: 16px !important;   
+}
+.col {
+    vertical-align: top !important;
+    padding: 16px !important;   
+}
+.colConfirm {
+    width: 17% !important;
+    button {
+        width: 100%;
+    }
+    .note {
+        margin-top: 16px;
+    }
+}
+.colAmount {
+    width: 150px;
+    label {
+            display: none !important;
+    } 
+}

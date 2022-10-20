@@ -17,7 +17,7 @@ import {Comment} from "models/tour";
 import clsx from "clsx";
 import Pagination from "components/Pagination";
 import CardComment from "components/CardComments";
-import PopupAddComment from "../components/PopupAddComment";
+import PopupAddComment from "components/Popup/PopupAddComment";
 
 interface Props { 
     comment: Comment[],
@@ -45,7 +45,7 @@ const Comments = memo(({comment}: Props) => {
                     <FontAwesomeIcon icon={faPlus} className="mr-1"/>
                     Add comments
                 </Button>
-                <Pagination className={classes.pagination} pages={0}/>
+                <Pagination className={classes.pagination}/>
             </div>
         </Row>
         <PopupAddComment

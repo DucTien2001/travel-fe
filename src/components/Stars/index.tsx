@@ -12,10 +12,10 @@ interface Props {
 }
 
 // eslint-disable-next-line react/display-name
-const CustomTextarea = memo(({ className, numberOfStars}: Props) => {
+const Stars = memo(({ className, numberOfStars}: Props) => {
 
     return (
-        <div className={classes.root}>
+        <div className={clsx(classes.root, className)}>
             {[...Array(numberOfStars)].map((star, index) => {
                 return (
                     <FontAwesomeIcon icon={faStar} key={index}></FontAwesomeIcon>
@@ -26,4 +26,4 @@ const CustomTextarea = memo(({ className, numberOfStars}: Props) => {
   }
 );
 
-export default CustomTextarea;
+export default Stars;

@@ -4,13 +4,22 @@ import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import InputTextArea from "components/common/inputs/InputTextArea";
+import InputSelect from "components/common/inputs/InputSelect";
+import InputCounter from "components/common/inputs/InputCounter";
+import Star from "components/Stars";
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
+import {HistoryBookRoom} from "models/room";
+import { Stars } from '@mui/icons-material';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export interface CommentForm { 
   comment: string;
+  selectInvoice: HistoryBookRoom[];
+  numberOfStars: number;
 }
 
 interface Props extends ModalProps{ 
@@ -28,6 +37,7 @@ const PopupAddComment = memo((props: Props) => {
     const schema = useMemo(() => {
       return yup.object().shape({
           comment: yup.string().required("Content is required"),
+          numberOfStars: yup.number().required(),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [i18n.language] );
@@ -37,9 +47,13 @@ const PopupAddComment = memo((props: Props) => {
       handleSubmit,
       formState: { errors },
       reset,
+      control,
       } = useForm<CommentForm>({
         resolver: yupResolver(schema),
         mode: "onChange",
+        defaultValues: { 
+          numberOfStars: 3,
+        }
     });
   
     const clearForm = () => {
@@ -58,7 +72,32 @@ const PopupAddComment = memo((props: Props) => {
           <Form  method="post" role="form" onSubmit={handleSubmit(_onSubmit)}>
                 <ModalHeader toggle={toggle} className={classes.title}>What do you want to ask us?</ModalHeader>
                 <ModalBody>
+                  <label>Choose your invoices: </label>
+                  <InputSelect
+                  className={classes.inputSelect}
+                  placeholder="Invoices"
+                  name="Invoices"
+                  />
+                  <Controller
+                  name="numberOfStars" 
+                  control={control}
+                  render={({field}) => 
+                    <div className={classes.starContainer}>
+                      <div  className={classes.inputCounter}>
+                        <InputCounter
+                        label="Star rating:"
+                        max={5}
+                        min={1}
+                        onChange={field.onChange}
+                        value = {field.value}
+                        />
+                      </div>
+                      <Star className={classes.starWrapper}numberOfStars={field.value}/>    
+                    </div>
+                  }
+                  />
                   <InputTextArea
+                  className={classes.labelText}
                   label ="Enter your question here:"
                   placeholder="Ex: How many rooms do you have?"
                   autoComplete="family-name"

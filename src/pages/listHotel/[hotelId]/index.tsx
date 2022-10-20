@@ -1,12 +1,14 @@
 import React, {memo} from "react";
 import SectionHeader from "components/Header/SectionHeader";
 import {images} from "configs/images";
-import SectionHotel from "./SectionHotel";
+import SectionHotel from "./components/SectionHotel";
+import CheckRoomEmpty from "./components/CheckRoomEmpty";
 import Comment from "./Comment";
-import GoogleMapBody from "./GoogleMapBody";
-import RelatedHotel from "./RelatedHotel";
+import GoogleMapBody from "./components/GoogleMapBody";
+import RelatedHotel from "./components/RelatedHotel";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
+import {Divider} from "components/common/Divider";
 
 const listCmt = [
   {
@@ -74,8 +76,9 @@ const ProductPage = memo(()=> {
         title="VIEW HOTEL"
         src={images.bgUser.src}
         />
-        <SectionHotel id={0} src={""} title={""} description={""} businessHours={""} location={""} contact={""} price={0} rate={0} creator={""}/>
-        <div className={classes.containerComment}>
+        <SectionHotel id={0} src={""} title={""} description={""} businessHours={""} location={""} contact={""} price={0} rate={0} creator={""}/> 
+        <div className={classes.container}>
+          <CheckRoomEmpty/>
           <Comment comment={listCmt}/>
         </div>
         <GoogleMapBody/>

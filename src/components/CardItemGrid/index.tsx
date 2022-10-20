@@ -14,7 +14,8 @@ import Button, {BtnType} from "components/common/buttons/Button";
 import Stars from "components/Stars";
 
 interface Props { 
-    link: string;
+    linkView: string;
+    linkBook: string;
     id: number;
     src: string;
     title: string;
@@ -33,7 +34,7 @@ interface Props {
 }
 
 // eslint-disable-next-line react/display-name
-const ListServices = memo(({link, id, src, title, description, businessHours, 
+const ListServices = memo(({linkView, linkBook, id, src, title, description, businessHours, 
     location, contact, price, discount, 
     tags, rate, creator, 
     isTemporarilyStopWorking, roomNumber, bookDates} : Props) => {
@@ -41,7 +42,7 @@ const ListServices = memo(({link, id, src, title, description, businessHours,
   return (
     <>
         <Col xs={4} className={classes.cardItem} key={id}>
-            <Link href={`/${link}/[${id}]`}>
+            <Link href={`/${linkView}/[${id}]`}>
                 <Card className={clsx("card-pricing card-background", classes.cardImage)}
                 style={{backgroundImage: `url(${src})`,}}
                 >
@@ -66,7 +67,7 @@ const ListServices = memo(({link, id, src, title, description, businessHours,
                                 <p>{contact} - {creator}</p>
                             </div>
                             <div className={classes.btnControlCard}>
-                                <Link href="/[id]book">
+                                <Link href={`/${linkView}/[${id}]`}>
                                 <Button
                                 className={clsx("btn-round", classes.btnView)}
                                 btnType={BtnType.Primary}
@@ -75,7 +76,7 @@ const ListServices = memo(({link, id, src, title, description, businessHours,
                                    View more
                                 </Button>
                                 </Link>
-                                <Link href="/[id]book">
+                                <Link href={`/${linkBook}/[${id}]`}>
                                     <Button
                                     className="btn-round"
                                     btnType={BtnType.Secondary}

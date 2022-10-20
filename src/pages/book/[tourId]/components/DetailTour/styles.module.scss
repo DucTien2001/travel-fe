@@ -1,0 +1,47 @@
+.root {
+    p{
+        margin: 0;
+        font-size: 14px;
+    }
+    span {
+        font-size: 14px;
+    }
+}
+
+.boxDetailTour {
+    margin-top: 16px;
+    p {
+        font-weight: 700;
+    }
+    .note {
+        font-weight: 500;
+        margin-top: 8px;
+    }
+    span {
+        color: var(--orange-color);
+        font-weight: 700;
+    }
+}
+
+.boxCostSummary {
+    p {
+        font-weight: 700;
+        >span {
+            color: var(--orange-color);
+            font-weight: 700;
+        }
+    }
+    span {
+        font-weight: 500;
+    }
+    .price {
+        font-size: 20px;
+        >span {
+            font-size: 20px;
+        }
+    }
+}
+
+.boxPrice {
+    margin-bottom: 8px;
+}

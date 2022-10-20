@@ -10,9 +10,11 @@ import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import Stars from "components/Stars";
-
+import clsx from "clsx";
 interface Props { 
-    link: string;
+    className?: string;
+    linkView: string;
+    linkBook: string;
     id: number;
     src: string;
     title: string;
@@ -31,16 +33,16 @@ interface Props {
 }
 
 // eslint-disable-next-line react/display-name
-const ListServices = memo(({link, id, src, title, description, businessHours, 
+const ListServices = memo(({className, linkView, linkBook, id, src, title, description, businessHours, 
     location, contact, price, discount, 
     tags, rate, creator, 
     isTemporarilyStopWorking, roomNumber, bookDates} : Props) => {
     
   return (
     <>
-        <Row xs={3} key={id} className={classes.rowTour}>
+        <Row xs={3} key={id} className={clsx(classes.rowTour, className)}>
             <Col className={isTemporarilyStopWorking ? classes.imgStopWorking : classes.imgTour}>
-                <Link href={`/${link}/[${id}]`} >
+                <Link href={`/${linkView}/[${id}]`} >
                      {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img alt="anh" src={src}></img>
                 </Link>
@@ -64,14 +66,16 @@ const ListServices = memo(({link, id, src, title, description, businessHours,
             </div>
             </Col>
             <Col className={classes.btnControlCardList}>
-                    <Button
-                        className="btn-round"
-                        btnType={BtnType.Primary}
-                        disabled={isTemporarilyStopWorking}
-                        >
-                        View more
-                    </Button>
-                    <Link href="/[id]book">
+                    <Link href={`/${linkView}/[${id}]`}>
+                        <Button
+                            className="btn-round"
+                            btnType={BtnType.Primary}
+                            disabled={isTemporarilyStopWorking}
+                            >
+                            View more
+                        </Button>
+                    </Link>
+                    <Link href={`/${linkBook}/[${id}]`}>
                         <Button
                             className="btn-round"
                             btnType={BtnType.Secondary}

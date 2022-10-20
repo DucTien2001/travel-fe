@@ -29,7 +29,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { faSlack } from "@fortawesome/free-brands-svg-icons";
-
+import PaginationComponent from "react-reactstrap-pagination";
 interface SearchData {
     tourName?:string;
     checkOptions?:boolean;
@@ -149,7 +149,173 @@ const ListTours : NextPage = () => {
             rate: 4,
             creator: "VietNam",
             isTemporarilyStopWorking: true,
-        },        {
+        },       
+         {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
+            image: images.bgUser.src,
+            star: 4,
+            title: "Nha trang",
+            description: "6 months access to the library",
+            businessHours: "7AM - 10PM",
+            location: "Khanh Hoa",
+            contact: "09324343",
+            price: 70,
+            discount: 2,
+            tags: "Sea",
+            rate: 4,
+            creator: "VietNam",
+            isTemporarilyStopWorking: true,
+        },
+        {
             image: images.bgUser.src,
             star: 4,
             title: "Nha trang",
@@ -201,6 +367,13 @@ const ListTours : NextPage = () => {
     const onChangeViewLayout = () => {
         setChangeViewLayout(!changeViewLayout);
     }
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(9);
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = listTour.slice(indexOfFirstPost, indexOfLastPost); 
+
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <>
@@ -293,7 +466,8 @@ const ListTours : NextPage = () => {
                         {!changeViewLayout && (<Row  className={classes.rowGridView}>
                             {listTour.map((tour, index)=> ( 
                             <CardItemGrid
-                            link="listTour"
+                            linkView="listTour"
+                            linkBook="book"
                             key={index}
                             id = {index}
                             src = {tour.image}
@@ -315,7 +489,8 @@ const ListTours : NextPage = () => {
                         {changeViewLayout && (<div>
                         {listTour.map((tour, index)=> (                         
                             <CardItemList
-                            link="listTour"
+                            linkView="listTour"
+                            linkBook="book"
                             key={index}
                             id = {index}
                             src = {tour.image}
@@ -334,7 +509,11 @@ const ListTours : NextPage = () => {
                         ))} 
                         </div>)}
                         <Row className={classes.pigination}>
-                            <Pagination pages={0}/>
+                        <Pagination 
+                            postPerPage={postsPerPage}
+                            totalPosts={listTour.length}
+                            paginate={paginate}
+                            />
                         </Row>
                     </Col>
                 </Row>
