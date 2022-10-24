@@ -14,6 +14,7 @@ import Button, {BtnType} from "components/common/buttons/Button";
 import Stars from "components/Stars";
 
 interface Props { 
+    className?: string;
     linkView: string;
     linkBook: string;
     id: number;
@@ -34,14 +35,14 @@ interface Props {
 }
 
 // eslint-disable-next-line react/display-name
-const ListServices = memo(({linkView, linkBook, id, src, title, description, businessHours, 
+const ListServices = memo(({className, linkView, linkBook, id, src, title, description, businessHours, 
     location, contact, price, discount, 
     tags, rate, creator, 
     isTemporarilyStopWorking, roomNumber, bookDates} : Props) => {
     
   return (
     <>
-        <Col xs={4} className={classes.cardItem} key={id}>
+        <Col xs={4} className={clsx(classes.cardItem, className)} key={id}>
             <Link href={`/${linkView}/[${id}]`}>
                 <Card className={clsx("card-pricing card-background", classes.cardImage)}
                 style={{backgroundImage: `url(${src})`,}}
