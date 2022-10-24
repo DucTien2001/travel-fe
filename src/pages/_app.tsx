@@ -7,6 +7,7 @@ import "assets/demo/nucleo-icons-page-styles.css?v=1.4.0";
 import './index.scss';
 import "@fortawesome/fontawesome-svg-core/styles.css"; // import Font Awesome CSS
 import LayoutAuth from "components/Layout/DefaultLayout";
+import LayoutEnterprise from "components/Layout/EnterpriseLayout";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import {publicRoutes} from "routes";
 config.autoAddCss = false; 
@@ -17,6 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <LayoutAuth>
       <Component {...pageProps} />
     </LayoutAuth>
+    
   )
 }
 

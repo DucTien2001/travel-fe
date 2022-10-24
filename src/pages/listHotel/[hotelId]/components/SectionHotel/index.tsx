@@ -94,7 +94,7 @@ const SectionTour = memo(({id, src, title, description, businessHours,
                {/* eslint-disable-next-line react/no-unescaped-entities */}
                   vacation." <br></br>
                   <br></br>
-                  <small>Kanye West</small>
+                  <small>{title}</small>
                 </p>
               </Col>
               <Col className="ml-auto mr-auto" md="6">

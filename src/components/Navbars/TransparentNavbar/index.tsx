@@ -16,7 +16,7 @@ import { faUser, faBook, faLocationDot, faPlane, faHotel,
   faAddressCard,
   faCalendarCheck, 
   faLandmarkDome,
-  faEarthAsia, faE, faV } from '@fortawesome/free-solid-svg-icons';
+  faEarthAsia, faE, faV, faSquarePlus, faBagShopping, faKey } from '@fortawesome/free-solid-svg-icons';
 import clsx from "clsx";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -26,7 +26,7 @@ import SignOutButton from "components/common/buttons/SignOutButton";
 const WhiteNavbar = memo(() => {
   const [collapseOpen, setCollapseOpen] = useState(false);
   const [navbarColor, setNavbarColor] = useState(" navbar-transparent");
-
+  const isEnterprise = true;
   const handleCollapseNavbar = () => {
     if (window.innerWidth <= 991) {
       document.documentElement.classList.toggle("nav-open");
@@ -52,7 +52,7 @@ const WhiteNavbar = memo(() => {
   }, []);
   return (
     <>
-      <Navbar className={clsx("fixed-top", navbarColor, classes.navbarWrapper)} expand="lg">
+      <Navbar className={isEnterprise ? clsx("fixed-top",classes.navbarWrapperViolet) : clsx("fixed-top", navbarColor, classes.navbarWrapper)} expand="lg">
         <Container className={classes.container}>
           <div className={clsx("navbar-translate", classes.navLogoName)}>
             <Link href="/" passHref>
@@ -72,6 +72,7 @@ const WhiteNavbar = memo(() => {
           </div>
           <Collapse isOpen={collapseOpen} navbar className={classes.collapseMobile}>
             <Nav className={clsx("ml-auto", classes.navWrapperMenu)} id="ceva" navbar>
+              {!isEnterprise && ( <>
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
@@ -138,7 +139,7 @@ const WhiteNavbar = memo(() => {
                     </Link>
                   </DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
+              </UncontrolledDropdown></>)}
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret

@@ -45,7 +45,9 @@ const Comments = memo(({comment}: Props) => {
                     <FontAwesomeIcon icon={faPlus} className="mr-1"/>
                     Add comments
                 </Button>
-                <Pagination className={classes.pagination} pages={0}/>
+                <Pagination className={classes.pagination} postPerPage={0} totalPosts={0} paginate={function (number: number): void {
+                          throw new Error("Function not implemented.");
+                      } }/>
             </div>
         </Row>
         <PopupAddComment

@@ -4,7 +4,9 @@ import {images} from "configs/images";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import Box from "components/BoxSmallLeft";
-
+import Link from "next/link";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck, faBellConcierge, faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 // eslint-disable-next-line react/display-name
 const DetailTour = memo(()=> {
   return (
@@ -17,6 +19,9 @@ const DetailTour = memo(()=> {
                   <div className={classes.boxDetailTour}>
                     <p>Date book: <span>22-2-2022</span></p>
                     <p className={classes.note}>Ticket expiration time <span>30 days</span> is from the date of purchase</p>
+                    <Link href="">
+                      <p className={classes.changeChoice}>Change your choice</p>
+                    </Link>
                   </div>
                 </Box>
                 <Box title="Cost summary">
@@ -27,6 +32,22 @@ const DetailTour = memo(()=> {
                       <p>(for all guests)</p>
                     </div>
                     <span>Taxes and fees are included</span>
+                  </div>
+                </Box>
+                <Box title="Note for you">
+                  <div className={classes.boxTip}>
+                      <div className={classes.tip}>
+                        <FontAwesomeIcon icon={faCircleCheck}/>
+                        <p>You can go experience it anytime while the ticket price is still available</p>
+                      </div>
+                      <div className={classes.tip}>
+                        <FontAwesomeIcon icon={faBellConcierge}/>
+                        <p>24-hour front desk - Help is always there when you need it!</p>
+                      </div>
+                      <div className={classes.tip}>
+                        <FontAwesomeIcon icon={faCircleInfo}/>
+                        <p>Please check the information to be filled in before pressing the confirm button</p>
+                      </div>
                   </div>
                 </Box>
             </div>

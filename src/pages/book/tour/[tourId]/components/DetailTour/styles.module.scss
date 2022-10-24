@@ -21,9 +21,18 @@
         color: var(--orange-color);
         font-weight: 700;
     }
+    .changeChoice {
+        margin-top: 16px;
+        color: var(--violet-color);
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
 }
 
 .boxCostSummary {
+    margin-top: 16px;
     p {
         font-weight: 700;
         >span {
@@ -44,4 +53,24 @@
 
 .boxPrice {
     margin-bottom: 8px;
+}
+.boxTip {
+    margin-top: 16px;
+    .tip {
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        svg {
+            margin-top: 4px;
+            margin-right: 4px;
+            color: var(--green-color);
+        }
+        p {
+            font-weight: 500;
+        }
+        @media only screen and (max-width: 768px) {
+            justify-content: flex-start;
+          }
+    }
 }

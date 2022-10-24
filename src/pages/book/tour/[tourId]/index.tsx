@@ -12,20 +12,21 @@ import {
 } from "reactstrap";
 
 // eslint-disable-next-line react/display-name
-const ProductPage = memo(()=> {
+const BookTour = memo(()=> {
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>
         <SectionHeader
+        className={classes.sectionHeader}
         title="BOOK TOUR"
         src={images.pricing1.src}
         />
         <Container>
             <Row className={classes.root}>
-                <Col xs={4}>
+                <Col xs={4} className={classes.boxLeft}>
                   <DetailTour/>
                 </Col>
-                <Col xs={8}>
+                <Col xs={8} className={classes.boxRight}>
                   <DetailCustomer/>
                 </Col>
             </Row>
@@ -35,4 +36,4 @@ const ProductPage = memo(()=> {
   );
 })
 
-export default ProductPage;
+export default BookTour;

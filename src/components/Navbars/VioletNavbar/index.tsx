@@ -16,7 +16,7 @@ import { faUser, faBook, faLocationDot, faPlane, faHotel,
   faAddressCard,
   faCalendarCheck, 
   faLandmarkDome,
-  faEarthAsia, faE, faV } from '@fortawesome/free-solid-svg-icons';
+  faEarthAsia, faE, faV, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from "clsx";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -34,22 +34,6 @@ const WhiteNavbar = memo(() => {
     }
   };
 
-  // useEffect(() => {
-  //   const updateNavbarColor = () => {
-  //     if (
-  //       document.documentElement.scrollTop > 10 ||
-  //       document.body.scrollTop > 10
-  //     ) {
-  //       setNavbarColor("");
-  //     } else {
-  //       setNavbarColor(" navbar-transparent");
-  //     }
-  //   };
-  //   window.addEventListener("scroll", updateNavbarColor);
-  //   return () => {
-  //     window.removeEventListener("scroll", updateNavbarColor);
-  //   };
-  // }, []);
   return (
     <>
       <Navbar className={clsx("fixed-top", classes.navbarWrapper)} expand="lg">
@@ -72,6 +56,38 @@ const WhiteNavbar = memo(() => {
           </div>
           <Collapse isOpen={collapseOpen} navbar className={classes.collapseMobile}>
             <Nav className={clsx("ml-auto", classes.navWrapperMenu)} id="ceva" navbar>
+              <UncontrolledDropdown nav>
+                <DropdownToggle
+                  caret
+                  color="default"
+                  data-toggle="dropdown"
+                  href="#pablo"
+                  id="navbarDropdownMenuLink1"
+                  nav
+                  onClick={(e) => e.preventDefault()}
+                >
+                 <FontAwesomeIcon icon={faSquarePlus} className={classes.iconNav}/>
+                  <p>Actions</p>
+                </DropdownToggle>
+                <DropdownMenu aria-labelledby="navbarDropdownMenuLink1">
+                  <DropdownItem className={classes.dropdownItem}>
+                    <Link href="/" passHref>
+                      <a>
+                        <FontAwesomeIcon icon={faPlane} className={classes.iconNav}/>
+                        Add tour
+                      </a>
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem className={classes.dropdownItem}>
+                    <Link href="/" passHref>
+                      <a>
+                        <FontAwesomeIcon icon={faHotel} className={classes.iconNav}/>
+                        Add hotel
+                      </a>
+                    </Link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret

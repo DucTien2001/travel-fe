@@ -22,6 +22,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
+import Link from "next/link";
 
 export interface CheckRoomForm { 
     departure: Date;
@@ -30,7 +31,7 @@ export interface CheckRoomForm {
 }
   
 interface Props { 
-
+ 
 }
 
 // eslint-disable-next-line react/display-name
@@ -147,7 +148,12 @@ const CheckRoomEmpty = memo((Props)=> {
                   />
                     </td>
                     <td className={clsx(classes.colConfirm, classes.col)}>
-                        <Button btnType={BtnType.Secondary}>I will book</Button>
+                        <Button btnType={BtnType.Secondary}>
+                            <Link href="/book/hotel/[roomId]"
+                             >
+                            <a>I will book</a>
+                            </Link>
+                        </Button>
                     </td>
                     </tr>
                 </tbody>

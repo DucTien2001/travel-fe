@@ -56,7 +56,7 @@ const InputTextField = memo(({className, label, optional, showEyes, startIcon, e
           className
         )}
       >
-        <label>{label} {optional && <span className={classes.optional}>(optional)</span>}</label>
+        <label className={classes.label}>{label} {optional && <span className={classes.optional}>(optional)</span>}</label>
         {!!startIcon || !!showEyes ? (
           <InputGroup className={faFocus ? "input-group-focus" : ""}>
             {startIcon && (

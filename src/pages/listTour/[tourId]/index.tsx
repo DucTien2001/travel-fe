@@ -1,10 +1,10 @@
 import React, {memo} from "react";
 import SectionHeader from "components/Header/SectionHeader";
 import {images} from "configs/images";
-import SectionTour from "./SectionTour";
-import Comment from "./Comment";
-import GoogleMapBody from "./GoogleMapBody";
-import RelatedTour from "./RelatedTour";
+import SectionTour from "./components/SectionTour";
+import Comment from "./components/Comment";
+import GoogleMapBody from "./components/GoogleMapBody";
+import RelatedTour from "./components/RelatedTour";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 

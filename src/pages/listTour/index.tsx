@@ -467,7 +467,7 @@ const ListTours : NextPage = () => {
                             {listTour.map((tour, index)=> ( 
                             <CardItemGrid
                             linkView="listTour"
-                            linkBook="book"
+                            linkBook="book/tour"
                             key={index}
                             id = {index}
                             src = {tour.image}
@@ -490,7 +490,7 @@ const ListTours : NextPage = () => {
                         {listTour.map((tour, index)=> (                         
                             <CardItemList
                             linkView="listTour"
-                            linkBook="book"
+                            linkBook="book/tour"
                             key={index}
                             id = {index}
                             src = {tour.image}
