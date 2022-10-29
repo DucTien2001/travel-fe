@@ -35,7 +35,7 @@ const Comments = memo(({comment}: Props) => {
         {/* eslint-disable-next-line react/no-unescaped-entities */}
         <h3 className="text-center">CUSTOMER'S FEEDBACKS</h3>
         <Row xs={3} className={classes.rowComment}>
-            {comment.map((cmt, index) => (
+            {comment?.map((cmt, index) => (
                 <CardComment key={index} user={cmt.user} comment={"Hello world"} date={cmt.date}/>
             ))}      
         </Row>

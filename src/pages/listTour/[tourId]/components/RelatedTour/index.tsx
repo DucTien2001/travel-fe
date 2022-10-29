@@ -161,7 +161,8 @@ const ProductPage = memo(()=> {
             <Row>
             {listTour.map((tour, index)=> ( 
                 <CardItemGrid
-                link="listTour"
+                linkView="listTour"
+                linkBook="book/tour"
                 key={index}
                 id = {index}
                 src = {tour.image}
