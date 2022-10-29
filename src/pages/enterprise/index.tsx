@@ -14,25 +14,42 @@ import classes from "./styles.module.scss";
 import Button, {BtnType}from "components/common/buttons/Button";
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHotel, faBagShopping } from '@fortawesome/free-solid-svg-icons';
+import { faBuilding, faPlaneDeparture } from '@fortawesome/free-solid-svg-icons';
 import {images} from "configs/images";
-import Tour from "./Tours";
+import Tours from "./Tours";
+import Hotels from "./Hotels";
+import Sidebar from "components/Sidebar";
+import {enterpriseRoutes} from "routes/routers";
+
+export enum EActiveNav { 
+  Tour_Active= 1,
+  Hotel_Active = 2
+}
 
 const Enterprise: NextPage = () => {
-    const [iconTabs, setIconTabs] = React.useState("1");
-    const [tabs, setTabs] = React.useState("1");
-    const [verticalTabs, setVerticalTabs] = React.useState("1");
+    const [verticalTabs, setVerticalTabs] = React.useState(EActiveNav.Tour_Active);
 
+    const onChangeTab = (type: EActiveNav) => {
+      switch (type) {
+        case EActiveNav.Tour_Active:
+          setVerticalTabs(EActiveNav.Tour_Active);
+          break;
+        case EActiveNav.Hotel_Active:
+          setVerticalTabs(EActiveNav.Hotel_Active)
+          break;
+        default:
+          break;
+      }
+    }
   return (
     <>
     <Row className={classes.root}>
         <Col xs={2} className={classes.sideBar}>
           <div className={classes.headerSidebar}>
-             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={images.imgLogo.src} alt=""/>
             <h4>TRAVELIX</h4>
           </div>
-            <Nav
+            {/* <Nav
             className="nav-pills-info flex-column"
             role="tablist"
             >
@@ -74,12 +91,40 @@ const Enterprise: NextPage = () => {
                 Options
                 </NavLink>
             </NavItem>
-            </Nav>
-            </Col>        
-            <Col xs={10}>
+            </Nav> */}
+          <Nav tabs className={classes.nav}>
+            <span>Dashboard</span>
+            <NavItem>
+              <NavLink href="#"
+              className={verticalTabs === EActiveNav.Tour_Active ? classes.active : classes.navLink} 
+              onClick={() => onChangeTab(EActiveNav.Tour_Active)}
+              >
+                <FontAwesomeIcon icon={faPlaneDeparture}/>
+                Tours
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="#"
+              className={verticalTabs === EActiveNav.Hotel_Active ? classes.active : classes.navLink} 
+              onClick={() => onChangeTab(EActiveNav.Hotel_Active)}>
+                <FontAwesomeIcon icon={faBuilding} />
+                Hotels
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="#">Another Link</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink disabled href="#">
+                Disabled Link
+              </NavLink>
+            </NavItem>
+        </Nav>
+        </Col>        
+        <Col xs={10}>
                     <TabContent activeTab={"verticalTabs" + verticalTabs}>
                       <TabPane tabId="verticalTabs1">
-                        <Tour/>
+                        <Tours/>
                       </TabPane>
                       <TabPane tabId="verticalTabs2">
                         Efficiently unleash cross-media information without
@@ -98,7 +143,8 @@ const Enterprise: NextPage = () => {
                         for state of the art customer service.
                       </TabPane>
                     </TabContent>
-            </Col>    
+
+        </Col>    
     </Row>
     </>
   );

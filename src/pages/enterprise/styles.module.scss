@@ -29,22 +29,45 @@
 .navItem {
     // background-color: var(--violet-color);
 }
-.navLink {
-    color: var(--violet-color);
-    font-size: 16px;
-    font-weight: 600;
-    svg {
-        margin-right: 8px;
-    }
-    &:hover {
-        color: var(--violet-color);
-    }
-}
+
 .active {
-    background-color: var(--violet-color);
+    background: var(--violet-color) !important;
     color: #ffff !important;
     font-weight: 600;
+    border-radius: 8px !important;
     svg {
         margin-right: 8px;
     }
+}
+
+
+.dropdownMenu {
+    min-width: 7rem!important;
+}
+
+
+
+//================================================================
+.nav {
+    display: flex;
+    flex-direction: column;
+    span {
+        margin-bottom: 8px;
+        font-weight: 700;
+    }
+    [class~="nav-item"] {
+        margin-bottom: 8px;
+        &:hover {
+            background: rgba(239, 238, 238, 0.8);
+            border-radius: 8px;
+        }
+    }
+}
+
+.navLink {
+    font-weight: 600;
+    svg {
+        margin-right: 8px;
+    }
+
 }

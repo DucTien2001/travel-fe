@@ -1,4 +1,40 @@
+.nav {
+    display: flex;
+    flex-direction: column;
+    span {
+        margin-bottom: 8px;
+        font-weight: 700;
+    }
+    .navItem {
+        margin-bottom: 8px;
+        
+    }
+}
 
+.sideBar {
+    box-shadow: 0 10px 30px -12px rgb(0 0 0 / 42%), 0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
+}
+.headerSidebar {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 14px;
+    padding-top: 24px;
+    h4 {
+        margin: 0;
+        margin-left: 12px;
+        font-weight: 700;
+        color: var(--violet-color);
+    }
+}
+.navLink {
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 5px 35px 0px rgba(255, 248, 248, 0);
+    svg {
+        margin-right: 8px;
+    }
+}
 .navbarWrapper {
     padding: 0;
 }

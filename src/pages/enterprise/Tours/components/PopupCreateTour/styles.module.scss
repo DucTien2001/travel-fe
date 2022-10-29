@@ -1,0 +1,16 @@
+.root {
+    &[class~=modal-dialog] {
+        margin: 8.75rem auto;
+    }
+}
+.row {
+    margin: 0;
+    flex-wrap:nowrap;
+}
+.title {
+    h5 {
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+}

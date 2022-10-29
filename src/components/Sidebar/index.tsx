@@ -52,18 +52,18 @@ const Sidebar = memo((props : Props) => {
   };
 
   const [verticalTabs, setVerticalTabs] = React.useState("1");
-
+  
   const links = (
     <>
       {routesList.map((route, key) => {
         return (
           <NavItem className={classes.navItem}>
              <NavLink
-                className={clsx(verticalTabs === `${route.id}` ? `${classes.active}` :  classes.navLink)}
+                className={classes.navLink}
+                active
                 href={route.path}
                 onClick={(e) => {
                 e.preventDefault();
-                setVerticalTabs(route.id);
                 }}
               >
                 <FontAwesomeIcon icon={route.icon}/>
@@ -77,13 +77,16 @@ const Sidebar = memo((props : Props) => {
     </>
   )
   return (
-    <Nav
-    className="nav-pills-info flex-column"
-    pills
-    role="tablist"
-    >
-    {links}
-    </Nav>
+    <Col xs={2} className={classes.sideBar}>
+      <div className={classes.headerSidebar}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={images.imgLogo.src} alt=""/>
+        <h4>TRAVELIX</h4>
+      </div>
+      <Nav tabs className={classes.nav}>
+      {links}
+      </Nav>
+    </Col>
   );
 })
 

@@ -19,15 +19,24 @@
     "@hookform/resolvers": "^2.9.8",
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.3",
+    "@types/react-datepicker": "^4.4.2",
     "aos": "^2.3.4",
     "clsx": "^1.2.1",
     "next": "12.2.5",
     "react": "18.2.0",
+    "react-bootstrap-switch": "^15.5.3",
+    "react-datepicker": "^4.8.0",
+    "react-datetime": "^3.1.1",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-google-login": "^5.2.2",
     "react-hook-form": "^7.36.0",
     "react-i18next": "^11.18.6",
+    "react-rainbow-components": "^1.31.0",
+    "react-reactstrap-pagination": "^2.0.3",
     "react-router-dom": "^6.3.0",
+    "react-select": "^5.4.0",
+    "react-slick": "^0.29.0",
     "reactstrap": "^8.10.1",
     "sass": "^1.54.8",
     "yup": "^0.32.11"
@@ -37,8 +46,10 @@
     "@types/node": "18.7.13",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
+    "@types/react-slick": "^0.23.10",
+    "@types/styled-components": "^5.1.26",
     "eslint": "8.23.0",
     "eslint-config-next": "12.2.5",
-    "typescript": "4.8.2"
+    "typescript": "^4.8.2"
   }
 }
