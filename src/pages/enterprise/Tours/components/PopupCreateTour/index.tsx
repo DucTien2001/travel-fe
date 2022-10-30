@@ -18,6 +18,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDropzone } from 'react-dropzone';
 import useIsMountedRef from 'hooks/useIsMountedRef';
+import UploadImage from 'components/UploadImage';
 
 const PHOTO_SIZE = 10 * 1000000; // bytes
 const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
@@ -26,6 +27,7 @@ export interface CommentForm {
   comment: string;
   selectInvoice: HistoryBookRoom[];
   numberOfStars: number;
+  image: File | string,
 }
 
 interface Props extends ModalProps{ 
@@ -168,13 +170,7 @@ const PopupCreateTour = memo((props: Props) => {
                         />
                     </Row>
                     <Row xs={6} className={classes.row}>
-                        <InputTextFieldBorder
-                        label="Image"
-                        className="mr-3"
-                        placeholder="Choose image"
-                        multiple
-                        type="file"
-                        />
+                        <UploadImage/>
                         <InputTextFieldBorder
                         label="Creator"
                         placeholder="Enter your company"
