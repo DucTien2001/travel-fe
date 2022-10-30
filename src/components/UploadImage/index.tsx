@@ -36,11 +36,11 @@ const UploadImage = memo(({errorMessage, photoSize = PHOTO_SIZE, fileFormats = F
     })
   }, [])
 
-  // const remove = (file: File) => {
-  //   const newFiles = [...files];     // make a var for the new array
-  //   newFiles.splice(file, 1);        // remove the file from the array
-  //   setFiles(newFiles);              // update the state
-  // };
+  const removeImage = (file:any) => () => {
+    const newImages = [...images]
+    newImages.splice(newImages.indexOf(file), 1)
+    setImages(newImages)
+  }
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
     accept: fileFormats
@@ -57,6 +57,7 @@ const UploadImage = memo(({errorMessage, photoSize = PHOTO_SIZE, fileFormats = F
         <ul>
           {images.length > 0 && <div>
             {images.map((image: string | undefined, index: React.Key | null | undefined) => <img key={index} alt="anh" src={image} className="selected-iamges"/>)}
+            <button onClick={removeImage(images)}>Remove File</button>
             </div>}
         </ul>
         {isError === 'size-invalid' && <ErrorMessage translation-key="common_file_size">size: {fData(photoSize) }</ErrorMessage>}
