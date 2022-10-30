@@ -12,3 +12,8 @@ export interface User {
     isDelete: boolean;
     isVerified: boolean;
 }
+
+export interface LoginForm {
+  username: string,
+  password: string
+}
