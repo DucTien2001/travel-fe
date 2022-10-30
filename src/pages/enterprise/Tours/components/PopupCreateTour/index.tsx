@@ -3,31 +3,28 @@ import {Row, Form, Modal, ModalProps, ModalHeader, ModalBody, ModalFooter } from
 import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
-import InputTextArea from "components/common/inputs/InputTextArea";
-import InputSelect from "components/common/inputs/InputSelect";
-import InputCounter from "components/common/inputs/InputCounter";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import Star from "components/Stars";
+import InputCheckbox from "components/common/inputs/InputCheckbox";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import {HistoryBookRoom} from "models/room";
-import { Stars } from '@mui/icons-material';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useDropzone } from 'react-dropzone';
-import useIsMountedRef from 'hooks/useIsMountedRef';
 import UploadImage from 'components/UploadImage';
+import { FileUpload } from 'models/attachment';
 
-const PHOTO_SIZE = 10 * 1000000; // bytes
-const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
-
-export interface CommentForm { 
-  comment: string;
-  selectInvoice: HistoryBookRoom[];
-  numberOfStars: number;
-  image: File | string,
+export interface CreateTourForm { 
+  name: string;
+  description: string;
+  businessHours: string;
+  location: string;
+  contact: string;
+  price: number;
+  discount?: number;
+  tags: string;
+  creator: string;
+  isTemporarilyStopWorking: boolean;
+  images?: File[];
 }
 
 interface Props extends ModalProps{ 
@@ -38,18 +35,28 @@ interface Props extends ModalProps{
 
 // eslint-disable-next-line react/display-name
 const PopupCreateTour = memo((props: Props) => {
-    const {isOpen, toggle, rest} = props; 
+    const {isOpen, toggle, onClose, rest} = props; 
 
     const { t, i18n } = useTranslation();
-    const isMountedRef = useIsMountedRef();
 
     const schema = useMemo(() => {
       return yup.object().shape({
-          comment: yup.string().required("Content is required"),
-          numberOfStars: yup.number().required(),
+          name: yup.string().required("Name is required"),
+          description: yup.string().required("Description is required"),
+          businessHours: yup.string().required("Hours is required"),
+          location: yup.string().required("Location is required"),
+          contact: yup.string().required("Contact is required"),
+          price: yup.number().required("Price is required"),
+          discount: yup.number().notRequired(),
+          tags: yup.string().required("Tags is required"),
+          creator: yup.string().required("Creator is required"),
+          isTemporarilyStopWorking: yup.boolean().required(),
+          images: yup.mixed().test('required', "Please select images", value => {
+            return value && value.length;
+          }),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [i18n.language] );
+      }, [i18n.language]);
   
      const {
       register,
@@ -57,83 +64,43 @@ const PopupCreateTour = memo((props: Props) => {
       formState: { errors },
       reset,
       control,
-      setError,
-      setValue,
-      } = useForm<CommentForm>({
+      } = useForm<CreateTourForm>({
         resolver: yupResolver(schema),
         mode: "onChange",
-        defaultValues: { 
-          numberOfStars: 3,
-        }
+        // defaultValues: { 
+        //   isTemporarilyStopWorking: false,
+        // }
     });
-
-    // const isValidSize = async (file: File) => {
-    //   return new Promise((resolve) => {
-    //     const reader = new FileReader()
-    //     reader.readAsDataURL(file);
-    //     reader.onload = function (e) {
-    //       const image = new Image();
-    //       image.src = e.target.result as string;
-    //       image.onload = function () {
-    //         const height = image.height;
-    //         const width = image.width;
-    //         resolve(height >= 200 && width >= 200)
-    //       };
-    //       image.onerror = function () {
-    //         resolve(false)
-    //       }
-    //     }
-    //     reader.onerror = function () {
-    //       resolve(false)
-    //     }
-    //   })
-    // }
-
-    // const handleDrop = useCallback(async (acceptedFiles: any) => {
-    //   let file = acceptedFiles[0];
-    //   const checkSize = file.size < PHOTO_SIZE;
-    //   const checkType = FILE_FORMATS.includes(file.type);
-    //   const validSize = await isValidSize(file)
-    //   if (!validSize) {
-    //     setError('image', { message: t('setup_survey_packs_popup_image_size') })
-    //     return
-    //   }
-    //   if (!checkSize) {
-    //     setError('image', { message: t('setup_survey_packs_popup_image_file_size', { size: fData(PHOTO_SIZE) }) })
-    //     return
-    //   }
-    //   if (!checkType) {
-    //     setError('image', { message: t('setup_survey_packs_popup_image_type') })
-    //     return
-    //   }
-    //   setValue('image', file)
-    // },
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
-    //   [isMountedRef]
-    // );
-
-    // const {
-    //   getRootProps,
-    //   getInputProps
-    // } = useDropzone({
-    //   onDrop: handleDrop,
-    //   multiple: true,
-    // });
 
     const clearForm = () => {
       reset({
-        comment: "",
+        name: "",
+        description: "",
+        businessHours: "",
+        location: "",
+        contact: "",
+        price: 0,
+        discount: 0,
+        tags: "",
+        creator: "",
+        isTemporarilyStopWorking: false,
+        images: [],
       })
     }
   
-    const _onSubmit = (data: CommentForm) => {
-        console.log(data);
+    const _onSubmit = () => {
+        console.log("hello");
         clearForm();
+        toggle();
     }
+
+    // const handle = () => {
+    //   console.log("heelo")
+    // }
   return (
     <>  
         <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
-          <Form  method="post" role="form" onSubmit={handleSubmit(_onSubmit)}>
+          <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
                 <ModalHeader toggle={toggle} className={classes.title}>Create tour</ModalHeader>
                 <ModalBody>
                     <Row xs={6} className={classes.row}>
@@ -141,10 +108,14 @@ const PopupCreateTour = memo((props: Props) => {
                         label="Name"
                         className="mr-3"
                         placeholder="Enter name"
+                        inputRef={register("name")}
+                        errorMessage={errors.name?.message}
                         />
                         <InputTextFieldBorder
                         label="Description"
                         placeholder="Enter description"
+                        inputRef={register("description")}
+                        errorMessage={errors.description?.message}
                         />
                     </Row>
                     <Row xs={6} className={classes.row}>
@@ -152,10 +123,14 @@ const PopupCreateTour = memo((props: Props) => {
                         label="Business hours"
                         className="mr-3"
                         placeholder="Enter business hours"
+                        inputRef={register("businessHours")}
+                        errorMessage={errors.businessHours?.message}
                         />
                         <InputTextFieldBorder
                         label="Location"
                         placeholder="Enter location"
+                        inputRef={register("location")}
+                        errorMessage={errors.location?.message}
                         />
                     </Row>
                     <Row xs={6} className={classes.row}>
@@ -163,32 +138,59 @@ const PopupCreateTour = memo((props: Props) => {
                         label="Price"
                         className="mr-3"
                         placeholder="Enter price"
+                        inputRef={register("price")}
+                        errorMessage={errors.price?.message}
                         />
                         <InputTextFieldBorder
                         label="Discount"
                         placeholder="Enter discount"
+                        inputRef={register("discount")}
+                        errorMessage={errors.discount?.message}
                         />
                     </Row>
                     <Row xs={6} className={classes.row}>
-                        <UploadImage/>
+                        <InputTextFieldBorder
+                        label="Tags"
+                        className="mr-3"
+                        placeholder="Enter tour's tags"
+                        inputRef={register("tags")}
+                        errorMessage={errors.tags?.message}
+                        />
                         <InputTextFieldBorder
                         label="Creator"
                         placeholder="Enter your company"
+                        inputRef={register("creator")}
+                        errorMessage={errors.creator?.message}
                         />
                     </Row>
+
+                        <InputTextFieldBorder
+                        label="Contact"
+                        placeholder="Enter contact"
+                        inputRef={register("contact")}
+                        errorMessage={errors.contact?.message}
+                        />
+                      {/* <Controller
+                          name="images"
+                          control={control}
+                          render={({ field }) => <UploadImage
+                            title="Upload images your tour"
+                            errorMessage={errors.images?.message}
+                          />}
+                      /> */}
+                      <UploadImage
+                            title="Upload images your tour"
+                            errorMessage={errors.images?.message}
+                          />
+                    <InputCheckbox
+                    content="Temporarily stop working"
+                    inputRef={register("isTemporarilyStopWorking")}
+                    />
                 </ModalBody>
                 <ModalFooter className={classes.footer}>
-                  <div className={classes.action}>
-                    <Button btnType={BtnType.Secondary} type="submit" className="mr-2">
-                      Post
-                    </Button>{' '}
-                    <Button btnType={BtnType.Primary} onClick={toggle}>
-                      Cancel
+                    <Button btnType={BtnType.Primary} type="submit">
+                      Save
                     </Button>
-                  </div>
-                  <p>
-                    Your question will be posted on Travelix.com once it has been approved and answered
-                  </p>
                 </ModalFooter>
           </Form>
         </Modal>
