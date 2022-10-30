@@ -4,12 +4,10 @@ import * as types from "./actionTypes";
 
 export interface UserState {
   user?: User;
-  verifiedSuccess?: boolean;
 }
 
 const initial: UserState = {
   user: null,
-  verifiedSuccess: false,
 };
 
 export const userReducer = (state = initial, action: any) =>

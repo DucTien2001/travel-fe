@@ -1,11 +1,6 @@
-import { all } from 'redux-saga/effects';
-// import { projectSagas } from './Project';
-// import { userSagas } from './User';
+import { all } from "redux-saga/effects";
 
 // Register all your watchers
 export const rootSaga = function* root() {
-  yield all([
-    // userSagas(),
-    // projectSagas()
-  ]);
+  yield all([]);
 };
