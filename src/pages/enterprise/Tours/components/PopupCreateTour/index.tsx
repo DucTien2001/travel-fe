@@ -18,7 +18,7 @@ import { useDropzone } from 'react-dropzone';
 const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 const PHOTO_SIZE = 10000000000; // bytes
 const MAX_IMAGES = 8;
-export interface CreateTourForm { 
+export interface TourForm { 
   name: string;
   description: string;
   businessHours: string;
@@ -29,7 +29,7 @@ export interface CreateTourForm {
   tags: string;
   creator: string;
   isTemporarilyStopWorking: boolean;
-  images?: File[];
+  images?: string[];
 }
 
 interface Props extends ModalProps{ 
@@ -59,9 +59,7 @@ const PopupCreateTour = memo((props: Props) => {
           tags: yup.string().required("Tags is required"),
           creator: yup.string().required("Creator is required"),
           isTemporarilyStopWorking: yup.boolean().required(),
-          images: yup.mixed().test('required', "Please select images", value => {
-            return value && value.length;
-          }),
+          images: yup.array().required("Images is required"),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [i18n.language]);
@@ -71,13 +69,15 @@ const PopupCreateTour = memo((props: Props) => {
       handleSubmit,
       formState: { errors },
       reset,
+      watch,
+      setValue,
       control,
-      } = useForm<CreateTourForm>({
+      } = useForm<TourForm>({
         resolver: yupResolver(schema),
         mode: "onChange",
-        // defaultValues: { 
-        //   isTemporarilyStopWorking: false,
-        // }
+        defaultValues: { 
+          isTemporarilyStopWorking: false,
+        }
     });
 
     const clearForm = () => {
@@ -87,8 +87,8 @@ const PopupCreateTour = memo((props: Props) => {
         businessHours: "",
         location: "",
         contact: "",
-        price: 0,
-        discount: 0,
+        price: null,
+        discount: null,
         tags: "",
         creator: "",
         isTemporarilyStopWorking: false,
@@ -96,6 +96,8 @@ const PopupCreateTour = memo((props: Props) => {
       })
     }
   
+    const imgs = watch("images");
+
     const onDrop = useCallback((acceptedFiles: File[]) => {
       const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
       if(!checkMaxImages) {
@@ -118,6 +120,7 @@ const PopupCreateTour = memo((props: Props) => {
         setIsError('');
         reader.onload = () => {
           setImages((prevState:any) => [...prevState, reader.result])
+          setValue("images", images)
         }
         reader.readAsDataURL(file);
       })
@@ -125,13 +128,9 @@ const PopupCreateTour = memo((props: Props) => {
   
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
     }); 
-
-    useEffect(() => {
-      register("images");
-    }, []);
     
-    const _onSubmit = () => {
-      console.log("hello");
+    const _onSubmit = (data: TourForm) => {
+      console.log(data);
       clearForm();
       toggle();
   }
@@ -218,8 +217,8 @@ const PopupCreateTour = memo((props: Props) => {
                       <p className={classes.titleUpload}>Upload images your tour</p>
                       <div className={classes.main}>
                           <div className={classes.listImageContainer}>
-                            {images.length > 0 && <Row className={classes.rowImg}>
-                              {images.map((image: string | undefined, index: React.Key | null | undefined) => 
+                            {imgs.length > 0 && <Row className={classes.rowImg}>
+                              {imgs.map((image: string | undefined, index: React.Key | null | undefined) => 
                                 (<Col xs={3} key={index} className={classes.imageContainer}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img  alt="anh" src={image} className="selected-iamges"/>
@@ -267,3 +266,4 @@ const PopupCreateTour = memo((props: Props) => {
 });
 
 export default PopupCreateTour;
+
