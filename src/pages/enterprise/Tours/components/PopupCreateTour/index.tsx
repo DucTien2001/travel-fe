@@ -1,5 +1,5 @@
-import React, { useMemo, memo, useCallback } from 'react';
-import {Row, Form, Modal, ModalProps, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import React, { useMemo, memo, useCallback, useState, useEffect } from 'react';
+import {Row, Form, Modal, ModalProps, ModalHeader, ModalBody, ModalFooter, Col } from 'reactstrap';
 import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
@@ -9,10 +9,15 @@ import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import {HistoryBookRoom} from "models/room";
-import UploadImage from 'components/UploadImage';
-import { FileUpload } from 'models/attachment';
+import ErrorMessage from 'components/common/texts/ErrorMessage';
+import { fData } from 'utils/formatNumber';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { useDropzone } from 'react-dropzone';
 
+const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
+const PHOTO_SIZE = 10000000000; // bytes
+const MAX_IMAGES = 8;
 export interface CreateTourForm { 
   name: string;
   description: string;
@@ -38,6 +43,9 @@ const PopupCreateTour = memo((props: Props) => {
     const {isOpen, toggle, onClose, rest} = props; 
 
     const { t, i18n } = useTranslation();
+
+    const [images, setImages] = useState<any>([]);
+    const [isError, setIsError] = useState<string>('');
 
     const schema = useMemo(() => {
       return yup.object().shape({
@@ -88,15 +96,51 @@ const PopupCreateTour = memo((props: Props) => {
       })
     }
   
-    const _onSubmit = () => {
-        console.log("hello");
-        clearForm();
-        toggle();
-    }
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+      const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
+      if(!checkMaxImages) {
+        setIsError("max-invalid")
+        setImages([]);
+        return;
+      }
+      acceptedFiles.forEach((file: File) => { 
+        const reader = new FileReader();
+        const checkSize = file.size < PHOTO_SIZE;
+        const checkType = FILE_FORMATS.includes(file.type);
+        if (!checkSize) {
+          setIsError('size-invalid');
+          return
+        }        
+        if (!checkType) {
+          setIsError('type-invalid');
+          return
+        }
+        setIsError('');
+        reader.onload = () => {
+          setImages((prevState:any) => [...prevState, reader.result])
+        }
+        reader.readAsDataURL(file);
+      })
+    }, [])
+  
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
+    }); 
 
-    // const handle = () => {
-    //   console.log("heelo")
-    // }
+    useEffect(() => {
+      register("images");
+    }, []);
+    
+    const _onSubmit = () => {
+      console.log("hello");
+      clearForm();
+      toggle();
+  }
+
+  const onDelete = (file: any) => {
+    const newImages = images.filter(it => it !== file)
+    setImages(newImages)
+  }
+
   return (
     <>  
         <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
@@ -170,18 +214,42 @@ const PopupCreateTour = memo((props: Props) => {
                         inputRef={register("contact")}
                         errorMessage={errors.contact?.message}
                         />
-                      {/* <Controller
-                          name="images"
-                          control={control}
-                          render={({ field }) => <UploadImage
-                            title="Upload images your tour"
-                            errorMessage={errors.images?.message}
-                          />}
-                      /> */}
-                      <UploadImage
-                            title="Upload images your tour"
-                            errorMessage={errors.images?.message}
-                          />
+                      <div>
+                      <p className={classes.titleUpload}>Upload images your tour</p>
+                      <div className={classes.main}>
+                          <div className={classes.listImageContainer}>
+                            {images.length > 0 && <Row className={classes.rowImg}>
+                              {images.map((image: string | undefined, index: React.Key | null | undefined) => 
+                                (<Col xs={3} key={index} className={classes.imageContainer}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img  alt="anh" src={image} className="selected-iamges"/>
+                                <div onClick={() => onDelete(image)} className={classes.deleteImage}><FontAwesomeIcon icon={faCircleXmark}/></div> 
+                                </Col>) 
+                                )}
+                              </Row>
+                            }
+                          </div>
+                          <Button className={classes.dropZone} btnType={BtnType.Primary} {...getRootProps()} disabled={images.length >= MAX_IMAGES}>
+                          <input {...getInputProps()} className={classes.input} name="images"/>
+                          {isDragActive ? 'Drag active' : "Choose your images"}
+                          </Button>
+                          {isError === 'size-invalid' && <ErrorMessage translation-key="common_file_size">size: {fData(PHOTO_SIZE) }</ErrorMessage>}
+                          {isError === 'max-invalid' && <ErrorMessage>You can upload only {MAX_IMAGES} images</ErrorMessage>}
+                          {isError === 'type-invalid' &&
+                            (
+                              <ErrorMessage  translation-key="common_file_type">
+                                Please choose following format: {" "}
+                                {
+                                    FILE_FORMATS.map(format => (
+                                      format.replace("image/", "*.")
+                                    )).join(", ")
+                                }
+                              </ErrorMessage>
+                            )
+                          }
+                          {!images.length && <ErrorMessage>{errors.images?.message}</ErrorMessage> }
+                      </div>
+                      </div>
                     <InputCheckbox
                     content="Temporarily stop working"
                     inputRef={register("isTemporarilyStopWorking")}

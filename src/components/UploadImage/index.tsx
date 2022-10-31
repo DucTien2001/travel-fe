@@ -62,7 +62,7 @@ const UploadImage = memo(({className, title, errorMessage, photoSize = PHOTO_SIZ
 
   return (
     <div className={className}>
-    <p className={classes.title}>{title}</p>
+    <p className={classes.titleUpload}>{title}</p>
     <div className={classes.main}>
         <div className={classes.listImageContainer}>
           {images.length > 0 && <Row className={classes.row} xs={5}>
