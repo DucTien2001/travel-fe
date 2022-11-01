@@ -12,17 +12,23 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import { publicRoutes } from "routes";
 config.autoAddCss = false;
 import type { AppProps } from "next/app";
-import { ConnectedRouter } from "connected-react-router";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+import { useDispatch } from "react-redux";
 // import { createConfigureStore } from "redux/configureStore";
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
 import { wrapper } from "redux/configureStore";
+import { useEffect } from "react";
+import { getMe } from "redux/reducers/User/actionTypes";
 
 // const { store } = createConfigureStore();
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(getMe())
+  },[])
+
   return (
     // <Provider store={store}>
       <LayoutAuth>
