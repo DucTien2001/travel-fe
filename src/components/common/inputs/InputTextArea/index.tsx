@@ -28,7 +28,7 @@ const CustomTextarea = memo(
           className
         )}
       >
-        <label className={classes.label}>{labelIcon} {label}</label>
+        {label && <label className={classes.label}>{labelIcon} {label}</label>}
         <InputGroup className={faFocus ? "input-group-focus" : ""}>
             <Input
             {...inputProps}

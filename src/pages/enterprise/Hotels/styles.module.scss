@@ -1,0 +1,53 @@
+.root {
+    padding: 85px 24px 0 24px;
+}
+
+.title {
+    h3 {
+        font-size: 24px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+}
+.rowHeaderBox {
+    margin: 0;
+} 
+.boxControl {
+    justify-content: space-between;
+    align-items: center;
+    button {
+        svg {
+            margin-right: 8px;
+        }
+    }
+}
+
+.table {
+    th {
+        
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        border-right: 1px solid #dee2e6 !important;
+    }
+    thead{
+        background-color: var(--violet-color);
+        color: #ffff;
+    }
+}
+
+.colAction {
+    width: 5% !important;
+} 
+
+.iconAction {
+    color: var(--violet-color);
+}
+
+.dropdownMenu {
+    min-width: 7rem;
+    .dropdownItem {
+        svg {
+            margin-right: 8px;
+        }
+    }
+}

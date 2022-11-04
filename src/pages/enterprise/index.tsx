@@ -23,7 +23,7 @@ import {enterpriseRoutes} from "routes/routers";
 
 export enum EActiveNav { 
   Tour_Active= 1,
-  Hotel_Active = 2
+  Hotel_Active = 2,
 }
 
 const Enterprise: NextPage = () => {
@@ -46,6 +46,7 @@ const Enterprise: NextPage = () => {
     <Row className={classes.root}>
         <Col xs={2} className={classes.sideBar}>
           <div className={classes.headerSidebar}>
+             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={images.imgLogo.src} alt=""/>
             <h4>TRAVELIX</h4>
           </div>
@@ -127,12 +128,7 @@ const Enterprise: NextPage = () => {
                         <Tours/>
                       </TabPane>
                       <TabPane tabId="verticalTabs2">
-                        Efficiently unleash cross-media information without
-                        cross-media value. Quickly maximize timely deliverables
-                        for real-time schemas. <br></br>
-                        <br></br>
-                        Dramatically maintain clicks-and-mortar solutions
-                        without functional solutions.
+                        <Hotels/>
                       </TabPane>
                       <TabPane tabId="verticalTabs3">
                         Completely synergize resource taxing relationships via

@@ -1,32 +1,32 @@
 import React, {memo, useMemo, useState} from "react";
-import {images} from "configs/images";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import Box from "components/BoxSmallLeft";
-import CardItemList from "components/CardItemList";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash, faCaretDown ,faSearch, faPlus, faHotel, faPlane, faSquarePlus} from '@fortawesome/free-solid-svg-icons';
-import Switch from "components/common/Switch";
+import { faPen, faTrash, faCaretDown ,faSearch, faPlus} from '@fortawesome/free-solid-svg-icons';
 import {Row, Col, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
 import Button, {BtnType} from "components/common/buttons/Button";
-import PopupDefault from "components/Popup/PopupConfirmSucess";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CommentForm } from "components/Popup/PopupAddComment";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
-import { VALIDATION } from "configs/constants";
-import {Form} from "reactstrap";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Link  from "next/link";
-import PopupCreateTour from "./components/PopupCreateTour";
+import PopupAddOrEditTour from "../components/PopupAddOrEditTour";
+import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 
 // eslint-disable-next-line react/display-name
 const Tour = memo(()=> {
     const [openPopupCreateTour, setOpenPopupCreateTour] = useState(false);
+    const [openPopupConfirmDelete, setOpenPopupConfirmDelete] = useState(false);
 
     const onTogglePopupCreateTour = () => setOpenPopupCreateTour(!openPopupCreateTour);
-  return (
+    const onTogglePopupConfirmDelete = () => setOpenPopupConfirmDelete(!openPopupConfirmDelete);
+
+    const onYesDelete = () => {
+
+    }
+   return (
     <>
        <div className={classes.root}>
             <Row className={clsx(classes.rowHeaderBox, classes.title)}>
@@ -92,11 +92,11 @@ const Tour = memo(()=> {
                         <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
                         <DropdownItem className={classes.dropdownItem}>
                             <FontAwesomeIcon icon={faPen}/>
-                            Add tour
+                            Edit
                         </DropdownItem>
-                        <DropdownItem className={classes.dropdownItem}>
+                        <DropdownItem className={classes.dropdownItem} onClick={onTogglePopupConfirmDelete}>
                             <FontAwesomeIcon icon={faTrash}/>
-                            Add hotel
+                            Delete
                         </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>
@@ -105,10 +105,17 @@ const Tour = memo(()=> {
                 </tbody>
             </Table> 
             </div>
-            <PopupCreateTour
+            <PopupAddOrEditTour
             isOpen={openPopupCreateTour}
             onClose={onTogglePopupCreateTour}
             toggle={onTogglePopupCreateTour}
+            />
+            <PopupConfirmDelete
+            title="Are you sure delete this tour ?"
+            isOpen={openPopupConfirmDelete}
+            onClose={onTogglePopupConfirmDelete}
+            toggle={onTogglePopupConfirmDelete}
+            onYes={onYesDelete}
             />
        </div>
     </>
