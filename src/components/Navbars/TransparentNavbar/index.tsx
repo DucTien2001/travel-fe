@@ -26,7 +26,7 @@ import SignOutButton from "components/common/buttons/SignOutButton";
 const WhiteNavbar = memo(() => {
   const [collapseOpen, setCollapseOpen] = useState(false);
   const [navbarColor, setNavbarColor] = useState(" navbar-transparent");
-  const isEnterprise = true;
+  const isEnterprise = false;
   const handleCollapseNavbar = () => {
     if (window.innerWidth <= 991) {
       document.documentElement.classList.toggle("nav-open");

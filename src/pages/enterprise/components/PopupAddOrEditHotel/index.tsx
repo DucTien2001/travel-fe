@@ -21,18 +21,26 @@ const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 const PHOTO_SIZE = 10000000000; // bytes
 const MAX_IMAGES = 9;
 const MIN_IMAGES = 3;
-export interface TourForm { 
+export interface HotelForm { 
   name: string;
   description: string;
-  businessHours: string;
   location: string;
   contact: string;
-  price: number;
-  discount?: number;
   tags: string;
   creator: string;
   isTemporarilyStopWorking: boolean;
-  images?: string[];
+  roomNumber: string;
+  imagesRoom: string[];
+  priceDays?: {
+    id?: number;
+    monday?: number;
+    tuesday?: number;
+    wednesday?: number;
+    thursday?: number;
+    friday?: number;
+    saturday?: number;
+    sunday?: number;
+  }[],
 }
 
 interface Props extends ModalProps{ 
@@ -47,7 +55,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
 
     const { t, i18n } = useTranslation();
 
-    const [images, setImages] = useState<any>([]);
+    const [imagesRoom, setImagesRoom] = useState<any>([]);
     const [isError, setIsError] = useState<string>('');
     const [collapses, setCollapses] = React.useState([1]);
 
@@ -63,7 +71,21 @@ const PopupAddOrEditHotel = memo((props: Props) => {
           tags: yup.string().required("Tags is required"),
           creator: yup.string().required("Creator is required"),
           isTemporarilyStopWorking: yup.boolean().required(),
-          images: yup.array().required("Images is required"),
+          imagesRoom: yup.array().required("Images is required"),
+          priceDays: yup
+          .array(
+            yup.object({
+              id: yup.number().transform(value => (isNaN(value) ? undefined : value)).notRequired(),
+              monday: yup.number().positive("Price must be than 0").required("Price monday is required"),
+              tuesday: yup.number().positive("Price must be than 0").required("Price monday is required"),
+              wednesday: yup.number().positive("Price must be than 0").required("Price monday is required"),
+              thursday: yup.number().positive("Price must be than 0").required("Price monday is required"),
+              friday: yup.number().positive("Price must be than 0").required("Price monday is required"),
+              saturday: yup.number().positive("Price must be than 0").required("Price monday is required"),
+              sunday: yup.number().positive("Price must be than 0").required("Price monday is required"),
+            })
+          )
+          .required(),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [i18n.language]);
@@ -90,7 +112,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       setValue,
       control,
       clearErrors,
-      } = useForm<TourForm>({
+      } = useForm<HotelForm>({
         resolver: yupResolver(schema),
         mode: "onChange",
         defaultValues: { 
@@ -102,15 +124,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       reset({
         name: "",
         description: "",
-        businessHours: "",
         location: "",
         contact: "",
-        price: null,
-        discount: null,
         tags: "",
         creator: "",
         isTemporarilyStopWorking: false,
-        images: [],
+        imagesRoom: [],
+        priceDays: [],
       })
     }
 
@@ -118,13 +138,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       const checkMinImages = acceptedFiles.length >= MIN_IMAGES;
       if(!checkMinImages) {
         setIsError("min-invalid")
-        setImages([])
+        setImagesRoom([])
         return;
       }
       const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
       if(!checkMaxImages) {
         setIsError("max-invalid")
-        setImages([])
+        setImagesRoom([])
         return;
       }
       acceptedFiles.forEach((file: File) => { 
@@ -141,13 +161,16 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         }
         setIsError('');
         reader.onload = () => {
-          setImages((prevState:any) => [...prevState, reader.result])
+          setImagesRoom((prevState:any) => [...prevState, reader.result])
         }
         reader.readAsDataURL(file);
       })
     }, [])
   
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
+    }); 
+    
+    const {getRootProps: getRootPropsRoom, getInputProps: getInputPropsRoom, isDragActive: isDragActiveInput} = useDropzone({onDrop,
     }); 
 
     const changeCollapse = (collapse: number) => {
@@ -158,7 +181,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       }
     };
     
-    const _onSubmit = (data: TourForm) => {
+    const _onSubmit = (data: HotelForm) => {
       console.log(data);
       clearForm();
       toggle();
@@ -170,14 +193,14 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       //   setIsError("max-invalid")
       //   return;
       // }
-      setValue("images", images)
+      setValue("imagesRoom", imagesRoom)
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [images]);
+    }, [imagesRoom]);
 
 
   const onDelete = (file: any) => {
-    const newImages = images.filter(it => it !== file)
-    setImages(newImages)
+    const newImages = imagesRoom.filter(it => it !== file)
+    setImagesRoom(newImages)
   }
 
   return (
@@ -242,45 +265,6 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                       </Col>
                       <Row className={classes.row}>
                         <Col>
-                          <p className={classes.titleUpload}>Upload images your hotel</p>
-                          <div className={classes.main}>
-                              <div className={classes.listImageContainer}>
-                                {images?.length > 0 && <Row className={classes.rowImg}>
-                                  {images?.map((image: string | undefined, index: React.Key | null | undefined) => 
-                                    (<Col xs={3} key={index} className={classes.imageContainer}>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img  alt="anh" src={image} className="selected-iamges"/>
-                                    <div onClick={() => onDelete(image)} className={classes.deleteImage}><FontAwesomeIcon icon={faCircleXmark}/></div> 
-                                    </Col>) 
-                                    )}
-                                  </Row>
-                                }
-                              </div>
-                              <Button className={classes.dropZone} btnType={BtnType.Primary} {...getRootProps()} disabled={images?.length >= MAX_IMAGES}>
-                              <input {...getInputProps()} className={classes.input} name="images"/>
-                              {isDragActive ? 'Drag active' : "Choose your images"}
-                              </Button>
-                              {isError === 'size-invalid' && <ErrorMessage translation-key="common_file_size">size: {fData(PHOTO_SIZE) }</ErrorMessage>}
-                              {isError === 'max-invalid' && <ErrorMessage>You can upload only {MAX_IMAGES} images</ErrorMessage>}
-                              {isError === 'min-invalid' && <ErrorMessage>You must upload minimum {MIN_IMAGES} images</ErrorMessage>}                  
-                              {isError === 'type-invalid' &&
-                                (
-                                  <ErrorMessage  translation-key="common_file_type">
-                                    Please choose following format: {" "}
-                                    {
-                                        FILE_FORMATS.map(format => (
-                                          format.replace("image/", "*.")
-                                        )).join(", ")
-                                    }
-                                  </ErrorMessage>
-                                )
-                              }
-                              {!images?.length && <ErrorMessage>{errors.images?.message}</ErrorMessage> }
-                          </div>
-                      </Col>
-                      </Row>
-                      <Row className={classes.row}>
-                        <Col>
                         <InputCheckbox
                         content="Temporarily stop working"
                         inputRef={register("isTemporarilyStopWorking")}
@@ -304,6 +288,45 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         />
                         </Col>
                     </Row>
+                    <Row className={clsx("mb-2",classes.row)}>
+                        <Col>
+                          <p className={classes.titleUpload}>Upload images your hotel</p>
+                          <div className={classes.main}>
+                              <div className={classes.listImageContainer}>
+                                {imagesRoom?.length > 0 && <Row className={classes.rowImg}>
+                                  {imagesRoom?.map((image: string | undefined, index: React.Key | null | undefined) => 
+                                    (<Col xs={3} key={index} className={classes.imageContainer}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img  alt="anh" src={image} className="selected-iamges"/>
+                                    <div onClick={() => onDelete(image)} className={classes.deleteImage}><FontAwesomeIcon icon={faCircleXmark}/></div> 
+                                    </Col>) 
+                                    )}
+                                  </Row>
+                                }
+                              </div>
+                              <Button className={classes.dropZone} btnType={BtnType.Primary} {...getRootProps()} disabled={imagesRoom?.length >= MAX_IMAGES}>
+                              <input {...getInputProps()} className={classes.input} name="images"/>
+                              {isDragActive ? 'Drag active' : "Choose your images"}
+                              </Button>
+                              {isError === 'size-invalid' && <ErrorMessage translation-key="common_file_size">size: {fData(PHOTO_SIZE) }</ErrorMessage>}
+                              {isError === 'max-invalid' && <ErrorMessage>You can upload only {MAX_IMAGES} images</ErrorMessage>}
+                              {isError === 'min-invalid' && <ErrorMessage>You must upload minimum {MIN_IMAGES} images</ErrorMessage>}                  
+                              {isError === 'type-invalid' &&
+                                (
+                                  <ErrorMessage  translation-key="common_file_type">
+                                    Please choose following format: {" "}
+                                    {
+                                        FILE_FORMATS.map(format => (
+                                          format.replace("image/", "*.")
+                                        )).join(", ")
+                                    }
+                                  </ErrorMessage>
+                                )
+                              }
+                              {!imagesRoom?.length && <ErrorMessage>{errors.imagesRoom?.message}</ErrorMessage> }
+                          </div>
+                      </Col>
+                      </Row>
                     <Row className={classes.row}> 
                     <Col>
                       <Card className="card-plain">
@@ -331,11 +354,11 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         >
                             <thead>
                                 <tr>
-                                    <th scope="row" >
+                                    <th scope="row">
                                         Days
                                     </th>
                                     <th>
-                                        Price
+                                        Price (unit VND)
                                     </th>
                                 </tr>
                             </thead>
@@ -347,6 +370,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                         </th>
                                         <td className={classes.tdPriceInput}>
                                             <input/>
+                                            &nbsp;VND
                                         </td>                           
                                 </tr>)})}
                             </tbody>

@@ -47,6 +47,9 @@
         background-color: var(--violet-color);
         color: #ffff;
     }
+    @media only screen and (max-width: 600px) {
+        display: none;
+     }
 }
 
 .roomNumberTitle {
@@ -56,11 +59,15 @@
 
 .colImg {
     width: 300px;
+
     .imgCarousel {
         margin: 0;
         img {
             width: 100%;
             max-height: 130px;
+            @media only screen and (max-width: 768px) {
+                width: 600rem;
+             }
         }
     }
 }
@@ -85,4 +92,58 @@
     label {
             display: none !important;
     } 
+}
+///=========== Mobile =========
+.tableMobile {
+    display: none;
+    > div {
+        padding: 8px;
+    }
+    .row {
+        margin: 0;
+    }
+    .boxInformation {
+        margin-right: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        p {
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+        }
+        .priceMobile {
+            color: var(--orange-color);
+        }
+        .inputCounter {
+            margin-left: 8px;
+        }
+    }
+    
+    @media only screen and (max-width: 600px) {
+        display:block;
+        
+     }
+     .boxInformation {
+        display: flex;
+     }
+     .imgCarouselMobile {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        [class=carousel-inner] {
+            height: 100%;
+            img {
+                border-radius: 5px;
+                cursor: unset;
+                height: 100%;
+                object-fit: cover;
+                padding: 0;
+                width: 100%;
+            }
+            [class="carousel-item active"] {
+                height: 100%;
+            }
+        }
+     }
 }

@@ -14,16 +14,21 @@ import classes from "./styles.module.scss";
 import Button, {BtnType}from "components/common/buttons/Button";
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding, faPlaneDeparture } from '@fortawesome/free-solid-svg-icons';
+import { faBuilding, faPlaneDeparture, faChartSimple, faEnvelope, faComments } from '@fortawesome/free-solid-svg-icons';
 import {images} from "configs/images";
 import Tours from "./Tours";
 import Hotels from "./Hotels";
+import Sales from "./Sales";
+import EmailTemplate from "./EmailTemplate";
 import Sidebar from "components/Sidebar";
 import {enterpriseRoutes} from "routes/routers";
 
 export enum EActiveNav { 
   Tour_Active= 1,
   Hotel_Active = 2,
+  Sales_Active = 3,
+  Email_Active = 4,
+  Feedback_Active = 5,  
 }
 
 const Enterprise: NextPage = () => {
@@ -36,6 +41,15 @@ const Enterprise: NextPage = () => {
           break;
         case EActiveNav.Hotel_Active:
           setVerticalTabs(EActiveNav.Hotel_Active)
+          break;
+        case EActiveNav.Sales_Active:
+          setVerticalTabs(EActiveNav.Sales_Active)
+          break;
+        case EActiveNav.Email_Active:
+          setVerticalTabs(EActiveNav.Email_Active)
+          break;
+        case EActiveNav.Feedback_Active:
+          setVerticalTabs(EActiveNav.Feedback_Active)
           break;
         default:
           break;
@@ -50,49 +64,6 @@ const Enterprise: NextPage = () => {
             <img src={images.imgLogo.src} alt=""/>
             <h4>TRAVELIX</h4>
           </div>
-            {/* <Nav
-            className="nav-pills-info flex-column"
-            role="tablist"
-            >
-            <NavItem className={classes.navItem}>
-                <NavLink
-                className={verticalTabs === "1" ? `${classes.active}` : classes.navLink}
-                href="#pablo"
-                onClick={(e) => {
-                e.preventDefault();
-                setVerticalTabs("1");
-                }}
-                >
-                    <FontAwesomeIcon icon={faBagShopping}/>
-                    Tours
-                </NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink
-                className={verticalTabs === "2" ? `${classes.active}` : classes.navLink}
-                href="#pablo"
-                onClick={(e) => {
-                e.preventDefault();
-                setVerticalTabs("2");
-                }}
-                >
-                    <FontAwesomeIcon icon={faHotel}/>
-                    Hotels
-                </NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink
-                className={verticalTabs === "3" ? `${classes.active}` : classes.navLink}
-                href="#pablo"
-                onClick={(e) => {
-                e.preventDefault();
-                setVerticalTabs("3");
-                }}
-                >
-                Options
-                </NavLink>
-            </NavItem>
-            </Nav> */}
           <Nav tabs className={classes.nav}>
             <span>Dashboard</span>
             <NavItem>
@@ -113,14 +84,32 @@ const Enterprise: NextPage = () => {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="#">Another Link</NavLink>
+            <NavLink href="#"
+              className={verticalTabs === EActiveNav.Sales_Active ? classes.active : classes.navLink} 
+              onClick={() => onChangeTab(EActiveNav.Sales_Active)}>
+                <FontAwesomeIcon icon={faChartSimple} />
+                Sales
+              </NavLink>
+            </NavItem>
+            <span>Notifications</span>
+            <NavItem>
+            <NavLink href="#"
+              className={verticalTabs === EActiveNav.Email_Active ? classes.active : classes.navLink} 
+              onClick={() => onChangeTab(EActiveNav.Email_Active)}>
+                <FontAwesomeIcon icon={faEnvelope} />
+                Email template
+              </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink disabled href="#">
-                Disabled Link
+            <NavLink href="#"
+              className={verticalTabs === EActiveNav.Feedback_Active ? classes.active : classes.navLink} 
+              onClick={() => onChangeTab(EActiveNav.Feedback_Active)}>
+                <FontAwesomeIcon icon={faComments} />
+                Feedbacks
               </NavLink>
             </NavItem>
         </Nav>
+        
         </Col>        
         <Col xs={10}>
                     <TabContent activeTab={"verticalTabs" + verticalTabs}>
@@ -131,12 +120,10 @@ const Enterprise: NextPage = () => {
                         <Hotels/>
                       </TabPane>
                       <TabPane tabId="verticalTabs3">
-                        Completely synergize resource taxing relationships via
-                        premier niche markets. Professionally cultivate
-                        one-to-one customer service with robust ideas. <br></br>
-                        <br></br>
-                        Dynamically innovate resource-leveling customer service
-                        for state of the art customer service.
+                        <Sales/>
+                      </TabPane>
+                      <TabPane tabId="verticalTabs4">
+                        <EmailTemplate/>
                       </TabPane>
                     </TabContent>
 

@@ -70,7 +70,7 @@ const Login: NextPage = () => {
         // else setErrorSubmit(true)
       })
       .finally(() => {
-        clearForm();
+        // clearForm();
         dispatch(setLoading(false));
       });
   };

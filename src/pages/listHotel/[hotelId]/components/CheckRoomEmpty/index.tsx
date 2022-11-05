@@ -23,6 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import Link from "next/link";
+import BoxSmallLeft from "components/BoxSmallLeft";
 
 export interface CheckRoomForm { 
     departure: Date;
@@ -97,6 +98,7 @@ const CheckRoomEmpty = memo((Props)=> {
                     </Button>
                 </div>
             </Row>   
+            {/* =============== Desktop =============== */}
             <Table
               responsive
               bordered
@@ -107,7 +109,7 @@ const CheckRoomEmpty = memo((Props)=> {
                         <th scope="row" className={classes.roomNumberTitle}>
                             Room Number
                         </th>
-                        <th className={classes.title}>
+                        <th className={clsx(classes.colImgMobile,classes.title)}>
                             Images
                         </th>
                         <th className={classes.title}>
@@ -144,20 +146,56 @@ const CheckRoomEmpty = memo((Props)=> {
                         onChange={field.onChange}
                         value = {field.value}
                         />
-                  }
-                  />
+                    }
+                    />
                     </td>
                     <td className={clsx(classes.colConfirm, classes.col)}>
-                        <Button btnType={BtnType.Secondary}>
                             <Link href="/book/hotel/[roomId]"
                              >
-                            <a>I will book</a>
+                                <Button btnType={BtnType.Secondary}>
+                                    I will book
+                                </Button>                 
                             </Link>
-                        </Button>
                     </td>
                     </tr>
                 </tbody>
-            </Table>    
+            </Table>  
+              {/*=============== Mobile ============  */}
+            <BoxSmallLeft className={classes.tableMobile} title="Choose the right one for you">
+                <div>
+                    <Row className={clsx("mb-3", classes.row)}>
+                        <div className={classes.boxInformation}>
+                            <p className="mr-2">Room number: </p>
+                            <p>1</p>
+                        </div>    
+                        <div className={classes.boxInformation}>
+                            <p className="mr-2">Price: </p>
+                            <p className={classes.priceMobile}>$200</p>
+                        </div>
+                    </Row>
+                        <div>
+                        <Carousel images={[images.phuQuoc, images.bg19]} className={classes.imgCarouselMobile}/>
+                        </div>
+                    <Row className={clsx("mt-4",classes.row)}>
+                    <div className={classes.boxInformation}>
+                        <p className="mr-2">Amount</p>
+                        <Controller
+                        name="amount" 
+                        control={control}
+                        render={({field}) => 
+                            <InputCounter
+                            className={classes.inputCounter}
+                            max={5}
+                            min={1}
+                            onChange={field.onChange}
+                            value = {field.value}
+                            />
+                        }
+                        />
+                    </div>
+                    </Row>
+                </div>
+            </BoxSmallLeft>
         </Container>
     </>
   );
