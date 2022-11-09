@@ -38,13 +38,13 @@ const customStyles = (
   }),
   valueContainer: (provided) => ({
     ...provided,
-    paddingLeft: "18px",
+    padding: "5px 18px",
   }),
   placeholder: (provided) => ({
     ...provided,
     color: "#888888",
     opacity: 0.8,
-    fontSize: "0.8571em",
+    fontSize: "14px",
     fontWeight: "400",
     margin: 0,
   }),
@@ -66,6 +66,8 @@ const customStyles = (
 });
 
 interface Props extends StateManagerProps {
+  label?: string;
+  labelIcon?: string;
   className?: string;
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrors<any>>;
   name: string;
@@ -75,7 +77,7 @@ interface Props extends StateManagerProps {
 }
 
 // eslint-disable-next-line react/display-name
-const CustomSelect = memo(({className, errorMessage, name, control, bindKey, bindLabel, ...rest}: Props) => {
+const CustomSelect = memo(({label, labelIcon, className, errorMessage, name, control, bindKey, bindLabel, ...rest}: Props) => {
 
     return (
       <FormGroup
@@ -85,6 +87,7 @@ const CustomSelect = memo(({className, errorMessage, name, control, bindKey, bin
           className
         )}
       >
+        {label && <label className={classes.label}>{labelIcon} {label}</label>}
         {control ? (
           <>
             <Controller

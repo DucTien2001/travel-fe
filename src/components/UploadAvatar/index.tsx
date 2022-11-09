@@ -3,17 +3,13 @@ import { useDropzone } from 'react-dropzone';
 import { fData } from 'utils/formatNumber';
 import { memo, useCallback, useEffect, useState } from 'react';
 import useIsMountedRef from 'hooks/useIsMountedRef';
-import {
-  Box,
-  Typography,
-  CircularProgress,
-} from '@mui/material';
-import { AddAPhoto as AddAPhotoIcon } from '@mui/icons-material';
 import classes from './styles.module.scss';
 import ErrorMessage from 'components/common/texts/ErrorMessage';
 import { useTranslation } from "react-i18next";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCamera} from '@fortawesome/free-solid-svg-icons';
 
-const PHOTO_SIZE = 1000000000000; // bytes
+const PHOTO_SIZE = 3145728; // bytes
 const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 
 interface UploadImageProps {
@@ -51,7 +47,7 @@ const UploadImage = memo(
     const { t } = useTranslation()
 
     const handleDrop = useCallback(
-      async (acceptedFiles: any) => {
+      async (acceptedFiles) => {
         let file = acceptedFiles[0];
         const checkSize = file.size < photoSize;
         const checkType = fileFormats.includes(file.type);
@@ -90,7 +86,7 @@ const UploadImage = memo(
       isDragAccept,
     } = useDropzone({
       onDrop: handleDrop,
-      multiple: true,
+      multiple: false,
       disabled: disabled,
     });
 
@@ -113,9 +109,9 @@ const UploadImage = memo(
           >
             <input {...getInputProps()} id="upload" />
             {isLoading && (
-              <Box className={classes.loading}>
-                <CircularProgress size={32} thickness={2.4} />
-              </Box>
+              <div className={classes.loading}>
+                {/* <CircularProgress size={32} thickness={2.4} /> */}
+              </div>
             )}
             {fileReview && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -124,14 +120,14 @@ const UploadImage = memo(
             <div
               className={clsx(classes.placeholder, { [classes.hover]: fileReview })}
             >
-              <AddAPhotoIcon className={classes.iconAdd} />
-              <Typography variant="caption">
+              <FontAwesomeIcon className={classes.iconAdd} icon={faCamera}/>
+              <p className={classes.textUpload}>
                 {fileReview ? 'Update photo' : 'Upload photo'}
-              </Typography>
+              </p>
             </div>
           </div>
         </div>
-        <Typography variant="caption" align={align} className={classes.caption}>
+        <p className={classes.caption}>
           {caption ? (
             caption
           ) : (
@@ -140,23 +136,22 @@ const UploadImage = memo(
               <br /> Max size of {fData(photoSize)}
             </>
           )}
-        </Typography>
-        {isError === 'size-invalid' && <p>{fData(photoSize)}</p>}
+        </p>
+        {isError === 'size-invalid' && <ErrorMessage translation-key="common_file_size">{t('common_file_size', { size: fData(photoSize) })}</ErrorMessage>}
         {isError === 'type-invalid' &&
           (
-            <ErrorMessage>
-                File type must be {
-                  fileFormats.map(format => (
+            <ErrorMessage  translation-key="common_file_type">
+              {
+                t('common_file_type', {
+                  fileFormats: fileFormats.map(format => (
                     format.replace("image/", "*.")
                   )).join(", ")
-                }
+                })
+              }
             </ErrorMessage>
           )
         }
-        {errorMessage && <p>{errorMessage}</p>}
-        <Box sx={{ display: 'flex', justifyContent: align === "left" ? "flex-start" : 'center' }}>
-
-        </Box>
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </>
     );
   }

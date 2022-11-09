@@ -1,3 +1,5 @@
+import { OptionItem } from "./general";
+
 export interface User {
     id: number;
     email: string;
@@ -17,3 +19,20 @@ export interface LoginForm {
   username: string,
   password: string
 }
+
+export enum EAdminType {
+  SUPER_ADMIN = 1,
+  ADMIN = 2,
+  USER = 3,
+}
+
+export const adminTypes: OptionItem[] = [
+  {
+      id: EAdminType.ADMIN,
+      name: 'Admin'
+  },
+  {
+      id: EAdminType.USER,
+      name: 'User'
+  }
+]
