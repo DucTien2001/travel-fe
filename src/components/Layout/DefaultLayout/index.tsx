@@ -6,14 +6,13 @@ interface Props {
 }
 
 const LayoutAuth = ({children}: Props) => {
-    const isEnterprise = false;
     return (
         <>
             <TransparentNavbar/>
             <div>
                 {children}
             </div>
-            {isEnterprise && (<Footer/>)}
+            <Footer/>
         </>
     )
 }

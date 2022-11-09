@@ -1,5 +1,10 @@
 .root {
-    padding: 85px 24px 0 24px;
+    padding: 85px 24px 0 0px;
+    width: 100%;
+    height: 100%;
+    @media only screen and (max-width: 768px) {
+        padding: 48px 24px 24px 32px; 
+    }
 }
 
 .title {

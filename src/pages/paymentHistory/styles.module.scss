@@ -1,0 +1,34 @@
+.sectionHeader {
+    min-height: 35vh !important;
+}
+.root {
+    padding-top: 57px;
+    padding-bottom: 188px;
+}
+.headerPaymentHistory {
+    align-items: center;
+    margin: 0;
+    p {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        margin-right: 16px;
+    }
+    .inputSearch {
+        margin-left: auto;
+    }
+    .boxControl {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    @media only screen and (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        .inputSearch {
+            margin:0;
+            width: 100%;
+            margin-top: 16px;
+        }
+    }
+}

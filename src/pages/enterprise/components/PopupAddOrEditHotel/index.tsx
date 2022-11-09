@@ -30,17 +30,8 @@ export interface HotelForm {
   creator: string;
   isTemporarilyStopWorking: boolean;
   roomNumber: string;
-  imagesRoom: string[];
-  priceDays?: {
-    id?: number;
-    monday?: number;
-    tuesday?: number;
-    wednesday?: number;
-    thursday?: number;
-    friday?: number;
-    saturday?: number;
-    sunday?: number;
-  }[],
+  imagesHotel: string[];
+
 }
 
 interface Props extends ModalProps{ 
@@ -55,7 +46,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
 
     const { t, i18n } = useTranslation();
 
-    const [imagesRoom, setImagesRoom] = useState<any>([]);
+    const [imagesHotel, setImagesHotel] = useState<any>([]);
     const [isError, setIsError] = useState<string>('');
     const [collapses, setCollapses] = React.useState([1]);
 
@@ -71,37 +62,12 @@ const PopupAddOrEditHotel = memo((props: Props) => {
           tags: yup.string().required("Tags is required"),
           creator: yup.string().required("Creator is required"),
           isTemporarilyStopWorking: yup.boolean().required(),
-          imagesRoom: yup.array().required("Images is required"),
-          priceDays: yup
-          .array(
-            yup.object({
-              id: yup.number().transform(value => (isNaN(value) ? undefined : value)).notRequired(),
-              monday: yup.number().positive("Price must be than 0").required("Price monday is required"),
-              tuesday: yup.number().positive("Price must be than 0").required("Price monday is required"),
-              wednesday: yup.number().positive("Price must be than 0").required("Price monday is required"),
-              thursday: yup.number().positive("Price must be than 0").required("Price monday is required"),
-              friday: yup.number().positive("Price must be than 0").required("Price monday is required"),
-              saturday: yup.number().positive("Price must be than 0").required("Price monday is required"),
-              sunday: yup.number().positive("Price must be than 0").required("Price monday is required"),
-            })
-          )
-          .required(),
+          imagesHotel: yup.array().required("Images is required"),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [i18n.language]);
 
-      const days = useMemo(() => {
-        return [
-          { id: 1, name: "Monday"},
-          { id: 2, name: "Tuesday"},
-          { id: 3, name: "Wednesday"},
-          { id: 4, name: "Thursday"},
-          { id: 5, name: "Friday"},
-          { id: 6, name: "Saturday"},
-          { id: 7, name: "Sunday"},
-        ];
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [i18n.language]);
+
 
      const {
       register,
@@ -129,8 +95,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         tags: "",
         creator: "",
         isTemporarilyStopWorking: false,
-        imagesRoom: [],
-        priceDays: [],
+        imagesHotel: [],
       })
     }
 
@@ -138,13 +103,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       const checkMinImages = acceptedFiles.length >= MIN_IMAGES;
       if(!checkMinImages) {
         setIsError("min-invalid")
-        setImagesRoom([])
+        setImagesHotel([])
         return;
       }
       const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
       if(!checkMaxImages) {
         setIsError("max-invalid")
-        setImagesRoom([])
+        setImagesHotel([])
         return;
       }
       acceptedFiles.forEach((file: File) => { 
@@ -161,7 +126,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         }
         setIsError('');
         reader.onload = () => {
-          setImagesRoom((prevState:any) => [...prevState, reader.result])
+          setImagesHotel((prevState:any) => [...prevState, reader.result])
         }
         reader.readAsDataURL(file);
       })
@@ -170,9 +135,6 @@ const PopupAddOrEditHotel = memo((props: Props) => {
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
     }); 
     
-    const {getRootProps: getRootPropsRoom, getInputProps: getInputPropsRoom, isDragActive: isDragActiveInput} = useDropzone({onDrop,
-    }); 
-
     const changeCollapse = (collapse: number) => {
       if (collapses.includes(collapse)) {
         setCollapses(collapses.filter((prop) => prop !== collapse));
@@ -193,14 +155,14 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       //   setIsError("max-invalid")
       //   return;
       // }
-      setValue("imagesRoom", imagesRoom)
+      setValue("imagesHotel", imagesHotel)
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [imagesRoom]);
+    }, [imagesHotel]);
 
 
   const onDelete = (file: any) => {
-    const newImages = imagesRoom.filter(it => it !== file)
-    setImagesRoom(newImages)
+    const newImages = imagesHotel.filter(it => it !== file)
+    setImagesHotel(newImages)
   }
 
   return (
@@ -271,30 +233,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         />
                         </Col>
                       </Row>
-                    {/* ===== Add or edit room */}
-                    <Row className={clsx(classes.boxTitleRoomNumber, classes.row)}>
-                      <Col>
-                       <p>Create room:</p>
-                      </Col>              
-                    </Row>         
-                    <Row className={classes.row} >        
-                        <Col xs={6}>
-                        <InputTextFieldBorder
-                        label="Room number"
-                        className="mr-3"
-                        placeholder="Enter room number"
-                        inputRef={register("tags")}
-                        errorMessage={errors.tags?.message}
-                        />
-                        </Col>
-                    </Row>
                     <Row className={clsx("mb-2",classes.row)}>
                         <Col>
                           <p className={classes.titleUpload}>Upload images your hotel</p>
                           <div className={classes.main}>
                               <div className={classes.listImageContainer}>
-                                {imagesRoom?.length > 0 && <Row className={classes.rowImg}>
-                                  {imagesRoom?.map((image: string | undefined, index: React.Key | null | undefined) => 
+                                {imagesHotel?.length > 0 && <Row className={classes.rowImg}>
+                                  {imagesHotel?.map((image: string | undefined, index: React.Key | null | undefined) => 
                                     (<Col xs={3} key={index} className={classes.imageContainer}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img  alt="anh" src={image} className="selected-iamges"/>
@@ -304,7 +249,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   </Row>
                                 }
                               </div>
-                              <Button className={classes.dropZone} btnType={BtnType.Primary} {...getRootProps()} disabled={imagesRoom?.length >= MAX_IMAGES}>
+                              <Button className={classes.dropZone} btnType={BtnType.Primary} {...getRootProps()} disabled={imagesHotel?.length >= MAX_IMAGES}>
                               <input {...getInputProps()} className={classes.input} name="images"/>
                               {isDragActive ? 'Drag active' : "Choose your images"}
                               </Button>
@@ -323,63 +268,10 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   </ErrorMessage>
                                 )
                               }
-                              {!imagesRoom?.length && <ErrorMessage>{errors.imagesRoom?.message}</ErrorMessage> }
+                              {!imagesHotel?.length && <ErrorMessage>{errors.imagesHotel?.message}</ErrorMessage> }
                           </div>
                       </Col>
                       </Row>
-                    <Row className={classes.row}> 
-                    <Col>
-                      <Card className="card-plain">
-                      <CardHeader id="headingOne" role="tab">
-                        <a
-                          aria-expanded={collapses.includes(1)}
-                          data-parent="#accordion"
-                          data-toggle="collapse"
-                          href="#pablo"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            changeCollapse(1);
-                          }}
-                          className={classes.titlePriceTable}
-                        >
-                          Price table{" "}
-                          <i className="now-ui-icons arrows-1_minimal-down"></i>
-                        </a>
-                      </CardHeader>
-                      <Collapse isOpen={collapses.includes(1)}>
-                        <CardBody className={classes.cardBody}>
-                        <Table
-                        bordered
-                        className={classes.table}
-                        >
-                            <thead>
-                                <tr>
-                                    <th scope="row">
-                                        Days
-                                    </th>
-                                    <th>
-                                        Price (unit VND)
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {days.map((day,index) => {
-                                return (<tr key={index}>   
-                                        <th scope="row" >
-                                            {day.name}
-                                        </th>
-                                        <td className={classes.tdPriceInput}>
-                                            <input/>
-                                            &nbsp;VND
-                                        </td>                           
-                                </tr>)})}
-                            </tbody>
-                        </Table> 
-                        </CardBody>
-                      </Collapse>
-                    </Card>
-                        </Col>
-                    </Row>
                 </ModalBody>            
                 <ModalFooter className={classes.footer}>
                     <Button btnType={BtnType.Primary} type="submit">

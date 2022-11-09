@@ -163,7 +163,7 @@ const PopupCreateTour = memo((props: Props) => {
             <ModalHeader toggle={toggle} className={classes.title}>Create tour</ModalHeader>
                 <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
                 <ModalBody>
-                    <Row xs={6} className={classes.row}>
+                    <Row xs={6} sm={12} className={classes.row}>
                       <Col>
                         <InputTextFieldBorder
                         label="Name"
@@ -182,7 +182,7 @@ const PopupCreateTour = memo((props: Props) => {
                         />
                       </Col>
                     </Row>
-                    <Row xs={6} className={classes.row}>
+                    <Row xs={6} sm={12} className={classes.row}>
                       <Col>
                         <InputTextFieldBorder
                         label="Business hours"
@@ -201,7 +201,7 @@ const PopupCreateTour = memo((props: Props) => {
                         />
                       </Col>
                     </Row>
-                    <Row xs={6} className={classes.row}>
+                    <Row xs={6} sm={12} className={classes.row}>
                       <Col>
                         <InputTextFieldBorder
                         label="Price"
@@ -220,7 +220,7 @@ const PopupCreateTour = memo((props: Props) => {
                         />
                       </Col>  
                     </Row>
-                    <Row xs={6} className={classes.row}>
+                    <Row xs={6}  className={classes.row}>
                       <Col>
                         <InputTextFieldBorder
                         label="Tags"

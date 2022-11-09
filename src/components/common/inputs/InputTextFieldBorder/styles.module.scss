@@ -1,6 +1,7 @@
 .root {
     text-align: left;
     font-size:16px;
+    width:100%;
     & [class~="input-group"] {
       margin: 0;
     }

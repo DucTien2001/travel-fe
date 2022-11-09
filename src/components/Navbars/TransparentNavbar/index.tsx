@@ -131,10 +131,10 @@ const WhiteNavbar = memo(() => {
                     </Link>
                   </DropdownItem>
                   <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/about" passHref>
+                    <Link href="/paymentHistory" passHref>
                       <a>
                         <FontAwesomeIcon icon={faCalendarCheck} className={classes.iconNav}/>
-                        Activity
+                        Payment history
                       </a>
                     </Link>
                   </DropdownItem>

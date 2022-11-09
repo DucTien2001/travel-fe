@@ -14,8 +14,8 @@ import {images} from "configs/images";
 const Footer = memo(() => {
   return (
     <> 
-      <Row>
-        <Row className={classes.root}>
+      <div>
+        <Row className={classes.root} >
             <Col>
                 <img alt="anh" src={images.footer.src}></img>
             </Col>
@@ -112,7 +112,7 @@ const Footer = memo(() => {
             </div>
           </Col>
         </Row>
-      </Row>
+      </div>
     </>
   );
 }) 

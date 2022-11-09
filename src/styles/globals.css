@@ -16,7 +16,10 @@ html,
   --linear-second-color: linear-gradient(#650eb6 0%, #000 80%);
   --eerie-black-5:#1c1c1c0d;
   --eerie-black-40: #1c1c1c66;
+  --eerie-black-20: #1c1c1c33;
+  --eerie-black-65: #1c1c1ca6;
   --gray-40: #A4A4A4;
+  --blue-color: #1f61a9;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
   Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }

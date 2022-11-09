@@ -33,16 +33,19 @@ const Tour = memo(()=> {
                  <h3>Tours</h3>
             </Row>
             <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
+                <div className={classes.boxInputSearch}>
                     <InputTextFieldBorder
                     placeholder="Search tours"
                     startIcon={<FontAwesomeIcon icon={faSearch}/>}
+                    className={classes.inputSearch}
                     />
+                </div>
                     <Button btnType={BtnType.Primary} onClick={onTogglePopupCreateTour}><FontAwesomeIcon icon={faPlus}/>Create</Button>
             </Row>
-            <div>
             <Table
               bordered
               className={classes.table}
+              responsive
             >
                 <thead>
                     <tr>
@@ -54,6 +57,9 @@ const Tour = memo(()=> {
                         </th>
                         <th>
                             Price
+                        </th>
+                        <th>
+                            State
                         </th>
                         <th>
                             Created
@@ -73,6 +79,9 @@ const Tour = memo(()=> {
                     </td>
                     <td>
                         Otto
+                    </td>
+                    <td>
+                        Active
                     </td>
                     <td>
                         da
@@ -104,7 +113,6 @@ const Tour = memo(()=> {
                     </tr>
                 </tbody>
             </Table> 
-            </div>
             <PopupAddOrEditTour
             isOpen={openPopupCreateTour}
             onClose={onTogglePopupCreateTour}

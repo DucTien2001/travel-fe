@@ -15,7 +15,7 @@ import Link  from "next/link";
 import PopupAddOrEditTour from "../components/PopupAddOrEditTour";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import FeatureSaleInformation from "../components/FeatureSaleInformation";
-import Chart from "../components/Charts";
+import Chart from "../../../components/Charts";
 
 export const productData = [
     {

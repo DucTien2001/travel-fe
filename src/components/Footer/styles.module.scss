@@ -2,7 +2,12 @@
     background: var(--violet-color);
     padding: 48px 100px;
     @media only screen and (max-width: 768px) {
-        display: none;
+        padding: 16px 0 0 0;
+        margin-left: 0;
+        margin-right: 0;
+      }
+      @media only screen and (max-width: 600px) {
+        display: block;
       }
 }
 
@@ -14,6 +19,9 @@
         text-transform: uppercase;
         font-weight:700;
     }
+    @media only screen and (max-width: 600px) {
+        margin-top: 24px;
+      }
 }
 
 .titleContact {
@@ -23,6 +31,10 @@
         text-transform: uppercase;
         font-weight:700;
     }
+    @media only screen and (max-width: 600px) {
+        text-align: center;
+        padding-left: 0;
+      }
 }
 .contentFollow {
     margin-top: 7px;
@@ -86,12 +98,19 @@
     p {
         color: var(--white-color);
     }
+    @media only screen and (max-width: 1024px) {
+        margin-top:0;
+      }
 }
 
 .rootBottom {
     background-color: #1f0733;
     width: 100%;
     padding: 12px;
+    @media only screen and (max-width: 768px) {
+        margin-left: 0;
+        margin-right: 0;
+      }
 }
 
 .wrapper {

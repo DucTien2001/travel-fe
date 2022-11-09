@@ -14,7 +14,7 @@ import classes from "./styles.module.scss";
 import Button, {BtnType}from "components/common/buttons/Button";
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding, faPlaneDeparture, faChartSimple, faEnvelope, faComments } from '@fortawesome/free-solid-svg-icons';
+import { faBuilding, faPlaneDeparture, faChartSimple, faEnvelope, faComments, faBars, faClose, faCircleArrowLeft, faCircleArrowRight } from '@fortawesome/free-solid-svg-icons';
 import {images} from "configs/images";
 import Tours from "./Tours";
 import Hotels from "./Hotels";
@@ -22,6 +22,7 @@ import Sales from "./Sales";
 import EmailTemplate from "./EmailTemplate";
 import Sidebar from "components/Sidebar";
 import {enterpriseRoutes} from "routes/routers";
+
 
 export enum EActiveNav { 
   Tour_Active= 1,
@@ -33,7 +34,7 @@ export enum EActiveNav {
 
 const Enterprise: NextPage = () => {
     const [verticalTabs, setVerticalTabs] = React.useState(EActiveNav.Tour_Active);
-
+    const [activeSideBarMobile, setActiveSideBarMobile] = useState(false);
     const onChangeTab = (type: EActiveNav) => {
       switch (type) {
         case EActiveNav.Tour_Active:
@@ -55,10 +56,16 @@ const Enterprise: NextPage = () => {
           break;
       }
     }
+    const handleSideBarMobile = () => {
+      setActiveSideBarMobile(!activeSideBarMobile);
+    }
   return (
     <>
-    <Row className={classes.root}>
-        <Col xs={2} className={classes.sideBar}>
+    <div className={classes.root}>
+        <Col xs={2} className={activeSideBarMobile ? classes.sideBarActive : classes.sideBar}>
+          <div className={classes.menuBarsMobile} onClick={handleSideBarMobile}>
+            <FontAwesomeIcon icon={activeSideBarMobile ? faCircleArrowLeft : faCircleArrowRight}/>
+          </div>
           <div className={classes.headerSidebar}>
              {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={images.imgLogo.src} alt=""/>
@@ -111,24 +118,24 @@ const Enterprise: NextPage = () => {
         </Nav>
         
         </Col>        
-        <Col xs={10}>
-                    <TabContent activeTab={"verticalTabs" + verticalTabs}>
-                      <TabPane tabId="verticalTabs1">
+        <Col xs={10} className={classes.content}>
+                    <TabContent activeTab={"verticalTabs" + verticalTabs} className={classes.tabContent}>
+                      <TabPane tabId="verticalTabs1" className={classes.tabPane}>
                         <Tours/>
                       </TabPane>
-                      <TabPane tabId="verticalTabs2">
+                      <TabPane tabId="verticalTabs2" className={classes.tabPane}>
                         <Hotels/>
                       </TabPane>
-                      <TabPane tabId="verticalTabs3">
+                      <TabPane tabId="verticalTabs3" className={classes.tabPane}>
                         <Sales/>
                       </TabPane>
-                      <TabPane tabId="verticalTabs4">
+                      <TabPane tabId="verticalTabs4" className={classes.tabPane}>
                         <EmailTemplate/>
                       </TabPane>
                     </TabContent>
 
         </Col>    
-    </Row>
+    </div>
     </>
   );
 };

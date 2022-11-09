@@ -15,14 +15,18 @@ import Link  from "next/link";
 import PopupAddOrEditTour from "../components/PopupAddOrEditTour";
 import PopupAddOrEditHotel from "../components/PopupAddOrEditHotel";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
+import PopupAddOrEditRoom from "../components/PopupAddOrEditRoom";
 
 // eslint-disable-next-line react/display-name
 const Hotel = memo(()=> {
     const [openPopupCreateHotel, setOpenPopupCreateHotel] = useState(false);
     const [openPopupConfirmDelete, setOpenPopupConfirmDelete] = useState(false);
+    const [openPopupCreateRoom, setOpenPopupCreateRoom] = useState(false);
+
 
     const onTogglePopupCreateHotel = () => setOpenPopupCreateHotel(!openPopupCreateHotel);
     const onTogglePopupConfirmDelete = () => setOpenPopupConfirmDelete(!openPopupConfirmDelete);
+    const onTogglePopupCreateRoom = () => setOpenPopupCreateRoom(!openPopupCreateRoom);
 
     const onYesDelete = () => {
 
@@ -34,16 +38,19 @@ const Hotel = memo(()=> {
                  <h3>Hotels</h3>
             </Row>
             <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
+                <div className={classes.boxInputSearch}>
                     <InputTextFieldBorder
                     placeholder="Search hotels"
                     startIcon={<FontAwesomeIcon icon={faSearch}/>}
+                    className={classes.inputSearch}
                     />
+                </div>
                     <Button btnType={BtnType.Primary} onClick={onTogglePopupCreateHotel}><FontAwesomeIcon icon={faPlus}/>Create</Button>
             </Row>
-            <div>
             <Table
               bordered
               className={classes.table}
+              responsive
             >
                 <thead>
                     <tr>
@@ -55,6 +62,9 @@ const Hotel = memo(()=> {
                         </th>
                         <th>
                             Price
+                        </th>
+                        <th>
+                            State
                         </th>
                         <th>
                             Created
@@ -76,42 +86,7 @@ const Hotel = memo(()=> {
                         Otto
                     </td>
                     <td>
-                        da
-                    </td>
-                    <td className="text-center">
-                    <UncontrolledDropdown>
-                        <DropdownToggle
-                        color="default"
-                        data-toggle="dropdown"
-                        href="#pablo"
-                        id="navbarDropdownMenuLink1"
-                        nav
-                        onClick={(e) => e.preventDefault()}
-                        >
-                        <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction}/>
-                        </DropdownToggle>
-                        <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                        <DropdownItem className={classes.dropdownItem}>
-                            <FontAwesomeIcon icon={faPen}/>
-                            Add hotel
-                        </DropdownItem>
-                        <DropdownItem className={classes.dropdownItem} onClick={onTogglePopupConfirmDelete}>
-                            <FontAwesomeIcon icon={faTrash}/>
-                            Delete
-                        </DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledDropdown>
-                    </td>
-                    </tr>
-                    <tr>
-                    <th scope="row">
-                        1
-                    </th>
-                    <td>
-                       
-                    </td>
-                    <td>
-                        Otto
+                        Active
                     </td>
                     <td>
                         da
@@ -131,7 +106,11 @@ const Hotel = memo(()=> {
                         <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
                         <DropdownItem className={classes.dropdownItem}>
                             <FontAwesomeIcon icon={faPen}/>
-                            Add hotel
+                            Edit
+                        </DropdownItem>
+                        <DropdownItem className={classes.dropdownItem} onClick={onTogglePopupCreateRoom}>
+                            <FontAwesomeIcon icon={faPlus}/>
+                            Add room
                         </DropdownItem>
                         <DropdownItem className={classes.dropdownItem} onClick={onTogglePopupConfirmDelete}>
                             <FontAwesomeIcon icon={faTrash}/>
@@ -143,7 +122,6 @@ const Hotel = memo(()=> {
                     </tr>
                 </tbody>
             </Table> 
-            </div>
             <PopupAddOrEditHotel
             isOpen={openPopupCreateHotel}
             onClose={onTogglePopupCreateHotel}
@@ -155,6 +133,11 @@ const Hotel = memo(()=> {
             onClose={onTogglePopupConfirmDelete}
             toggle={onTogglePopupConfirmDelete}
             onYes={onYesDelete}
+            />
+            <PopupAddOrEditRoom
+            isOpen={openPopupCreateRoom}
+            onClose={onTogglePopupCreateRoom}
+            toggle={onTogglePopupCreateRoom}
             />
        </div>
     </>

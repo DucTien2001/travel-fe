@@ -1,0 +1,86 @@
+.table {
+    th {
+        
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        border-right: 1px solid #dee2e6 !important;
+    }
+    thead{
+        background-color: var(--violet-color);
+        color: #ffff;
+    }
+    @media only screen and (max-width: 768px) {
+        display: none;
+      }
+}
+
+.iconCheck {
+    font-size: 20px;
+    color: var(--green-color);
+}
+.colIconDownload {
+    display: flex;
+    justify-content: center;
+}
+.iconDownload {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: var(--eerie-black-5) !important;
+    font-size: 20px;
+    color: var(--blue-color) !important;
+}
+
+.tourName {
+    color: var(--violet-color) !important;
+    text-decoration: underline;
+    line-height: 24px !important;
+}
+
+// ============ Mobile ====================================
+.containerMobile {
+    display: none;
+
+    @media only screen and (max-width: 768px) {
+        display: block;
+    }
+    .boxInvoiceMobile {
+        @media only screen and (max-width: 768px) {
+            display: flex;
+            margin: 0;
+            border-bottom: 1px solid var(--eerie-black-20);
+            padding-bottom: 16px;
+            .boxInformation {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                p {
+                    font-size: 14px;
+                    margin: 0;
+                    span {
+                        font-weight: 600;
+                    }
+                }
+            }
+            .boxDownload {
+                flex: 0;
+                justify-content: center;
+                align-items: center;
+            }
+            .tourNameMobile {
+                text-decoration: underline;
+                font-weight: 600;
+                cursor: pointer;
+            }
+        }
+    }
+    .row {
+        margin: 0;
+        justify-content: center;
+    }
+}
