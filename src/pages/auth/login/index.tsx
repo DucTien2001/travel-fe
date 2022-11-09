@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { Container, Row, Col, Card, CardHeader, CardBody, Form } from "reactstrap";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import clsx from "clsx";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -11,11 +11,14 @@ import Button, { BtnType } from "components/common/buttons/Button";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Google from "components/SocialButton/Google";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "redux/reducers/Status/actionTypes";
 import { UserService } from "services/user";
 import { EKey } from "models/general";
 import { setUserLogin } from "redux/reducers/User/actionTypes";
+import { ReducerType } from "redux/reducers";
+import Router from "next/router";
+
 interface LoginForm {
   email: string;
   password: string;
@@ -23,6 +26,7 @@ interface LoginForm {
 
 const Login: NextPage = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state: ReducerType) => state.user);
 
   const { t, i18n } = useTranslation();
 
@@ -43,6 +47,12 @@ const Login: NextPage = () => {
     resolver: yupResolver(schema),
     mode: "onChange",
   });
+
+  useEffect(() => {
+    if (user) {
+      Router.push('/')
+    }
+  }, [user]);
 
   const clearForm = () => {
     reset({

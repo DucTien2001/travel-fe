@@ -48,6 +48,12 @@ var routes = [
       icon: "ni ni-circle-08 text-pink",
       layout: "/auth",
     },
+    {
+      path: "/verify-signup",
+      name: "VerifySignup",
+      icon: "ni ni-circle-08 text-pink",
+      layout: "/auth",
+    },
   ];
   export default routes;
   

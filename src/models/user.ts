@@ -36,3 +36,8 @@ export const adminTypes: OptionItem[] = [
       name: 'User'
   }
 ]
+
+export interface IVerifySignup {
+  code: string,
+  userId: number
+}
