@@ -22,6 +22,10 @@ import Link from "next/link";
 import { VALIDATION } from "configs/constants";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
 import {EUserType} from "models/user";
+import { useDispatch } from "react-redux";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { UserService } from "services/user";
+import PopupConfirmSucess from "components/Popup/PopupConfirmSucess";
 
 interface SignUpForm { 
     firstName: string;
@@ -34,7 +38,9 @@ interface SignUpForm {
 }
 
 const Login: NextPage = () => {
+  const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
+  const [registerSuccess, setRegisterSuccess] = useState(false)
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -84,9 +90,25 @@ const Login: NextPage = () => {
       role: EUserType.USER,
     })
   }
+  const onClosePopupRegisterSuccess = () => setRegisterSuccess(!registerSuccess);
 
   const _onSubmit = (data: SignUpForm) => {
       console.log(data);
+      dispatch(setLoading(true));
+      UserService.register({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        username: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        phoneNumber: data.phoneNumber,
+        role: data.role,
+      }).
+      then(() => {
+        setRegisterSuccess(true)
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)))
       clearForm();
   }
     return (
@@ -219,6 +241,13 @@ const Login: NextPage = () => {
               </Container>
             </div>
           </Container>
+          <PopupConfirmSucess
+            isOpen={registerSuccess}
+            onClose={onClosePopupRegisterSuccess}
+            toggle={onClosePopupRegisterSuccess}
+            title={"Confirm"}
+            description={"Thank you for booking their services. We will send you invoice and ticket information via email. Please check email for details."}
+            />
         </div>
       </div>
     )

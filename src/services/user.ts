@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { IVerifySignup, LoginForm, User } from "models/user";
+import { IVerifySignup, LoginForm, User, RegisterForm } from "models/user";
 import api from "./configApi";
 
 export class UserService {
@@ -17,6 +17,17 @@ export class UserService {
   static async getMe(): Promise<User> {
     return await api
       .get(API.AUTH.ME)
+      .then((res) => {
+        return Promise.resolve(res.data.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async register(data: RegisterForm) {
+    return await api
+      .post(API.AUTH.REGISTER, data)
       .then((res) => {
         return Promise.resolve(res.data.data);
       })

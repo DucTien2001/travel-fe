@@ -107,6 +107,7 @@ const DetailCustomer = memo(()=> {
  
 
   const toggle = () => setModal(!modal);
+  
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>

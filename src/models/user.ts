@@ -20,6 +20,16 @@ export interface LoginForm {
   password: string
 }
 
+export interface RegisterForm {
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+  role: number;
+  phoneNumber: string;
+}
+
 export enum EUserType {
   ADMIN = 1,
   ENTERPRISE = 2,
