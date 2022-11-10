@@ -52,14 +52,14 @@ const Login: NextPage = () => {
   } = useForm<LoginForm>({
     resolver: yupResolver(schema),
     mode: "onChange",
-    defaultValues: { 
+    defaultValues: {
       role: EUserType.USER,
-    }
+    },
   });
 
   useEffect(() => {
     if (user) {
-      Router.push('/')
+      Router.push("/");
     }
   }, [user]);
 
@@ -67,7 +67,7 @@ const Login: NextPage = () => {
     reset({
       email: "",
       password: "",
-      role: EUserType.USER
+      role: EUserType.USER,
     });
   };
 
@@ -77,13 +77,11 @@ const Login: NextPage = () => {
     UserService.login({
       username: data?.email,
       password: data?.password,
+      role: data?.role,
     })
       .then((res) => {
         localStorage.setItem(EKey.TOKEN, res.token);
         dispatch(setUserLogin(res.user));
-        // if (solutionId) {
-        //   dispatch(push(routes.project.create));
-        // }
       })
       .catch((e) => {
         // if (e.detail === 'notVerified') setIsNotVerified(true)
@@ -134,29 +132,29 @@ const Login: NextPage = () => {
                           <p className={classes.textYouAre}>You are: </p>
                           <div className={classes.boxCheckRole}>
                             <Controller
-                            name="role"
-                            control={control}
-                            render={({field}) => (
-                              <>
-                              <InputCheckbox
-                              content="Normal"
-                              checked={field.value === EUserType.USER}
-                              onChange={() => {
-                                setValue("role", EUserType.USER)
-                              }}
-                              />                
-                              <InputCheckbox
-                              content="Enterprise"
-                              checked={field.value === EUserType.ENTERPRISE}
-                              onChange={() => {
-                                setValue("role", EUserType.ENTERPRISE)
-                              }}
-                              />
-                              </>
-                            )}
+                              name="role"
+                              control={control}
+                              render={({ field }) => (
+                                <>
+                                  <InputCheckbox
+                                    content="Normal"
+                                    checked={field.value === EUserType.USER}
+                                    onChange={() => {
+                                      setValue("role", EUserType.USER);
+                                    }}
+                                  />
+                                  <InputCheckbox
+                                    content="Enterprise"
+                                    checked={field.value === EUserType.ENTERPRISE}
+                                    onChange={() => {
+                                      setValue("role", EUserType.ENTERPRISE);
+                                    }}
+                                  />
+                                </>
+                              )}
                             />
                           </div>
-                        </div>                        
+                        </div>
                         <div className={classes.btnLoginContainer}>
                           <Button btnType={BtnType.Linear} type="submit">
                             Sign in

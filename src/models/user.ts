@@ -17,7 +17,8 @@ export interface User {
 
 export interface LoginForm {
   username: string,
-  password: string
+  password: string,
+  role: number,
 }
 
 export interface RegisterForm {
