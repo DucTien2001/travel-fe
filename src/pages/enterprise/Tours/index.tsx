@@ -43,7 +43,6 @@ const Tour = memo(()=> {
                     <Button btnType={BtnType.Primary} onClick={onTogglePopupCreateTour}><FontAwesomeIcon icon={faPlus}/>Create</Button>
             </Row>
             <Table
-              bordered
               className={classes.table}
               responsive
             >
