@@ -21,6 +21,10 @@
     .card {
         border-radius: 16px;
     }
+    @media only screen and (max-width: 767px) {
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+    }
 }
 
 .headerLoginContainer {
@@ -74,4 +78,21 @@
     @media only screen and (max-width: 767px) {
       line-height: 16px;
     }
+}
+
+.boxTextRole {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  .boxCheckRole {
+    display: flex;
+    gap: 24px;
+  }
+}
+.textYouAre {
+  font-size: 14px; 
+  font-weight: 500;
+  margin: 0;
 }

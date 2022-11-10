@@ -4,7 +4,7 @@ export interface User {
     id: number;
     email: string;
     passWord: string;
-    role: string;
+    role: number;
     avatar: any;
     firstName: string;
     lastName: string;
@@ -20,19 +20,19 @@ export interface LoginForm {
   password: string
 }
 
-export enum EAdminType {
-  SUPER_ADMIN = 1,
-  ADMIN = 2,
+export enum EUserType {
+  ADMIN = 1,
+  ENTERPRISE = 2,
   USER = 3,
 }
 
 export const adminTypes: OptionItem[] = [
   {
-      id: EAdminType.ADMIN,
+      id: EUserType.ADMIN,
       name: 'Admin'
   },
   {
-      id: EAdminType.USER,
+      id: EUserType.USER,
       name: 'User'
   }
 ]

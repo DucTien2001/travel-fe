@@ -15,14 +15,28 @@
     background-position: center;
     background-size: cover;
 }
-
+.containerCard {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
 .container {
     padding-top: 80px;
     .card {
         border-radius: 16px;
     }
+    @media only screen and (max-width: 767px) {
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+    }
 }
-
+.row {
+  @media only screen and (max-width: 767px) {
+    flex-direction: column;
+    .colName {
+      max-width: 100%;
+    }
+  }
+}
 .headerSignUpContainer {
    p {
     margin-top: 50px;
@@ -75,3 +89,21 @@
       line-height: 16px;
     }
 }
+.boxTextRole {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  .boxCheckRole {
+    display: flex;
+    gap: 24px;
+  }
+}
+.textYouAre {
+  font-size: 14px; 
+  font-weight: 500;
+  margin: 0;
+}
+
+

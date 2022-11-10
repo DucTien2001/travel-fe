@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Form } from "reactstra
 import { useState, useMemo, useEffect } from "react";
 import clsx from "clsx";
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import classes from "./styles.module.scss";
@@ -18,10 +18,13 @@ import { EKey } from "models/general";
 import { setUserLogin } from "redux/reducers/User/actionTypes";
 import { ReducerType } from "redux/reducers";
 import Router from "next/router";
+import { EUserType } from "models/user";
+import InputCheckbox from "components/common/inputs/InputCheckbox";
 
 interface LoginForm {
   email: string;
   password: string;
+  role: number;
 }
 
 const Login: NextPage = () => {
@@ -34,6 +37,7 @@ const Login: NextPage = () => {
     return yup.object().shape({
       email: yup.string().email("Please enter a valid email address").required("Email is required"),
       password: yup.string().required("Password is required"),
+      role: yup.number().required(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language]);
@@ -43,9 +47,14 @@ const Login: NextPage = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    control,
+    setValue,
   } = useForm<LoginForm>({
     resolver: yupResolver(schema),
     mode: "onChange",
+    defaultValues: { 
+      role: EUserType.USER,
+    }
   });
 
   useEffect(() => {
@@ -58,6 +67,7 @@ const Login: NextPage = () => {
     reset({
       email: "",
       password: "",
+      role: EUserType.USER
     });
   };
 
@@ -120,6 +130,33 @@ const Login: NextPage = () => {
                           inputRef={register("password")}
                           errorMessage={errors.password?.message}
                         />
+                        <div className={classes.boxTextRole}>
+                          <p className={classes.textYouAre}>You are: </p>
+                          <div className={classes.boxCheckRole}>
+                            <Controller
+                            name="role"
+                            control={control}
+                            render={({field}) => (
+                              <>
+                              <InputCheckbox
+                              content="Normal"
+                              checked={field.value === EUserType.USER}
+                              onChange={() => {
+                                setValue("role", EUserType.USER)
+                              }}
+                              />                
+                              <InputCheckbox
+                              content="Enterprise"
+                              checked={field.value === EUserType.ENTERPRISE}
+                              onChange={() => {
+                                setValue("role", EUserType.ENTERPRISE)
+                              }}
+                              />
+                              </>
+                            )}
+                            />
+                          </div>
+                        </div>                        
                         <div className={classes.btnLoginContainer}>
                           <Button btnType={BtnType.Linear} type="submit">
                             Sign in

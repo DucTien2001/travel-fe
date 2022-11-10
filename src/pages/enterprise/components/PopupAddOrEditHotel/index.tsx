@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faBed } from '@fortawesome/free-solid-svg-icons';
 import { useDropzone } from 'react-dropzone';
 import { clsx } from 'clsx';
+import UploadImage from "components/UploadImage";
 
 const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 const PHOTO_SIZE = 10000000000; // bytes
@@ -29,7 +30,6 @@ export interface HotelForm {
   tags: string;
   creator: string;
   isTemporarilyStopWorking: boolean;
-  roomNumber: string;
   imagesHotel: string[];
 
 }
@@ -99,41 +99,41 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       })
     }
 
-    const onDrop = useCallback((acceptedFiles: File[]) => {
-      const checkMinImages = acceptedFiles.length >= MIN_IMAGES;
-      if(!checkMinImages) {
-        setIsError("min-invalid")
-        setImagesHotel([])
-        return;
-      }
-      const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
-      if(!checkMaxImages) {
-        setIsError("max-invalid")
-        setImagesHotel([])
-        return;
-      }
-      acceptedFiles.forEach((file: File) => { 
-        const reader = new FileReader();
-        const checkSize = file.size < PHOTO_SIZE;
-        const checkType = FILE_FORMATS.includes(file.type);
-        if (!checkSize) {
-          setIsError('size-invalid');
-          return
-        }        
-        if (!checkType) {
-          setIsError('type-invalid');
-          return
-        }
-        setIsError('');
-        reader.onload = () => {
-          setImagesHotel((prevState:any) => [...prevState, reader.result])
-        }
-        reader.readAsDataURL(file);
-      })
-    }, [])
+    // const onDrop = useCallback((acceptedFiles: File[]) => {
+    //   const checkMinImages = acceptedFiles.length >= MIN_IMAGES;
+    //   if(!checkMinImages) {
+    //     setIsError("min-invalid")
+    //     setImagesHotel([])
+    //     return;
+    //   }
+    //   const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
+    //   if(!checkMaxImages) {
+    //     setIsError("max-invalid")
+    //     setImagesHotel([])
+    //     return;
+    //   }
+    //   acceptedFiles.forEach((file: File) => { 
+    //     const reader = new FileReader();
+    //     const checkSize = file.size < PHOTO_SIZE;
+    //     const checkType = FILE_FORMATS.includes(file.type);
+    //     if (!checkSize) {
+    //       setIsError('size-invalid');
+    //       return
+    //     }        
+    //     if (!checkType) {
+    //       setIsError('type-invalid');
+    //       return
+    //     }
+    //     setIsError('');
+    //     reader.onload = () => {
+    //       setImagesHotel((prevState:any) => [...prevState, reader.result])
+    //     }
+    //     reader.readAsDataURL(file);
+    //   })
+    // }, [])
   
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
-    }); 
+    // const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
+    // }); 
     
     const changeCollapse = (collapse: number) => {
       if (collapses.includes(collapse)) {
@@ -149,21 +149,21 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       toggle();
   }
 
-    useEffect(() => {      
-      // const checkMaxImages = images.length <= MAX_IMAGES;
-      // if(!checkMaxImages) {
-      //   setIsError("max-invalid")
-      //   return;
-      // }
-      setValue("imagesHotel", imagesHotel)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [imagesHotel]);
+    // useEffect(() => {      
+    //   // const checkMaxImages = images.length <= MAX_IMAGES;
+    //   // if(!checkMaxImages) {
+    //   //   setIsError("max-invalid")
+    //   //   return;
+    //   // }
+    //   setValue("imagesHotel", imagesHotel)
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [imagesHotel]);
 
 
-  const onDelete = (file: any) => {
-    const newImages = imagesHotel.filter(it => it !== file)
-    setImagesHotel(newImages)
-  }
+  // const onDelete = (file: any) => {
+  //   const newImages = imagesHotel.filter(it => it !== file)
+  //   setImagesHotel(newImages)
+  // }
 
   return (
     <>  
@@ -233,45 +233,15 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         />
                         </Col>
                       </Row>
-                    <Row className={clsx("mb-2",classes.row)}>
-                        <Col>
-                          <p className={classes.titleUpload}>Upload images your hotel</p>
-                          <div className={classes.main}>
-                              <div className={classes.listImageContainer}>
-                                {imagesHotel?.length > 0 && <Row className={classes.rowImg}>
-                                  {imagesHotel?.map((image: string | undefined, index: React.Key | null | undefined) => 
-                                    (<Col xs={3} key={index} className={classes.imageContainer}>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img  alt="anh" src={image} className="selected-iamges"/>
-                                    <div onClick={() => onDelete(image)} className={classes.deleteImage}><FontAwesomeIcon icon={faCircleXmark}/></div> 
-                                    </Col>) 
-                                    )}
-                                  </Row>
-                                }
-                              </div>
-                              <Button className={classes.dropZone} btnType={BtnType.Primary} {...getRootProps()} disabled={imagesHotel?.length >= MAX_IMAGES}>
-                              <input {...getInputProps()} className={classes.input} name="images"/>
-                              {isDragActive ? 'Drag active' : "Choose your images"}
-                              </Button>
-                              {isError === 'size-invalid' && <ErrorMessage translation-key="common_file_size">size: {fData(PHOTO_SIZE) }</ErrorMessage>}
-                              {isError === 'max-invalid' && <ErrorMessage>You can upload only {MAX_IMAGES} images</ErrorMessage>}
-                              {isError === 'min-invalid' && <ErrorMessage>You must upload minimum {MIN_IMAGES} images</ErrorMessage>}                  
-                              {isError === 'type-invalid' &&
-                                (
-                                  <ErrorMessage  translation-key="common_file_type">
-                                    Please choose following format: {" "}
-                                    {
-                                        FILE_FORMATS.map(format => (
-                                          format.replace("image/", "*.")
-                                        )).join(", ")
-                                    }
-                                  </ErrorMessage>
-                                )
-                              }
-                              {!imagesHotel?.length && <ErrorMessage>{errors.imagesHotel?.message}</ErrorMessage> }
-                          </div>
-                      </Col>
-                      </Row>
+                      <Controller
+                      name="imagesHotel"
+                      control={control}
+                      render={({field}) => (
+                        <UploadImage
+                        onChange={field.onChange}
+                        />
+                      )}
+                      />                
                 </ModalBody>            
                 <ModalFooter className={classes.footer}>
                     <Button btnType={BtnType.Primary} type="submit">
