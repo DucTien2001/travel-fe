@@ -10,18 +10,8 @@ import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import ErrorMessage from 'components/common/texts/ErrorMessage';
-import { fData } from 'utils/formatNumber';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark, faBed } from '@fortawesome/free-solid-svg-icons';
-import { useDropzone } from 'react-dropzone';
-import { clsx } from 'clsx';
 import UploadImage from "components/UploadImage";
 
-const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
-const PHOTO_SIZE = 10000000000; // bytes
-const MAX_IMAGES = 9;
-const MIN_IMAGES = 3;
 export interface HotelForm { 
   name: string;
   description: string;
@@ -45,39 +35,30 @@ const PopupAddOrEditHotel = memo((props: Props) => {
     const {isOpen, toggle, onClose, rest} = props; 
 
     const { t, i18n } = useTranslation();
-
-    const [imagesHotel, setImagesHotel] = useState<any>([]);
-    const [isError, setIsError] = useState<string>('');
     const [collapses, setCollapses] = React.useState([1]);
 
     const schema = useMemo(() => {
       return yup.object().shape({
           name: yup.string().required("Name is required"),
           description: yup.string().required("Description is required"),
-          businessHours: yup.string().required("Hours is required"),
           location: yup.string().required("Location is required"),
           contact: yup.string().required("Contact is required"),
-          price: yup.number().required("Price is required"),
-          discount: yup.number().notRequired(),
           tags: yup.string().required("Tags is required"),
           creator: yup.string().required("Creator is required"),
           isTemporarilyStopWorking: yup.boolean().required(),
-          imagesHotel: yup.array().required("Images is required"),
+          imagesHotel: yup.mixed().test("required", "Please select images", value => {
+            return value && value.length;
+          }),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [i18n.language]);
-
-
 
      const {
       register,
       handleSubmit,
       formState: { errors },
       reset,
-      watch,
-      setValue,
       control,
-      clearErrors,
       } = useForm<HotelForm>({
         resolver: yupResolver(schema),
         mode: "onChange",
@@ -99,42 +80,6 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       })
     }
 
-    // const onDrop = useCallback((acceptedFiles: File[]) => {
-    //   const checkMinImages = acceptedFiles.length >= MIN_IMAGES;
-    //   if(!checkMinImages) {
-    //     setIsError("min-invalid")
-    //     setImagesHotel([])
-    //     return;
-    //   }
-    //   const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
-    //   if(!checkMaxImages) {
-    //     setIsError("max-invalid")
-    //     setImagesHotel([])
-    //     return;
-    //   }
-    //   acceptedFiles.forEach((file: File) => { 
-    //     const reader = new FileReader();
-    //     const checkSize = file.size < PHOTO_SIZE;
-    //     const checkType = FILE_FORMATS.includes(file.type);
-    //     if (!checkSize) {
-    //       setIsError('size-invalid');
-    //       return
-    //     }        
-    //     if (!checkType) {
-    //       setIsError('type-invalid');
-    //       return
-    //     }
-    //     setIsError('');
-    //     reader.onload = () => {
-    //       setImagesHotel((prevState:any) => [...prevState, reader.result])
-    //     }
-    //     reader.readAsDataURL(file);
-    //   })
-    // }, [])
-  
-    // const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
-    // }); 
-    
     const changeCollapse = (collapse: number) => {
       if (collapses.includes(collapse)) {
         setCollapses(collapses.filter((prop) => prop !== collapse));
@@ -148,22 +93,6 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       clearForm();
       toggle();
   }
-
-    // useEffect(() => {      
-    //   // const checkMaxImages = images.length <= MAX_IMAGES;
-    //   // if(!checkMaxImages) {
-    //   //   setIsError("max-invalid")
-    //   //   return;
-    //   // }
-    //   setValue("imagesHotel", imagesHotel)
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [imagesHotel]);
-
-
-  // const onDelete = (file: any) => {
-  //   const newImages = imagesHotel.filter(it => it !== file)
-  //   setImagesHotel(newImages)
-  // }
 
   return (
     <>  
@@ -225,6 +154,18 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         errorMessage={errors.contact?.message}
                         />
                       </Col>
+                      <Controller
+                        name="imagesHotel"
+                        control={control}
+                        render={({field}) => (
+                          <UploadImage
+                          title = "Upload your hotel images"
+                          file={field.value as unknown as File[]}
+                          onChange={(value) =>field.onChange(value)}
+                          errorMessage={errors.imagesHotel?.message}
+                          />
+                        )}
+                      /> 
                       <Row className={classes.row}>
                         <Col>
                         <InputCheckbox
@@ -232,16 +173,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         inputRef={register("isTemporarilyStopWorking")}
                         />
                         </Col>
-                      </Row>
-                      <Controller
-                      name="imagesHotel"
-                      control={control}
-                      render={({field}) => (
-                        <UploadImage
-                        onChange={field.onChange}
-                        />
-                      )}
-                      />                
+                      </Row>              
                 </ModalBody>            
                 <ModalFooter className={classes.footer}>
                     <Button btnType={BtnType.Primary} type="submit">

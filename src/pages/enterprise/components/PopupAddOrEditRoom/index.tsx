@@ -17,12 +17,13 @@ import { faCircleXmark, faListCheck, faTrash } from '@fortawesome/free-solid-svg
 import { useDropzone } from 'react-dropzone';
 import { clsx } from 'clsx';
 import InputTextField from 'components/common/inputs/InputTextField';
+import UploadImage from "components/UploadImage";
 
 const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 const PHOTO_SIZE = 10000000000; // bytes
 const MAX_IMAGES = 9;
 const MIN_IMAGES = 3;
-export interface HotelForm { 
+export interface RoomForm { 
   room: { 
     title: string;
     imagesRoom: string[];
@@ -47,18 +48,16 @@ interface Props extends ModalProps{
 // eslint-disable-next-line react/display-name
 const PopupAddOrEditHotel = memo((props: Props) => {
     const {isOpen, toggle, onClose, rest} = props; 
-
     const { t, i18n } = useTranslation();
-
-    const [imagesRoom, setImagesRoom] = useState<any>([]);
-    const [isError, setIsError] = useState<string>('');
     const [isOpenToggleArr, setIsOpenToggleArr] = useState([true]);
 
     const schema = useMemo(() => {
       return yup.object().shape({
           room: yup.array(yup.object({
             title: yup.string().required("Name is required"),
-            imagesRoom: yup.array().required("Images is required"),
+            imagesRoom: yup.mixed().test("required", "Please select images", value => {
+              return value && value.length;
+            }),
             priceDays: yup
             .array(
               yup.object({            
@@ -82,66 +81,22 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       handleSubmit,
       formState: { errors },
       reset,
-      watch,
-      setValue,
       control,
-      setError,
-      } = useForm<HotelForm>({
+      } = useForm<RoomForm>({
         resolver: yupResolver(schema),
         mode: "onChange",
     });
 
-    const onDrop = useCallback((acceptedFiles: File[]) => {
-      const checkMinImages = acceptedFiles.length >= MIN_IMAGES;
-      if(!checkMinImages) {
-        setIsError("min-invalid")
-        setImagesRoom([])
-        return;
-      }
-      const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
-      if(!checkMaxImages) {
-        setIsError("max-invalid")
-        setImagesRoom([])
-        return;
-      }
-      acceptedFiles.forEach((file: File) => { 
-        const reader = new FileReader();
-        const checkSize = file.size < PHOTO_SIZE;
-        const checkType = FILE_FORMATS.includes(file.type);
-        if (!checkSize) {
-          setIsError('size-invalid');
-          return
-        }        
-        if (!checkType) {
-          setIsError('type-invalid');
-          return
-        }
-        setIsError('');
-        reader.onload = () => {
-          setImagesRoom((prevState:any) => [...prevState, reader.result])
-        }
-        reader.readAsDataURL(file);
-      })
-    }, [])
     
     const { fields: fieldsRoom, append: appendRoom, remove: removeRoom } = useFieldArray({
         control,
         name: "room",
     });
     
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
-    }); 
-    
   const handleToggleCollapse = (index) => {
     const newIsOpen = [...isOpenToggleArr];
     newIsOpen[index] = !newIsOpen[index];
     setIsOpenToggleArr(newIsOpen);
-  };
-
-  const handleAddImages = (index) => {
-    const newImages = [...imagesRoom];
-    newImages[index] = !newImages[index];
-    setImagesRoom(newImages);
   };
 
     const onAddRoom = () => {
@@ -162,29 +117,11 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       })
     }
 
-    const onDeleteImages = (file: any) => {
-      const newImages = imagesRoom.filter(it => it !== file)
-      setImagesRoom(newImages)
-    }
-    
-    const _onSubmit = (data: HotelForm) => {
+    const _onSubmit = (data: RoomForm) => {
       console.log(data);
       clearForm();
       toggle();
   }
-
-    useEffect(() => {      
-      // const checkMaxImages = images.length <= MAX_IMAGES;
-      // if(!checkMaxImages) {
-      //   setIsError("max-invalid")
-      //   return;
-      // } 
-      imagesRoom.map((item, index) => {
-        setValue(`room.${index}.imagesRoom`, item)
-      })
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [imagesRoom]);
-
 
     useEffect(() => {
       onAddRoom()
@@ -225,46 +162,18 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         </Col>
                     </Row> 
                     {/* row images */}
-                    <Row className={clsx("mb-2",classes.row)}>
-                            <Col>
-                              <p className={classes.titleUpload}>Upload images your room</p>
-                              <div className={classes.main}>
-                                  <div className={classes.listImageContainer}>
-                                    {imagesRoom?.length > 0 && <Row className={classes.rowImg}>
-                                      {imagesRoom?.map((image: string | undefined, index: React.Key | null | undefined) => 
-                                        (<Col xs={3} key={index} className={classes.imageContainer}>
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img  alt="anh" src={image} className="selected-iamges"/>
-                                        <div onClick={() => onDeleteImages(image)} className={classes.deleteImage}><FontAwesomeIcon icon={faCircleXmark}/></div> 
-                                        </Col>) 
-                                        )}
-                                      </Row>
-                                    }
-                                  </div>
-                                  <Button className={classes.dropZone} btnType={BtnType.Primary} {...getRootProps()} disabled={imagesRoom?.length >= MAX_IMAGES}>
-                                    <input {...getInputProps()} className={classes.input} name="images"/>
-                                    {isDragActive ? 'Drag active' : "Choose your images"}
-                                  </Button>
-                                  {isError === 'size-invalid' && <ErrorMessage translation-key="common_file_size">size: {fData(PHOTO_SIZE) }</ErrorMessage>}
-                                  {isError === 'max-invalid' && <ErrorMessage>You can upload only {MAX_IMAGES} images</ErrorMessage>}
-                                  {isError === 'min-invalid' && <ErrorMessage>You must upload minimum {MIN_IMAGES} images</ErrorMessage>}                  
-                                  {isError === 'type-invalid' &&
-                                    (
-                                      <ErrorMessage  translation-key="common_file_type">
-                                        Please choose following format: {" "}
-                                        {
-                                            FILE_FORMATS.map(format => (
-                                              format.replace("image/", "*.")
-                                            )).join(", ")
-                                        }
-                                      </ErrorMessage>
-                                    )
-                                  }
-                                 
-                              </div>
-                              {imagesRoom?.length === 0 && <ErrorMessage>{errors.room && errors.room[index]?.imagesRoom?.message}</ErrorMessage> }
-                          </Col>
-                    </Row>
+                    <Controller
+                        name={`room.${index}.imagesRoom`}
+                        control={control}
+                        render={({field}) => (
+                          <UploadImage
+                          title = "Upload your hotel images"
+                          file={field.value as unknown as File[]}
+                          onChange={(value) =>field.onChange(value)}
+                          errorMessage={errors.room && errors.room[index]?.imagesRoom?.message}
+                          />
+                        )}
+                      /> 
                     {/* row price table */}
                     <Row className={classes.row}> 
                         <Col>
@@ -305,7 +214,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                     <td className={classes.tdPriceInput}>
                                       <InputTextField   
                                       inputRef={register(`room.${index}.priceDays.${index}.monday`)}  
-                                      errorMessage={errors.room && errors.room[index]?.priceDays[index]?.monday?.message}                      
+                                      errorMessage={errors.room && errors.room[index]?.priceDays?.[index]?.monday?.message}                      
                                       />
                                       &nbsp;VND
                                     </td>
@@ -317,7 +226,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                     <td className={classes.tdPriceInput}>
                                     <InputTextField   
                                       inputRef={register(`room.${index}.priceDays.${index}.tuesday`)}
-                                      errorMessage={errors.room && errors.room[index]?.priceDays[index]?.tuesday?.message}                               
+                                      errorMessage={errors.room && errors.room[index]?.priceDays?.[index].tuesday?.message}                               
                                       />
                                       &nbsp;VND
                                     </td>
@@ -329,7 +238,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                     <td className={classes.tdPriceInput}>
                                     <InputTextField   
                                       inputRef={register(`room.${index}.priceDays.${index}.wednesday`)}  
-                                      errorMessage={errors.room && errors.room[index]?.priceDays[index]?.wednesday?.message}                             
+                                      errorMessage={errors.room && errors.room[index]?.priceDays?.[index].wednesday?.message}                               
                                       />
                                       &nbsp;VND
                                     </td>
@@ -341,7 +250,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                     <td className={classes.tdPriceInput}>
                                     <InputTextField   
                                       inputRef={register(`room.${index}.priceDays.${index}.thursday`)}  
-                                      errorMessage={errors.room && errors.room[index]?.priceDays[index]?.thursday?.message}                             
+                                      errorMessage={errors.room && errors.room[index]?.priceDays?.[index].thursday?.message}                              
                                       />
                                       &nbsp;VND
                                     </td>
@@ -353,7 +262,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                     <td className={classes.tdPriceInput}>
                                     <InputTextField   
                                       inputRef={register(`room.${index}.priceDays.${index}.friday`)}  
-                                      errorMessage={errors.room && errors.room[index]?.priceDays[index]?.friday?.message}                             
+                                      errorMessage={errors.room && errors.room[index]?.priceDays?.[index].friday?.message}                           
                                       />
                                       &nbsp;VND
                                     </td>
@@ -365,7 +274,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                     <td className={classes.tdPriceInput}>
                                     <InputTextField   
                                       inputRef={register(`room.${index}.priceDays.${index}.saturday`)}  
-                                      errorMessage={errors.room && errors.room[index]?.priceDays[index]?.saturday?.message}                             
+                                      errorMessage={errors.room && errors.room[index]?.priceDays?.[index].saturday?.message}                            
                                       />
                                       &nbsp;VND
                                     </td>
@@ -377,7 +286,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                     <td className={classes.tdPriceInput}>
                                     <InputTextField   
                                       inputRef={register(`room.${index}.priceDays.${index}.sunday`)}   
-                                      errorMessage={errors.room && errors.room[index]?.priceDays[index]?.sunday?.message}                            
+                                      errorMessage={errors.room && errors.room[index]?.priceDays?.[index].sunday?.message}                           
                                       />
                                       &nbsp;VND
                                     </td> 

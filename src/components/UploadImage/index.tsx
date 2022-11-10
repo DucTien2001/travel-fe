@@ -26,7 +26,7 @@ const MIN_IMAGES = 3;
 interface Props { 
     title?: string;
     errorMessage?: string;
-    // file?: string[] | File[];
+    file?: string[] | File[];
     onChange?: (file: string[] | File[]) => void;
 }
 
@@ -36,7 +36,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
 
     const { t, i18n } = useTranslation();
 
-    const [imagesHotel, setImagesHotel] = useState<any>([]);
+    const [imagesReview, setImagesReview] = useState<any>([]);
     const [isError, setIsError] = useState<string>('');
 
 
@@ -45,13 +45,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       const checkMinImages = acceptedFiles.length >= MIN_IMAGES;
       if(!checkMinImages) {
         setIsError("min-invalid")
-        setImagesHotel([])
+        setImagesReview([])
         return;
       }
       const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
       if(!checkMaxImages) {
         setIsError("max-invalid")
-        setImagesHotel([])
+        setImagesReview([])
         return;
       }
       acceptedFiles.forEach((file: File) => { 
@@ -68,8 +68,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         }
         setIsError('');
         reader.onload = () => {
-          setImagesHotel((prevState:any) => [...prevState, reader.result])
-          
+          setImagesReview((prevState:any) => [...prevState, reader.result]) 
         }
         reader.readAsDataURL(file);
       })
@@ -79,13 +78,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
     }); 
 
     useEffect(() => {      
-        onChange && onChange(imagesHotel)
-    }, [imagesHotel]);
+        onChange && onChange([...imagesReview])
+    }, [imagesReview]);
 
 
   const onDelete = (file: any) => {
-    const newImages = imagesHotel.filter(it => it !== file)
-    setImagesHotel(newImages)
+    const newImages = imagesReview.filter(it => it !== file)
+    setImagesReview(newImages)
   }
 
   return (
@@ -93,11 +92,11 @@ const PopupAddOrEditHotel = memo((props: Props) => {
 
         <Row className={clsx("mb-2",classes.row)}>
             <Col>
-                <p className={classes.titleUpload}>Upload images your hotel</p>
-                    <div className={classes.main}>
+                <p className={classes.titleUpload}>{title}</p>
+                    <div className={classes.main} {...getRootProps()}>
                         <div className={classes.listImageContainer}>
-                            {imagesHotel?.length > 0 && <Row className={classes.rowImg}>
-                                {imagesHotel?.map((image: string | undefined, index: React.Key | null | undefined) => 
+                            {imagesReview?.length > 0 && <Row className={classes.rowImg}>
+                                {imagesReview?.map((image: string | undefined, index: React.Key | null | undefined) => 
                                     (<Col xs={3} key={index} className={classes.imageContainer}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img  alt="anh" src={image} className="selected-iamges"/>
@@ -107,7 +106,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   </Row>
                                 }
                               </div>
-                              <Button className={classes.dropZone} btnType={BtnType.Primary} {...getRootProps()} disabled={imagesHotel?.length >= MAX_IMAGES}>
+                              <Button className={classes.dropZone} btnType={BtnType.Primary}  disabled={imagesReview?.length >= MAX_IMAGES}>
                               <input {...getInputProps()} className={classes.input} name="images"/>
                               {isDragActive ? 'Drag active' : "Choose your images"}
                               </Button>
@@ -126,7 +125,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   </ErrorMessage>
                             )
                         }
-                        {/* {!imagesHotel?.length && <ErrorMessage>{errors.imagesHotel?.message}</ErrorMessage> } */}
+                        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage> }
                     </div>
                 </Col>
             </Row>

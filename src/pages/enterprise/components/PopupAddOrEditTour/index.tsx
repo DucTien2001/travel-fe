@@ -10,16 +10,8 @@ import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import ErrorMessage from 'components/common/texts/ErrorMessage';
-import { fData } from 'utils/formatNumber';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import { useDropzone } from 'react-dropzone';
+import UploadImage  from 'components/UploadImage';
 
-const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
-const PHOTO_SIZE = 10000000000; // bytes
-const MAX_IMAGES = 9;
-const MIN_IMAGES = 3;
 export interface TourForm { 
   name: string;
   description: string;
@@ -43,12 +35,7 @@ interface Props extends ModalProps{
 // eslint-disable-next-line react/display-name
 const PopupCreateTour = memo((props: Props) => {
     const {isOpen, toggle, onClose, rest} = props; 
-
     const { t, i18n } = useTranslation();
-
-    const [images, setImages] = useState<any>([]);
-    const [isError, setIsError] = useState<string>('');
-
     const schema = useMemo(() => {
       return yup.object().shape({
           name: yup.string().required("Name is required"),
@@ -61,7 +48,9 @@ const PopupCreateTour = memo((props: Props) => {
           tags: yup.string().required("Tags is required"),
           creator: yup.string().required("Creator is required"),
           isTemporarilyStopWorking: yup.boolean().required(),
-          images: yup.array().max(9, "max 9").required("Images is required"),
+          images: yup.mixed().test("required", "Please select images", value => {
+            return value && value.length;
+          }),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [i18n.language]);
@@ -71,10 +60,7 @@ const PopupCreateTour = memo((props: Props) => {
       handleSubmit,
       formState: { errors },
       reset,
-      watch,
-      setValue,
       control,
-      clearErrors,
       } = useForm<TourForm>({
         resolver: yupResolver(schema),
         mode: "onChange",
@@ -99,63 +85,12 @@ const PopupCreateTour = memo((props: Props) => {
       })
     }
 
-    const onDrop = useCallback((acceptedFiles: File[]) => {
-      const checkMinImages = acceptedFiles.length >= MIN_IMAGES;
-      if(!checkMinImages) {
-        setIsError("min-invalid")
-        setImages([])
-        return;
-      }
-      const checkMaxImages = acceptedFiles.length <= MAX_IMAGES;
-      if(!checkMaxImages) {
-        setIsError("max-invalid")
-        setImages([])
-        return;
-      }
-      acceptedFiles.forEach((file: File) => { 
-        const reader = new FileReader();
-        const checkSize = file.size < PHOTO_SIZE;
-        const checkType = FILE_FORMATS.includes(file.type);
-        if (!checkSize) {
-          setIsError('size-invalid');
-          return
-        }        
-        if (!checkType) {
-          setIsError('type-invalid');
-          return
-        }
-        setIsError('');
-        reader.onload = () => {
-          setImages((prevState:any) => [...prevState, reader.result])
-        }
-        reader.readAsDataURL(file);
-      })
-    }, [])
-  
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
-    }); 
-    
     const _onSubmit = (data: TourForm) => {
       console.log(data);
       clearForm();
       toggle();
   }
 
-    useEffect(() => {      
-      // const checkMaxImages = images.length <= MAX_IMAGES;
-      // if(!checkMaxImages) {
-      //   setIsError("max-invalid")
-      //   return;
-      // }
-      setValue("images", images)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [images]);
-
-
-  const onDelete = (file: any) => {
-    const newImages = images.filter(it => it !== file)
-    setImages(newImages)
-  }
 
   return (
     <>  
@@ -249,45 +184,18 @@ const PopupCreateTour = memo((props: Props) => {
                       />
                       </Col>
                     </Row>
-                    <Row className={classes.row}>
-                      <Col>
-                      <p className={classes.titleUpload}>Upload images your tour</p>
-                      <div className={classes.main}>
-                          <div className={classes.listImageContainer}>
-                            {images?.length > 0 && <Row className={classes.rowImg}>
-                              {images?.map((image: string | undefined, index: React.Key | null | undefined) => 
-                                (<Col xs={3} key={index} className={classes.imageContainer}>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img  alt="anh" src={image} className="selected-iamges"/>
-                                <div onClick={() => onDelete(image)} className={classes.deleteImage}><FontAwesomeIcon icon={faCircleXmark}/></div> 
-                                </Col>) 
-                                )}
-                              </Row>
-                            }
-                          </div>
-                          <Button className={classes.dropZone} btnType={BtnType.Primary} {...getRootProps()} disabled={images?.length >= MAX_IMAGES}>
-                          <input {...getInputProps()} className={classes.input} name="images"/>
-                          {isDragActive ? 'Drag active' : "Choose your images"}
-                          </Button>
-                          {isError === 'size-invalid' && <ErrorMessage translation-key="common_file_size">size: {fData(PHOTO_SIZE) }</ErrorMessage>}
-                          {isError === 'max-invalid' && <ErrorMessage>You can upload only {MAX_IMAGES} images</ErrorMessage>}
-                          {isError === 'min-invalid' && <ErrorMessage>You must upload minimum {MIN_IMAGES} images</ErrorMessage>}                  
-                          {isError === 'type-invalid' &&
-                            (
-                              <ErrorMessage  translation-key="common_file_type">
-                                Please choose following format: {" "}
-                                {
-                                    FILE_FORMATS.map(format => (
-                                      format.replace("image/", "*.")
-                                    )).join(", ")
-                                }
-                              </ErrorMessage>
-                            )
-                          }
-                          {!images?.length && <ErrorMessage>{errors.images?.message}</ErrorMessage> }
-                      </div>
-                      </Col>
-                      </Row>
+                    <Controller
+                        name="images"
+                        control={control}
+                        render={({field}) => (
+                          <UploadImage
+                          title = "Upload your tour images"
+                          file={field.value as unknown as File[]}
+                          onChange={(value) =>field.onChange(value)}
+                          errorMessage={errors.images?.message}
+                          />
+                        )}
+                        /> 
                     <Row className={classes.row}>
                       <Col>
                         <InputCheckbox
@@ -295,7 +203,7 @@ const PopupCreateTour = memo((props: Props) => {
                         inputRef={register("isTemporarilyStopWorking")}
                         />
                       </Col>
-                    </Row>                   
+                    </Row>        
                 </ModalBody>                
                 <ModalFooter className={classes.footer}>
                     <Button btnType={BtnType.Primary} type="submit">
