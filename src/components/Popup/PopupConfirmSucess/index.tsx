@@ -19,11 +19,11 @@ import { faCircleCheck} from '@fortawesome/free-solid-svg-icons';
 
 
 interface Props extends ModalProps{ 
-    isOpen: boolean;
-    onClose: () => void;
-    toggle: () => void;
+    isOpen?: boolean;
+    onClose?: () => void;
+    toggle?: () => void;
     iconTitle?: React.ReactNode;
-    title: string;
+    title?: string;
     description?: string;
 }
 

@@ -17,8 +17,11 @@ import { useDispatch } from "react-redux";
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
 import { wrapper } from "redux/configureStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getMe } from "redux/reducers/User/actionTypes";
+import AppStatus from "components/AppStatus";
+import Router from "next/router";
+import LoadingScreen from "components/LoadingSrceen";
 
 // const { store } = createConfigureStore();
 
@@ -29,9 +32,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     dispatch(getMe())
   },[])
 
+  const [loading, setLoading] = useState(false);
+  Router.events.on("routeChangeStart", (url) => {
+    setLoading(true);
+  })
+  Router.events.on("routeChangeComplete", (url) => {
+    setLoading(false);
+  })
   return (
     // <Provider store={store}>
       <LayoutAuth>
+        {loading && <LoadingScreen/>}
+        <AppStatus />
         <Component {...pageProps} />
       </LayoutAuth>
     // </Provider>

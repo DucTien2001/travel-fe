@@ -23,10 +23,13 @@ import dynamic from "next/dynamic";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
 import SignOutButton from "components/common/buttons/SignOutButton";
+import UseAuth from "hooks/useAuth";
+
+
 const WhiteNavbar = memo(() => {
+  const { isLoggedIn, logout, user } = UseAuth();
   const [collapseOpen, setCollapseOpen] = useState(false);
   const [navbarColor, setNavbarColor] = useState(" navbar-transparent");
-  const isEnterprise = false;
   const handleCollapseNavbar = () => {
     if (window.innerWidth <= 991) {
       document.documentElement.classList.toggle("nav-open");
@@ -52,7 +55,7 @@ const WhiteNavbar = memo(() => {
   }, []);
   return (
     <>
-      <Navbar className={isEnterprise ? clsx("fixed-top",classes.navbarWrapperViolet) : clsx("fixed-top", navbarColor, classes.navbarWrapper)} expand="lg">
+      <Navbar className={clsx("fixed-top", navbarColor, classes.navbarWrapper)} expand="lg">
         <Container className={classes.container}>
           <div className={clsx("navbar-translate", classes.navLogoName)}>
             <Link href="/" passHref>
@@ -72,7 +75,6 @@ const WhiteNavbar = memo(() => {
           </div>
           <Collapse isOpen={collapseOpen} navbar className={classes.collapseMobile}>
             <Nav className={clsx("ml-auto", classes.navWrapperMenu)} id="ceva" navbar>
-              {!isEnterprise && ( <>
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
@@ -115,41 +117,6 @@ const WhiteNavbar = memo(() => {
                   nav
                   onClick={(e) => e.preventDefault()}
                 >
-                  <FontAwesomeIcon icon={faUser} className={classes.iconNav}/>
-                  <p>Profile</p>
-                </DropdownToggle>
-                <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
-                  <DropdownItem className="noti-title" header tag="div">
-                        <h6 className={classes.headerTitle}>Welcome!</h6>
-                      </DropdownItem>
-                  <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/profile" passHref>
-                      <a>
-                        <FontAwesomeIcon icon={faAddressCard} className={classes.iconNav}/>
-                        My profile
-                      </a>
-                    </Link>
-                  </DropdownItem>
-                  <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/paymentHistory" passHref>
-                      <a>
-                        <FontAwesomeIcon icon={faCalendarCheck} className={classes.iconNav}/>
-                        Payment history
-                      </a>
-                    </Link>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown></>)}
-              <UncontrolledDropdown nav>
-                <DropdownToggle
-                  caret
-                  color="default"
-                  data-toggle="dropdown"
-                  href="#pablo"
-                  id="navbarDropdownMenuLink"
-                  nav
-                  onClick={(e) => e.preventDefault()}
-                >
                   <FontAwesomeIcon icon={faEarthAsia} className={classes.iconNav}/>
                   <p>Languages</p>
                 </DropdownToggle>
@@ -172,14 +139,60 @@ const WhiteNavbar = memo(() => {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <NavItem>
-              {/* <SignOutButton/> */}
-              <Link href="/auth/login" passHref>
-                <a>
-                  <Button btnType={BtnType.Secondary}>Sign in</Button>
-                </a>
-              </Link>
-              </NavItem>
+              {isLoggedIn ?
+              (
+                <>
+                  <UncontrolledDropdown nav>
+                  <DropdownToggle
+                    caret
+                    color="default"
+                    data-toggle="dropdown"
+                    href="#pablo"
+                    id="navbarDropdownMenuLink"
+                    nav
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <FontAwesomeIcon icon={faUser} className={classes.iconNav}/>
+                    <p>Profile</p>
+                  </DropdownToggle>
+                  <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
+                    <DropdownItem className="noti-title" header tag="div">
+                          <h6 className={classes.headerTitle}>Welcome!</h6>
+                        </DropdownItem>
+                    <DropdownItem className={classes.dropdownItem}>
+                      <Link href="/profile" passHref>
+                        <a>
+                          <FontAwesomeIcon icon={faAddressCard} className={classes.iconNav}/>
+                          My profile
+                        </a>
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem className={classes.dropdownItem}>
+                      <Link href="/paymentHistory" passHref>
+                        <a>
+                          <FontAwesomeIcon icon={faCalendarCheck} className={classes.iconNav}/>
+                          Payment history
+                        </a>
+                      </Link>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+                <NavItem onClick={logout}> 
+                  <Link href="/auth/login" passHref>             
+                      <a>
+                        <Button btnType={BtnType.Secondary}>Sign out</Button>
+                      </a>      
+                  </Link>   
+                </NavItem> 
+              </>
+              )   
+              :        
+                <NavItem>
+                  <Link href="/auth/login" passHref>
+                    <Button btnType={BtnType.Secondary}>Sign in</Button>
+                  </Link>
+                </NavItem>     
+              }
             </Nav>
           </Collapse>
         </Container>

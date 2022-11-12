@@ -107,9 +107,11 @@ const Login: NextPage = () => {
       then(() => {
         setRegisterSuccess(true)
       })
-      .catch((e) => dispatch(setErrorMess(e)))
+      .catch((e) => {
+        dispatch(setErrorMess(e))
+      })
       .finally(() => dispatch(setLoading(false)))
-      clearForm();
+      // clearForm();
   }
     return (
       <div className="main-content">
@@ -246,7 +248,7 @@ const Login: NextPage = () => {
             onClose={onClosePopupRegisterSuccess}
             toggle={onClosePopupRegisterSuccess}
             title={"Confirm"}
-            description={"Thank you for booking their services. We will send you invoice and ticket information via email. Please check email for details."}
+            description={"You have register successfully. Please check email to verify."}
             />
         </div>
       </div>

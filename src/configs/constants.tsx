@@ -7,6 +7,7 @@ export const API = {
     LOGIN: '/v1.0/user/login',
     LOGIN_SOCIAL: '/v1.0/user/login/social',
     SEND_VERIFY_SIGNUP: '/v1.0/user/verify-signup',
+    RESEND_VERIFY_SIGNUP: '/v1.0/user/re-send-email-verify-signup/:id',
     REGISTER: '/v1.0/user/register',
     ACTIVE: '/v1.0/user/active',
     SEND_EMAIL_FORGOT_PASSWORD: '/v1.0/user/send-email-forgot-password',

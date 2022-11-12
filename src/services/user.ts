@@ -46,4 +46,16 @@ export class UserService {
         return Promise.reject(e?.response?.data);
       });
   }
+
+  
+  static async reSendEmailVerifySignup(id: number): Promise<User> {
+    return await api.put(`${API.AUTH.RESEND_VERIFY_SIGNUP}/${id}`)
+      .then((res) => {
+        return Promise.resolve(res.data.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
 }

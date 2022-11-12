@@ -12,7 +12,7 @@ import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder"
 import Google from "components/SocialButton/Google";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "redux/reducers/Status/actionTypes";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { UserService } from "services/user";
 import { EKey } from "models/general";
 import { setUserLogin } from "redux/reducers/User/actionTypes";
@@ -20,6 +20,12 @@ import { ReducerType } from "redux/reducers";
 import Router from "next/router";
 import { EUserType } from "models/user";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
+import ErrorMessage from "components/common/texts/ErrorMessage";
+import PopupDefault from "components/Popup/PopupDefault";
+
+
+// hiển thị thông báo verify trên nút submit nếu có rồi thì check còn chưa có thì resend email
+//  (call API resend)
 
 interface LoginForm {
   email: string;
@@ -32,6 +38,8 @@ const Login: NextPage = () => {
   const { user } = useSelector((state: ReducerType) => state.user);
 
   const { t, i18n } = useTranslation();
+  const [errorSubmit, setErrorSubmit] = useState(false)
+  const [isNotVerified, setIsNotVerified] = useState(false)
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -49,6 +57,8 @@ const Login: NextPage = () => {
     reset,
     control,
     setValue,
+    watch,
+    getValues,
   } = useForm<LoginForm>({
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -56,6 +66,14 @@ const Login: NextPage = () => {
       role: EUserType.USER,
     },
   });
+  
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      errorSubmit && setErrorSubmit(false)
+    });
+    return () => subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch]);
 
   useEffect(() => {
     if (user) {
@@ -83,15 +101,26 @@ const Login: NextPage = () => {
         localStorage.setItem(EKey.TOKEN, res.token);
         dispatch(setUserLogin(res.user));
       })
-      .catch((e) => {
-        // if (e.detail === 'notVerified') setIsNotVerified(true)
-        // else setErrorSubmit(true)
+      .catch(e => {
+        if (e.detail === 'notVerified') setIsNotVerified(true)
+        else setErrorSubmit(true)
       })
       .finally(() => {
-        // clearForm();
         dispatch(setLoading(false));
       });
   };
+
+  const onReSendVerifySignUp = () => {
+    setIsNotVerified(false)
+    const userID = user.id;
+    dispatch(setLoading(true))
+    UserService.reSendEmailVerifySignup(userID)
+      .then(() => {
+        dispatch(setSuccessMess("Resend successfully"))
+      })
+      .catch(e => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)))
+  }
   return (
     <div className="main-content">
       <div className={clsx("header page-header-image", classes.headerWrapper)}>
@@ -155,6 +184,13 @@ const Login: NextPage = () => {
                             />
                           </div>
                         </div>
+                        {errorSubmit && (
+                          <div className={classes.boxError}>
+                          <ErrorMessage>
+                            Please enter a correct email and password.
+                          </ErrorMessage>
+                          </div>
+                        )}
                         <div className={classes.btnLoginContainer}>
                           <Button btnType={BtnType.Linear} type="submit">
                             Sign in
@@ -189,6 +225,18 @@ const Login: NextPage = () => {
           </div>
         </Container>
       </div>
+      <PopupDefault
+      className={classes.popupResend}
+      isOpen={isNotVerified}
+      title="Notifications"
+      description="Your account is not be verified. Please check your email for confirmation or click here to get a confirmation email resend"
+      // eslint-disable-next-line react/no-children-prop
+      children= {
+        <>
+          <Button btnType={BtnType.Linear} onClick={onReSendVerifySignUp}>Send verify</Button>
+        </>
+      }
+      />
     </div>
   );
 };
