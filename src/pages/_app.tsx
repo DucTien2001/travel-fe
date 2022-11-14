@@ -12,7 +12,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import { publicRoutes } from "routes";
 config.autoAddCss = false;
 import type { AppProps } from "next/app";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { createConfigureStore } from "redux/configureStore";
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
@@ -22,15 +22,26 @@ import { getMe } from "redux/reducers/User/actionTypes";
 import AppStatus from "components/AppStatus";
 import Router from "next/router";
 import LoadingScreen from "components/LoadingSrceen";
+import { EUserType } from "models/user";
+import { ReducerType } from "redux/reducers";
+import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
 
 // const { store } = createConfigureStore();
 
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
+  const { user } = useSelector((state: ReducerType) => state.user);
+
+  useEffect(() => {
+    dispatch(getMe())
+  }, [dispatch])
 
   useEffect(()=>{
-    dispatch(getMe())
-  },[])
+    if( user && user?.role === EUserType.ENTERPRISE){
+      dispatch(getAllTours(user?.id))
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch, user])
 
   const [loading, setLoading] = useState(false);
   Router.events.on("routeChangeStart", (url) => {

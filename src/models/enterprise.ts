@@ -6,7 +6,7 @@ export interface ETour {
     location: string;
     price: number;
     discount: number;
-    tags: string;
+    tags: string[];
     images: string[];
     creator: number;
     isTemporarilyStopWorking?: boolean;

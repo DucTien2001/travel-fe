@@ -6,6 +6,7 @@ import Button, { BtnType } from "components/common/buttons/Button";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import InputTextArea from "components/common/inputs/InputTextArea";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
+import InputTags from "components/common/inputs/InputTags";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -26,7 +27,7 @@ export interface TourForm {
   location: string;
   price: number;
   discount?: number;
-  tags: string;
+  tags: string[];
   isTemporarilyStopWorking: boolean;
   images?: string[] | File[];
 }
@@ -54,7 +55,7 @@ const PopupCreateTour = memo((props: Props) => {
       location: yup.string().required("Location is required"),
       price: yup.number().typeError("Price must be a number").required("Price is required"),
       discount: yup.number().typeError("Discount must be a number").notRequired(),
-      tags: yup.string().required("Tags is required"),
+      tags: yup.array().required("Tags is required"),
       isTemporarilyStopWorking: yup.boolean().required(),
       images: yup.mixed().test("required", "Please select images", (value) => {
         return value && value.length;
@@ -85,7 +86,7 @@ const PopupCreateTour = memo((props: Props) => {
       location: "",
       price: null,
       discount: null,
-      tags: "",
+      tags: [],
       isTemporarilyStopWorking: false,
       images: [],
     });
@@ -153,7 +154,7 @@ const PopupCreateTour = memo((props: Props) => {
       <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
         <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
           <ModalHeader toggle={toggle} className={classes.title}>
-            Create tour
+            Create tour 2
           </ModalHeader>
           <ModalBody>
             <Row xs={6} sm={12} className={classes.row}>
@@ -186,12 +187,23 @@ const PopupCreateTour = memo((props: Props) => {
                 />
               </Col>
               <Col>
-                <InputTextFieldBorder
-                  label="Tags"
-                  className="mr-3"
-                  placeholder="Enter tour's tags"
-                  inputRef={register("tags")}
-                  errorMessage={errors.tags?.message}
+              <Controller
+                  name="tags"
+                  control={control}
+                  render={({ field }) => (
+                    <InputTags
+                      {...field}
+                      label="Tags"
+                      name="tags"
+                      placeholder="Enter tags"
+                      onChange={(value: any) => {
+                        return field.onChange(value);
+                      }}
+                      value={field.value ? field.value : []}
+                      control={control}
+                      errorMessage={errors.tags?.message}
+                    />
+                  )}
                 />
               </Col>
             </Row>

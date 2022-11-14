@@ -22,6 +22,7 @@ import { EUserType } from "models/user";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import PopupDefault from "components/Popup/PopupDefault";
+import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
 
 
 // hiển thị thông báo verify trên nút submit nếu có rồi thì check còn chưa có thì resend email
@@ -100,6 +101,9 @@ const Login: NextPage = () => {
       .then((res) => {
         localStorage.setItem(EKey.TOKEN, res.token);
         dispatch(setUserLogin(res.user));
+        if(res?.role === EUserType.ENTERPRISE) {
+          dispatch(getAllTours(res.user.id))
+        }
       })
       .catch(e => {
         if (e.detail === 'notVerified') setIsNotVerified(true)

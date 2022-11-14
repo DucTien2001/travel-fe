@@ -56,7 +56,7 @@ const ListHotels : NextPage = () => {
             price: 70,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
         },
         {
             image: images.bgUser.src,
@@ -69,7 +69,7 @@ const ListHotels : NextPage = () => {
             price: 70,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: false,
         },        {
             image: images.bgUser.src,
@@ -83,7 +83,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: false,
         },        {
             image: images.bgUser.src,
@@ -97,7 +97,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: false,
         },        {
             image: images.bgUser.src,
@@ -111,7 +111,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
         },        {
             image: images.bgUser.src,
             star: 4,
@@ -124,7 +124,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: false,
         },        {
             image: images.bgUser.src,
@@ -138,7 +138,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
         },        {
             image: images.bgUser.src,
             star: 4,
@@ -151,7 +151,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        
         {
@@ -166,7 +166,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },
         {
@@ -181,7 +181,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -195,7 +195,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -209,7 +209,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -223,7 +223,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -237,7 +237,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -251,7 +251,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -265,7 +265,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -279,7 +279,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -293,7 +293,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -307,7 +307,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -321,7 +321,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -335,7 +335,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -349,7 +349,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -363,7 +363,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -377,7 +377,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },        {
             image: images.bgUser.src,
@@ -391,7 +391,7 @@ const ListHotels : NextPage = () => {
             discount: 2,
             tags: "Sea",
             rate: 4,
-            creator: "VietNam",
+            creator: 1,
             isTemporarilyStopWorking: true,
         },
     ]

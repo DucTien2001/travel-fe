@@ -31,9 +31,9 @@ export const API = {
   },
   ENTERPRISE: {
     TOUR: {
-      CREATE_TOUR: '/v1.0/enterprise/tour/create',
-      UPDATE_TOUR: '/v1.0/enterprise/tour/update/:id',
-      GET_TOUR: '/v1.0/enterprise/tour/get-tours/:id',
+      CREATE_TOUR: '/v1.0/tour/create',
+      UPDATE_TOUR: '/v1.0/tour/update/:id',
+      GET_TOUR: '/v1.0/tour/get-tours/:id',
     }
   }
 }

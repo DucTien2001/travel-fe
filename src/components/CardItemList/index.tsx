@@ -26,7 +26,7 @@ interface Props {
     discount?: number;
     tags?: string;
     rate: number;
-    creator: string;
+    creator: number;
     isTemporarilyStopWorking?: boolean;
     roomNumber?: string;
     bookDates?: string;

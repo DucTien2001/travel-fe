@@ -68,18 +68,18 @@ const Tour = memo(()=> {
         // setTourEdit(tourAction)
       }
 
-    useEffect(() => {
-        if(user) {
-            dispatch(setLoading(true));
-            TourService.getTours(user?.id)
-            .then((res) => {
-                setListTour(res.data);
-            })
-            .catch((e) => dispatch(setErrorMess(e)))
-            .finally(() => dispatch(setLoading(false))); 
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dispatch])
+    // useEffect(() => {
+    //     if(user) {
+    //         dispatch(setLoading(true));
+    //         TourService.getTours(user?.id)
+    //         .then((res) => {
+    //             setListTour(res.data);
+    //         })
+    //         .catch((e) => dispatch(setErrorMess(e)))
+    //         .finally(() => dispatch(setLoading(false))); 
+    //     }
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // },[dispatch])
 
    return (
     <>
