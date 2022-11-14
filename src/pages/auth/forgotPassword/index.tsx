@@ -18,6 +18,11 @@ import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Link from "next/link";
+import { UserService } from "services/user";
+import { useDispatch } from "react-redux";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import Router from "next/router";
+
 
 interface ForgotPasswordForm { 
     email: string;
@@ -25,6 +30,7 @@ interface ForgotPasswordForm {
 
 const Login: NextPage = () => {
   const { t, i18n } = useTranslation();
+  const dispatch = useDispatch();
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -39,21 +45,20 @@ const Login: NextPage = () => {
       register,
       handleSubmit,
       formState: { errors },
-      reset,
       } = useForm<ForgotPasswordForm>({
         resolver: yupResolver(schema),
         mode: "onChange",
   });
 
-  const clearForm = () => {
-    reset({
-        email: "",
-    })
-  }
-
   const _onSubmit = (data: ForgotPasswordForm) => {
-      console.log(data);
-      clearForm();
+      dispatch(setLoading(true))
+      UserService.sendEmailForgotPassword(data.email)
+        .then(() => {
+          dispatch(setSuccessMess("Send verify code successfully"))
+          Router.push(`/auth/verifyForgotPassword?email=${data.email}`);
+        })
+        .catch((e) => dispatch(setErrorMess(e)))
+        .finally(() => dispatch(setLoading(false)))
   }
     return (
       <div className="main-content">

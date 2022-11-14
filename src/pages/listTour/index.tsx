@@ -30,15 +30,17 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { faSlack } from "@fortawesome/free-brands-svg-icons";
 import PaginationComponent from "react-reactstrap-pagination";
+import { TourService } from "services/tour";
+import { useDispatch } from "react-redux";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import { Tour } from "models/tour";
 interface SearchData {
     tourName?:string;
     checkOptions?:boolean;
 }
 
 const ListTours : NextPage = () => {
-    useEffect(()=>{
-        Aos.init({duration:500});
-    },[]);
+  const dispatch = useDispatch();
 
     const listTour = [
         {
@@ -332,10 +334,9 @@ const ListTours : NextPage = () => {
         },
 
     ]
-
     const { t, i18n } = useTranslation();
-
     const [changeViewLayout, setChangeViewLayout] = useState(false);
+    const [listTours, setListTours] = useState<Tour[]>();
 
     const schema = useMemo(() => {
         return yup.object().shape({
@@ -374,6 +375,19 @@ const ListTours : NextPage = () => {
     const currentPosts = listTour.slice(indexOfFirstPost, indexOfLastPost); 
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+    useEffect(() => {
+        dispatch(setLoading(true))
+        TourService.getAllTours().then((res) => {
+            setListTours(res.data);
+        })
+        .catch((e) => dispatch(setErrorMess(e)))
+        .finally(() => dispatch(setLoading(false))); 
+    },[dispatch])
+
+    useEffect(()=>{
+        Aos.init({duration:500});
+    },[]);
 
   return (
     <>
@@ -464,24 +478,24 @@ const ListTours : NextPage = () => {
                     <Col xs={10} className={classes.listTours}>
                         {/* ==================== Grid view ===================== */}                            
                         {!changeViewLayout && (<Row  className={classes.rowGridView}>
-                            {listTour.map((tour, index)=> ( 
+                            {listTours?.map((tour, index)=> ( 
                             <CardItemGrid
                             linkView="listTour"
                             linkBook="book/tour"
                             key={index}
                             id = {index}
-                            src = {tour.image}
+                            src = {tour.images}
                             title = {tour.title}
                             description = {tour.description}
                             businessHours = {tour.businessHours}
                             location ={tour.location}
-                            contact={tour.contact}
+                            // contact={tour.contact}
                             price ={tour.price}
                             discount = {tour.discount}
                             tags={tour.tags}
-                            rate={tour.rate}
+                            // rate={tour.rate}
                             creator={tour.creator}
-                            isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
+                            // isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
                             />
                             ))}
                         </Row>)} 

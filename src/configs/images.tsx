@@ -24,8 +24,9 @@ import imagesListTour from "assets/img/images-listTour.jpg";
 import imagesListHotel from "assets/img/images-listHotel.jpg";
 import phuQuoc from "assets/img/phuquoc.jpg";
 import imagesItinerary from "assets/img/icon-itinerary.jpg";
-
+import defaultUser from "assets/img/defaultUser.png";
 import google from "assets/img/icon/ic-google.svg";
+import manage from "assets/img/manage.png";
 // import pricing1 from 'assets/img/pricing1.jpg'
 
 export const images = {
@@ -55,4 +56,6 @@ export const images = {
   imagesListTour,
   imagesListHotel,
   phuQuoc,imagesItinerary,
+  defaultUser,
+  manage,
 };

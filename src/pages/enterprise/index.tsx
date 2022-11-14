@@ -22,6 +22,7 @@ import Sales from "./Sales";
 import EmailTemplate from "./EmailTemplate";
 import Sidebar from "components/Sidebar";
 import {enterpriseRoutes} from "routes/routers";
+import SectionHeader from "components/Header/SectionHeader";
 
 
 export enum EActiveNav { 

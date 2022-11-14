@@ -79,17 +79,6 @@ const Login: NextPage = () => {
         }
   });
 
-  const clearForm = () => {
-    reset({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phoneNumber: "",
-      role: EUserType.USER,
-    })
-  }
   const onClosePopupRegisterSuccess = () => setRegisterSuccess(!registerSuccess);
 
   const _onSubmit = (data: SignUpForm) => {

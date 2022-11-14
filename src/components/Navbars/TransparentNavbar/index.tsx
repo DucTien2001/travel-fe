@@ -16,6 +16,7 @@ import { faUser, faBook, faLocationDot, faPlane, faHotel,
   faAddressCard,
   faCalendarCheck, 
   faLandmarkDome,
+  faBarsProgress,
   faEarthAsia, faE, faV, faSquarePlus, faBagShopping, faKey } from '@fortawesome/free-solid-svg-icons';
 import clsx from "clsx";
 import Link from "next/link";
@@ -24,6 +25,7 @@ import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
 import SignOutButton from "components/common/buttons/SignOutButton";
 import UseAuth from "hooks/useAuth";
+import { EUserType } from "models/user";
 
 
 const WhiteNavbar = memo(() => {
@@ -55,7 +57,7 @@ const WhiteNavbar = memo(() => {
   }, []);
   return (
     <>
-      <Navbar className={clsx("fixed-top", navbarColor, classes.navbarWrapper)} expand="lg">
+      <Navbar className={user?.role !== EUserType.USER ? clsx("fixed-top", classes.navbarWrapperViolet) : clsx("fixed-top", navbarColor, classes.navbarWrapper)} expand="lg">
         <Container className={classes.container}>
           <div className={clsx("navbar-translate", classes.navLogoName)}>
             <Link href="/" passHref>
@@ -158,7 +160,7 @@ const WhiteNavbar = memo(() => {
                   <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
                     <DropdownItem className="noti-title" header tag="div">
                           <h6 className={classes.headerTitle}>Welcome!</h6>
-                        </DropdownItem>
+                    </DropdownItem>
                     <DropdownItem className={classes.dropdownItem}>
                       <Link href="/profile" passHref>
                         <a>
@@ -175,6 +177,17 @@ const WhiteNavbar = memo(() => {
                         </a>
                       </Link>
                     </DropdownItem>
+                    {user?.role === EUserType.ENTERPRISE && (
+                    <DropdownItem className={classes.dropdownItem}>
+                    <Link href="/enterprise" passHref>
+                      <a>
+                        <FontAwesomeIcon icon={faBarsProgress} className={classes.iconNav}/>
+                         Management 
+                      </a>
+                    </Link>
+                  </DropdownItem>
+                    )}
+
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 <NavItem onClick={logout}> 
@@ -186,12 +199,19 @@ const WhiteNavbar = memo(() => {
                 </NavItem> 
               </>
               )   
-              :        
+              :     
+              (<>
                 <NavItem>
                   <Link href="/auth/login" passHref>
                     <Button btnType={BtnType.Secondary}>Sign in</Button>
                   </Link>
-                </NavItem>     
+                </NavItem>
+                <NavItem>
+                  <Link href="/auth/signup" passHref>
+                    <Button btnType={BtnType.Secondary}>Register</Button>
+                  </Link>
+                </NavItem>              
+              </>)   
               }
             </Nav>
           </Collapse>

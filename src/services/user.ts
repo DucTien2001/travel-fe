@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { IVerifySignup, LoginForm, User, RegisterForm } from "models/user";
+import { IVerifySignup, LoginForm, User, RegisterForm, ChangePassForgotForm, UpdateUserProfile, ChangePassword } from "models/user";
 import api from "./configApi";
 
 export class UserService {
@@ -48,14 +48,65 @@ export class UserService {
   }
 
   
-  static async reSendEmailVerifySignup(id: number): Promise<User> {
-    return await api.put(`${API.AUTH.RESEND_VERIFY_SIGNUP}/${id}`)
+  static async reSendEmailVerifySignup(email: string) {
+    return await api.put(API.AUTH.RESEND_VERIFY_SIGNUP, { email })
       .then((res) => {
-        return Promise.resolve(res.data.data);
+        return Promise.resolve(res.data.data)
       })
       .catch((e) => {
         return Promise.reject(e?.response?.data);
-      });
+      })
   }
 
+  static async sendEmailForgotPassword(email: string) {
+    return await api.put(API.AUTH.SEND_EMAIL_FORGOT_PASSWORD, {
+      email
+    })
+      .then((res) => {
+        return Promise.resolve(res.data.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
+
+  static async changePassForgot(data: ChangePassForgotForm) {
+    return await api.put(API.AUTH.FORGOT_PASSWORD, data)
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
+
+  static async getUserProfile(id: number): Promise<any> {
+    return await api.get(API.AUTH.PROFILE.replace(":id", `${id}`))
+      .then((res) => {
+        return Promise.resolve(res.data.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
+
+  static async updateUserProfile(id: number, data: UpdateUserProfile): Promise<any> {
+    return await api.put(API.USER.UPDATE_PROFILE.replace(":id", `${id}`), data)
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
+
+  static async changePassword(data: ChangePassword): Promise<any> {
+    return await api.put(`${API.USER.CHANGE_PASSWORD}`, data)
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
 }

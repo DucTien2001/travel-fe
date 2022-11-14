@@ -24,12 +24,13 @@ import Sidebar from "components/Sidebar";
 import UserProfile from "./UserProfile";
 import ChangePassword from "./ChangePassword";
 import { Divider } from "@mui/material";
+import UseAuth from "hooks/useAuth";
 interface Props { 
   routes: Item[];
 } 
 
 const Profile : NextPage = () => {
-
+  const { logout } = UseAuth();
   const [verticalTabs, setVerticalTabs] = React.useState("1");
 
   return (
@@ -77,7 +78,7 @@ const Profile : NextPage = () => {
               </NavLink>
             </NavItem>
             <Divider/>
-            <NavItem className={classes.navLogout}>
+            <NavItem className={classes.navLogout} onClick={logout}>
             <Link href="/auth/login">
               <a>
                 <FontAwesomeIcon icon={faArrowRightFromBracket}/>

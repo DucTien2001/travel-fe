@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Link  from "next/link";
-import PopupAddOrEditTour from "../components/PopupAddOrEditTour";
+import PopupAddOrEditTour from "../Tours/PopupAddOrEditTour";
 import PopupAddOrEditHotel from "../components/PopupAddOrEditHotel";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 

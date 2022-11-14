@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Link  from "next/link";
-import PopupAddOrEditTour from "../components/PopupAddOrEditTour";
+import PopupAddOrEditTour from "../Tours/PopupAddOrEditTour";
 import PopupAddOrEditHotel from "../components/PopupAddOrEditHotel";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import PopupAddOrEditRoom from "../components/PopupAddOrEditRoom";
@@ -151,10 +151,7 @@ const Hotel = memo(()=> {
                         <th>
                             State
                         </th>
-                        <th>
-                            Created
-                        </th>
-                        <th className={classes.colAction}>
+                        <th className={classes.colRoom}>
                             Room
                         </th>
                         <th className={classes.colAction}>
@@ -179,11 +176,8 @@ const Hotel = memo(()=> {
                         <td>
                             {item.state}
                         </td>
-                        <td >
-                            {item.createDate}
-                        </td>
                         <td onClick={() => handleToggleSubTable(index)} className="text-center">
-                            <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction}/>
+                            Show room {"  "}<FontAwesomeIcon icon={faCaretDown} className={classes.iconAction}/>
                         </td>
                         <td className="text-center">
                         <UncontrolledDropdown>
@@ -227,8 +221,11 @@ const Hotel = memo(()=> {
                                             <th>
                                                 Price
                                             </th>
-                                            <th colSpan={2}>
+                                            <th>
                                                 State
+                                            </th>
+                                            <th>
+                                                Action
                                             </th>
                                         </tr>
                                     </thead>
@@ -238,12 +235,12 @@ const Hotel = memo(()=> {
                                                 {item.room.numberRoom}
                                             </td>
                                             <td>
-                                            {item.room.price}
+                                                {item.room.price}
                                             </td>
                                             <td>
                                                 {item.room.state}
                                             </td>
-                                            <td className="text-center">
+                                            <td>
                                                 <UncontrolledDropdown>
                                                     <DropdownToggle
                                                     color="default"

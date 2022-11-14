@@ -11,42 +11,49 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import UploadImage  from 'components/UploadImage';
+import { useDispatch } from 'react-redux';
+import { TourService } from 'services/enterprise/tour';
+import useAuth from 'hooks/useAuth';
+import { setErrorMess, setLoading, setSuccessMess } from 'redux/reducers/Status/actionTypes';
+import { ETour } from 'models/enterprise';
+import axios from 'axios';
 
-export interface TourForm { 
+export interface TourForm{ 
   name: string;
   description: string;
   businessHours: string;
   location: string;
-  contact: string;
   price: number;
   discount?: number;
   tags: string;
-  creator: string;
   isTemporarilyStopWorking: boolean;
-  images?: string[];
+  images?: string[] | File[];
 }
 
 interface Props extends ModalProps{ 
     isOpen: boolean;
     onClose: () => void;
     toggle: () => void;
+    itemEdit?: ETour;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupCreateTour = memo((props: Props) => {
-    const {isOpen, toggle, onClose, rest} = props; 
+    const dispatch = useDispatch();
+    const {user} = useAuth();
+    const {isOpen, toggle, onClose, itemEdit, rest} = props; 
     const { t, i18n } = useTranslation();
+    const [listImages, setListImages] = useState([])
+
     const schema = useMemo(() => {
       return yup.object().shape({
           name: yup.string().required("Name is required"),
           description: yup.string().required("Description is required"),
           businessHours: yup.string().required("Hours is required"),
           location: yup.string().required("Location is required"),
-          contact: yup.string().required("Contact is required"),
-          price: yup.number().required("Price is required"),
-          discount: yup.number().notRequired(),
+          price: yup.number().typeError('Price must be a number').required("Price is required"),
+          discount: yup.number().typeError('Discount must be a number').notRequired(),
           tags: yup.string().required("Tags is required"),
-          creator: yup.string().required("Creator is required"),
           isTemporarilyStopWorking: yup.boolean().required(),
           images: yup.mixed().test("required", "Please select images", value => {
             return value && value.length;
@@ -75,28 +82,127 @@ const PopupCreateTour = memo((props: Props) => {
         description: "",
         businessHours: "",
         location: "",
-        contact: "",
         price: null,
         discount: null,
         tags: "",
-        creator: "",
         isTemporarilyStopWorking: false,
         images: [],
       })
     }
 
-    const _onSubmit = (data: TourForm) => {
-      console.log(data);
-      clearForm();
-      toggle();
-  }
+  //   const _onSubmit = (data: TourForm) => {
+  //       dispatch(setLoading(true));
+  //       if(itemEdit) {
+  //         TourService.updateTour(itemEdit.id, {
+  //           title: data.name,
+  //           description: data.description,
+  //           businessHours: data.businessHours,
+  //           location: data.location,
+  //           price: data.price,
+  //           discount: data.discount,
+  //           tags: data.tags,
+  //           images: data.images,
+  //         })
+  //         .then(() => {
+  //           dispatch(setSuccessMess("Create tour successfully"))
+  //         })
+  //         .catch(e => {
+  //           dispatch(setErrorMess(e))
+  //         })
+  //         .finally(() => {
+  //           dispatch(setLoading(false));
+  //         });
+  //       }
+  //       else { 
+  //         TourService.createTour({
+  //           title: data.name,
+  //           description: data.description,
+  //           businessHours: data.businessHours,
+  //           location: data.location,
+  //           price: data.price,
+  //           discount: data.discount,
+  //           tags: data.tags,
+  //           images: data.images,
+  //           creator: user.id,
+  //         })
+  //           .then(() => {
+  //             dispatch(setSuccessMess("Create tour successfully"))
+  //           })
+  //           .catch(e => {
+  //             dispatch(setErrorMess(e))
+  //           })
+  //           .finally(() => {
+  //             dispatch(setLoading(false));
+  //           });
+  //       }
 
-
+  // }
+    const _onSubmit = async (data: TourForm) => {
+      console.log("===========",data);
+      const uploader = data.images.map((file) => {
+        const formData:any = new FormData();
+        formData.append("file", file);
+        formData.append('tags', 'codeinfuse, medium, gist');
+        formData.append('upload_preset', 'my-uploads');
+        formData.append('api_key', '859398113752799');
+        formData.append('timestamp', (Date.now() / 1000) / 0);
+        return axios.post('https://api.cloudinary.com/v1_1/dpvvffyul/image/upload', formData,{
+          headers: {"X-Requested-With": "XMLHttpRequest"},
+        })
+        .then((res) => {
+          const data = res.data;
+          const imageUrl = data.secure_url;
+          let specialArrayInObject = listImages;
+          specialArrayInObject.push(imageUrl);
+          const newObj = [...listImages, specialArrayInObject];
+          setListImages(newObj);
+          console.log("########", listImages);
+        });
+      })
+      if(user){
+        dispatch(setLoading(true));
+        TourService.createTour({
+            title: data.name,
+            description: data.description,
+            businessHours: data.businessHours,
+            location: data.location,
+            price: data.price,
+            discount: data.discount,
+            tags: data.tags,
+            images: listImages,
+            creator: user?.id,
+          })
+            .then(() => {
+              dispatch(setSuccessMess("Create tour successfully"))
+            })
+            .catch(e => {
+              dispatch(setErrorMess(e))
+            })
+            .finally(() => {
+              dispatch(setLoading(false));
+            });
+      }
+      onClose();
+    }
+  // useEffect(() => {
+  //   if (itemEdit) {
+  //     reset({
+  //       name: itemEdit.title,
+  //       description: itemEdit.description,
+  //       businessHours: itemEdit.businessHours,
+  //       location: itemEdit.location,
+  //       price: itemEdit.price,
+  //       discount: itemEdit.discount || null,
+  //       tags: itemEdit.tags,
+  //       images: itemEdit.images,
+  //     })
+  //   }
+  // }, [reset, itemEdit])
   return (
     <>  
         <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
+          <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
             <ModalHeader toggle={toggle} className={classes.title}>Create tour</ModalHeader>
-                <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
                 <ModalBody>
                     <Row xs={6} sm={12} className={classes.row}>
                       <Col>
@@ -129,12 +235,13 @@ const PopupCreateTour = memo((props: Props) => {
                       </Col>
                       <Col>
                         <InputTextFieldBorder
-                        label="Contact"
-                        placeholder="Enter contact"
-                        inputRef={register("contact")}
-                        errorMessage={errors.contact?.message}
+                        label="Tags"
+                        className="mr-3"
+                        placeholder="Enter tour's tags"
+                        inputRef={register("tags")}
+                        errorMessage={errors.tags?.message}
                         />
-                      </Col>
+                      </Col> 
                     </Row>
                     <Row xs={6} sm={12} className={classes.row}>
                       <Col>
@@ -152,25 +259,6 @@ const PopupCreateTour = memo((props: Props) => {
                         placeholder="Enter discount"
                         inputRef={register("discount")}
                         errorMessage={errors.discount?.message}
-                        />
-                      </Col>  
-                    </Row>
-                    <Row xs={6}  className={classes.row}>
-                      <Col>
-                        <InputTextFieldBorder
-                        label="Tags"
-                        className="mr-3"
-                        placeholder="Enter tour's tags"
-                        inputRef={register("tags")}
-                        errorMessage={errors.tags?.message}
-                        />
-                      </Col> 
-                      <Col>
-                        <InputTextFieldBorder
-                        label="Creator"
-                        placeholder="Enter your company"
-                        inputRef={register("creator")}
-                        errorMessage={errors.creator?.message}
                         />
                       </Col>  
                     </Row>

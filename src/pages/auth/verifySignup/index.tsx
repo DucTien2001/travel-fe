@@ -26,17 +26,6 @@ const VerifySignup: NextPage = () => {
     <div className="main-content">
       <div className={clsx("header page-header-image", classes.headerWrapper)}>
        <Container className={classes.container}>
-          {/* <div className="header-body text-center mb-7">
-            <Row className="justify-content-center">
-              <Col lg="5" md="6">
-                <h1 className="text-white">OK</h1>
-              </Col>
-            </Row>
-            <Container className="mt--8 pb-5">
-              <Button>Back to login</Button>
-            </Container>
-          </div> */} 
-        
         <Modal isOpen={true} className={classes.root}>
             <ModalHeader className={classes.title}>
                 <FontAwesomeIcon icon={faCircleCheck}/>

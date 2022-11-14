@@ -30,6 +30,27 @@ export interface RegisterForm {
   role: number;
   phoneNumber: string;
 }
+export interface ChangePassForgotForm {
+  email: string;
+  code: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface UpdateUserProfile {
+  avatar: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  phoneNumber: string;
+}
+
+export interface ChangePassword {
+  userId: number;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 
 export enum EUserType {
   ADMIN = 1,
@@ -52,3 +73,4 @@ export interface IVerifySignup {
   code: string,
   userId: number
 }
+

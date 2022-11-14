@@ -1,26 +1,32 @@
 /* eslint-disable react/display-name */
-import React, {memo, useMemo, useState} from "react";
+import React, {memo, useEffect, useMemo, useState} from "react";
 import classes from "./styles.module.scss";
 import {Row, Container, Col, Form} from "reactstrap";
-import {images} from "configs/images";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera} from '@fortawesome/free-solid-svg-icons';
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import InputTextArea from "components/common/inputs/InputTextArea";
 import Button, {BtnType} from "components/common/buttons/Button";
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { VALIDATION } from "configs/constants";
+import UseAuth from "hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import { UserService } from "services/user";
+import {images} from "configs/images";
+import UploadAvatar from "components/UploadAvatar";
+
 
 interface FormData { 
+    avatar?: string;
     firstName: string;
     lastName:string;
     email:string;
-    phone?:string;
+    phoneNumber?:string;
     address?: string;
-    instruction?: string;
 }
 interface Props { 
 
@@ -29,7 +35,8 @@ interface Props {
 const UserProfile = memo((props: Props) => {
 
     const { t, i18n } = useTranslation();
-
+    const { user } = UseAuth();
+    const dispatch = useDispatch();
     const [isEnterprise, setIsEnterprise] = useState(false);
 
     const schema = useMemo(() => {
@@ -42,7 +49,6 @@ const UserProfile = memo((props: Props) => {
           phoneNumber: isEnterprise ? yup.string().required().matches(VALIDATION.phone, { message: 'Please enter a valid phone number.', excludeEmptyString : true })
          : yup.string().notRequired().matches(VALIDATION.phone, { message: 'Please enter a valid phone number.', excludeEmptyString: true }),
           address: isEnterprise ? yup.string() : yup.string().required("Address is required"),
-          instruction: isEnterprise ? yup.string() : yup.string().required("Instruction is required"),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [i18n.language] );
@@ -52,26 +58,90 @@ const UserProfile = memo((props: Props) => {
         handleSubmit,
         formState: { errors },
         reset,
+        control,
         } = useForm<FormData>({
           resolver: yupResolver(schema),
           mode: "onChange",
     });
 
     const _onSubmit = (data: FormData) => {
-        console.log(data);
+        dispatch(setLoading(true));
+        if(user) {
+            UserService.updateUserProfile(user.id, {
+                avatar: data.avatar,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                address: data.address,
+                phoneNumber: data.phoneNumber,    
+            })
+            .then(() => {
+                dispatch(setSuccessMess("Update profile successfully"))
+            }) 
+            .catch((err) => dispatch(setErrorMess(err)))
+            .finally(() => dispatch(setLoading(false)));
+        }
     }
+
+    // useEffect(() => {
+    //     const subscription = watch((value, { name, type }) => {
+    //         if (name === "avatar") {
+    //             if (typeof value.avatar === 'object') {
+    //                 const form = new FormData()
+    //                 form.append('avatar', value.avatar)
+    //                 UserService.updateAvatar(form)
+    //                     .then(() => {
+    //                         dispatch(getMe())
+    //                     })
+    //                     .catch((e) => dispatch(setErrorMess(e)))
+    //                     .finally(() => dispatch(setLoading(false)))
+    //             }
+    //         }
+    //     })
+    //     return () => subscription.unsubscribe()
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [watch])
+
+    useEffect(() => {
+        if(user) {
+            UserService.getUserProfile(user?.id)
+            .then((res) => {
+                reset({
+                    avatar: res.avatar,
+                    firstName: res.firstName,
+                    lastName: res.lastName,
+                    email: res.email,
+                    phoneNumber: res.phoneNumber,
+                    address: res.address,                   
+                })
+            })
+            .catch((err) => dispatch(setErrorMess(err)))
+            .finally(() => dispatch(setLoading(false)));
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user, dispatch])
+
     return (
         <>
             <Row className={classes.personalInfor}>
                 <div className={classes.photoContainer}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img alt="avatar" src={images.emily.src}/>
+                    <Controller
+                        name="avatar"
+                        control={control}
+                        render={({ field }) => <UploadAvatar
+                            file={field.value}
+                            errorMessage={errors.avatar?.message}
+                            onChange={(value) => field.onChange(value)}
+                            className={classes.avatar}
+                        />}
+                    />
                     <div className={classes.uploadImage}>
                         <FontAwesomeIcon icon={faCamera}/>
                     </div>
                  </div>
                 <div className={classes.information}>
-                    <h4>Dinh Minh Khoi</h4>
+                    <h4>{user?.firstName} {user?.lastName}</h4>
                 </div>
             </Row>
             <Container className={`px-lg-5 ${classes.containerForm}`}>
@@ -108,7 +178,7 @@ const UserProfile = memo((props: Props) => {
                         type="text"
                         inputRef={register("email")}
                         errorMessage={errors.email?.message}
-
+                        disabled
                     />
                     <InputTextFieldBorder
                         className="mb-4"
@@ -117,8 +187,8 @@ const UserProfile = memo((props: Props) => {
                         name="phone"
                         placeholder="Phone"
                         type="text"
-                        inputRef={register("phone")}
-                        errorMessage={errors.phone?.message}
+                        inputRef={register("phoneNumber")}
+                        errorMessage={errors.phoneNumber?.message}
                     />
                     {!isEnterprise && ( <InputTextFieldBorder
                         className="mb-4"
@@ -128,14 +198,6 @@ const UserProfile = memo((props: Props) => {
                         type="text"
                         inputRef={register("address")}
                         errorMessage={errors.address?.message}
-                    />)}
-                    {!isEnterprise && (<InputTextArea
-                        label="Instruction"
-                        name="instruction"
-                        placeholder="Instruction"
-                        type="textarea"
-                        inputRef={register("instruction")}
-                        errorMessage={errors.instruction?.message}
                     />)}
                     <Button btnType={BtnType.Primary} type="submit" className={classes.btnSave}>
                         Save change

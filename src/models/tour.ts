@@ -1,18 +1,17 @@
 import {User} from "./user";
 
 export interface Tour {
-    id: number;
-    src: string;
+    id?:number;
     title: string;
     description: string;
     businessHours: string;
     location: string;
-    contact: string;
     price: number;
-    discount?: number;
-    tags?: string;
+    discount: number;
+    tags: string;
+    images: string;
     rate: number;
-    creator: string;
+    creator: number;
     isTemporarilyStopWorking?: boolean;
 }
 

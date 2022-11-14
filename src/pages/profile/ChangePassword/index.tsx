@@ -13,6 +13,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { VALIDATION } from "configs/constants";
 import { Divider }from "components/common/Divider";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import { UserService } from "services/user";
+import { useDispatch } from "react-redux";
+import UseAuth from "hooks/useAuth";
 
 interface FormData { 
     currentPassword: string;
@@ -24,9 +28,9 @@ interface Props {
 }
 
 const UserProfile = memo((props: Props) => {
-
+    const dispatch = useDispatch();
+    const { user } = UseAuth();
     const { t, i18n } = useTranslation();
-
     const [isEmptyPassword, setIsEmptyPassword] = useState(false)
 
     const schema = useMemo(() => {
@@ -65,8 +69,24 @@ const UserProfile = memo((props: Props) => {
     });
 
     const _onSubmit = (data: FormData) => {
-        console.log(data);
-        
+      dispatch(setLoading(true));
+      if(user) {
+        UserService.changePassword({
+          userId: user.id,
+          currentPassword: data.currentPassword,
+          newPassword: data.newPassword,
+          confirmPassword: data.confirmPassword,
+        })
+          .then((res) => {
+            dispatch(setSuccessMess("Change password successfully"));
+            if (isEmptyPassword) {
+              setIsEmptyPassword(false)
+            }
+            reset();
+          })
+          .catch((e) => dispatch(setErrorMess(e)))
+          .finally(() => dispatch(setLoading(false)));     
+      }
     }
     return (
         <>
@@ -81,7 +101,9 @@ const UserProfile = memo((props: Props) => {
                         label="Current password"
                         name="currentPassword"
                         placeholder="Current Password"
-                        type="text"
+                        type="password"
+                        showEyes={true}
+                        autoComplete="off"
                         inputRef={register("currentPassword")}
                         errorMessage={errors.currentPassword?.message}
                     />)}
@@ -90,7 +112,9 @@ const UserProfile = memo((props: Props) => {
                         label="New password"
                         name="newPassword"
                         placeholder="New password"
-                        type="text"
+                        type="password"
+                        showEyes={true}
+                        autoComplete="off"
                         inputRef={register("newPassword")}
                         errorMessage={errors.newPassword?.message}
 
@@ -100,7 +124,9 @@ const UserProfile = memo((props: Props) => {
                         label="Confirm password"
                         name="confirmPassword"
                         placeholder="Confirm password"
-                        type="text"
+                        type="password"
+                        showEyes={true}
+                        autoComplete="off"
                         inputRef={register("confirmPassword")}
                         errorMessage={errors.confirmPassword?.message}
                     />

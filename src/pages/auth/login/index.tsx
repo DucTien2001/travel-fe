@@ -112,9 +112,10 @@ const Login: NextPage = () => {
 
   const onReSendVerifySignUp = () => {
     setIsNotVerified(false)
-    const userID = user.id;
+    const email = getValues('email');
+    if (!email || errors.email) return
     dispatch(setLoading(true))
-    UserService.reSendEmailVerifySignup(userID)
+    UserService.reSendEmailVerifySignup(email)
       .then(() => {
         dispatch(setSuccessMess("Resend successfully"))
       })

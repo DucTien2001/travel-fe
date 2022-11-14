@@ -23,12 +23,12 @@ interface Props {
     description: string;
     businessHours: string;
     location: string;
-    contact: string;
+    contact?: string;
     price: number;
     discount?: number;
     tags?: string;
-    rate: number;
-    creator: string;
+    rate?: number;
+    creator: number;
     isTemporarilyStopWorking?: boolean;
     roomNumber?: string;
     bookDates?: string;

@@ -71,15 +71,17 @@ const PopupAddOrEditHotel = memo((props: Props) => {
           setImagesReview((prevState:any) => [...prevState, reader.result]) 
         }
         reader.readAsDataURL(file);
-      })
-    }, [])
+      },
+      onChange && onChange([...acceptedFiles])
+      )
+    }, [onChange])
   
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
     }); 
 
-    useEffect(() => {      
-        onChange && onChange([...imagesReview])
-    }, [imagesReview]);
+    // useEffect(() => {      
+    //     onChange && onChange([...imagesReview])
+    // }, [imagesReview]);
 
 
   const onDelete = (file: any) => {
