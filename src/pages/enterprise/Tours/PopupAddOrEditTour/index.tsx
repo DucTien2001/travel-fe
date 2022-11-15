@@ -19,6 +19,7 @@ import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/
 import { ETour } from "models/enterprise";
 import axios from "axios";
 import { ImageService } from "services/image";
+import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
 
 export interface TourForm {
   name: string;
@@ -120,6 +121,7 @@ const PopupCreateTour = memo((props: Props) => {
             creator: user?.id,
           })
             .then(() => {
+              dispatch(getAllTours(user?.id))
               dispatch(setSuccessMess("Create tour successfully"));
             })
             .catch((e) => {

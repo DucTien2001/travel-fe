@@ -27,7 +27,7 @@ const initial: EnterpriseState = {
 export const enterpriseReducer = (state = initial, action: any) =>
   produce(state, (draft) => {
     switch (action.type) {
-      case types.GET_TOURS_REDUCER:
+      case types.SET_TOURS_REDUCER:
         draft.allTours = action.data;
         break;
       default:
