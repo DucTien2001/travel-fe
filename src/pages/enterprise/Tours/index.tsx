@@ -27,7 +27,7 @@ import { ReducerType } from "redux/reducers";
 // eslint-disable-next-line react/display-name
 const Tour = memo(()=> {
     const dispatch = useDispatch()
-    const {allTours} = useSelector((state: ReducerType) => state.enterpise);
+    const {allTours} = useSelector((state: ReducerType) => state.enterprise);
     // console.log(allTours)
     const { id } = useParams<{ id: string }>();
     const [openPopupCreateTour, setOpenPopupCreateTour] = useState(false);
