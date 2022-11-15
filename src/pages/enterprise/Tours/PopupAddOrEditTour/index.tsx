@@ -54,7 +54,7 @@ const PopupCreateTour = memo((props: Props) => {
       businessHours: yup.string().required("Hours is required"),
       location: yup.string().required("Location is required"),
       price: yup.number().typeError("Price must be a number").required("Price is required"),
-      discount: yup.number().typeError("Discount must be a number").notRequired(),
+      discount: yup.number().nullable().typeError("Discount must be a number").notRequired(),
       tags: yup.array().required("Tags is required"),
       isTemporarilyStopWorking: yup.boolean().required(),
       images: yup.mixed().test("required", "Please select images", (value) => {
