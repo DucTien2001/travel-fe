@@ -18,7 +18,7 @@ const createRootReducer = () => {
 export interface ReducerType {
   status: StatusState;
   user: UserState;
-  enterpise: EnterpriseState;
+  enterprise: EnterpriseState;
   // router: {
   //   location: {
   //     pathname: string;
