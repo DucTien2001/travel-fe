@@ -1,10 +1,12 @@
-
+// tour
 export const GET_TOURS_REQUEST = "GET_TOURS_REQUEST";
-export const GET_TOURS_REDUCER = "GET_TOURS_REDUCER";
 export const SET_TOURS_REDUCER = "SET_TOURS_REDUCER";
+
+// hotel
 export const GET_HOTELS_REQUEST = "GET_HOTELS_REQUEST";
-export const GET_HOTELS_REDUCER = "GET_HOTELS_REDUCER";
 export const SET_HOTELS_REDUCER = "SET_HOTELS_REDUCER";
+
+// ********** tour **********
 export const getAllTours = (userId: number) => {
   return {
     type: GET_TOURS_REQUEST,
@@ -19,6 +21,7 @@ export const setAllToursReducer = (data: any) => {
   };
 };
 
+// *********** hotel ************
 export const getAllHotels = (userId: number) => {
   return {
     type: GET_HOTELS_REQUEST,

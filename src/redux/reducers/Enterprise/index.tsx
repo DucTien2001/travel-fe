@@ -2,19 +2,20 @@ import produce from "immer";
 import * as types from "./actionTypes";
 
 export interface ITour {
-    id?: number;
-    title: string;
-    description: string;
-    businessHours: string;
-    location: string;
-    price: number;
-    discount: number;
-    tags: string[];
-    images: string[];
-    creator: number;
-    isTemporarilyStopWorking?: boolean;
+  id?: number;
+  title: string;
+  description: string;
+  businessHours: string;
+  location: string;
+  price: number;
+  discount: number;
+  tags: string[];
+  images: string[];
+  creator: number;
+  isTemporarilyStopWorking?: boolean;
 }
 export interface IHotel {
+  id?: number;
   name: string;
   description: string;
   checkInTime: string;
@@ -43,13 +44,9 @@ export interface IRoom {
   hotelId: number;
 }
 export interface EnterpriseState {
-  allTours?: ITour[],
-  allHotels: {
-    hotel: IHotel,
-    allRooms: IRoom[]
-    }[],
+  allTours: ITour[];
+  allHotels: IHotel[];
 }
-
 
 const initial: EnterpriseState = {
   allTours: [],
@@ -61,6 +58,9 @@ export const enterpriseReducer = (state = initial, action: any) =>
     switch (action.type) {
       case types.SET_TOURS_REDUCER:
         draft.allTours = action.data;
+        break;
+      case types.SET_HOTELS_REDUCER:
+        draft.allHotels = action.data;
         break;
       default:
         return state;

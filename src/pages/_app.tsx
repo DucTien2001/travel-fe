@@ -24,7 +24,7 @@ import Router from "next/router";
 import LoadingScreen from "components/LoadingSrceen";
 import { EUserType } from "models/user";
 import { ReducerType } from "redux/reducers";
-import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
+import { getAllHotels, getAllTours } from "redux/reducers/Enterprise/actionTypes";
 
 // const { store } = createConfigureStore();
 
@@ -39,6 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(()=>{
     if( user && user?.role === EUserType.ENTERPRISE){
       dispatch(getAllTours(user?.id))
+      dispatch(getAllHotels(user?.id))
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch, user])

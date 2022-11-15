@@ -1,7 +1,7 @@
 import { EUserType } from "models/user";
 import { useDispatch, useSelector } from 'react-redux';
 import { ReducerType } from "redux/reducers";
-import { setAllToursReducer } from "redux/reducers/Enterprise/actionTypes";
+import { setAllHotelsReducer, setAllToursReducer } from "redux/reducers/Enterprise/actionTypes";
 import { userLogoutRequest } from "redux/reducers/User/actionTypes";
 
 
@@ -11,6 +11,7 @@ export default function UseAuth() {
   const logout = () => {
     dispatch(userLogoutRequest());
     dispatch(setAllToursReducer([]));
+    dispatch(setAllHotelsReducer([]));
   }
 
   return {
