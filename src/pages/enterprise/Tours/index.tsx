@@ -27,10 +27,9 @@ import { ReducerType } from "redux/reducers";
 // eslint-disable-next-line react/display-name
 const Tour = memo(()=> {
     const dispatch = useDispatch()
-    // const {allTours} = useSelector((state: ReducerType) => state.enterpise);
+    const {allTours} = useSelector((state: ReducerType) => state.enterpise);
     // console.log(allTours)
     const { id } = useParams<{ id: string }>();
-    const {user} = useAuth();
     const [openPopupCreateTour, setOpenPopupCreateTour] = useState(false);
     const [openPopupConfirmDelete, setOpenPopupConfirmDelete] = useState(false);
     const [listTour, setListTour] = useState<ETour[]>(null);
@@ -125,7 +124,7 @@ const Tour = memo(()=> {
                     </tr>
                 </thead>
                 <tbody>
-                {listTour?.map((item, index) => (
+                {allTours?.map((item, index) => (
                     <tr key={index}>
                     <th scope="row">
                         {item?.id}
@@ -165,7 +164,7 @@ const Tour = memo(()=> {
                     </td>
                     </tr>
                 ))}
-                {!listTour?.length && 
+                {!allTours?.length && 
                     <tr>
                         <td scope="row" colSpan={5}> 
                         <SearchNotFound/>
