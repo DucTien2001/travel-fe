@@ -13,7 +13,7 @@ import * as yup from "yup";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Link  from "next/link";
 import PopupAddOrEditTour from "../Tours/PopupAddOrEditTour";
-import PopupAddOrEditHotel from "../components/PopupAddOrEditHotel";
+import PopupAddOrEditHotel from "../Hotels/PopupAddOrEditHotel";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 
 // eslint-disable-next-line react/display-name

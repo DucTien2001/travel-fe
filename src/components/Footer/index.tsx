@@ -9,13 +9,15 @@ import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { faMapLocation, faPhone, faEnvelopeOpenText, faEarthAmerica } from '@fortawesome/free-solid-svg-icons';
-
 import {images} from "configs/images";
+import useAuth from "hooks/useAuth";
+import { EUserType } from "models/user";
 const Footer = memo(() => {
+  const {user} = useAuth();
   return (
     <> 
-      <div>
-        <Row className={classes.root} >
+      <div className={user?.role=== EUserType.ENTERPRISE || user?.role=== EUserType.ADMIN ? classes.rootRole : ""}>
+        <Row className={classes.root}>
             <Col>
                 <img alt="anh" src={images.footer.src}></img>
             </Col>

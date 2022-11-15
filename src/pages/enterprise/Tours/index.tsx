@@ -17,14 +17,18 @@ import PopupAddOrEditTour from "./PopupAddOrEditTour";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import {ETour} from "models/enterprise";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/enterprise/tour";
 import useAuth from "hooks/useAuth";
 import SearchNotFound from "components/SearchNotFound";
+import { ReducerType } from "redux/reducers";
+
 // eslint-disable-next-line react/display-name
 const Tour = memo(()=> {
     const dispatch = useDispatch()
+    // const {allTours} = useSelector((state: ReducerType) => state.enterpise);
+    // console.log(allTours)
     const { id } = useParams<{ id: string }>();
     const {user} = useAuth();
     const [openPopupCreateTour, setOpenPopupCreateTour] = useState(false);
@@ -148,7 +152,7 @@ const Tour = memo(()=> {
                         <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction}/>
                         </DropdownToggle>
                         <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onAction(e.currentTarget, item)}>
+                        <DropdownItem className={classes.dropdownItem}>
                             <FontAwesomeIcon icon={faPen}/>
                             Edit
                         </DropdownItem>

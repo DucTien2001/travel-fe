@@ -13,7 +13,7 @@ import * as yup from "yup";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import Link  from "next/link";
 import PopupAddOrEditTour from "../Tours/PopupAddOrEditTour";
-import PopupAddOrEditHotel from "../components/PopupAddOrEditHotel";
+import PopupAddOrEditHotel from "./PopupAddOrEditHotel";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import PopupAddOrEditRoom from "../components/PopupAddOrEditRoom";
 

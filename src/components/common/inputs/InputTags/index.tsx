@@ -51,10 +51,10 @@ const CustomTagsInput = memo(
           }}
           {...rest}
         />
-        {errorMessage && (
+      </FormGroup>
+      {errorMessage && (
           <span className="text-danger ml-2 mt-1 d-block"><>{errorMessage}</></span>
         )}
-      </FormGroup>
       </>
     );
   }

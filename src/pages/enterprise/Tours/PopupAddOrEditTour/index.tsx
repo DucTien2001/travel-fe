@@ -46,7 +46,6 @@ const PopupCreateTour = memo((props: Props) => {
   const { user } = useAuth();
   const { isOpen, toggle, onClose, itemEdit, rest } = props;
   const { t, i18n } = useTranslation();
-  const [listImages, setListImages] = useState([]);
 
   const schema = useMemo(() => {
     return yup.object().shape({

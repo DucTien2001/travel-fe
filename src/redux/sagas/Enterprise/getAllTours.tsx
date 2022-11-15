@@ -7,7 +7,6 @@ function* requestGetAllTours(data: {type: string, userId: number}) {
   try {
     yield put(setLoading(true));
     const tours = yield call(TourService.getTours, data.userId);
-    console.log(tours);
     yield put(setAllToursReducer(tours.data));
   } catch (e: any) {
     console.log(e);

@@ -57,7 +57,7 @@ const WhiteNavbar = memo(() => {
   }, []);
   return (
     <>
-      <Navbar className={user?.role !== EUserType.USER ? clsx("fixed-top", classes.navbarWrapperViolet) : clsx("fixed-top", navbarColor, classes.navbarWrapper)} expand="lg">
+      <Navbar className={user?.role === EUserType.USER || !user ? clsx("fixed-top", navbarColor, classes.navbarWrapper) : clsx("fixed-top", classes.navbarWrapperViolet)} expand="lg">
         <Container className={classes.container}>
           <div className={clsx("navbar-translate", classes.navLogoName)}>
             <Link href="/" passHref>

@@ -1,3 +1,8 @@
+.rootRole {
+    position: relative;
+    z-index: 10000;
+}
+
 .root {
     background: var(--violet-color);
     padding: 48px 100px;
@@ -107,6 +112,7 @@
     background-color: #1f0733;
     width: 100%;
     padding: 12px;
+    margin: 0;
     @media only screen and (max-width: 768px) {
         margin-left: 0;
         margin-right: 0;

@@ -6,6 +6,7 @@ import Button, {BtnType} from "components/common/buttons/Button";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import InputTextArea from "components/common/inputs/InputTextArea";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
+import InputTags from "components/common/inputs/InputTags";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,12 +17,12 @@ export interface HotelForm {
   name: string;
   description: string;
   location: string;
-  contact: string;
-  tags: string;
-  creator: string;
+  checkInTime: string;
+  checkOutTime: string;
+  tags: string[];
   isTemporarilyStopWorking: boolean;
   imagesHotel: string[];
-
+  creator: number;
 }
 
 interface Props extends ModalProps{ 
@@ -42,9 +43,9 @@ const PopupAddOrEditHotel = memo((props: Props) => {
           name: yup.string().required("Name is required"),
           description: yup.string().required("Description is required"),
           location: yup.string().required("Location is required"),
-          contact: yup.string().required("Contact is required"),
-          tags: yup.string().required("Tags is required"),
-          creator: yup.string().required("Creator is required"),
+          checkInTime: yup.string().required("Check in time is required"),
+          checkOutTime: yup.string().required("Check out time is required"),
+          tags: yup.array().required("Tags is required"),
           isTemporarilyStopWorking: yup.boolean().required(),
           imagesHotel: yup.mixed().test("required", "Please select images", value => {
             return value && value.length;
@@ -72,9 +73,9 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         name: "",
         description: "",
         location: "",
-        contact: "",
-        tags: "",
-        creator: "",
+        checkInTime: "",
+        checkOutTime: "",
+        tags: [],
         isTemporarilyStopWorking: false,
         imagesHotel: [],
       })
@@ -118,25 +119,47 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         errorMessage={errors.location?.message}
                         />
                       </Col>  
-                    </Row>  
+                    </Row>
                     <Row xs={6} className={classes.row}>
                       <Col>
                         <InputTextFieldBorder
-                        label="Tags"
+                        label="Check In Time"
                         className="mr-3"
-                        placeholder="Enter tour's tags"
-                        inputRef={register("tags")}
-                        errorMessage={errors.tags?.message}
+                        placeholder="Enter check in"
+                        inputRef={register("checkInTime")}
+                        errorMessage={errors.checkInTime?.message}
                         />
-                        </Col>
-                        <Col>
+                      </Col>
+                      <Col>
                         <InputTextFieldBorder
-                        label="Creator"
-                        placeholder="Enter your company"
-                        inputRef={register("creator")}
-                        errorMessage={errors.creator?.message}
+                        label="Check Out Time"
+                        placeholder="Enter check out"
+                        inputRef={register("checkOutTime")}
+                        errorMessage={errors.checkOutTime?.message}
                         />
-                        </Col>
+                      </Col>  
+                    </Row>    
+                    <Row xs={6} className={classes.row}>
+                      <Col>
+                      <Controller
+                        name="tags"
+                        control={control}
+                        render={({ field }) => (
+                          <InputTags
+                            {...field}
+                            label="Tags"
+                            name="tags"
+                            placeholder="Enter tags"
+                            onChange={(value: any) => {
+                              return field.onChange(value);
+                            }}
+                            value={field.value ? field.value : []}
+                            control={control}
+                            errorMessage={errors.tags?.message}
+                          />
+                        )}
+                      />
+                      </Col>
                     </Row>
                     <Col>
                       <InputTextArea
@@ -145,14 +168,6 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         inputRef={register("description")}
                         errorMessage={errors.description?.message}
                       />
-                      </Col>
-                      <Col>
-                        <InputTextFieldBorder
-                        label="Contact"
-                        placeholder="Enter contact"
-                        inputRef={register("contact")}
-                        errorMessage={errors.contact?.message}
-                        />
                       </Col>
                       <Controller
                         name="imagesHotel"

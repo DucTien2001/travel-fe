@@ -14,14 +14,46 @@ export interface ITour {
     creator: number;
     isTemporarilyStopWorking?: boolean;
 }
+export interface IHotel {
+  name: string;
+  description: string;
+  checkInTime: string;
+  checkOutTime: string;
+  location: string;
+  tags: string;
+  images: string;
+  creator: number;
+}
 
+export interface IRoom {
+  title: string;
+  description: string;
+  discount: number;
+  tags: string;
+  images: string;
+  numberOfBed: number;
+  numberOfRoom: number;
+  mondayPrice: number;
+  tuesdayPrice: number;
+  wednesdayPrice: number;
+  thursdayPrice: number;
+  fridayPrice: number;
+  saturdayPrice: number;
+  sundayPrice: number;
+  hotelId: number;
+}
 export interface EnterpriseState {
-  allTours?: ITour[]
+  allTours?: ITour[],
+  allHotels: {
+    hotel: IHotel,
+    allRooms: IRoom[]
+    }[],
 }
 
 
 const initial: EnterpriseState = {
   allTours: [],
+  allHotels: [],
 };
 
 export const enterpriseReducer = (state = initial, action: any) =>
