@@ -20,7 +20,22 @@ export interface EUpdateTour {
   location: string;
   price: number;
   discount: number;
-  tags: string;
+  tags: string[];
   images: string[];
+  isTemporarilyStopWorking?: boolean;
+}
+
+
+export interface FormTour {
+  id?: number;
+  title: string;
+  description: string;
+  businessHours: string;
+  location: string;
+  price: number;
+  discount: number;
+  tags: string[];
+  images: string[] | File[];
+  creator: number;
   isTemporarilyStopWorking?: boolean;
 }

@@ -79,10 +79,10 @@ const PopupAddOrEditHotel = memo((props: Props) => {
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
     }); 
 
-    // useEffect(() => {      
-    //     onChange && onChange([...imagesReview])
-    // }, [imagesReview]);
-
+    useEffect(() => {      
+        onChange && onChange([...imagesReview])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [imagesReview]);
 
   const onDelete = (file: any) => {
     const newImages = imagesReview.filter(it => it !== file)

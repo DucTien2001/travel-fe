@@ -124,6 +124,7 @@ const Tour = memo(()=> {
                     </tr>
                 </thead>
                 <tbody>
+                {!!allTours?.length && (<>
                 {allTours?.map((item, index) => (
                     <tr key={index}>
                     <th scope="row">
@@ -163,7 +164,7 @@ const Tour = memo(()=> {
                     </UncontrolledDropdown>
                     </td>
                     </tr>
-                ))}
+                ))}</>)}
                 {!allTours?.length && 
                     <tr>
                         <td scope="row" colSpan={5}> 

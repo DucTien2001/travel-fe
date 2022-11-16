@@ -54,7 +54,7 @@ const PopupCreateTour = memo((props: Props) => {
       businessHours: yup.string().required("Hours is required"),
       location: yup.string().required("Location is required"),
       price: yup.number().typeError("Price must be a number").required("Price is required"),
-      discount: yup.number().nullable().typeError("Discount must be a number").notRequired(),
+      discount: yup.number().transform(value => (isNaN(value) ? undefined : value)).typeError("Discount must be a number").notRequired(),
       tags: yup.array().required("Tags is required"),
       isTemporarilyStopWorking: yup.boolean().required(),
       images: yup.mixed().test("required", "Please select images", (value) => {
@@ -107,6 +107,20 @@ const PopupCreateTour = memo((props: Props) => {
     });
     await Promise.all(uploader)
       .then((res) => {
+        // if(itemEdit) {
+        //   TourService.updateTour(itemEdit?.id, {
+        //     title: itemEdit.title,
+        //     description: itemEdit.description,
+        //     businessHours: itemEdit.businessHours,
+        //     location: itemEdit.location,
+        //     price: itemEdit.price,
+        //     discount: itemEdit.discount,
+        //     tags: itemEdit.tags,
+        //     images: itemEdit.images,
+        //   })
+        //   // console.log(res);
+        // }
+        // else {
         if (user) {
           TourService.createTour({
             title: data.name,
@@ -127,6 +141,7 @@ const PopupCreateTour = memo((props: Props) => {
               dispatch(setErrorMess(e));
             });
         }
+        // }
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
@@ -136,6 +151,7 @@ const PopupCreateTour = memo((props: Props) => {
         dispatch(setLoading(false));
       });
   };
+ 
   // useEffect(() => {
   //   if (itemEdit) {
   //     reset({
@@ -150,6 +166,13 @@ const PopupCreateTour = memo((props: Props) => {
   //     })
   //   }
   // }, [reset, itemEdit])
+
+  //   useEffect(() => {
+  //   if (!isOpen && !itemEdit) {
+  //     clearForm()
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isOpen, itemEdit])
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>

@@ -12,7 +12,7 @@ interface Props extends ModalProps{
     title: string;
     isOpen: boolean;
     onClose: () => void;
-    toggle: () => void;
+    toggle?: () => void;
     onYes: () => void;
 }
 

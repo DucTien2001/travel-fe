@@ -26,7 +26,7 @@ interface Props {
     contact?: string;
     price: number;
     discount?: number;
-    tags?: string;
+    tags?: string[];
     rate?: number;
     creator: number;
     isTemporarilyStopWorking?: boolean;

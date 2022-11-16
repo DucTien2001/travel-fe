@@ -31,16 +31,18 @@ import { useTranslation } from "react-i18next";
 import { faSlack } from "@fortawesome/free-brands-svg-icons";
 import PaginationComponent from "react-reactstrap-pagination";
 import { TourService } from "services/tour";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { Tour } from "models/tour";
+import { ReducerType } from "redux/reducers";
 interface SearchData {
     tourName?:string;
     checkOptions?:boolean;
 }
 
 const ListTours : NextPage = () => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const {allTours} = useSelector((state: ReducerType) => state.tour);
 
     const listTour = [
         {
@@ -337,7 +339,7 @@ const ListTours : NextPage = () => {
     const { t, i18n } = useTranslation();
     const [changeViewLayout, setChangeViewLayout] = useState(false);
     const [listTours, setListTours] = useState<Tour[]>();
-
+    
     const schema = useMemo(() => {
         return yup.object().shape({
             tourName: yup.string().notRequired(),
@@ -478,13 +480,13 @@ const ListTours : NextPage = () => {
                     <Col xs={10} className={classes.listTours}>
                         {/* ==================== Grid view ===================== */}                            
                         {!changeViewLayout && (<Row  className={classes.rowGridView}>
-                            {listTours?.map((tour, index)=> ( 
+                            {allTours?.map((tour, index)=> ( 
                             <CardItemGrid
                             linkView="listTour"
                             linkBook="book/tour"
                             key={index}
                             id = {index}
-                            src = {tour.images}
+                            src = {tour.images[0]}
                             title = {tour.title}
                             description = {tour.description}
                             businessHours = {tour.businessHours}
@@ -501,22 +503,22 @@ const ListTours : NextPage = () => {
                         </Row>)} 
                         {/* ==================== List view ===================== */}
                         {changeViewLayout && (<div>
-                        {listTour.map((tour, index)=> (                         
+                        {allTours?.map((tour, index)=> (                         
                             <CardItemList
                             linkView="listTour"
                             linkBook="book/tour"
                             key={index}
                             id = {index}
-                            src = {tour.image}
+                            src = {tour.images[0]}
                             title = {tour.title}
                             description = {tour.description}
                             businessHours = {tour.businessHours}
                             location ={tour.location}
-                            contact={tour.contact}
+                            // contact={tour.contact}
                             price ={tour.price}
                             discount = {tour.discount}
                             tags={tour.tags}
-                            rate={tour.rate}
+                            // rate={tour.rate}
                             creator={tour.creator}
                             isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
                             />

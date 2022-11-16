@@ -33,6 +33,7 @@ export const API = {
     TOUR: {
       CREATE_TOUR: '/v1.0/tour/create',
       UPDATE_TOUR: '/v1.0/tour/update/:id',
+      DELETE_TOUR: '/v1.0/tour/delete/:id',
       GET_TOUR: '/v1.0/tour/get-tours/:id',
     },
     HOTEL: {
