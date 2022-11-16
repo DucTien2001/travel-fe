@@ -15,18 +15,18 @@ export interface ITour {
   isTemporarilyStopWorking?: boolean;
 }
 
-export interface TourState {
+export interface NormalState {
   allTours: ITour[];
 }
 
-const initial: TourState = {
+const initial: NormalState = {
   allTours: [],
 };
 
-export const tourReducer = (state = initial, action: any) =>
+export const normalReducer = (state = initial, action: any) =>
   produce(state, (draft) => {
     switch (action.type) {
-      case types.SET_TOURS_REDUCER:
+      case types.SET_NORMAL_TOURS_REDUCER:
         draft.allTours = action.data;
         break;
       default:

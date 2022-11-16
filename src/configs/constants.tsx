@@ -40,6 +40,9 @@ export const API = {
       CREATE_HOTEL: '/v1.0/hotel/create',
       UPDATE_HOTEL: '/v1.0/hotel/update/:id',
       GET_HOTELS: '/v1.0/hotel/get-hotels/:id',
+    },
+    ROOM: {
+      CREATE_ROOM: '/v1.0/room/create',
     }
   }
 }

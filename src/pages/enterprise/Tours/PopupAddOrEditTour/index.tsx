@@ -103,7 +103,7 @@ const PopupCreateTour = memo((props: Props) => {
       formData.append("upload_preset", "my-uploads");
       formData.append("api_key", "859398113752799");
       formData.append("timestamp", Date.now() / 1000 / 0);
-      uploader.push(ImageService.uploadImagesTour(formData));
+      uploader.push(ImageService.uploadImage(formData));
     });
     await Promise.all(uploader)
       .then((res) => {

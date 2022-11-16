@@ -1,19 +1,5 @@
-import React, { useMemo, memo, useCallback, useState, useEffect } from "react";
-import {
-  Row,
-  Form,
-  Modal,
-  ModalProps,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Col,
-  Table,
-  Card,
-  CardBody,
-  CardHeader,
-  Collapse,
-} from "reactstrap";
+import React, { useMemo, memo } from "react";
+import { Row, Form, Modal, ModalProps, ModalHeader, ModalBody, ModalFooter, Col } from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import Button, { BtnType } from "components/common/buttons/Button";
@@ -36,6 +22,7 @@ export interface HotelForm {
   name: string;
   description: string;
   location: string;
+  contact: string;
   checkInTime: string;
   checkOutTime: string;
   tags: string[];
@@ -56,14 +43,12 @@ const PopupAddOrEditHotel = memo((props: Props) => {
   const { user } = useSelector((state: ReducerType) => state.user);
   const { isOpen, toggle, onClose, rest } = props;
 
-  const { t, i18n } = useTranslation();
-  const [collapses, setCollapses] = React.useState([1]);
-
   const schema = useMemo(() => {
     return yup.object().shape({
       name: yup.string().required("Name is required"),
       description: yup.string().required("Description is required"),
       location: yup.string().required("Location is required"),
+      contact: yup.string().required("Contact is required"),
       checkInTime: yup.string().required("Check in time is required"),
       checkOutTime: yup.string().required("Check out time is required"),
       tags: yup.array().required("Tags is required"),
@@ -72,8 +57,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         return value && value.length;
       }),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
+  }, []);
 
   const {
     register,
@@ -94,20 +78,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       name: "",
       description: "",
       location: "",
+      contact: "",
       checkInTime: "",
       checkOutTime: "",
       tags: [],
       isTemporarilyStopWorking: false,
       imagesHotel: [],
     });
-  };
-
-  const changeCollapse = (collapse: number) => {
-    if (collapses.includes(collapse)) {
-      setCollapses(collapses.filter((prop) => prop !== collapse));
-    } else {
-      setCollapses([...collapses, collapse]);
-    }
   };
 
   const _onSubmit = async (data: HotelForm) => {
@@ -120,12 +97,11 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       formData.append("upload_preset", "my-uploads");
       formData.append("api_key", "859398113752799");
       formData.append("timestamp", Date.now() / 1000 / 0);
-      uploader.push(ImageService.uploadImagesTour(formData));
+      uploader.push(ImageService.uploadImage(formData));
     });
     console.log(data);
     await Promise.all(uploader)
       .then((res) => {
-        console.log(res, "==========res===========")
         if (user) {
           HotelService.createHotel({
             name: data.name,
@@ -133,14 +109,15 @@ const PopupAddOrEditHotel = memo((props: Props) => {
             checkInTime: data.checkInTime,
             checkOutTime: data.checkOutTime,
             location: data.location,
+            contact: data.contact,
             tags: data.tags,
             images: res,
             creator: user?.id,
           })
             .then(() => {
               dispatch(setSuccessMess("Create hotel successfully"));
-              clearForm();
-              toggle();
+              // clearForm();
+              // toggle();
             })
             .catch((e) => {
               dispatch(setErrorMess(e));
@@ -151,7 +128,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         dispatch(setErrorMess(e));
       })
       .finally(() => {
-        onClose();
+        // onClose();
         dispatch(setLoading(false));
       });
   };
@@ -203,6 +180,14 @@ const PopupAddOrEditHotel = memo((props: Props) => {
               </Col>
             </Row>
             <Row xs={6} className={classes.row}>
+              <Col>
+                <InputTextFieldBorder
+                  label="Contact"
+                  placeholder="Enter contact"
+                  inputRef={register("contact")}
+                  errorMessage={errors.contact?.message}
+                />
+              </Col>
               <Col>
                 <Controller
                   name="tags"

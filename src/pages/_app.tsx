@@ -14,8 +14,8 @@ config.autoAddCss = false;
 import type { AppProps } from "next/app";
 import { useDispatch, useSelector } from "react-redux";
 // import { createConfigureStore } from "redux/configureStore";
-import withRedux from 'next-redux-wrapper';
-import withReduxSaga from 'next-redux-saga';
+import withRedux from "next-redux-wrapper";
+import withReduxSaga from "next-redux-saga";
 import { wrapper } from "redux/configureStore";
 import { useEffect, useState } from "react";
 import { getMe } from "redux/reducers/User/actionTypes";
@@ -24,7 +24,12 @@ import Router from "next/router";
 import LoadingScreen from "components/LoadingSrceen";
 import { EUserType } from "models/user";
 import { ReducerType } from "redux/reducers";
-import { getAllHotels, getAllTours } from "redux/reducers/Enterprise/actionTypes";
+import {
+  getAllHotels as getAllHotelsOfEnterprise,
+  getAllTours as getAllToursOfEnterprise,
+} from "redux/reducers/Enterprise/actionTypes";
+import { getAllTours as getAllToursOfNormal } from "redux/reducers/Normal/actionTypes";
+// import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 
 // const { store } = createConfigureStore();
 
@@ -33,31 +38,34 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { user } = useSelector((state: ReducerType) => state.user);
 
   useEffect(() => {
-    dispatch(getMe())
-  }, [dispatch])
+    dispatch(getMe());
+  }, [dispatch]);
 
-  useEffect(()=>{
-    if( user && user?.role === EUserType.ENTERPRISE){
-      dispatch(getAllTours(user?.id))
-      dispatch(getAllHotels(user?.id))
+  useEffect(() => {
+    dispatch(getAllToursOfNormal());
+    if (user) {
+      if (user?.role === EUserType.ENTERPRISE) {
+        dispatch(getAllToursOfEnterprise(user?.id));
+        dispatch(getAllHotelsOfEnterprise(user?.id));
+      }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, user])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, user]);
 
   const [loading, setLoading] = useState(false);
   Router.events.on("routeChangeStart", (url) => {
     setLoading(true);
-  })
+  });
   Router.events.on("routeChangeComplete", (url) => {
     setLoading(false);
-  })
+  });
   return (
     // <Provider store={store}>
-      <LayoutAuth>
-        {loading && <LoadingScreen/>}
-        <AppStatus />
-        <Component {...pageProps} />
-      </LayoutAuth>
+    <LayoutAuth>
+      {loading && <LoadingScreen />}
+      <AppStatus />
+      <Component {...pageProps} />
+    </LayoutAuth>
     // </Provider>
   );
 }
