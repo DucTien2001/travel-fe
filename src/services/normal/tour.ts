@@ -1,10 +1,10 @@
 import { API } from "configs/constants";
 import { Tour } from "models/tour";
-import api from "./configApi";
+import api from "services/configApi";
 
 export class TourService {
     static async getAllTours(): Promise<any> {
-        return await api.get(API.TOUR.ALL_TOUR)
+        return await api.get(API.NORMAL.TOUR.ALL_TOURS)
           .then((res) => {
             return Promise.resolve(res.data)
           })
@@ -13,7 +13,7 @@ export class TourService {
           })
       }
     static async getTour(id: number): Promise<any> {
-      return await api.get(API.TOUR.DETAIL_TOUR.replace(":id", `${id}`))
+      return await api.get(API.NORMAL.TOUR.DETAIL_TOUR.replace(":id", `${id}`))
           .then((res) => {
             return Promise.resolve(res.data)
           })

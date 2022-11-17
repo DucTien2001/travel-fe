@@ -25,17 +25,19 @@ export const API = {
     CHANGE_PASSWORD: '/v1.0/user/change-password',
     UPDATE_AVATAR: '/v1.0/user/update-avatar',
   },
-  TOUR: { 
-    DEFAULT: '/v1.0/tour',
-    ALL_TOUR: '/v1.0/tour/get-all-tours',
-    DETAIL_TOUR: '/v1.0/tour/get-tours/:id',
+  NORMAL: {
+    TOUR: { 
+      DEFAULT: '/v1.0/tour',
+      ALL_TOURS: '/v1.0/tour/get-all-tours',
+      DETAIL_TOUR: '/v1.0/tour/get-tour/:id',
+    }
   },
   ENTERPRISE: {
     TOUR: {
       CREATE_TOUR: '/v1.0/tour/create',
       UPDATE_TOUR: '/v1.0/tour/update/:id',
       DELETE_TOUR: '/v1.0/tour/delete/:id',
-      GET_TOUR: '/v1.0/tour/get-tours/:id',
+      GET_TOURS: '/v1.0/tour/get-tours/:id',
     },
     HOTEL: {
       CREATE_HOTEL: '/v1.0/hotel/create',

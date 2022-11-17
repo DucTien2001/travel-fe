@@ -34,7 +34,7 @@ export class TourService {
   }
     
     static async getTours(userId: number): Promise<any> {
-      return await api.get(API.ENTERPRISE.TOUR.GET_TOUR.replace(":id", `${userId}`))
+      return await api.get(API.ENTERPRISE.TOUR.GET_TOURS.replace(":id", `${userId}`))
         .then((res) => {
           return Promise.resolve(res.data)
         })
