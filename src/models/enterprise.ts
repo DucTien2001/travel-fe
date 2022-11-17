@@ -9,6 +9,7 @@ export interface ETour {
   tags: string[];
   images: string[];
   creator: number;
+  contact: string;
   isTemporarilyStopWorking?: boolean;
 }
 
@@ -22,20 +23,6 @@ export interface EUpdateTour {
   discount: number;
   tags: string[];
   images: string[];
-  isTemporarilyStopWorking?: boolean;
-}
-
-
-export interface FormTour {
-  id?: number;
-  title: string;
-  description: string;
-  businessHours: string;
-  location: string;
-  price: number;
-  discount: number;
-  tags: string[];
-  images: string[] | File[];
-  creator: number;
+  contact: string;
   isTemporarilyStopWorking?: boolean;
 }

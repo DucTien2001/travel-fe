@@ -28,12 +28,8 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import { faSlack } from "@fortawesome/free-brands-svg-icons";
 import PaginationComponent from "react-reactstrap-pagination";
-import { TourService } from "services/tour";
 import { useDispatch, useSelector } from "react-redux";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
-import { Tour } from "models/tour";
 import { ReducerType } from "redux/reducers";
 interface SearchData {
     tourName?:string;
@@ -42,7 +38,7 @@ interface SearchData {
 
 const ListTours : NextPage = () => {
     const dispatch = useDispatch();
-    const {allTours} = useSelector((state: ReducerType) => state.tour);
+    const {allTours} = useSelector((state: ReducerType) => state.normal);
 
     const listTour = [
         {
@@ -337,9 +333,7 @@ const ListTours : NextPage = () => {
 
     ]
     const { t, i18n } = useTranslation();
-    const [changeViewLayout, setChangeViewLayout] = useState(false);
-    const [listTours, setListTours] = useState<Tour[]>();
-    
+    const [changeViewLayout, setChangeViewLayout] = useState(false);   
     const schema = useMemo(() => {
         return yup.object().shape({
             tourName: yup.string().notRequired(),
@@ -378,19 +372,9 @@ const ListTours : NextPage = () => {
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-    useEffect(() => {
-        dispatch(setLoading(true))
-        TourService.getAllTours().then((res) => {
-            setListTours(res.data);
-        })
-        .catch((e) => dispatch(setErrorMess(e)))
-        .finally(() => dispatch(setLoading(false))); 
-    },[dispatch])
-
     useEffect(()=>{
         Aos.init({duration:500});
     },[]);
-
   return (
     <>
         <SectionHeader
@@ -485,13 +469,13 @@ const ListTours : NextPage = () => {
                             linkView="listTour"
                             linkBook="book/tour"
                             key={index}
-                            id = {index}
+                            id = {tour.id}
                             src = {tour.images[0]}
                             title = {tour.title}
                             description = {tour.description}
                             businessHours = {tour.businessHours}
                             location ={tour.location}
-                            // contact={tour.contact}
+                            contact={tour.contact}
                             price ={tour.price}
                             discount = {tour.discount}
                             tags={tour.tags}
@@ -514,7 +498,7 @@ const ListTours : NextPage = () => {
                             description = {tour.description}
                             businessHours = {tour.businessHours}
                             location ={tour.location}
-                            // contact={tour.contact}
+                            contact={tour.contact}
                             price ={tour.price}
                             discount = {tour.discount}
                             tags={tour.tags}

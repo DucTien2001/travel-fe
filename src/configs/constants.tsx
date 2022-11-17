@@ -28,6 +28,7 @@ export const API = {
   TOUR: { 
     DEFAULT: '/v1.0/tour',
     ALL_TOUR: '/v1.0/tour/get-all-tours',
+    DETAIL_TOUR: '/v1.0/tour/get-tours/:id',
   },
   ENTERPRISE: {
     TOUR: {

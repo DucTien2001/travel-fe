@@ -11,6 +11,7 @@ import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import Stars from "components/Stars";
 import clsx from "clsx";
+import { fCurrency2 } from "utils/formatNumber";
 interface Props { 
     className?: string;
     linkView: string;
@@ -41,29 +42,29 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
   return (
     <>
         <Row xs={3} key={id} className={clsx(classes.rowTour, className)}>
-            <Col className={isTemporarilyStopWorking ? classes.imgStopWorking : classes.imgTour}>
+            <Col className={classes.imgTour}>
                 <Link href={`/${linkView}/[${id}]`} >
                      {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img alt="anh" src={src}></img>
                 </Link>
-            {isTemporarilyStopWorking ? (<div className={classes.stopWorking}>
-                    <span className={classes.stop}>STOP WORKING</span>
-                    </div>) : (<div className={discount ? classes.discountWrapper : classes.noDiscount}>
+            <div className={discount ? classes.discountWrapper : classes.noDiscount}>
                     <span className={classes.percent}>{discount}%</span>
                     <span className={classes.discount}>DISCOUNT</span>
-            </div>)}
+            </div>
             </Col>
             <Col className={classes.information}>
-            <h5 className={classes.title}>{title}{roomNumber} <Badge pill color="var(--violet-color)">{tags}</Badge></h5>  
+            <h5 className={classes.title}>{title}{roomNumber} 
+            
+            </h5> 
+            <h5 className={classes.title}> {tags.map((tag,index) => (
+                <Badge pill color="var(--violet-color)" key={index}>{tag}</Badge>
+            ))}  </h5> 
             <span>{location} - {businessHours}{bookDates}</span>  
             <div className={classes.priceContainer}>
-                <h3>{price}$</h3>
+                <h3>{fCurrency2(price)} VND</h3>
                 <Stars numberOfStars={rate}/>
             </div>
-                <span className={classes.contact}>{contact} - {creator}</span>
-            <div className={classes.description}>
-                <span>{description}</span> 
-            </div>
+                <span className={classes.contact}>{contact}</span>
             </Col>
             <Col className={classes.btnControlCardList}>
                     <Link href={`/${linkView}/[${id}]`}>

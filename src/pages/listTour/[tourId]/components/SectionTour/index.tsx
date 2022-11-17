@@ -7,31 +7,35 @@ import {
   Container,
   Row,
   Col,
+  UncontrolledCarousel,
 } from "reactstrap";
 import {images} from "configs/images";
 import Carousel from "components/Carousel";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
 import Link from "next/link";
+import { Tour } from "models/tour";
 interface Props { 
-  id: number;
-  src: string;
-  title: string;
-  description: string;
-  businessHours: string;
-  location: string;
-  contact: string;
-  price: number;
-  discount?: number;
-  tags?: string;
-  rate: number;
-  creator: string;
-  isTemporarilyStopWorking?: boolean;
-  roomNumber?: string;
-  bookDates?: string;
+  // id: number;
+  // src: string;
+  // title: string;
+  // description: string;
+  // businessHours: string;
+  // location: string;
+  // contact: string;
+  // price: number;
+  // discount?: number;
+  // tags?: string;
+  // rate: number;
+  // creator: string;
+  // isTemporarilyStopWorking?: boolean;
+  // roomNumber?: string;
+  // bookDates?: string;
+  tour: Tour;
 }
 
 const items = [
+  
   {
     src: images.phuQuoc.src,
     altText: "",
@@ -55,10 +59,13 @@ const items = [
 ];
 
 // eslint-disable-next-line react/display-name
-const SectionTour = memo(({id, src, title, description, businessHours, 
-  location, contact, price, discount, 
-  tags, rate, creator, 
-  isTemporarilyStopWorking, roomNumber, bookDates} : Props)=> {
+const SectionTour = memo(({
+  // id, src, title, description, businessHours, 
+  // location, contact, price, discount, 
+  // tags, rate, creator, 
+  // isTemporarilyStopWorking, roomNumber, bookDates
+  tour
+} : Props)=> {
   const [collapses, setCollapses] = React.useState([1]);
   const changeCollapse = (collapse: number) => {
     if (collapses.includes(collapse)) {
@@ -79,15 +86,20 @@ const SectionTour = memo(({id, src, title, description, businessHours,
       document.body.classList.remove("sidebar-collapse");
     };
   }, []);
+  console.log(tour?.images);
   return (
     <>
         <div className="section">
           <Container>
             <Row>
               <Col md="5">
-                <Carousel
-                  images={items}
+                {/* <Carousel
+                  images={tour?.images}
                 />
+                 */}
+                {/* <UncontrolledCarousel
+                items={tour?.images}
+                /> */}
                 <p className={`blockquote blockquote-info ${classes.blockquote}`}>
                 {/* eslint-disable-next-line react/no-unescaped-entities */}
                   "And thank you for turning my personal jean jacket into a
@@ -204,7 +216,7 @@ const SectionTour = memo(({id, src, title, description, businessHours,
                   </Card>
                 </div>
                 <Row className="justify-content-end">
-                  <Link href={`/book/[${id}]`}>
+                  <Link href={`/book/[${tour?.id}]`}>
                   <Button className="mr-3" btnType={BtnType.Primary} isDot={true}>
                     Book now 
                   </Button>

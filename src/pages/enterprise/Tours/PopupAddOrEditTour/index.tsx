@@ -20,6 +20,7 @@ import { ETour } from "models/enterprise";
 import axios from "axios";
 import { ImageService } from "services/image";
 import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
+import { VALIDATION } from "configs/constants";
 
 export interface TourForm {
   name: string;
@@ -28,6 +29,7 @@ export interface TourForm {
   location: string;
   price: number;
   discount?: number;
+  contact: string;
   tags: string[];
   isTemporarilyStopWorking: boolean;
   images?: string[] | File[];
@@ -56,6 +58,9 @@ const PopupCreateTour = memo((props: Props) => {
       price: yup.number().typeError("Price must be a number").required("Price is required"),
       discount: yup.number().transform(value => (isNaN(value) ? undefined : value)).typeError("Discount must be a number").notRequired(),
       tags: yup.array().required("Tags is required"),
+      contact: yup.string()
+      .required("Contact is required")
+      .matches(VALIDATION.phone, { message: 'Please enter a valid phone number.', excludeEmptyString: true }),
       isTemporarilyStopWorking: yup.boolean().required(),
       images: yup.mixed().test("required", "Please select images", (value) => {
         return value && value.length;
@@ -87,6 +92,7 @@ const PopupCreateTour = memo((props: Props) => {
       price: null,
       discount: null,
       tags: [],
+      contact: "",
       isTemporarilyStopWorking: false,
       images: [],
     });
@@ -107,20 +113,21 @@ const PopupCreateTour = memo((props: Props) => {
     });
     await Promise.all(uploader)
       .then((res) => {
-        // if(itemEdit) {
-        //   TourService.updateTour(itemEdit?.id, {
-        //     title: itemEdit.title,
-        //     description: itemEdit.description,
-        //     businessHours: itemEdit.businessHours,
-        //     location: itemEdit.location,
-        //     price: itemEdit.price,
-        //     discount: itemEdit.discount,
-        //     tags: itemEdit.tags,
-        //     images: itemEdit.images,
-        //   })
-        //   // console.log(res);
-        // }
-        // else {
+        if(itemEdit) {
+          TourService.updateTour(itemEdit?.id, {
+            title: itemEdit.title,
+            description: itemEdit.description,
+            businessHours: itemEdit.businessHours,
+            location: itemEdit.location,
+            price: itemEdit.price,
+            discount: itemEdit.discount,
+            tags: itemEdit.tags,
+            contact: itemEdit.contact,
+            images: itemEdit.images,
+          })
+          // console.log(res);
+        }
+        else {
         if (user) {
           TourService.createTour({
             title: data.name,
@@ -130,6 +137,7 @@ const PopupCreateTour = memo((props: Props) => {
             price: data.price,
             discount: data.discount,
             tags: data.tags,
+            contact: data.contact,
             images: res,
             creator: user?.id,
           })
@@ -141,7 +149,7 @@ const PopupCreateTour = memo((props: Props) => {
               dispatch(setErrorMess(e));
             });
         }
-        // }
+        }
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
@@ -152,33 +160,34 @@ const PopupCreateTour = memo((props: Props) => {
       });
   };
  
-  // useEffect(() => {
-  //   if (itemEdit) {
-  //     reset({
-  //       name: itemEdit.title,
-  //       description: itemEdit.description,
-  //       businessHours: itemEdit.businessHours,
-  //       location: itemEdit.location,
-  //       price: itemEdit.price,
-  //       discount: itemEdit.discount || null,
-  //       tags: itemEdit.tags,
-  //       images: itemEdit.images,
-  //     })
-  //   }
-  // }, [reset, itemEdit])
+  useEffect(() => {
+    if (itemEdit) {
+      reset({
+        name: itemEdit.title,
+        description: itemEdit.description,
+        businessHours: itemEdit.businessHours,
+        location: itemEdit.location,
+        price: itemEdit.price,
+        discount: itemEdit.discount || null,
+        tags: itemEdit.tags,
+        contact: itemEdit.contact,
+        images: itemEdit.images,
+      })
+    }
+  }, [reset, itemEdit])
 
-  //   useEffect(() => {
-  //   if (!isOpen && !itemEdit) {
-  //     clearForm()
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isOpen, itemEdit])
+    useEffect(() => {
+    if (!isOpen && !itemEdit) {
+      clearForm()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, itemEdit])
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
         <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
           <ModalHeader toggle={toggle} className={classes.title}>
-            Create tour 2
+            Create tour 
           </ModalHeader>
           <ModalBody>
             <Row xs={6} sm={12} className={classes.row}>
@@ -211,23 +220,12 @@ const PopupCreateTour = memo((props: Props) => {
                 />
               </Col>
               <Col>
-              <Controller
-                  name="tags"
-                  control={control}
-                  render={({ field }) => (
-                    <InputTags
-                      {...field}
-                      label="Tags"
-                      name="tags"
-                      placeholder="Enter tags"
-                      onChange={(value: any) => {
-                        return field.onChange(value);
-                      }}
-                      value={field.value ? field.value : []}
-                      control={control}
-                      errorMessage={errors.tags?.message}
-                    />
-                  )}
+                <InputTextFieldBorder
+                  label="Contact"
+                  className="mr-3"
+                  placeholder="Enter contact"
+                  inputRef={register("contact")}
+                  errorMessage={errors.contact?.message}
                 />
               </Col>
             </Row>
@@ -247,6 +245,28 @@ const PopupCreateTour = memo((props: Props) => {
                   placeholder="Enter discount"
                   inputRef={register("discount")}
                   errorMessage={errors.discount?.message}
+                />
+              </Col>
+            </Row>
+            <Row className={classes.row}>
+              <Col>
+              <Controller
+                  name="tags"
+                  control={control}
+                  render={({ field }) => (
+                    <InputTags
+                      {...field}
+                      label="Tags"
+                      name="tags"
+                      placeholder="Enter tags"
+                      onChange={(value: any) => {
+                        return field.onChange(value);
+                      }}
+                      value={field.value ? field.value : []}
+                      control={control}
+                      errorMessage={errors.tags?.message}
+                    />
+                  )}
                 />
               </Col>
             </Row>

@@ -67,7 +67,7 @@ const CustomCarousel = memo(({className, images} : Props) => {
                     activeIndex={activeIndex}
                     onClickHandler={goToIndex}
                 />
-                {images.map((item, index) => {
+                {images?.map((item, index) => {
                     return (
                       <CarouselItem
                         onExiting={onExiting}

@@ -6,12 +6,14 @@ import {
   CardTitle,
   CardBody,
   Col,
+  Badge,
 } from "reactstrap";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import Stars from "components/Stars";
+import { fCurrency2 } from "utils/formatNumber";
 
 interface Props { 
     className?: string;
@@ -47,25 +49,22 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                 <Card className={clsx("card-pricing card-background", classes.cardImage)}
                 style={{backgroundImage: `url(${src})`,}}
                 >
-                    <CardBody className={isTemporarilyStopWorking ? classes.stopCard : classes.cardBody}>
-                         {isTemporarilyStopWorking ? (<div className={classes.stopWorking}>
-                                <span className={classes.stop}>STOP WORKING</span>
-                            </div>) : (<div className={discount ? classes.discountWrapper : classes.noDiscount}>
+                    <CardBody className={classes.cardBody}>
+                            <div className={discount ? classes.discountWrapper : classes.noDiscount}>
                                 <span className={classes.percent}>{discount}%</span>
                                 <span className={classes.discount}>DISCOUNT</span>
-                            </div>)}
+                            </div>
                         <h5 className={clsx("category", classes.title)}>{title}{roomNumber} - {location}</h5>
                         <Stars numberOfStars={rate}/>
                         <div className={classes.tags}>
-                            <p>{tags}</p>
+                            {tags?.map((tag, index) => (
+                                <Badge pill color="var(--violet-color)" key={index}>{tag}</Badge>
+                            ))}
                         </div>
                         <p>{businessHours}{bookDates}</p>
-                        <CardTitle tag="h3">{price}$</CardTitle>
-                            <ul>
-                                <li>{description}</li>
-                            </ul>
+                        <CardTitle tag="h3">{fCurrency2(price)} VND</CardTitle>
                             <div>
-                                <p>{contact} - {creator}</p>
+                                <p>{contact}</p>
                             </div>
                             <div className={classes.btnControlCard}>
                                 <Link href={`/${linkView}/[${id}]`}>

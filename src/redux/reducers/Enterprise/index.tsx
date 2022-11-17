@@ -12,6 +12,7 @@ export interface ITour {
   tags: string[];
   images: string[];
   creator: number;
+  contact: string;
   isTemporarilyStopWorking?: boolean;
 }
 export interface IHotel {
