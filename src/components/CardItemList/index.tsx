@@ -56,7 +56,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
             <h5 className={classes.title}>{title}{roomNumber} 
             
             </h5> 
-            <h5 className={classes.title}> {tags.map((tag,index) => (
+            <h5 className={classes.title}> {tags?.map((tag,index) => (
                 <Badge pill color="var(--violet-color)" key={index}>{tag}</Badge>
             ))}  </h5> 
             <span>{location} - {businessHours}{bookDates}</span>  

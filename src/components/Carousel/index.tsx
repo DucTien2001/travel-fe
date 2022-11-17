@@ -67,8 +67,7 @@ const CustomCarousel = memo(({className, images} : Props) => {
                     activeIndex={activeIndex}
                     onClickHandler={goToIndex}
                 />
-                {images?.map((item, index) => {
-                    return (
+                {images?.map((item, index) => 
                       <CarouselItem
                         onExiting={onExiting}
                         onExited={onExited}
@@ -78,12 +77,11 @@ const CustomCarousel = memo(({className, images} : Props) => {
                         <img
                           key={index}
                           src={item.src}
-                          alt="anh"
+                          alt={item.altText}
                           className="d-block img-raised"
                         />
-                      </CarouselItem>
-                    );
-                  })}
+                      </CarouselItem>            
+                  )}
                 <a
                     className="carousel-control-prev"
                     data-slide="prev"

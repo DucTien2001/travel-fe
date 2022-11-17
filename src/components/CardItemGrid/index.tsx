@@ -56,11 +56,11 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                             </div>
                         <h5 className={clsx("category", classes.title)}>{title}{roomNumber} - {location}</h5>
                         <Stars numberOfStars={rate}/>
-                        <div className={classes.tags}>
-                            {tags?.map((tag, index) => (
-                                <Badge pill color="var(--violet-color)" key={index}>{tag}</Badge>
+                        {!!tags?.length && <div className={classes.tags}>
+                            {tags?.map((item, index) => (
+                                <Badge pill color="var(--violet-color)" key={index}>{item}</Badge>
                             ))}
-                        </div>
+                        </div>}
                         <p>{businessHours}{bookDates}</p>
                         <CardTitle tag="h3">{fCurrency2(price)} VND</CardTitle>
                             <div>
@@ -76,7 +76,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                    View more
                                 </Button>
                                 </Link>
-                                <Link href={`/${linkBook}/[${id}]`}>
+                                <Link href={`/${linkBook}/:${id}`}>
                                     <Button
                                     className="btn-round"
                                     btnType={BtnType.Secondary}

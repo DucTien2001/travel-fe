@@ -16,26 +16,10 @@ import Button, {BtnType} from "components/common/buttons/Button";
 import Link from "next/link";
 import { Tour } from "models/tour";
 interface Props { 
-  // id: number;
-  // src: string;
-  // title: string;
-  // description: string;
-  // businessHours: string;
-  // location: string;
-  // contact: string;
-  // price: number;
-  // discount?: number;
-  // tags?: string;
-  // rate: number;
-  // creator: string;
-  // isTemporarilyStopWorking?: boolean;
-  // roomNumber?: string;
-  // bookDates?: string;
   tour: Tour;
 }
 
 const items = [
-  
   {
     src: images.phuQuoc.src,
     altText: "",
@@ -59,13 +43,15 @@ const items = [
 ];
 
 // eslint-disable-next-line react/display-name
-const SectionTour = memo(({
-  // id, src, title, description, businessHours, 
-  // location, contact, price, discount, 
-  // tags, rate, creator, 
-  // isTemporarilyStopWorking, roomNumber, bookDates
-  tour
-} : Props)=> {
+const SectionTour = memo(({tour} : Props)=> {
+  const newImages = tour?.images?.map(item => {return {
+    src: item,
+    altText: "",
+    caption: "",
+  }})
+  
+  console.log(newImages);
+  
   const [collapses, setCollapses] = React.useState([1]);
   const changeCollapse = (collapse: number) => {
     if (collapses.includes(collapse)) {
@@ -86,17 +72,16 @@ const SectionTour = memo(({
       document.body.classList.remove("sidebar-collapse");
     };
   }, []);
-  console.log(tour?.images);
   return (
     <>
         <div className="section">
           <Container>
             <Row>
               <Col md="5">
-                {/* <Carousel
-                  images={tour?.images}
+                <Carousel
+                  images={newImages}
                 />
-                 */}
+                
                 {/* <UncontrolledCarousel
                 items={tour?.images}
                 /> */}

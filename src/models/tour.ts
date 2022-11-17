@@ -17,6 +17,8 @@ export interface Tour {
 
 export interface Image {
     src: string;
+    altText?: string;
+    caption?: string;
 }
 
 export interface Comment {
