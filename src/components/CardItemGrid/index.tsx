@@ -67,7 +67,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                 <p>{contact}</p>
                             </div>
                             <div className={classes.btnControlCard}>
-                                <Link href={`/${linkView}/[${id}]`}>
+                                <Link href={`/${linkView}/:${id}`}>
                                 <Button
                                 className={clsx("btn-round", classes.btnView)}
                                 btnType={BtnType.Primary}
