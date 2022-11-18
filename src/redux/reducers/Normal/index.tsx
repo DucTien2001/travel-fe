@@ -16,12 +16,28 @@ export interface ITour {
   isTemporarilyStopWorking?: boolean;
 }
 
+export interface IHotel {
+  id?: number;
+  name: string;
+  description: string;
+  checkInTime: string;
+  checkOutTime: string;
+  location: string;
+  contact: string;
+  tags: string[];
+  images: string[];
+  creator: number;
+  isTemporarilyStopWorking?: boolean;
+}
+
 export interface NormalState {
   allTours: ITour[];
+  allHotels: IHotel[];
 }
 
 const initial: NormalState = {
   allTours: [],
+  allHotels: [],
 };
 
 export const normalReducer = (state = initial, action: any) =>
@@ -29,6 +45,9 @@ export const normalReducer = (state = initial, action: any) =>
     switch (action.type) {
       case types.SET_NORMAL_TOURS_REDUCER:
         draft.allTours = action.data;
+        break;
+      case types.SET_NORMAL_HOTELS_REDUCER:
+        draft.allHotels = action.data;
         break;
       default:
         return state;

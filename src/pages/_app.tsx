@@ -28,7 +28,7 @@ import {
   getAllHotels as getAllHotelsOfEnterprise,
   getAllTours as getAllToursOfEnterprise,
 } from "redux/reducers/Enterprise/actionTypes";
-import { getAllTours as getAllToursOfNormal } from "redux/reducers/Normal/actionTypes";
+import { getAllTours as getAllToursOfNormal, getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 // import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 
 // const { store } = createConfigureStore();
@@ -43,6 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     dispatch(getAllToursOfNormal());
+    dispatch(getAllHotelsOfNormal());
     if (user) {
       if (user?.role === EUserType.ENTERPRISE) {
         dispatch(getAllToursOfEnterprise(user?.id));

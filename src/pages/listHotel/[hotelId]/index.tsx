@@ -1,6 +1,6 @@
-import React, {memo} from "react";
+import React, { memo, useEffect, useState } from "react";
 import SectionHeader from "components/Header/SectionHeader";
-import {images} from "configs/images";
+import { images } from "configs/images";
 import SectionHotel from "./components/SectionHotel";
 import CheckRoomEmpty from "./components/CheckRoomEmpty";
 import Comment from "./components/Comment";
@@ -8,11 +8,15 @@ import GoogleMapBody from "./components/GoogleMapBody";
 import RelatedHotel from "./components/RelatedHotel";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import {Divider} from "components/common/Divider";
+import { Divider } from "components/common/Divider";
+import { useRouter } from "next/router";
+import { HotelService } from "services/normal/hotel";
+import { useDispatch } from "react-redux";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 
 const listCmt = [
   {
-    user: { 
+    user: {
       id: 1,
       email: "khoiyahoo@gmail.com",
       passWord: "1234",
@@ -30,7 +34,7 @@ const listCmt = [
     date: new Date(),
   },
   {
-    user: { 
+    user: {
       id: 1,
       email: "khoiyahoo@gmail.com",
       passWord: "1234",
@@ -48,7 +52,7 @@ const listCmt = [
     date: new Date(),
   },
   {
-    user: { 
+    user: {
       id: 1,
       email: "khoiyahoo@gmail.com",
       passWord: "1234",
@@ -65,46 +69,58 @@ const listCmt = [
     comment: "Chuyen di that tuyet voi",
     date: new Date(),
   },
-]
-const hotel = 
-  {
-      id: 0,
-      image: images.bgUser.src,
-      star: 4,
-      title: "Khach san ngan sao",
-      description: "6 months access to the library",
-      businessHours: "7AM - 10PM",
-      location: "Khanh Hoa",
-      contact: "09324343",
-      price: 70,
-      tags: "Sea",
-      rate: 4,
-      creator: "VietNam",
-    
-  }
+];
+const hotel = {
+  id: 0,
+  image: images.bgUser.src,
+  star: 4,
+  title: "Khach san ngan sao",
+  description: "6 months access to the library",
+  businessHours: "7AM - 10PM",
+  location: "Khanh Hoa",
+  contact: "09324343",
+  price: 70,
+  tags: "Sea",
+  rate: 4,
+  creator: "VietNam",
+};
 
-interface Props {
-  
-}
+interface Props {}
 // eslint-disable-next-line react/display-name
-const ProductPage = memo((Props)=> {
+const ProductPage = memo((Props) => {
+  const dispatch = useDispatch();
+  const router = useRouter()
+  const [hotel, setHotel] = useState<any>();
+  useEffect(() => {
+    if(router){
+      dispatch(setLoading(true))
+      HotelService.getHotel(Number(router.query.hotelId.slice(1))).
+      then((res) => {
+        setHotel(res.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false))
+      })
+    }
+  }, [router]);
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>
-        <SectionHeader
-        title="VIEW HOTEL"
-        src={images.bgUser.src}
+        <SectionHeader title="VIEW HOTEL" src={images.bgUser.src} />
+        <SectionHotel hotel={hotel}
         />
-        <SectionHotel id={hotel.id} src={""} title={hotel.title} description={hotel.description} businessHours={hotel.businessHours} location={""} contact={""} price={0} rate={0} creator={""}/> 
         <div className={classes.container}>
-          <CheckRoomEmpty/>
-          <Comment comment={listCmt}/>
+          <CheckRoomEmpty hotelId={hotel?.id}/>
+          {/* <Comment comment={listCmt}/> */}
         </div>
-        <GoogleMapBody/>
-        <RelatedHotel/>
+        <GoogleMapBody />
+        <RelatedHotel />
       </div>
     </>
   );
-})
+});
 
 export default ProductPage;
