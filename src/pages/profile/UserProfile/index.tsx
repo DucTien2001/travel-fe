@@ -18,9 +18,10 @@ import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/
 import { UserService } from "services/user";
 import {images} from "configs/images";
 import UploadAvatar from "components/UploadAvatar";
+import { ImageService } from "services/image";
 
 
-interface FormData { 
+interface FormUser { 
     avatar?: string;
     firstName: string;
     lastName:string;
@@ -59,27 +60,45 @@ const UserProfile = memo((props: Props) => {
         formState: { errors },
         reset,
         control,
-        } = useForm<FormData>({
+        } = useForm<FormUser>({
           resolver: yupResolver(schema),
           mode: "onChange",
     });
 
-    const _onSubmit = (data: FormData) => {
+    const _onSubmit = async (data: FormUser) => {
         dispatch(setLoading(true));
-        if(user) {
-            UserService.updateUserProfile(user.id, {
-                avatar: data.avatar,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                address: data.address,
-                phoneNumber: data.phoneNumber,    
-            })
-            .then(() => {
-                dispatch(setSuccessMess("Update profile successfully"))
-            }) 
-            .catch((err) => dispatch(setErrorMess(err)))
-            .finally(() => dispatch(setLoading(false)));
-        }
+        let avatar;
+        const formData: any = new FormData();
+        formData.append("file", data.avatar);
+        formData.append("tags", "codeinfuse, medium, gist");
+        formData.append("upload_preset", "my-uploads");
+        formData.append("api_key", "859398113752799");
+        formData.append("timestamp", Date.now() / 1000 / 0);
+        console.log(formData)
+        ImageService.uploadImage(formData)
+        .then((res) => {
+            console.log(res)
+            if(user) {
+                UserService.updateUserProfile(user.id, {
+                    avatar: res,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    address: data.address,
+                    phoneNumber: data.phoneNumber,    
+                })
+                .then(() => {
+                    dispatch(setSuccessMess("Update profile successfully"))
+                }) 
+                .catch((err) => dispatch(setErrorMess(err)))
+                .finally(() => dispatch(setLoading(false)));
+            }
+        })
+        .catch((e) => {
+            dispatch(setErrorMess(e));
+          })
+        .finally(() => {
+            dispatch(setLoading(false));
+        });
     }
 
     // useEffect(() => {

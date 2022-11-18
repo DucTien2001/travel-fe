@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import React, {memo, useEffect, useState} from "react";
 import {
   Card,
   CardHeader,
@@ -7,31 +7,39 @@ import {
   Container,
   Row,
   Col,
+  Carousel,
   UncontrolledCarousel,
+  CarouselItem,
+  CarouselIndicators,
+  CarouselProps,
+  CarouselControl,
+  Badge,
 } from "reactstrap";
+// import { Carousel } from 'react-responsive-carousel'
 import {images} from "configs/images";
-import Carousel from "components/Carousel";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
 import Link from "next/link";
 import { Tour } from "models/tour";
+import { fCurrency2 } from "utils/formatNumber";
+import clsx from "clsx";
 interface Props { 
   tour: Tour;
 }
 
 const items = [
   {
-    src: images.phuQuoc.src,
+    src: "https://res.cloudinary.com/dpvvffyul/image/upload/v1668655644/my-uploads/spyh7ujucwnkpgkhnifu.webp",
     altText: "",
     caption: "",
   },
   {
-    src: images.phuQuoc.src,
+    src: "https://res.cloudinary.com/dpvvffyul/image/upload/v1668655643/my-uploads/bd4ylh4xlauzx1eosqgk.webp",
     altText: "",
     caption: "",
   },
   {
-    src: images.phuQuoc.src,
+    src: "https://res.cloudinary.com/dpvvffyul/image/upload/v1668655644/my-uploads/spyh7ujucwnkpgkhnifu.webp",
     altText: "",
     caption: "",
   },
@@ -44,14 +52,7 @@ const items = [
 
 // eslint-disable-next-line react/display-name
 const SectionTour = memo(({tour} : Props)=> {
-  const newImages = tour?.images?.map(item => {return {
-    src: item,
-    altText: "",
-    caption: "",
-  }})
-  
-  console.log(newImages);
-  
+  const [images, setImages] = useState([]);
   const [collapses, setCollapses] = React.useState([1]);
   const changeCollapse = (collapse: number) => {
     if (collapses.includes(collapse)) {
@@ -72,38 +73,98 @@ const SectionTour = memo(({tour} : Props)=> {
       document.body.classList.remove("sidebar-collapse");
     };
   }, []);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const onExiting = () => {
+    setAnimating(true);
+  };
+  const onExited = () => {
+    setAnimating(false);
+  };
+  const next = () => {
+    // if (animating) return;
+    // const nextIndex = activeIndex === images.length - 1 ? 0 : activeIndex + 1;
+    // setActiveIndex(nextIndex);
+  };
+  const previous = () => {
+    // if (animating) return;
+    // const nextIndex = activeIndex === 0 ? images.length - 1 : activeIndex - 1;
+    // setActiveIndex(nextIndex);
+  };
+  // const slides = 
+  
+  console.log(items);
+
+  useEffect(() => {
+    const newImages = tour?.images?.map((item, index) => {return {
+      altText: 'Slide',
+      caption: 'Slide',
+      key: index + 1,
+      src: item,
+    }})
+    setImages(newImages);
+  }, [tour])
   return (
     <>
         <div className="section">
           <Container>
             <Row>
               <Col md="5">
-                <Carousel
+                {/* <Carousel
                   images={newImages}
-                />
-                
-                {/* <UncontrolledCarousel
-                items={tour?.images}
                 /> */}
+                {images && (<Carousel
+                  activeIndex={activeIndex}
+                  next={next}
+                  previous={previous}
+                  >
+                  {/* <CarouselIndicators items={images} activeIndex={activeIndex} onClickHandler={goToIndex}/> */}
+                  { images?.map((item) => {
+                    return (
+                      <CarouselItem 
+                        onExiting={() => setAnimating(true)}
+                        onExited={() => setAnimating(false)}
+                        key={item.src}
+                      >
+                        <img src={item.src} alt={item.altText} />
+                      </CarouselItem>
+                    );
+                  })
+                  }
+                  <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+                  <CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+                </Carousel>)}
                 <p className={`blockquote blockquote-info ${classes.blockquote}`}>
-                {/* eslint-disable-next-line react/no-unescaped-entities */}
-                  "And thank you for turning my personal jean jacket into a
-                  couture piece. Wear yours with mirrored sunglasses on
-               {/* eslint-disable-next-line react/no-unescaped-entities */}
-                  vacation." <br></br>
+                  <small>{tour?.title}</small>
                   <br></br>
-                  <small>Kanye West</small>
+                  {tour?.businessHours} - {tour?.contact}          
                 </p>
               </Col>
               <Col className="ml-auto mr-auto" md="6">
-                <h2 className={`title ${classes.nameTour}`}>Saint Laurent</h2>
-                <h5 className="category">Slim-Fit Leather Biker Jacket</h5>
-                <h2 className={`main-price ${classes.price}`}>$3,390</h2>
-                <div
-                  aria-multiselectable={true}
-                  className="card-collapse"
-                  id="accordion"
-                  role="tablist"
+                <h2 className={`title ${classes.nameTour}`}>{tour?.title} - {tour?.location}</h2>
+                {<div className={classes.tags}>
+                    {tour?.tags?.map((item, index) => (
+                        <Badge pill className={classes.badgeTags} key={index}>{item}</Badge>
+                        
+                      ))}
+                </div>}
+                <h2 className={`main-price ${classes.price}`}> {fCurrency2(tour?.price)} VND</h2>
+                <h2 className={`main-price ${classes.businessHours}`}>Time business: {tour?.businessHours}</h2>
+                <Row className="justify-content-end">
+                  <Link href={`/book/[${tour?.id}]`}>
+                  <Button className="mr-3" btnType={BtnType.Primary} isDot={true}>
+                    Book now 
+                  </Button>
+                  </Link>
+                </Row>
+              </Col>
+            </Row>
+            <Row>
+            <div
+              aria-multiselectable={true}
+              className={clsx("card-collapse", classes.description)}
+              id="accordion"
+              role="tablist"
                 >
                   <Card className="card-plain">
                     <CardHeader id="headingOne" role="tab">
@@ -125,89 +186,12 @@ const SectionTour = memo(({tour} : Props)=> {
                       <CardBody>
                         <p>
                           {/* eslint-disable-next-line react/no-unescaped-entities */}
-                          Eres' daring 'Grigri Fortune' swimsuit has the fit and
-                          coverage of a bikini in a one-piece silhouette. This
-                          {/* eslint-disable-next-line react/no-unescaped-entities */}
-                          fuchsia style is crafted from the label's sculpting
-                          peau douce fabric and has flattering cutouts through
-                          the torso and back. Wear yours with mirrored
-                          sunglasses on vacation.
+                          {tour?.description}
                         </p>
-                      </CardBody>
-                    </Collapse>
-                  </Card>
-                  <Card className="card-plain">
-                    <CardHeader id="headingTwo" role="tab">
-                      <a
-                        aria-expanded={collapses.includes(2)}
-                        data-parent="#accordion"
-                        data-toggle="collapse"
-                        href="#pablo"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          changeCollapse(2);
-                        }}
-                      >
-                        Designer Information{" "}
-                        <i className="now-ui-icons arrows-1_minimal-down"></i>
-                      </a>
-                    </CardHeader>
-                    <Collapse isOpen={collapses.includes(2)}>
-                      <CardBody>
-                        <p>
-                          An infusion of West Coast cool and New York attitude,
-                          Rebecca Minkoff is synonymous with It girl style.
-                          Minkoff burst on the fashion scene with her
-                          {/* eslint-disable-next-line react/no-unescaped-entities */}
-                          best-selling 'Morning After Bag' and later expanded
-                          her offering with the Rebecca Minkoff Collection - a
-                          {/* eslint-disable-next-line react/no-unescaped-entities */}
-                          range of luxe city staples with a "downtown romantic"
-                          theme.
-                        </p>
-                      </CardBody>
-                    </Collapse>
-                  </Card>
-                  <Card className="card-plain">
-                    <CardHeader id="headingThree" role="tab">
-                      <a
-                        aria-expanded={collapses.includes(3)}
-                        data-parent="#accordion"
-                        data-toggle="collapse"
-                        href="#pablo"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          changeCollapse(3);
-                        }}
-                      >
-                        Details and Care{" "}
-                        <i className="now-ui-icons arrows-1_minimal-down"></i>
-                      </a>
-                    </CardHeader>
-                    <Collapse isOpen={collapses.includes(3)}>
-                      <CardBody>
-                        <ul>
-                          <li>Storm and midnight-blue stretch cotton-blend</li>
-                          <li>
-                            Notch lapels, functioning buttoned cuffs, two front
-                            flap pockets, single vent, internal pocket
-                          </li>
-                          <li>Two button fastening</li>
-                          <li>84% cotton, 14% nylon, 2% elastane</li>
-                          <li>Dry clean</li>
-                        </ul>
                       </CardBody>
                     </Collapse>
                   </Card>
                 </div>
-                <Row className="justify-content-end">
-                  <Link href={`/book/[${tour?.id}]`}>
-                  <Button className="mr-3" btnType={BtnType.Primary} isDot={true}>
-                    Book now 
-                  </Button>
-                  </Link>
-                </Row>
-              </Col>
             </Row>
           </Container>
                       

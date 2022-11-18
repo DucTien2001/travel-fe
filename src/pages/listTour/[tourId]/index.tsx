@@ -89,6 +89,7 @@ const ProductPage = memo(()=> {
       })
     }
   }, [router]);
+  console.log(tour);
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>
@@ -97,9 +98,9 @@ const ProductPage = memo(()=> {
         src={images.bgUser.src}
         /> 
         <SectionTour tour={tour}/> 
-        {/* <div className={classes.containerComment}>
+        <div className={classes.containerComment}>
           <Comment comment={listCmt}/>
-        </div> */}
+        </div>
         {/* <GoogleMapBody/>
         <RelatedTour/>  */}
       </div>
