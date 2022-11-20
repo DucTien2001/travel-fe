@@ -33,6 +33,13 @@ export const API = {
     },
     TOURBILL: { 
       CREATE: '/v1.0/tour-bill/create',
+    },
+    HOTEL: { 
+      ALL_HOTELS: '/v1.0/hotel/get-all-hotels',
+      DETAIL_HOTEL: '/v1.0/hotel/get-hotel/:id',
+    },
+    ROOM: {
+      GET_ROOMS: '/v1.0/room/get-all-rooms/:id',
     }
   },
   ENTERPRISE: {

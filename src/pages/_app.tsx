@@ -28,9 +28,13 @@ import {
   getAllHotels as getAllHotelsOfEnterprise,
   getAllTours as getAllToursOfEnterprise,
 } from "redux/reducers/Enterprise/actionTypes";
+<<<<<<< HEAD
 import { getAllTours as getAllToursOfNormal } from "redux/reducers/Normal/actionTypes";
 import { SWRConfig } from 'swr'
 import axios from "axios";
+=======
+import { getAllTours as getAllToursOfNormal, getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
+>>>>>>> 21a74f9ca3b22f57f87edb091c1a751dd5429277
 // import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 
 // const { store } = createConfigureStore();
@@ -45,6 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     dispatch(getAllToursOfNormal());
+    dispatch(getAllHotelsOfNormal());
     if (user) {
       if (user?.role === EUserType.ENTERPRISE) {
         dispatch(getAllToursOfEnterprise(user?.id));

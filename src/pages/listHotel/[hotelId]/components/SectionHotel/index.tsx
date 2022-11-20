@@ -9,13 +9,13 @@ import {
   Col,
 } from "reactstrap";
 import {images} from "configs/images";
-import Carousel from "components/Carousel";
+// import Carousel from "components/Carousel";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
-interface Props { 
+interface IHotel { 
   id: number;
   src: string;
-  title: string;
+  name: string;
   description: string;
   businessHours: string;
   location: string;
@@ -28,6 +28,10 @@ interface Props {
   isTemporarilyStopWorking?: boolean;
   roomNumber?: string;
   bookDates?: string;
+}
+
+interface Props {
+  hotel: IHotel
 }
 
 const items = [
@@ -54,10 +58,7 @@ const items = [
 ];
 
 // eslint-disable-next-line react/display-name
-const SectionTour = memo(({id, src, title, description, businessHours, 
-  location, contact, price, discount, 
-  tags, rate, creator, 
-  isTemporarilyStopWorking, roomNumber, bookDates} : Props)=> {
+const SectionTour = memo(({hotel} : Props)=> {
   const [collapses, setCollapses] = React.useState([1]);
   const changeCollapse = (collapse: number) => {
     if (collapses.includes(collapse)) {
@@ -84,9 +85,9 @@ const SectionTour = memo(({id, src, title, description, businessHours,
           <Container>
             <Row>
               <Col md="5">
-                <Carousel
+                {/* <Carousel
                   images={items}
-                />
+                /> */}
                 <p className={`blockquote blockquote-info ${classes.blockquote}`}>
                 {/* eslint-disable-next-line react/no-unescaped-entities */}
                   "And thank you for turning my personal jean jacket into a
@@ -94,11 +95,11 @@ const SectionTour = memo(({id, src, title, description, businessHours,
                {/* eslint-disable-next-line react/no-unescaped-entities */}
                   vacation." <br></br>
                   <br></br>
-                  <small>{title}</small>
+                  <small>{hotel?.name}</small>
                 </p>
               </Col>
               <Col className="ml-auto mr-auto" md="6">
-                <h2 className={`title ${classes.nameTour}`}>Saint Laurent</h2>
+                <h2 className={`title ${classes.nameTour}`}>{hotel?.name}</h2>
                 <h5 className="category">Slim-Fit Leather Biker Jacket</h5>
                 <h2 className={`main-price ${classes.price}`}>$3,390</h2>
                 <div
