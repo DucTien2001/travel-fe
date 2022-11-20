@@ -33,6 +33,8 @@ export const API = {
     },
     TOURBILL: { 
       CREATE: '/v1.0/tour-bill/create',
+      GET_ALL_TOURBILL: '/v1.0/tour-bill/get-all-user-tour-bills/:id',
+      GET_TOURBILL: '/v1.0/tour-bill/get-tour-bill/:id',
     },
     HOTEL: { 
       ALL_HOTELS: '/v1.0/hotel/get-all-hotels',

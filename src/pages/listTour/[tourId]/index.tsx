@@ -12,6 +12,10 @@ import { TourService } from "services/normal/tour";
 import { Tour } from "models/tour";
 import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Container } from "reactstrap";
+import { faFaceFrown } from '@fortawesome/free-regular-svg-icons';
+
 
 const listCmt = [
   {
@@ -93,15 +97,25 @@ const ProductPage = memo(()=> {
     <>
       <div className={clsx("wrapper", classes.root)}>
         <SectionHeader
-        title="VIEW TOUR"
-        src={images.bgUser.src}
-        /> 
-        <SectionTour tour={tour}/> 
-        <div className={classes.containerComment}>
-          <Comment comment={listCmt}/>
-        </div>
-        {/* <GoogleMapBody/>
-        <RelatedTour/>  */}
+          title="VIEW TOUR"
+          src={images.bgUser.src}
+          className={ tour?.isTemporarilyStopWorking ? classes.sectionHeader : ""}
+          /> 
+        {tour?.isTemporarilyStopWorking ? (
+          <Container className={classes.boxStopWorking}>
+            <h3>Sorry, our service is temporarily in active use </h3>
+            <FontAwesomeIcon icon={faFaceFrown}/>
+          </Container>
+        ) : (
+          <>
+          <SectionTour tour={tour}/> 
+          <div className={classes.containerComment}>
+            <Comment comment={listCmt}/>
+          </div>
+          {/* <GoogleMapBody/>
+          <RelatedTour/>  */}
+          </>
+        )}
       </div>
     </>
   );

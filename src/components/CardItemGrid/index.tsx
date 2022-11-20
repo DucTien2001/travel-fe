@@ -21,7 +21,7 @@ interface Props {
   businessHours: string;
   location: string;
   contact?: string;
-  price: number;
+  price?: number;
   discount?: number;
   tags?: string[];
   rate?: number;
@@ -29,13 +29,14 @@ interface Props {
   isTemporarilyStopWorking?: boolean;
   roomNumber?: string;
   bookDates?: string;
+  isHotel?: boolean;
 }
 
 // eslint-disable-next-line react/display-name
 const ListServices = memo(({className, linkView, linkBook, id, src, title, description, businessHours, 
     location, contact, price, discount, 
     tags, rate, creator, 
-    isTemporarilyStopWorking, roomNumber, bookDates} : Props) => {
+    isTemporarilyStopWorking, roomNumber, bookDates, isHotel} : Props) => {
     const {user} = useAuth();
     return (
     <>
@@ -57,7 +58,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                             ))}
                         </div>}
                         <p>{businessHours}{bookDates}</p>
-                        <CardTitle tag="h3">{fCurrency2(price)} VND</CardTitle>
+                        {price && <CardTitle tag="h3">{fCurrency2(price)} VND</CardTitle> }
                             <div>
                                 <p>{contact}</p>
                             </div>
@@ -65,7 +66,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                 <Link href={`/${linkView}/:${id}`}>
                                 <Button
                                 className={clsx("btn-round", classes.btnView)}
-                                btnType={BtnType.Primary}
+                                btnType={isHotel ? BtnType.Secondary : BtnType.Primary}
                                 disabled={isTemporarilyStopWorking}
                                 >
                                    View more
@@ -74,7 +75,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                 {user ? 
                                 ( <Link href={`/${linkBook}/:${id}`}>
                                 <Button
-                                className="btn-round"
+                                className={isHotel ? clsx("btn-round", classes.isHotel) : clsx("btn-round")}
                                 btnType={BtnType.Secondary}
                                 disabled={isTemporarilyStopWorking}
                                 >
@@ -83,7 +84,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                 </Link> ) : 
                                     (<Link href={`/auth/login`}>
                                     <Button
-                                    className="btn-round"
+                                    className={isHotel ? clsx("btn-round", classes.isHotel) : clsx("btn-round")}
                                     btnType={BtnType.Secondary}
                                     disabled={isTemporarilyStopWorking}
                                     >

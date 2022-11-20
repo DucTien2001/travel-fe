@@ -1,4 +1,4 @@
-import React, {memo, useMemo, useState} from "react";
+import React, {memo, useEffect, useMemo, useState} from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,9 +6,49 @@ import { faCircleCheck, faDownload } from '@fortawesome/free-solid-svg-icons';
 import {Row, Col, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
 import SearchNotFound from "components/SearchNotFound";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import useAuth from "hooks/useAuth";
+import {TourBillService} from "services/normal/tourBill";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import moment from "moment";
+import { fCurrency2 } from "utils/formatNumber";
+import {saveAs} from 'file-saver';
+import {useRouter} from "next/router";
 
 // eslint-disable-next-line react/display-name
 const Tour = memo(()=> {
+    const dispatch = useDispatch();
+    const {user} = useAuth();
+    const router = useRouter();
+    const [listHistory, setListHistory] = useState([]);
+    useEffect(() => {
+        if(user) {
+            dispatch(setLoading(true));
+            TourBillService.getAllTourBill(user?.id)
+            .then((res) => {
+                setListHistory(res.data);
+            })
+            .catch((e) => {
+                dispatch(setErrorMess(e));
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
+            })
+        }      
+    }, [user, dispatch])
+    
+    const onDownloadBill = (id: number) => {
+        dispatch(setLoading(true))
+        TourBillService.getTourBill(id)
+          .then(res => {
+            const myFile = new File([res.data as BlobPart], `invoice-${moment().format('MM-DD-YYYY-hh-mm-ss')}.pdf`, {
+                type: "application/pdf",
+              });
+            saveAs(myFile, `invoice-${moment().format('MM-DD-YYYY-hh-mm-ss')}.pdf`);
+          })
+          .catch((e) => dispatch(setErrorMess(e)))
+          .finally(() => dispatch(setLoading(false)))
+    }
    return (
     <>
        <div className={classes.root}>
@@ -39,35 +79,40 @@ const Tour = memo(()=> {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    {listHistory && listHistory?.map((item, index) => (
+                    <tr key={index}>
                     <th scope="row">
-                        <a href="" target="_blank" className={classes.tourName}>                         
-                            Nha trang                       
+                        {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                        <a href={`/listTour/:${item?.tourId}`} target="_blank" className={classes.tourName}>                         
+                            {item?.tourId}            
                         </a>
                     </th>
                     <td>
-                       TV203
+                        TV{item?.id}
                     </td>
                     <td>
-                        20/3/2002
+                        {moment(item?.createAt).format("DD/MM/YYYY")}
                     </td>
                     <td>
-                        2.000.000 VND
+                       {fCurrency2(item?.totalBill)}
                     </td>
                     <td>
                         <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>
                     </td>
                     <td className={classes.colIconDownload}>
-                        <div className={classes.iconDownload}>
+                        <div className={classes.iconDownload} onClick={() => {onDownloadBill(item?.id)}}>
                             <FontAwesomeIcon icon={faDownload} />        
                         </div>
                     </td>
                     </tr>
+                    ))}
+                {!listHistory?.length && (
                     <tr>
                         <th scope="row" colSpan={6}>
                             <SearchNotFound mess="No tour found"/>
                         </th>
                     </tr>
+                )}
                 </tbody>
         </Table> 
         {/* ===== Mobile ======== */}

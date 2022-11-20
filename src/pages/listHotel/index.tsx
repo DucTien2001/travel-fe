@@ -221,12 +221,12 @@ const ListHotels: NextPage = () => {
                       title={hotel.name}
                       description={hotel.description}
                       businessHours={hotel.checkInTime}
-                      price={0}
                       location={hotel.location}
                       contact={hotel.contact}
                       tags={hotel.tags}
                       creator={hotel.creator}
                       isTemporarilyStopWorking={hotel.isTemporarilyStopWorking}
+                      isHotel={true}
                     />
                   ))}
                 </Row>
@@ -244,12 +244,12 @@ const ListHotels: NextPage = () => {
                       title={hotel.name}
                       description={hotel.description}
                       businessHours={hotel.checkInTime}
-                      price={0}
                       location={hotel.location}
                       contact={hotel.contact}
                       tags={hotel.tags}
                       creator={hotel.creator}
                       isTemporarilyStopWorking={hotel.isTemporarilyStopWorking}
+                      isHotel={true}
                     />
                   ))}
                 </div>

@@ -115,13 +115,11 @@ const DetailCustomer = memo(({tour}: Props)=> {
     setDeactivate(!deactivate);
   }
 
-  // console.log(isShowRecipient);
+  
 
   const _onSubmit = (data: BookForm) => {
-      console.log(data);
-      console.log(user?.id);
-      console.log(user?.email);
       dispatch(setLoading(true));
+      const totalPrice = data?.amount * tour?.price;
       if(isShowRecipient) {
         if(user) {
           TourBillService.create({
@@ -129,7 +127,7 @@ const DetailCustomer = memo(({tour}: Props)=> {
             userMail: data?.email,
             tourId: tour?.id,
             amount: data.amount,
-            price: tour?.price,
+            price: totalPrice,
             discount: tour?.discount,
             email: data.recipient[0].emailRecipient,
             phoneNumber: data.recipient[0].phoneNumberRecipient,
@@ -156,7 +154,7 @@ const DetailCustomer = memo(({tour}: Props)=> {
             userMail: data?.email,
             tourId: tour?.id,
             amount: data.amount,
-            price: tour?.price,
+            price: totalPrice,
             discount: tour?.discount,
             email: data?.email,
             phoneNumber: data?.phoneNumber,

@@ -12,6 +12,7 @@ import Button, {BtnType} from "components/common/buttons/Button";
 import Stars from "components/Stars";
 import clsx from "clsx";
 import { fCurrency2 } from "utils/formatNumber";
+import useAuth from "hooks/useAuth";
 interface Props { 
     className?: string;
     linkView: string;
@@ -23,7 +24,7 @@ interface Props {
     businessHours: string;
     location: string;
     contact?: string;
-    price: number;
+    price?: number;
     discount?: number;
     tags?: string[];
     rate?: number;
@@ -31,14 +32,15 @@ interface Props {
     isTemporarilyStopWorking?: boolean;
     roomNumber?: string;
     bookDates?: string;
+    isHotel?: boolean;
 }
 
 // eslint-disable-next-line react/display-name
 const ListServices = memo(({className, linkView, linkBook, id, src, title, description, businessHours, 
     location, contact, price, discount, 
     tags, rate, creator, 
-    isTemporarilyStopWorking, roomNumber, bookDates} : Props) => {
-    
+    isTemporarilyStopWorking, roomNumber, bookDates, isHotel} : Props) => {
+    const {user} = useAuth();
   return (
     <>
         <Row xs={3} key={id} className={clsx(classes.rowTour, className)}>
@@ -61,7 +63,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
             ))}  </h5> 
             <span>{location} - {businessHours}{bookDates}</span>  
             <div className={classes.priceContainer}>
-                <h3>{fCurrency2(price)} VND</h3>
+                {price && <h3>{fCurrency2(price)} VND</h3> }
                 <Stars numberOfStars={rate}/>
             </div>
                 <span className={classes.contact}>{contact}</span>
@@ -70,21 +72,32 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                     <Link href={`/${linkView}/[${id}]`}>
                         <Button
                             className="btn-round"
-                            btnType={BtnType.Primary}
+                            btnType={isHotel ? BtnType.Secondary : BtnType.Primary}
                             disabled={isTemporarilyStopWorking}
                             >
                             View more
                         </Button>
                     </Link>
-                    <Link href={`/${linkBook}/[${id}]`}>
-                        <Button
-                            className="btn-round"
+                    {user ? 
+                        (<Link href={`/${linkBook}/:${id}`}>
+                            <Button
+                            className={isHotel ? clsx("btn-round", classes.isHotel) : clsx("btn-round")}
                             btnType={BtnType.Secondary}
                             disabled={isTemporarilyStopWorking}
                             >
-                            Book now
-                        </Button>
-                    </Link>       
+                                Book now
+                            </Button>
+                        </Link> ) : 
+                        (<Link href={`/auth/login`}>
+                            <Button
+                            className={isHotel ? clsx("btn-round", classes.isHotel) : clsx("btn-round")}
+                            btnType={BtnType.Secondary}
+                            disabled={isTemporarilyStopWorking}
+                            >
+                                Book now
+                            </Button>
+                        </Link>)                      
+                    }      
             </Col>
         </Row>
     </>

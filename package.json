@@ -27,6 +27,7 @@
     "axios": "^0.25.0",
     "clsx": "^1.2.1",
     "connected-react-router": "^6.9.2",
+    "file-saver": "^2.0.5",
     "history": "^4.10.1",
     "immer": "^9.0.7",
     "next": "12.2.5",

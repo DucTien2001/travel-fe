@@ -32,12 +32,10 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const CheckRoomEmpty = memo(({ hotelId }: Props) => {
   const [listRooms, setListRoom] = useState([]);
-
   const schema = useMemo(() => {
     return yup.object().shape({
-      departure: yup.date().required("Departure date is required"),
-      return: yup.date().min(yup.ref("departure"), "Return day is must be rather than departure day")
-      .required("Return date is required"),
+      departure: yup.date().nullable().required("Departure is required"),
+      return: yup.date().nullable().required("Return is required"),
       amountList: yup.array().of(
         yup.object().shape({
           amount: yup.number()
@@ -61,16 +59,11 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
     defaultValues: {
       departure: new Date(),
       return: new Date(Date.now() + ( 3600 * 1000 * 24)),
-      
     },
   });
+  const _departure = watch("departure");
+  const _return = watch("return");
   
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "amountList",
-    keyName: "fieldID",
-  });
-
   useEffect(() => {
     if (hotelId) {
       RoomService.getAllRoomsOfHotel(hotelId).then((res) => {
@@ -106,48 +99,53 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
     }
     return price;
   };
-  const _onSubmit = (data) => {
-    console.log(data, "===================")
-    const startDate = new Date(data?.departure);
-    const endDate = new Date(data?.return);
-    RoomService.getAllRoomsAvailable({
-      hotelId: hotelId,
-      startDate: startDate,
-      endDate: endDate,
-    }).then((res) => {
-      const _listRooms = [];
-      res.data.map((room) => {
-        const prices = [];
-        let i = new Date(startDate);
-        for (i; i.getTime() < endDate.getTime(); i.setDate(i.getDate() + 1)) {
-          let flag = false;
-          room.specialDatePrice.map((item) => {
-            if (i.getTime() === item?.date.getTime()) {
+  
+
+  useEffect(() => {
+      const startDate = new Date(_departure);
+      const endDate = new Date(_return);
+      RoomService.getAllRoomsAvailable({
+        hotelId: hotelId,
+        startDate: startDate,
+        endDate: endDate,
+      }).then((res) => {
+        const _listRooms = [];
+        res.data.map((room) => {
+          const prices = [];
+          let i = new Date(startDate);
+          for (i; i.getTime() < endDate.getTime(); i.setDate(i.getDate() + 1)) {
+            let flag = false;
+            room.specialDatePrice.map((item) => {
+              if (i.getTime() === item?.date.getTime()) {
+                prices.push({
+                  date: new Date(i),
+                  price: item?.price,
+                });
+                flag = true;
+              }
+            });
+            if (!flag) {
               prices.push({
                 date: new Date(i),
-                price: item?.price,
+                price: getPriceOfDay(i, room),
               });
-              flag = true;
             }
-          });
-          if (!flag) {
-            prices.push({
-              date: new Date(i),
-              price: getPriceOfDay(i, room),
-            });
           }
-        }
-        _listRooms.push({ ...room, priceDetail: [...prices] });
+          _listRooms.push({ ...room, priceDetail: [...prices] });
+        });
+        reset({
+          amountList: _listRooms.map(()=>({
+            amount: 0
+          }))
+        })
+        console.log(_listRooms, "==========_listRooms=======");
+        setListRoom(_listRooms);
       });
-      reset({
-        amountList: _listRooms.map(()=>({
-          amount: 0
-        }))
-      })
-      console.log(_listRooms, "==========_listRooms=======");
-      setListRoom(_listRooms);
-    });
-  };
+  }, [_departure, _return])
+
+  const _onSubmit = () => {
+
+  }
 
   return (
     <>
@@ -161,6 +159,8 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
               placeholder="Departure"
               control={control}
               name="departure"
+              minDate={moment().toDate()}
+              maxDate={watch("return")}
               timeFormat={false}
               labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
               inputRef={register("departure")}
@@ -172,19 +172,14 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
               placeholder="Return"
               control={control}
               name="return"
+              minDate={watch("departure") || moment().toDate()}
               timeFormat={false}
               labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
               inputRef={register("return")}
               errorMessage={errors.return?.message}
             />
-            <div className={classes.btnContainer}>
-              <Button btnType={BtnType.Primary} type="submit">
-                <FontAwesomeIcon icon={faArrowsRotate} />
-                Change search
-              </Button>
-            </div>
           </Row>
-        </Form>
+        
         {/* =============== Desktop =============== */}
         <div className={classes.boxTableRoom}>
         <Table bordered className={classes.table}>
@@ -246,8 +241,8 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
           <tbody>
             <tr>
                 <td className={clsx(classes.colConfirm, classes.col)}>
-                  <Link href="/book/hotel/:1">
-                    <Button btnType={BtnType.Secondary}>Book</Button>
+                  <Link href="">
+                    <Button btnType={BtnType.Secondary} type="submit">Book</Button>
                   </Link>
                 </td>
             </tr>
@@ -290,6 +285,7 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
             </Row>
           </div>
         </BoxSmallLeft>
+        </Form>
       </Container>
     </>
   );
