@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import React, {memo, useEffect, useState} from "react";
 import {
   Card,
   CardHeader,
@@ -7,31 +7,23 @@ import {
   Container,
   Row,
   Col,
+  Badge,
 } from "reactstrap";
 import {images} from "configs/images";
 // import Carousel from "components/Carousel";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
-interface IHotel { 
-  id: number;
-  src: string;
-  name: string;
-  description: string;
-  businessHours: string;
-  location: string;
-  contact: string;
-  price: number;
-  discount?: number;
-  tags?: string;
-  rate: number;
-  creator: string;
-  isTemporarilyStopWorking?: boolean;
-  roomNumber?: string;
-  bookDates?: string;
-}
+import Carousel from "components/Carousel";
+import { ICreateHotel } from "models/hotel";
+import { fCurrency2 } from "utils/formatNumber";
+import useAuth from "hooks/useAuth";
+import Link from "next/link";
+import clsx from "clsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBellConcierge, faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
-  hotel: IHotel
+  hotel: ICreateHotel;
 }
 
 const items = [
@@ -59,6 +51,8 @@ const items = [
 
 // eslint-disable-next-line react/display-name
 const SectionTour = memo(({hotel} : Props)=> {
+  const {user} = useAuth();
+  const [images, setImages] = useState([]);
   const [collapses, setCollapses] = React.useState([1]);
   const changeCollapse = (collapse: number) => {
     if (collapses.includes(collapse)) {
@@ -79,34 +73,64 @@ const SectionTour = memo(({hotel} : Props)=> {
       document.body.classList.remove("sidebar-collapse");
     };
   }, []);
+
+  useEffect(() => {
+    const newImages = hotel?.images?.map((item, index) => {return {
+      altText: 'Slide',
+      caption: 'Slide',
+      key: index + 1,
+      src: item,
+    }})
+    setImages(newImages);
+  }, [hotel])
+
   return (
     <>
         <div className="section">
           <Container>
             <Row>
               <Col md="5">
-                {/* <Carousel
-                  images={items}
-                /> */}
+              {images && (<Carousel
+                  images={images}
+                />)}
                 <p className={`blockquote blockquote-info ${classes.blockquote}`}>
-                {/* eslint-disable-next-line react/no-unescaped-entities */}
-                  "And thank you for turning my personal jean jacket into a
-                  couture piece. Wear yours with mirrored sunglasses on
-               {/* eslint-disable-next-line react/no-unescaped-entities */}
-                  vacation." <br></br>
+                  <small>{hotel?.name}&nbsp;&nbsp;{hotel?.checkInTime} - {hotel?.checkOutTime}</small>
                   <br></br>
-                  <small>{hotel?.name}</small>
+                  {hotel?.contact}    
                 </p>
               </Col>
               <Col className="ml-auto mr-auto" md="6">
-                <h2 className={`title ${classes.nameTour}`}>{hotel?.name}</h2>
-                <h5 className="category">Slim-Fit Leather Biker Jacket</h5>
-                <h2 className={`main-price ${classes.price}`}>$3,390</h2>
-                <div
-                  aria-multiselectable={true}
-                  className="card-collapse"
-                  id="accordion"
-                  role="tablist"
+                <h2 className={`title ${classes.nameTour}`}>{hotel?.name} - {hotel?.location}</h2>
+                {<div className={classes.tags}>
+                    {hotel?.tags?.map((item, index) => (
+                        <Badge pill className={classes.badgeTags} key={index}>{item}</Badge>
+                        
+                      ))}
+                </div>}
+                <h2 className={`main-price ${classes.businessHours}`}>Time business: {hotel?.checkInTime} - {hotel?.checkOutTime}</h2>
+                <h2 className={`main-price ${classes.businessHours}`}>Contact: {hotel?.contact}</h2>
+                <div className={classes.boxTip}>
+                <div className={classes.tip}>
+                   <FontAwesomeIcon icon={faCircleCheck}/>
+                  <p>You can go experience it anytime while the ticket price is still available</p>
+                </div>
+                <div className={classes.tip}>
+                  <FontAwesomeIcon icon={faBellConcierge}/>
+                  <p>24-hour front desk - Help is always there when you need it!</p>
+                </div>
+                <div className={classes.tip}>
+                  <FontAwesomeIcon icon={faCircleInfo}/>
+                  <p>Please check the information to be filled in before pressing the confirm button</p>
+                </div>
+            </div>
+              </Col>             
+            </Row>
+            <Row>
+            <div
+                aria-multiselectable={true}
+                id="accordion"
+                role="tablist"
+                className={clsx("card-collapse", classes.description)}
                 >
                   <Card className="card-plain">
                     <CardHeader id="headingOne" role="tab">
@@ -128,87 +152,12 @@ const SectionTour = memo(({hotel} : Props)=> {
                       <CardBody>
                         <p>
                           {/* eslint-disable-next-line react/no-unescaped-entities */}
-                          Eres' daring 'Grigri Fortune' swimsuit has the fit and
-                          coverage of a bikini in a one-piece silhouette. This
-                          {/* eslint-disable-next-line react/no-unescaped-entities */}
-                          fuchsia style is crafted from the label's sculpting
-                          peau douce fabric and has flattering cutouts through
-                          the torso and back. Wear yours with mirrored
-                          sunglasses on vacation.
+                          {hotel?.description}
                         </p>
-                      </CardBody>
-                    </Collapse>
-                  </Card>
-                  <Card className="card-plain">
-                    <CardHeader id="headingTwo" role="tab">
-                      <a
-                        aria-expanded={collapses.includes(2)}
-                        data-parent="#accordion"
-                        data-toggle="collapse"
-                        href="#pablo"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          changeCollapse(2);
-                        }}
-                      >
-                        Designer Information{" "}
-                        <i className="now-ui-icons arrows-1_minimal-down"></i>
-                      </a>
-                    </CardHeader>
-                    <Collapse isOpen={collapses.includes(2)}>
-                      <CardBody>
-                        <p>
-                          An infusion of West Coast cool and New York attitude,
-                          Rebecca Minkoff is synonymous with It girl style.
-                          Minkoff burst on the fashion scene with her
-                          {/* eslint-disable-next-line react/no-unescaped-entities */}
-                          best-selling 'Morning After Bag' and later expanded
-                          her offering with the Rebecca Minkoff Collection - a
-                          {/* eslint-disable-next-line react/no-unescaped-entities */}
-                          range of luxe city staples with a "downtown romantic"
-                          theme.
-                        </p>
-                      </CardBody>
-                    </Collapse>
-                  </Card>
-                  <Card className="card-plain">
-                    <CardHeader id="headingThree" role="tab">
-                      <a
-                        aria-expanded={collapses.includes(3)}
-                        data-parent="#accordion"
-                        data-toggle="collapse"
-                        href="#pablo"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          changeCollapse(3);
-                        }}
-                      >
-                        Details and Care{" "}
-                        <i className="now-ui-icons arrows-1_minimal-down"></i>
-                      </a>
-                    </CardHeader>
-                    <Collapse isOpen={collapses.includes(3)}>
-                      <CardBody>
-                        <ul>
-                          <li>Storm and midnight-blue stretch cotton-blend</li>
-                          <li>
-                            Notch lapels, functioning buttoned cuffs, two front
-                            flap pockets, single vent, internal pocket
-                          </li>
-                          <li>Two button fastening</li>
-                          <li>84% cotton, 14% nylon, 2% elastane</li>
-                          <li>Dry clean</li>
-                        </ul>
                       </CardBody>
                     </Collapse>
                   </Card>
                 </div>
-                <Row className="justify-content-end">
-                  <Button className="mr-3" btnType={BtnType.Primary} isDot={true}>
-                    Book now 
-                  </Button>
-                </Row>
-              </Col>
             </Row>
           </Container>
                       

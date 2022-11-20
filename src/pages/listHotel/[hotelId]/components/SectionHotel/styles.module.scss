@@ -14,3 +14,35 @@
 .price {
     color: var(--orange-color) !important;
 }
+.badgeTags {
+    color: var(--violet-color) !important;
+    margin-left: 8px;
+}
+.description {
+    width: 100%;
+}
+.businessHours {
+    color: var(--violet-color) !important;
+    font-size: 20px;
+    font-weight: 600 !important;
+}
+
+.boxTip {
+    margin-top: 16px;
+    .tip {
+        margin-bottom: 16px;
+        display: flex;
+        align-items: flex-start;
+        svg {
+            margin-top: 6px;
+            margin-right: 4px;
+            color: var(--green-color);
+        }
+        p {
+            font-weight: 500;
+        }
+        @media only screen and (max-width: 768px) {
+            justify-content: flex-start;
+          }
+    }
+}

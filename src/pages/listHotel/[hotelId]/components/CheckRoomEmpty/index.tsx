@@ -16,7 +16,7 @@ import Link from "next/link";
 import BoxSmallLeft from "components/BoxSmallLeft";
 import { RoomService } from "services/normal/room";
 import moment from "moment";
-
+import { format } from 'date-fns';
 export interface CheckRoomForm {
   departure: Date;
   return: Date;
@@ -36,7 +36,8 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
   const schema = useMemo(() => {
     return yup.object().shape({
       departure: yup.date().required("Departure date is required"),
-      return: yup.date().required("Return date is required"),
+      return: yup.date().min(yup.ref("departure"), "Return day is must be rather than departure day")
+      .required("Return date is required"),
       amountList: yup.array().of(
         yup.object().shape({
           amount: yup.number()
@@ -57,9 +58,11 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
   } = useForm<CheckRoomForm>({
     resolver: yupResolver(schema),
     mode: "onChange",
-    // defaultValues: {
-    //   amountList: listRooms.map(()=>{return {amount: 0}}),
-    // },
+    defaultValues: {
+      departure: new Date(),
+      return: new Date(Date.now() + ( 3600 * 1000 * 24)),
+      
+    },
   });
   
   const { fields, append, remove } = useFieldArray({
@@ -183,7 +186,8 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
           </Row>
         </Form>
         {/* =============== Desktop =============== */}
-        <Table responsive bordered className={classes.table}>
+        <div className={classes.boxTableRoom}>
+        <Table bordered className={classes.table}>
           <thead>
             <tr>
               <th scope="row" className={classes.roomNumberTitle}>
@@ -193,7 +197,6 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
               <th className={classes.title}>Number of rooms left</th>
               <th className={classes.title}>Price</th>
               <th className={classes.title}>Amount</th>
-              <th className={classes.title}>Confirm</th>
             </tr>
           </thead>
           <tbody>
@@ -207,37 +210,50 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
                 </td>
                 <td className={classes.col}>{room?.numberOfRoom}</td>
                 <td className={classes.col}>
-                  {room?.priceDetail?.map((priceInfo) => (
-                    <p>
+                  {room?.priceDetail?.map((priceInfo, index) => (
+                    <p key={index}>
                       {moment(priceInfo?.date).format("DD/MM/YYYY")}{":"} {priceInfo?.price}
                     </p>
                   ))}
                 </td>
                 <td className={clsx(classes.colAmount, classes.col)}>
                   <Controller
-                  name={`amountList.${index}`}
-                  // name="amountList"
-                    control={control}
-                    render={({ field }) => (
+                  name={`amountList.${index}.amount`}
+                  control={control}
+                  render={({ field }) => (
                       <InputCounter
                         className={classes.inputCounter}
-                        max={5}
+                        max={room?.numberOfRoom}
                         min={1}
                         onChange={field.onChange}
-                        value={field.value?.amount}
+                        value={field.value}
                       />
                     )}
                   />
-                </td>
-                <td className={clsx(classes.colConfirm, classes.col)}>
-                  <Link href="/book/hotel/:1">
-                    <Button btnType={BtnType.Secondary}>I will book</Button>
-                  </Link>
                 </td>
               </tr>
             ))}
           </tbody>
         </Table>
+        <Table bordered className={clsx(classes.table, classes.tableConfirm)} xs={3}>
+          <thead>
+            <tr>
+              <th className={classes.colConfirm}>
+                Confirm
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td className={clsx(classes.colConfirm, classes.col)}>
+                  <Link href="/book/hotel/:1">
+                    <Button btnType={BtnType.Secondary}>Book</Button>
+                  </Link>
+                </td>
+            </tr>
+          </tbody>
+        </Table>
+        </div>
         {/*=============== Mobile ============  */}
         <BoxSmallLeft className={classes.tableMobile} title="Choose the right one for you">
           <div>

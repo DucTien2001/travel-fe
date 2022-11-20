@@ -147,3 +147,13 @@
         }
      }
 }
+
+.boxTableRoom {
+    display: flex;
+}
+.tableConfirm {
+    width: 5% !important;
+    .colConfirm {
+        padding: 17px;
+    }
+}

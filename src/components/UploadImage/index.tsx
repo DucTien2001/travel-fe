@@ -80,18 +80,18 @@ const PopupAddOrEditHotel = memo((props: Props) => {
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
     }); 
 
-    useEffect(() => {      
-        for(const file of files) {
-          if (!!file && typeof file === "object") {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => setImagesReview((prevState:any) => [...prevState, reader.result]);
-          } else {
-            setImagesReview((prevState:any) => [...prevState, file])
-          }
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [imagesReview, files]);
+    // useEffect(() => {      
+    //     for(const file of files) {
+    //       if (!!file && typeof file === "object") {
+    //         const reader = new FileReader();
+    //         reader.readAsDataURL(file);
+    //         reader.onload = () => setImagesReview((prevState:any) => [...prevState, reader.result]);
+    //       } else {
+    //         setImagesReview((prevState:any) => [...prevState, file])
+    //       }
+    //     }
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [imagesReview, files]);
 
   const onDelete = (file: any) => {
     const newImages = imagesReview.filter(it => it !== file)

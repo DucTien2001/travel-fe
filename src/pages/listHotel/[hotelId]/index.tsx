@@ -117,7 +117,7 @@ const ProductPage = memo((Props) => {
           {/* <Comment comment={listCmt}/> */}
         </div>
         <GoogleMapBody />
-        <RelatedHotel />
+        {/* <RelatedHotel /> */}
       </div>
     </>
   );
