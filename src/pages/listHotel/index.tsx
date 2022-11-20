@@ -211,7 +211,7 @@ const ListHotels: NextPage = () => {
               {/* ==================== Grid view ===================== */}
               {!changeViewLayout && (
                 <Row className={classes.rowGridView}>
-                  {allHotels.map((hotel, index) => (
+                  {allHotels?.map((hotel, index) => (
                     <CardItemGrid
                       linkView="listHotel"
                       linkBook="/book/hotel"

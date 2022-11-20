@@ -16,12 +16,12 @@ import Link from "next/link";
 import BoxSmallLeft from "components/BoxSmallLeft";
 import { RoomService } from "services/normal/room";
 import moment from "moment";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 export interface CheckRoomForm {
   departure: Date;
   return: Date;
   amountList: {
-    amount: number
+    amount: number;
   }[];
 }
 
@@ -38,7 +38,7 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
       return: yup.date().nullable().required("Return is required"),
       amountList: yup.array().of(
         yup.object().shape({
-          amount: yup.number()
+          amount: yup.number(),
         })
       ),
     });
@@ -58,19 +58,11 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
     mode: "onChange",
     defaultValues: {
       departure: new Date(),
-      return: new Date(Date.now() + ( 3600 * 1000 * 24)),
+      return: new Date(Date.now() + 3600 * 1000 * 24),
     },
   });
   const _departure = watch("departure");
   const _return = watch("return");
-  
-  useEffect(() => {
-    if (hotelId) {
-      RoomService.getAllRoomsOfHotel(hotelId).then((res) => {
-        setListRoom(res.data);
-      });
-    }
-  }, [hotelId]);
 
   const getPriceOfDay = (date: Date, room: any) => {
     let price = 0;
@@ -99,53 +91,54 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
     }
     return price;
   };
-  
 
-  useEffect(() => {
-      const startDate = new Date(_departure);
-      const endDate = new Date(_return);
-      RoomService.getAllRoomsAvailable({
-        hotelId: hotelId,
-        startDate: startDate,
-        endDate: endDate,
-      }).then((res) => {
-        const _listRooms = [];
-        res.data.map((room) => {
-          const prices = [];
-          let i = new Date(startDate);
-          for (i; i.getTime() < endDate.getTime(); i.setDate(i.getDate() + 1)) {
-            let flag = false;
-            room.specialDatePrice.map((item) => {
-              if (i.getTime() === item?.date.getTime()) {
-                prices.push({
-                  date: new Date(i),
-                  price: item?.price,
-                });
-                flag = true;
-              }
-            });
-            if (!flag) {
+  const getRoomsAvailable = () => {
+    const startDate = new Date(_departure);
+    const endDate = new Date(_return);
+    RoomService.getAllRoomsAvailable({
+      hotelId: hotelId,
+      startDate: startDate,
+      endDate: endDate,
+    }).then((res) => {
+      const _listRooms = [];
+      res.data.map((room) => {
+        const prices = [];
+        let i = new Date(startDate);
+        for (i; i.getTime() < endDate.getTime(); i.setDate(i.getDate() + 1)) {
+          let flag = false;
+          room.specialDatePrice.map((item) => {
+            if (i.getTime() === item?.date.getTime()) {
               prices.push({
                 date: new Date(i),
-                price: getPriceOfDay(i, room),
+                price: item?.price,
               });
+              flag = true;
             }
+          });
+          if (!flag) {
+            prices.push({
+              date: new Date(i),
+              price: getPriceOfDay(i, room),
+            });
           }
-          _listRooms.push({ ...room, priceDetail: [...prices] });
-        });
-        reset({
-          amountList: _listRooms.map(()=>({
-            amount: 0
-          }))
-        })
-        console.log(_listRooms, "==========_listRooms=======");
-        setListRoom(_listRooms);
+        }
+        _listRooms.push({ ...room, priceDetail: [...prices] });
       });
-  }, [_departure, _return])
+      setValue("amountList", _listRooms.map(() => ({
+        amount: 0,
+      })))
+      console.log(_listRooms, "==========_listRooms=======");
+      setListRoom(_listRooms);
+    });
+  };
 
-  const _onSubmit = () => {
+  useEffect(() => {
+    if (_departure && _return) {
+      getRoomsAvailable();
+    }
+  }, [_return]);
 
-  }
+  const _onSubmit = () => {};
 
   return (
     <>
@@ -179,96 +172,97 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
               errorMessage={errors.return?.message}
             />
           </Row>
-        
-        {/* =============== Desktop =============== */}
-        <div className={classes.boxTableRoom}>
-        <Table bordered className={classes.table}>
-          <thead>
-            <tr>
-              <th scope="row" className={classes.roomNumberTitle}>
-                Room Type
-              </th>
-              <th className={clsx(classes.colImgMobile, classes.title)}>Images</th>
-              <th className={classes.title}>Number of rooms left</th>
-              <th className={classes.title}>Price</th>
-              <th className={classes.title}>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {listRooms?.map((room, index) => (
-              <tr key={room?.id}>
-                <th scope="row" className={classes.col}>
-                  {room?.title}
-                </th>
-                <td className={classes.colImg}>
-                  {/* <Carousel images={[images.bgUser, images.bg19]} className={classes.imgCarousel}/> */}
-                </td>
-                <td className={classes.col}>{room?.numberOfRoom}</td>
-                <td className={classes.col}>
-                  {room?.priceDetail?.map((priceInfo, index) => (
-                    <p key={index}>
-                      {moment(priceInfo?.date).format("DD/MM/YYYY")}{":"} {priceInfo?.price}
-                    </p>
-                  ))}
-                </td>
-                <td className={clsx(classes.colAmount, classes.col)}>
-                  <Controller
-                  name={`amountList.${index}.amount`}
-                  control={control}
-                  render={({ field }) => (
-                      <InputCounter
-                        className={classes.inputCounter}
-                        max={room?.numberOfRoom}
-                        min={1}
-                        onChange={field.onChange}
-                        value={field.value}
+
+          {/* =============== Desktop =============== */}
+          <div className={classes.boxTableRoom}>
+            <Table bordered className={classes.table}>
+              <thead>
+                <tr>
+                  <th scope="row" className={classes.roomNumberTitle}>
+                    Room Type
+                  </th>
+                  <th className={clsx(classes.colImgMobile, classes.title)}>Images</th>
+                  <th className={classes.title}>Number of rooms left</th>
+                  <th className={classes.title}>Price</th>
+                  <th className={classes.title}>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {listRooms?.map((room, index) => (
+                  <tr key={room?.id}>
+                    <th scope="row" className={classes.col}>
+                      {room?.title}
+                    </th>
+                    <td className={classes.colImg}>
+                      {/* <Carousel images={[images.bgUser, images.bg19]} className={classes.imgCarousel}/> */}
+                    </td>
+                    <td className={classes.col}>{room?.numberOfRoom}</td>
+                    <td className={classes.col}>
+                      {room?.priceDetail?.map((priceInfo, index) => (
+                        <p key={index}>
+                          {moment(priceInfo?.date).format("DD/MM/YYYY")}
+                          {":"} {priceInfo?.price}
+                        </p>
+                      ))}
+                    </td>
+                    <td className={clsx(classes.colAmount, classes.col)}>
+                      <Controller
+                        name={`amountList.${index}.amount`}
+                        control={control}
+                        render={({ field }) => (
+                          <InputCounter
+                            className={classes.inputCounter}
+                            max={room?.numberOfRoom}
+                            min={1}
+                            onChange={field.onChange}
+                            value={field.value}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <Table bordered className={clsx(classes.table, classes.tableConfirm)} xs={3}>
-          <thead>
-            <tr>
-              <th className={classes.colConfirm}>
-                Confirm
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-                <td className={clsx(classes.colConfirm, classes.col)}>
-                  <Link href="">
-                    <Button btnType={BtnType.Secondary} type="submit">Book</Button>
-                  </Link>
-                </td>
-            </tr>
-          </tbody>
-        </Table>
-        </div>
-        {/*=============== Mobile ============  */}
-        <BoxSmallLeft className={classes.tableMobile} title="Choose the right one for you">
-          <div>
-            <Row className={clsx("mb-3", classes.row)}>
-              <div className={classes.boxInformation}>
-                <p className="mr-2">Room number: </p>
-                <p>1</p>
-              </div>
-              <div className={classes.boxInformation}>
-                <p className="mr-2">Price: </p>
-                <p className={classes.priceMobile}>$200</p>
-              </div>
-            </Row>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <Table bordered className={clsx(classes.table, classes.tableConfirm)} xs={3}>
+              <thead>
+                <tr>
+                  <th className={classes.colConfirm}>Confirm</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className={clsx(classes.colConfirm, classes.col)}>
+                    <Link href="">
+                      <Button btnType={BtnType.Secondary} type="submit">
+                        Book
+                      </Button>
+                    </Link>
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+          {/*=============== Mobile ============  */}
+          <BoxSmallLeft className={classes.tableMobile} title="Choose the right one for you">
             <div>
-              <Carousel images={[images.phuQuoc, images.bg19]} className={classes.imgCarouselMobile} />
-            </div>
-            <Row className={clsx("mt-4", classes.row)}>
-              <div className={classes.boxInformation}>
-                <p className="mr-2">Amount</p>
-                {/* <Controller
+              <Row className={clsx("mb-3", classes.row)}>
+                <div className={classes.boxInformation}>
+                  <p className="mr-2">Room number: </p>
+                  <p>1</p>
+                </div>
+                <div className={classes.boxInformation}>
+                  <p className="mr-2">Price: </p>
+                  <p className={classes.priceMobile}>$200</p>
+                </div>
+              </Row>
+              <div>
+                <Carousel images={[images.phuQuoc, images.bg19]} className={classes.imgCarouselMobile} />
+              </div>
+              <Row className={clsx("mt-4", classes.row)}>
+                <div className={classes.boxInformation}>
+                  <p className="mr-2">Amount</p>
+                  {/* <Controller
                   name="amount"
                   control={control}
                   render={({ field }) => (
@@ -281,10 +275,10 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
                     />
                   )}
                 /> */}
-              </div>
-            </Row>
-          </div>
-        </BoxSmallLeft>
+                </div>
+              </Row>
+            </div>
+          </BoxSmallLeft>
         </Form>
       </Container>
     </>
