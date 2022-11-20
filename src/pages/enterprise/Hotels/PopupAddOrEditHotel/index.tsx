@@ -223,7 +223,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
               render={({ field }) => (
                 <UploadImage
                   title="Upload your hotel images"
-                  file={field.value as unknown as File[]}
+                  files={field.value as unknown as File[]}
                   onChange={(value) => field.onChange(value)}
                   errorMessage={errors.imagesHotel?.message}
                 />

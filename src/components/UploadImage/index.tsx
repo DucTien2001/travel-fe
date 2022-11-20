@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faBed } from '@fortawesome/free-solid-svg-icons';
 import { useDropzone } from 'react-dropzone';
 import { clsx } from 'clsx';
+import useIsMountedRef from 'hooks/useIsMountedRef';
 
 const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 const PHOTO_SIZE = 10000000000; // bytes
@@ -26,16 +27,16 @@ const MIN_IMAGES = 3;
 interface Props { 
     title?: string;
     errorMessage?: string;
-    file?: string[] | File[];
+    files?: string[] | File[];
     onChange?: (file: string[] | File[]) => void;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddOrEditHotel = memo((props: Props) => {
-    const {title, errorMessage, onChange} = props; 
+    const {title, errorMessage, onChange, files} = props; 
 
     const { t, i18n } = useTranslation();
-
+    const isMountedRef = useIsMountedRef();
     const [imagesReview, setImagesReview] = useState<any>([]);
     const [isError, setIsError] = useState<string>('');
 
@@ -74,15 +75,23 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       },
       onChange && onChange([...acceptedFiles])
       )
-    }, [onChange])
+    }, [isMountedRef, onChange])
   
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop,
     }); 
 
     useEffect(() => {      
-        onChange && onChange([...imagesReview])
+        for(const file of files) {
+          if (!!file && typeof file === "object") {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => setImagesReview((prevState:any) => [...prevState, reader.result]);
+          } else {
+            setImagesReview((prevState:any) => [...prevState, file])
+          }
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [imagesReview]);
+    }, [imagesReview, files]);
 
   const onDelete = (file: any) => {
     const newImages = imagesReview.filter(it => it !== file)

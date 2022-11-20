@@ -7,8 +7,16 @@ import Box from "components/BoxSmallLeft";
 import Link from "next/link";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faBellConcierge, faCircleInfo} from '@fortawesome/free-solid-svg-icons';
+import { Tour } from "models/tour";
+import { fCurrency2 } from "utils/formatNumber";
+import useFormattedDate from "hooks/useFormatDate";
 // eslint-disable-next-line react/display-name
-const DetailTour = memo(()=> {
+interface Props {
+  tour: Tour;
+}
+// eslint-disable-next-line react/display-name
+const DetailTour = memo(({tour}: Props)=> {
+  const dayBook = useFormattedDate(new Date());
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>
@@ -17,18 +25,18 @@ const DetailTour = memo(()=> {
                 title="Your booking details"
                 >
                   <div className={classes.boxDetailTour}>
-                    <p>Date book: <span>22-2-2022</span></p>
+                    <p>Date book: <span>{dayBook}</span></p>
                     <p className={classes.note}>Ticket expiration time <span>30 days</span> is from the date of purchase</p>
-                    <Link href="">
+                    <Link href="/listTour">
                       <p className={classes.changeChoice}>Change your choice</p>
                     </Link>
                   </div>
                 </Box>
                 <Box title="Cost summary">
                   <div className={classes.boxCostSummary}>
-                    <p>Tour name: <span>Nha trang</span></p>
+                    <p>Tour name: <span>{tour?.title}</span></p>
                     <div className={classes.boxPrice}>
-                      <p className={classes.price}>Price: <span>$700</span></p>
+                      <p className={classes.price}>Price: <span>{fCurrency2(tour?.price)} VND</span></p>
                       <p>(for all guests)</p>
                     </div>
                     <span>Taxes and fees are included</span>

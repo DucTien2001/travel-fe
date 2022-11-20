@@ -29,6 +29,8 @@ import {
   getAllTours as getAllToursOfEnterprise,
 } from "redux/reducers/Enterprise/actionTypes";
 import { getAllTours as getAllToursOfNormal } from "redux/reducers/Normal/actionTypes";
+import { SWRConfig } from 'swr'
+import axios from "axios";
 // import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 
 // const { store } = createConfigureStore();
@@ -60,13 +62,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     setLoading(false);
   });
   return (
-    // <Provider store={store}>
     <LayoutAuth>
       {loading && <LoadingScreen />}
       <AppStatus />
       <Component {...pageProps} />
     </LayoutAuth>
-    // </Provider>
   );
 }
 

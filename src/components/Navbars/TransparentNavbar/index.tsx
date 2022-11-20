@@ -82,7 +82,6 @@ const WhiteNavbar = memo(() => {
                   caret
                   color="default"
                   data-toggle="dropdown"
-                  href="#pablo"
                   id="navbarDropdownMenuLink1"
                   nav
                   onClick={(e) => e.preventDefault()}

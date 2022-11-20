@@ -63,9 +63,10 @@ const VerifyForgotPassword: NextPage = () => {
   const _onSubmit = (data: VerifyForgotPasswordForm) => {
     const urlParams = new URLSearchParams(location.search);
     const email = urlParams.get("email");
+    const newEmail = email.replace(" ", "+");
     dispatch(setLoading(true));
     UserService.changePassForgot({  
-      email: email,
+      email: newEmail,
       code: data.code,
       password: data.newPassword,
       confirmPassword: data.confirmNewPassword,

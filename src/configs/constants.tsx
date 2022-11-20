@@ -30,6 +30,9 @@ export const API = {
       DEFAULT: '/v1.0/tour',
       ALL_TOURS: '/v1.0/tour/get-all-tours',
       DETAIL_TOUR: '/v1.0/tour/get-tour/:id',
+    },
+    TOURBILL: { 
+      CREATE: '/v1.0/tour-bill/create',
     }
   },
   ENTERPRISE: {

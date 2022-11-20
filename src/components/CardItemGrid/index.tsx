@@ -14,6 +14,7 @@ import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import Stars from "components/Stars";
 import { fCurrency2 } from "utils/formatNumber";
+import useAuth from "hooks/useAuth";
 
 interface Props { 
     className?: string;
@@ -41,8 +42,8 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
     location, contact, price, discount, 
     tags, rate, creator, 
     isTemporarilyStopWorking, roomNumber, bookDates} : Props) => {
-    
-  return (
+    const {user} = useAuth();
+    return (
     <>
         <Col xs={4} className={clsx(classes.cardItem, className)} key={id}>
             <Link href={`/${linkView}/[${id}]`}>
@@ -76,7 +77,17 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                    View more
                                 </Button>
                                 </Link>
-                                <Link href={`/${linkBook}/:${id}`}>
+                                {user ? 
+                                ( <Link href={`/${linkBook}/:${id}`}>
+                                <Button
+                                className="btn-round"
+                                btnType={BtnType.Secondary}
+                                disabled={isTemporarilyStopWorking}
+                                >
+                                    Book now
+                                </Button>
+                                </Link> ) : 
+                                    (<Link href={`/auth/login`}>
                                     <Button
                                     className="btn-round"
                                     btnType={BtnType.Secondary}
@@ -84,7 +95,8 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                     >
                                         Book now
                                     </Button>
-                                </Link>
+                                    </Link>)                      
+                                }
                             </div>
                     </CardBody>
                 </Card>

@@ -43,6 +43,7 @@
     margin-top: 10px;
     display: flex;
     justify-content: end;
+    align-items: center;
     h5 {
         font-weight: 700;
         color: var(--violet-color);
@@ -154,4 +155,20 @@
     @media only screen and (max-width: 768px) {
         justify-content: center;
       }
+}
+
+.selectPerPage {
+    background-color: #ffff;
+    color: var(--violet-color);
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    .option {
+        padding: 8px 10px !important;
+    }
+}
+
+.stopWorking {
+    display: none;
 }
