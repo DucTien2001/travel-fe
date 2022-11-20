@@ -12,6 +12,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import UploadImage from "components/UploadImage";
+import UploadFile from "components/UploadFile";
 import { useDispatch } from "react-redux";
 import { TourService } from "services/enterprise/tour";
 import useAuth from "hooks/useAuth";
@@ -284,9 +285,9 @@ const PopupCreateTour = memo((props: Props) => {
               name="images"
               control={control}
               render={({ field }) => (
-                <UploadImage
+                <UploadFile
                   title="Upload your tour images"
-                  file={field.value as unknown as File[]}
+                  file={field.value ? field.value : []}
                   onChange={(value) => field.onChange(value)}
                   errorMessage={errors.images?.message}
                 />

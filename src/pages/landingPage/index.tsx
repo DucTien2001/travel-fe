@@ -35,7 +35,7 @@ const LandingPage: NextPage = () => {
                 </Col>  
               </Row>
               <Row className={classes.btnContainerWrapper} >
-                <Link href="/login" passHref>
+                <Link href="/listTour" passHref>
                   <a>
                     <Button
                       btnType={BtnType.Linear}

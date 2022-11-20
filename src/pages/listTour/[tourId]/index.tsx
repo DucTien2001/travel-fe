@@ -69,7 +69,6 @@ const listCmt = [
   },
 ]
 
-
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(()=> {
   const dispatch = useDispatch();
@@ -88,8 +87,8 @@ const ProductPage = memo(()=> {
         dispatch(setLoading(false))
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
-  console.log(tour);
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>

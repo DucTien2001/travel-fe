@@ -7,51 +7,25 @@ import {
   Container,
   Row,
   Col,
-  Carousel,
-  UncontrolledCarousel,
-  CarouselItem,
-  CarouselIndicators,
-  CarouselProps,
-  CarouselControl,
   Badge,
 } from "reactstrap";
 // import { Carousel } from 'react-responsive-carousel'
 import {images} from "configs/images";
 import classes from "./styles.module.scss";
+import Carousel from "components/Carousel";
 import Button, {BtnType} from "components/common/buttons/Button";
 import Link from "next/link";
 import { Tour } from "models/tour";
 import { fCurrency2 } from "utils/formatNumber";
 import clsx from "clsx";
+import useAuth from "hooks/useAuth";
 interface Props { 
   tour: Tour;
 }
 
-const items = [
-  {
-    src: "https://res.cloudinary.com/dpvvffyul/image/upload/v1668655644/my-uploads/spyh7ujucwnkpgkhnifu.webp",
-    altText: "",
-    caption: "",
-  },
-  {
-    src: "https://res.cloudinary.com/dpvvffyul/image/upload/v1668655643/my-uploads/bd4ylh4xlauzx1eosqgk.webp",
-    altText: "",
-    caption: "",
-  },
-  {
-    src: "https://res.cloudinary.com/dpvvffyul/image/upload/v1668655644/my-uploads/spyh7ujucwnkpgkhnifu.webp",
-    altText: "",
-    caption: "",
-  },
-  {
-    src: images.phuQuoc.src,
-    altText: "",
-    caption: "",
-  },
-];
-
 // eslint-disable-next-line react/display-name
 const SectionTour = memo(({tour} : Props)=> {
+  const {user} = useAuth();
   const [images, setImages] = useState([]);
   const [collapses, setCollapses] = React.useState([1]);
   const changeCollapse = (collapse: number) => {
@@ -73,27 +47,6 @@ const SectionTour = memo(({tour} : Props)=> {
       document.body.classList.remove("sidebar-collapse");
     };
   }, []);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [animating, setAnimating] = useState(false);
-  const onExiting = () => {
-    setAnimating(true);
-  };
-  const onExited = () => {
-    setAnimating(false);
-  };
-  const next = () => {
-    // if (animating) return;
-    // const nextIndex = activeIndex === images.length - 1 ? 0 : activeIndex + 1;
-    // setActiveIndex(nextIndex);
-  };
-  const previous = () => {
-    // if (animating) return;
-    // const nextIndex = activeIndex === 0 ? images.length - 1 : activeIndex - 1;
-    // setActiveIndex(nextIndex);
-  };
-  // const slides = 
-  
-  console.log(items);
 
   useEffect(() => {
     const newImages = tour?.images?.map((item, index) => {return {
@@ -110,30 +63,9 @@ const SectionTour = memo(({tour} : Props)=> {
           <Container>
             <Row>
               <Col md="5">
-                {/* <Carousel
-                  images={newImages}
-                /> */}
                 {images && (<Carousel
-                  activeIndex={activeIndex}
-                  next={next}
-                  previous={previous}
-                  >
-                  {/* <CarouselIndicators items={images} activeIndex={activeIndex} onClickHandler={goToIndex}/> */}
-                  { images?.map((item) => {
-                    return (
-                      <CarouselItem 
-                        onExiting={() => setAnimating(true)}
-                        onExited={() => setAnimating(false)}
-                        key={item.src}
-                      >
-                        <img src={item.src} alt={item.altText} />
-                      </CarouselItem>
-                    );
-                  })
-                  }
-                  <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-                  <CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-                </Carousel>)}
+                  images={images}
+                />)}
                 <p className={`blockquote blockquote-info ${classes.blockquote}`}>
                   <small>{tour?.title}</small>
                   <br></br>
@@ -151,11 +83,16 @@ const SectionTour = memo(({tour} : Props)=> {
                 <h2 className={`main-price ${classes.price}`}> {fCurrency2(tour?.price)} VND</h2>
                 <h2 className={`main-price ${classes.businessHours}`}>Time business: {tour?.businessHours}</h2>
                 <Row className="justify-content-end">
-                  <Link href={`/book/[${tour?.id}]`}>
+                  {user ? <Link href={`/book/tour/:${tour?.id}`}>
                   <Button className="mr-3" btnType={BtnType.Primary} isDot={true}>
                     Book now 
                   </Button>
                   </Link>
+                  : <Link href={"/auth/login"}>
+                  <Button className="mr-3" btnType={BtnType.Primary} isDot={true}>
+                    Book now 
+                  </Button>
+                  </Link> }
                 </Row>
               </Col>
             </Row>

@@ -61,13 +61,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     setLoading(false);
   });
   return (
-    // <Provider store={store}>
     <LayoutAuth>
       {loading && <LoadingScreen />}
       <AppStatus />
       <Component {...pageProps} />
     </LayoutAuth>
-    // </Provider>
   );
 }
 
