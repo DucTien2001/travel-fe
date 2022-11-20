@@ -34,3 +34,8 @@ export interface RoomPrice {
   other: string;
   roomId: string;
 }
+
+export interface EGetPrice {
+  date: Date;
+  roomId: number;
+}

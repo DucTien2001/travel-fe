@@ -37,6 +37,8 @@ export const API = {
     },
     ROOM: {
       GET_ROOMS: '/v1.0/room/get-all-rooms/:id',
+      GET_ROOMS_AVAILABLE: '/v1.0/room/get-rooms-available',
+      GET_PRICE: '/v1.0/room-other-price/get-price',
     }
   },
   ENTERPRISE: {

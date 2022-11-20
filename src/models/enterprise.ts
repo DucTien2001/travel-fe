@@ -26,3 +26,9 @@ export interface EUpdateTour {
   contact: string;
   isTemporarilyStopWorking?: boolean;
 }
+
+export interface EGetRoomsAvailable {
+  hotelId: number;
+  startDate: Date;
+  endDate: Date;
+}

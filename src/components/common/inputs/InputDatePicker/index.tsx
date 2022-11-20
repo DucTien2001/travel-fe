@@ -47,6 +47,9 @@ const CustomDatePicker = memo(
                   <ReactDatetime
                     {...field}
                     className={classes.datePickerInput}
+                    onChange={(date)=>{
+                      return field?.onChange(date)
+                    }}
                     inputProps={{
                         className: "form-control",
                         placeholder: `${placeholder}`,
