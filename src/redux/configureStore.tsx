@@ -10,7 +10,7 @@ export const makeStore = (context) => {
   const store = configureStore({
     reducer: createRootReducer(),
     middleware: (getDefaultMiddleware) => {
-      return [...getDefaultMiddleware({ thunk: false }), sagaMiddleware, ...middlewares()];
+      return [...getDefaultMiddleware({ thunk: false, serializableCheck: false }), sagaMiddleware, ...middlewares()];
     },
     devTools: process.env.NODE_ENV !== "production",
   });

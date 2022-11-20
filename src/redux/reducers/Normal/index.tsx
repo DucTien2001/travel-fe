@@ -30,14 +30,35 @@ export interface IHotel {
   isTemporarilyStopWorking?: boolean;
 }
 
+export interface IRoom {
+  title: string;
+  description: string;
+  discount: number;
+  tags: string;
+  images: string;
+  numberOfBed: number;
+  numberOfRoom: number;
+  hotelId: number;
+  amount: number;
+  priceDetail: any;
+}
+
+export interface IRoomBillConfirm {
+  rooms: IRoom[];
+  startDate: string;
+  endDate: string;
+}
+
 export interface NormalState {
   allTours: ITour[];
   allHotels: IHotel[];
+  roomBillConfirm: IRoomBillConfirm;
 }
 
 const initial: NormalState = {
   allTours: [],
   allHotels: [],
+  roomBillConfirm: null,
 };
 
 export const normalReducer = (state = initial, action: any) =>
@@ -48,6 +69,9 @@ export const normalReducer = (state = initial, action: any) =>
         break;
       case types.SET_NORMAL_HOTELS_REDUCER:
         draft.allHotels = action.data;
+        break;
+      case types.SET_ROOM_BILL_CONFIRM_REDUCER:
+        draft.roomBillConfirm = action.data;
         break;
       default:
         return state;

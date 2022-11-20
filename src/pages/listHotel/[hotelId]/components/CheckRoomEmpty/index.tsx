@@ -17,6 +17,8 @@ import BoxSmallLeft from "components/BoxSmallLeft";
 import { RoomService } from "services/normal/room";
 import moment from "moment";
 import { format } from "date-fns";
+import { useDispatch } from "react-redux";
+import { setRoomBillConfirmReducer } from "redux/reducers/Normal/actionTypes";
 export interface CheckRoomForm {
   departure: Date;
   return: Date;
@@ -31,6 +33,7 @@ interface Props {
 
 // eslint-disable-next-line react/display-name
 const CheckRoomEmpty = memo(({ hotelId }: Props) => {
+  const dispatch = useDispatch();
   const [listRooms, setListRoom] = useState([]);
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -138,7 +141,26 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
     }
   }, [_return]);
 
-  const _onSubmit = () => {};
+  const _onSubmit = (data) => {
+    const roomBillConfirm = []
+    data?.amountList?.map((item, index)=>{
+      if(item?.amount >0){
+        roomBillConfirm.push({
+          ...listRooms[index],
+          amount: item.amount
+        })
+      }
+      console.log({
+        ...listRooms[index],
+        amount: item.amount
+      })
+    })
+    dispatch(setRoomBillConfirmReducer({
+      rooms: roomBillConfirm,
+      startDate: new Date(data?.departure),
+      endDate: new Date(data?.return)
+    }))
+  };
 
   return (
     <>
@@ -233,11 +255,11 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
               <tbody>
                 <tr>
                   <td className={clsx(classes.colConfirm, classes.col)}>
-                    <Link href="">
+                    {/* <Link href=""> */}
                       <Button btnType={BtnType.Secondary} type="submit">
                         Book
                       </Button>
-                    </Link>
+                    {/* </Link> */}
                   </td>
                 </tr>
               </tbody>
