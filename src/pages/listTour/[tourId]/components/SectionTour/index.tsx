@@ -84,14 +84,18 @@ const SectionTour = memo(({tour} : Props)=> {
                 <h2 className={`main-price ${classes.businessHours}`}>Time business: {tour?.businessHours}</h2>
                 <Row className="justify-content-end">
                   {user ? <Link href={`/book/tour/:${tour?.id}`}>
+                    <a>
                   <Button className="mr-3" btnType={BtnType.Primary} isDot={true}>
                     Book now 
                   </Button>
+                  </a>
                   </Link>
                   : <Link href={"/auth/login"}>
+                    <a>
                   <Button className="mr-3" btnType={BtnType.Primary} isDot={true}>
                     Book now 
                   </Button>
+                  </a>
                   </Link> }
                 </Row>
               </Col>

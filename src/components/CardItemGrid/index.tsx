@@ -41,7 +41,8 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
     return (
     <>
         <Col xs={4} className={clsx(classes.cardItem, className)} key={id}>
-            <Link href={`/${linkView}/[${id}]`}>
+            <Link href={`/${linkView}/:${id}`}>
+                <a>
                 <Card className={clsx("card-pricing card-background", classes.cardImage)}
                 style={{backgroundImage: `url(${src})`,}}
                 >
@@ -64,6 +65,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                             </div>
                             <div className={classes.btnControlCard}>
                                 <Link href={`/${linkView}/:${id}`}>
+                                <a>
                                 <Button
                                 className={clsx("btn-round", classes.btnView)}
                                 btnType={isHotel ? BtnType.Secondary : BtnType.Primary}
@@ -71,9 +73,11 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                 >
                                    View more
                                 </Button>
+                                </a>
                                 </Link>
                                 {user ? 
                                 ( <Link href={`/${linkBook}/:${id}`}>
+                                <a>
                                 <Button
                                 className={isHotel ? clsx("btn-round", classes.isHotel) : clsx("btn-round")}
                                 btnType={BtnType.Secondary}
@@ -81,8 +85,10 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                 >
                                     Book now
                                 </Button>
+                                </a>
                                 </Link> ) : 
                                     (<Link href={`/auth/login`}>
+                                    <a>
                                     <Button
                                     className={isHotel ? clsx("btn-round", classes.isHotel) : clsx("btn-round")}
                                     btnType={BtnType.Secondary}
@@ -90,11 +96,13 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                     >
                                         Book now
                                     </Button>
+                                    </a>
                                     </Link>)                      
                                 }
                             </div>
                     </CardBody>
                 </Card>
+                </a>
             </Link>
         </Col>
       </>

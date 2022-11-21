@@ -2,6 +2,7 @@ import { memo } from 'react';
 import classes from './styles.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
+import ErrorMessage from 'components/common/texts/ErrorMessage';
 
 interface InputsProps {
     className?: string;
@@ -11,11 +12,12 @@ interface InputsProps {
     min: number,
     value: number,
     onChange: (value: number) => void,
+    errorMessage?: string;
 }
 // eslint-disable-next-line react/display-name
 const InputCounter = memo((props: InputsProps) => {
 
-  const {className, label, labelIcon, max, min, value, onChange} = props;
+  const {className, label, labelIcon, max, min, value, onChange, errorMessage} = props;
 
   const add = () => {
     const newValue = value + 1;
@@ -46,6 +48,7 @@ const InputCounter = memo((props: InputsProps) => {
         <FontAwesomeIcon icon={faPlus}/>
       </button>
     </div> 
+    {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </>                                         
   );
 });

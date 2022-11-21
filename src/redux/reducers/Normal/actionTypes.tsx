@@ -10,6 +10,10 @@ export const SET_NORMAL_HOTELS_REDUCER = "SET_NORMAL_HOTELS_REDUCER";
 export const GET_ROOM_BILL_CONFIRM_REQUEST = "GET_ROOM_BILL_CONFIRM_REQUEST";
 export const SET_ROOM_BILL_CONFIRM_REDUCER = "SET_ROOM_BILL_CONFIRM_REDUCER";
 
+//tour bill
+export const GET_TOUR_BILLS_REQUEST = "GET_TOUR_BILLS_REQUEST";
+export const SET_TOUR_BILLS_REDUCER = "SET_TOUR_BILLS_REDUCER";
+
 // ********** tour **********
 export const getAllTours = () => {
   return {
@@ -48,6 +52,20 @@ export const getRoomBillConfirm = () => {
 export const setRoomBillConfirmReducer = (data: any) => {
   return {
     type: SET_ROOM_BILL_CONFIRM_REDUCER,
+    data: data,
+  };
+};
+
+// ********** TOUR bill **********
+export const getAllTourBills = () => {
+  return {
+    type: GET_TOUR_BILLS_REQUEST,
+  };
+};
+
+export const setAllTourBillsReducer = (data: any) => {
+  return {
+    type: SET_TOUR_BILLS_REDUCER,
     data: data,
   };
 };

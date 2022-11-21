@@ -29,21 +29,31 @@ return (
                     <Col xs={4} className={classes.listSocial} >
                     <ul>
                         <li className={classes.itemSocial}>
-                            <Link href="/" className={classes.linkSocial}><FontAwesomeIcon icon={faFacebook} fontSize="20px"/></Link>
+                            <Link href="/" className={classes.linkSocial}>
+                                <a>
+                                <FontAwesomeIcon icon={faFacebook} fontSize="20px"/>
+                                </a>
+                            </Link>
                         </li>
                         <li className={classes.itemSocial}>
                             <Link href="/" className={classes.linkSocial}>
+                                <a>
                                 <FontAwesomeIcon icon={faTwitter} fontSize="20px"/>
+                                </a>
                             </Link>
                         </li>
                         <li className={classes.itemSocial}>
                             <Link href="/" className={classes.linkSocial}>
+                                <a>
                                 <FontAwesomeIcon icon={faInstagram} fontSize="20px"/>
+                                </a>
                             </Link>
                         </li>
                         <li className={classes.itemSocial}>
                             <Link href="/" className={classes.linkSocial}>
+                                <a>
                                 <FontAwesomeIcon icon={faYoutube} fontSize="20px"/>
+                                </a>
                             </Link>
                         </li>
                     </ul>

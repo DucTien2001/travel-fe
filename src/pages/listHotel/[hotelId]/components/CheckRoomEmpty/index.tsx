@@ -19,6 +19,10 @@ import moment from "moment";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 import { setRoomBillConfirmReducer } from "redux/reducers/Normal/actionTypes";
+import { IHotel } from "models/hotel";
+import { useRouter } from "next/router";
+import { fCurrency2 } from "utils/formatNumber";
+import ErrorMessage from "components/common/texts/ErrorMessage";
 export interface CheckRoomForm {
   departure: Date;
   return: Date;
@@ -28,12 +32,13 @@ export interface CheckRoomForm {
 }
 
 interface Props {
-  hotelId: number;
+  hotel: IHotel;
 }
 
 // eslint-disable-next-line react/display-name
-const CheckRoomEmpty = memo(({ hotelId }: Props) => {
+const CheckRoomEmpty = memo(({ hotel }: Props) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [listRooms, setListRoom] = useState([]);
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -99,7 +104,7 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
     const startDate = new Date(_departure);
     const endDate = new Date(_return);
     RoomService.getAllRoomsAvailable({
-      hotelId: hotelId,
+      hotelId: hotel?.id,
       startDate: startDate,
       endDate: endDate,
     }).then((res) => {
@@ -139,27 +144,36 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
     if (_departure && _return) {
       getRoomsAvailable();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_return]);
-
   const _onSubmit = (data) => {
-    const roomBillConfirm = []
+    const roomBillConfirm = [];
+    // let isError = false;
     data?.amountList?.map((item, index)=>{
-      if(item?.amount >0){
+      if(item?.amount > 0){
         roomBillConfirm.push({
           ...listRooms[index],
           amount: item.amount
         })
       }
-      console.log({
-        ...listRooms[index],
-        amount: item.amount
-      })
+      // else { 
+      //   isError = true;
+      // }
+      // console.log({
+      //   ...listRooms[index],
+      //   amount: item.amount
+      // })
     })
     dispatch(setRoomBillConfirmReducer({
+      hotel: hotel,
       rooms: roomBillConfirm,
       startDate: new Date(data?.departure),
       endDate: new Date(data?.return)
     }))
+    // if(isError === false) {
+    //   router.push(`/book/hotel`);
+    // }
+    router.push(`/book/hotel`);
   };
 
   return (
@@ -203,7 +217,7 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
                   <th scope="row" className={classes.roomNumberTitle}>
                     Room Type
                   </th>
-                  <th className={clsx(classes.colImgMobile, classes.title)}>Images</th>
+                  {/* <th className={clsx(classes.colImgMobile, classes.title)}>Images</th> */}
                   <th className={classes.title}>Number of rooms left</th>
                   <th className={classes.title}>Price</th>
                   <th className={classes.title}>Amount</th>
@@ -215,15 +229,17 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
                     <th scope="row" className={classes.col}>
                       {room?.title}
                     </th>
-                    <td className={classes.colImg}>
-                      {/* <Carousel images={[images.bgUser, images.bg19]} className={classes.imgCarousel}/> */}
-                    </td>
+                    {/* <td className={classes.colImg}>
+                      <Carousel images={room?.images} className={classes.imgCarousel}/>
+                    </td> */}
                     <td className={classes.col}>{room?.numberOfRoom}</td>
                     <td className={classes.col}>
                       {room?.priceDetail?.map((priceInfo, index) => (
-                        <p key={index}>
+                        <p key={index} className={classes.colPrice}>
                           {moment(priceInfo?.date).format("DD/MM/YYYY")}
-                          {":"} {priceInfo?.price}
+                          {":"}
+                          <br></br>
+                          <span>{fCurrency2(priceInfo?.price)} VND</span>
                         </p>
                       ))}
                     </td>
@@ -237,8 +253,8 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
                             max={room?.numberOfRoom}
                             min={1}
                             onChange={field.onChange}
-                            value={field.value}
-                          />
+                            value={field.value}                       
+                          />                       
                         )}
                       />
                     </td>
@@ -255,11 +271,9 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
               <tbody>
                 <tr>
                   <td className={clsx(classes.colConfirm, classes.col)}>
-                    {/* <Link href=""> */}
                       <Button btnType={BtnType.Secondary} type="submit">
                         Book
                       </Button>
-                    {/* </Link> */}
                   </td>
                 </tr>
               </tbody>
@@ -267,39 +281,56 @@ const CheckRoomEmpty = memo(({ hotelId }: Props) => {
           </div>
           {/*=============== Mobile ============  */}
           <BoxSmallLeft className={classes.tableMobile} title="Choose the right one for you">
-            <div>
-              <Row className={clsx("mb-3", classes.row)}>
+            {listRooms?.map((room, index) => (
+              <div key={room?.id} className="mb-4 ml-3">
+              <Row className={classes.row}>
                 <div className={classes.boxInformation}>
-                  <p className="mr-2">Room number: </p>
-                  <p>1</p>
+                  <p className="mr-2">Room number: <span>{room?.title}</span></p>
                 </div>
                 <div className={classes.boxInformation}>
-                  <p className="mr-2">Price: </p>
-                  <p className={classes.priceMobile}>$200</p>
+                  <p className="mr-2">Number of rooms left: <span>{room?.numberOfRoom}</span></p>
                 </div>
               </Row>
-              <div>
+              <Row className={classes.row}>
+                <div className={classes.boxPriceMobile}>
+                  <p>Price: </p>
+                  {room?.priceDetail?.map((priceInfo, index) => (
+                      <p key={index} className={classes.colPrice}>
+                        <span>{moment(priceInfo?.date).format("DD/MM/YYYY")} {":"}</span>             
+                        <br></br>
+                        <span>{fCurrency2(priceInfo?.price)} VND</span>
+                      </p>
+                  ))}
+                </div>
+              </Row>
+              {/* <Row className={classes.boxImgMobile}>
                 <Carousel images={[images.phuQuoc, images.bg19]} className={classes.imgCarouselMobile} />
-              </div>
-              <Row className={clsx("mt-4", classes.row)}>
+              </Row> */}
+              <Row className={classes.row}>
                 <div className={classes.boxInformation}>
                   <p className="mr-2">Amount</p>
-                  {/* <Controller
-                  name="amount"
-                  control={control}
-                  render={({ field }) => (
-                    <InputCounter
-                      className={classes.inputCounter}
-                      max={5}
-                      min={1}
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  )}
-                /> */}
+                  <Controller
+                        name={`amountList.${index}.amount`}
+                        control={control}
+                        render={({ field }) => (
+                          <InputCounter
+                            className={classes.inputCounter}
+                            max={room?.numberOfRoom}
+                            min={1}
+                            onChange={field.onChange}
+                            value={field.value}
+                          />
+                        )}
+                  />
                 </div>
               </Row>
-            </div>
+              </div>
+            ))}
+            <Row className={classes.boxBtnMobile}>
+              <Button btnType={BtnType.Secondary} type="submit">
+                  Book
+              </Button>
+            </Row>
           </BoxSmallLeft>
         </Form>
       </Container>

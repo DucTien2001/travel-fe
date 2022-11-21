@@ -291,7 +291,7 @@ const DetailCustomer = memo(({tour}: Props)=> {
                             <Col xs={6}>
                                 <InputTextFieldBorder
                                 label="First name recipient"
-                                placeholder="Enter full name recipient"
+                                placeholder="Enter first name recipient"
                                 inputRef={register(`recipient.${index}.firstNameRecipient`)}
                                 errorMessage={errors.recipient?.[index]?.firstNameRecipient?.message}
                                 />
@@ -299,7 +299,7 @@ const DetailCustomer = memo(({tour}: Props)=> {
                             <Col xs={6}>
                                 <InputTextFieldBorder
                                 label="Last name recipient"
-                                placeholder="Enter email recipient"
+                                placeholder="Enter last name recipient"
                                 inputRef={register(`recipient.${index}.lastNameRecipient`)}
                                 errorMessage={errors.recipient?.[index]?.lastNameRecipient?.message}
                                 />
@@ -309,7 +309,7 @@ const DetailCustomer = memo(({tour}: Props)=> {
                             <Col xs={6}>
                                 <InputTextFieldBorder
                                 label="Email recipient"
-                                placeholder="Enter full name recipient"
+                                placeholder="Enter email recipient"
                                 inputRef={register(`recipient.${index}.emailRecipient`)}
                                 errorMessage={errors.recipient?.[index]?.emailRecipient?.message}
                                 />
@@ -317,7 +317,7 @@ const DetailCustomer = memo(({tour}: Props)=> {
                             <Col xs={6}>
                                 <InputTextFieldBorder
                                 label="Phone recipient"
-                                placeholder="Enter email recipient"
+                                placeholder="Enter phone recipient"
                                 inputRef={register(`recipient.${index}.phoneNumberRecipient`)}
                                 errorMessage={errors.recipient?.[index]?.phoneNumberRecipient?.message}
                                 />

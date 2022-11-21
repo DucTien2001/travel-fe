@@ -1,18 +1,13 @@
 import React, {memo, useState} from "react";
-import Link  from "next/link";
 // reactstrap components
 import {
   Carousel,
   CarouselItem,
   CarouselIndicators,
-  CarouselProps,
   CarouselControl,
 } from "reactstrap";
 
-import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
-import Button, {BtnType} from "components/common/buttons/Button";
-import {Image} from "models/tour";
 
 interface Props { 
     className?: string;

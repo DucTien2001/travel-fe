@@ -31,6 +31,9 @@ export const API = {
       ALL_TOURS: '/v1.0/tour/get-all-tours',
       DETAIL_TOUR: '/v1.0/tour/get-tour/:id',
     },
+    ROOMBILL: { 
+      CREATE: '/v1.0/room-bill/create',
+    },
     TOURBILL: { 
       CREATE: '/v1.0/tour-bill/create',
       GET_ALL_TOURBILL: '/v1.0/tour-bill/get-all-user-tour-bills/:id',

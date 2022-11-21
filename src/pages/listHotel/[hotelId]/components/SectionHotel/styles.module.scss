@@ -20,6 +20,10 @@
 }
 .description {
     width: 100%;
+    @media only screen and (max-width: 768px) {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
 }
 .businessHours {
     color: var(--violet-color) !important;

@@ -1,4 +1,4 @@
-import React, {memo, useState} from "react";
+import React, {memo, useEffect, useState} from "react";
 import Link  from "next/link";
 // reactstrap components
 import {
@@ -18,6 +18,8 @@ import clsx from "clsx";
 import Pagination from "components/Pagination";
 import CardComment from "components/CardComments";
 import PopupAddComment from "components/Popup/PopupAddComment";
+import { ReducerType } from "redux/reducers";
+import { useSelector } from "react-redux";
 
 interface Props { 
     comment: Comment[],
@@ -25,8 +27,8 @@ interface Props {
 
 // eslint-disable-next-line react/display-name
 const Comments = memo(({comment}: Props) => {
+    const {allTourBills} = useSelector((state: ReducerType) => state.normal);
     const [modal, setModal] = useState(false);
-
     const toggle = () => setModal(!modal);
     
   return (

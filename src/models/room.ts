@@ -34,7 +34,19 @@ export interface RoomPrice {
   other: string;
   roomId: string;
 }
-
+export interface IRoom {
+  id?:number;
+  title: string;
+  description: string;
+  discount: number;
+  tags: string;
+  images: string;
+  numberOfBed: number;
+  numberOfRoom: number;
+  hotelId: number;
+  amount: number;
+  priceDetail: any;
+}
 export interface EGetPrice {
   date: Date;
   roomId: number;

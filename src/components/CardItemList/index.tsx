@@ -21,7 +21,9 @@ interface Props {
     src: string;
     title: string;
     description: string;
-    businessHours: string;
+    businessHours?: string;
+    checkInTime?: string;
+    checkOutTime?: string;
     location: string;
     contact?: string;
     price?: number;
@@ -37,7 +39,7 @@ interface Props {
 
 // eslint-disable-next-line react/display-name
 const ListServices = memo(({className, linkView, linkBook, id, src, title, description, businessHours, 
-    location, contact, price, discount, 
+    location, contact, price, discount, checkInTime, checkOutTime,
     tags, rate, creator, 
     isTemporarilyStopWorking, roomNumber, bookDates, isHotel} : Props) => {
     const {user} = useAuth();
@@ -45,9 +47,11 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
     <>
         <Row xs={3} key={id} className={clsx(classes.rowTour, className)}>
             <Col className={classes.imgTour}>
-                <Link href={`/${linkView}/[${id}]`} >
+                <Link href={`/${linkView}/:${id}`} >
+                    <a>
                      {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img alt="anh" src={src}></img>
+                    </a>
                 </Link>
             <div className={discount ? classes.discountWrapper : classes.noDiscount}>
                     <span className={classes.percent}>{discount}%</span>
@@ -61,7 +65,11 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
             <h5 className={classes.title}> {tags?.map((tag,index) => (
                 <Badge pill color="var(--violet-color)" key={index}>{tag}</Badge>
             ))}  </h5> 
-            <span>{location} - {businessHours}{bookDates}</span>  
+            <span>{location} {businessHours && - {businessHours}}{bookDates}</span>
+            <br></br>
+            <span className={classes.checkTime}>Check in time: {checkInTime}</span>
+            <br></br>
+            <span className={classes.checkTime}>Check out time: {checkOutTime}</span>
             <div className={classes.priceContainer}>
                 {price && <h3>{fCurrency2(price)} VND</h3> }
                 <Stars numberOfStars={rate}/>
@@ -70,6 +78,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
             </Col>
             <Col className={classes.btnControlCardList}>
                     <Link href={`/${linkView}/[${id}]`}>
+                        <a>
                         <Button
                             className="btn-round"
                             btnType={isHotel ? BtnType.Secondary : BtnType.Primary}
@@ -77,9 +86,11 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                             >
                             View more
                         </Button>
+                        </a>
                     </Link>
                     {user ? 
                         (<Link href={`/${linkBook}/:${id}`}>
+                            <a>
                             <Button
                             className={isHotel ? clsx("btn-round", classes.isHotel) : clsx("btn-round")}
                             btnType={BtnType.Secondary}
@@ -87,8 +98,10 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                             >
                                 Book now
                             </Button>
+                            </a>
                         </Link> ) : 
                         (<Link href={`/auth/login`}>
+                            <a>
                             <Button
                             className={isHotel ? clsx("btn-round", classes.isHotel) : clsx("btn-round")}
                             btnType={BtnType.Secondary}
@@ -96,6 +109,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                             >
                                 Book now
                             </Button>
+                            </a>
                         </Link>)                      
                     }      
             </Col>

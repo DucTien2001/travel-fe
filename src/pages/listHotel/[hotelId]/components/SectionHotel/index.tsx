@@ -26,28 +26,6 @@ interface Props {
   hotel: ICreateHotel;
 }
 
-const items = [
-  {
-    src: images.phuQuoc.src,
-    altText: "",
-    caption: "",
-  },
-  {
-    src: images.phuQuoc.src,
-    altText: "",
-    caption: "",
-  },
-  {
-    src: images.phuQuoc.src,
-    altText: "",
-    caption: "",
-  },
-  {
-    src: images.phuQuoc.src,
-    altText: "",
-    caption: "",
-  },
-];
 
 // eslint-disable-next-line react/display-name
 const SectionTour = memo(({hotel} : Props)=> {

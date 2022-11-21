@@ -6,6 +6,9 @@
     margin-bottom: 0;
     font-weight: 700;
     padding:0 ;
+    @media only screen and (max-width: 768px) {
+        margin-left: 16px;
+    }
 }
 
 .inputDateContainer {
@@ -15,6 +18,8 @@
     }
     @media only screen and (max-width: 768px) {
         flex-direction: column; 
+        padding-left: 32px;
+        padding-right: 32px;
         .inputSearchDate {
             margin-right: 0;
         }
@@ -93,6 +98,26 @@
             display: none !important;
     } 
 }
+.colPrice {
+    font-weight: 600;
+   span{
+    color: var(--orange-color);
+   }
+    
+}
+.boxTableRoom {
+    display: flex;
+
+}
+.tableConfirm {
+    width: 5% !important;
+    .colConfirm {
+        padding: 17px;
+    }
+    @media only screen and (max-width: 600px) {
+        display: none;
+     }
+}
 ///=========== Mobile =========
 .tableMobile {
     display: none;
@@ -108,9 +133,12 @@
         justify-content: center;
         align-items: center;
         p {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
             margin: 0;
+            span {
+                font-weight: 700;
+            }
         }
         .priceMobile {
             color: var(--orange-color);
@@ -145,15 +173,27 @@
                 height: 100%;
             }
         }
-     }
-}
 
-.boxTableRoom {
-    display: flex;
-}
-.tableConfirm {
-    width: 5% !important;
-    .colConfirm {
-        padding: 17px;
+     }
+     .boxImgMobile {
+        margin:0;
+        >div{
+            margin: 0px 0px 0 !important;
+        }
+    }
+    .boxPriceMobile {
+        p {
+            font-weight: 500;
+            margin: 0;
+            span {
+                font-weight: 700;
+            }
+        }
+    }
+    .boxBtnMobile {
+        display: flex;
+        margin: 0;
+        justify-content: center;
     }
 }
+

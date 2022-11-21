@@ -1,0 +1,20 @@
+.root {
+    padding-bottom: 48px;
+    @media only screen and (max-width: 768px) {
+        flex-direction: column;
+      }
+}
+
+.boxLeft {
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+      }
+}
+.boxRight {
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+      }
+}
+.sectionHeader {
+    min-height: 35vh;
+}

@@ -28,7 +28,9 @@ const DetailTour = memo(({tour}: Props)=> {
                     <p>Date book: <span>{dayBook}</span></p>
                     <p className={classes.note}>Ticket expiration time <span>30 days</span> is from the date of purchase</p>
                     <Link href="/listTour">
+                      <a>
                       <p className={classes.changeChoice}>Change your choice</p>
+                      </a>
                     </Link>
                   </div>
                 </Box>

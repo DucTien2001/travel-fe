@@ -202,13 +202,17 @@ const WhiteNavbar = memo(() => {
               (<>
                 <NavItem>
                   <Link href="/auth/login" passHref>
+                    <a>
                     <Button btnType={BtnType.Secondary}>Sign in</Button>
-                  </Link>
+                    </a>
+                  </Link>           
                 </NavItem>
                 <NavItem>
                   <Link href="/auth/signup" passHref>
+                    <a>
                     <Button btnType={BtnType.Secondary}>Register</Button>
-                  </Link>
+                    </a>
+                  </Link>       
                 </NavItem>              
               </>)   
               }

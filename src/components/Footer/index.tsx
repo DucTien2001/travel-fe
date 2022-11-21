@@ -32,34 +32,42 @@ const Footer = memo(() => {
                    <ul>
                       <li className={classes.itemFollow}>
                         <Link href="/">
+                          <a>
                           <div>
                             <FontAwesomeIcon icon={faFacebook} fontSize="18px"/>  
                             Facebook
                           </div>
+                          </a>
                         </Link>
                       </li>
                       <li className={classes.itemFollow}>
                         <Link href="/">
+                          <a>
                           <div>
                             <FontAwesomeIcon icon={faTwitter} fontSize="18px"/>
                             Twitter
                           </div>
+                          </a>
                         </Link>
                         </li>
                       <li className={classes.itemFollow}>
                         <Link href="/">
+                          <a>
                           <div>
                             <FontAwesomeIcon icon={faInstagram} fontSize="18px"/>
                             Instagram
                           </div>
+                          </a>
                         </Link>
                       </li>
                       <li className={classes.itemFollow}>
                         <Link href="/">
+                          <a>
                           <div>
                             <FontAwesomeIcon icon={faYoutube} fontSize="18px"/>
                             Youtube
                           </div>
+                          </a>
                         </Link>
                         </li>
                    </ul>
@@ -82,19 +90,19 @@ const Footer = memo(() => {
                     <li className={classes.infoContact}>
                       <div>
                          <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
-                         <Link href="tel:+84 954 000 917" className={classes.contactLinkInfo}>84 954 000 917</Link>
+                         <Link href="tel:+84 954 000 917" className={classes.contactLinkInfo}><a>84 954 000 917</a></Link>
                       </div>
                     </li>
                     <li className={classes.infoContact}>
                         <div>
                         <FontAwesomeIcon icon={faEnvelopeOpenText}></FontAwesomeIcon>
-                        <Link href="mailto:mail@mail.com" className={classes.contactLinkInfo}>travelix@gmail.com</Link>
+                        <Link href="mailto:mail@mail.com" className={classes.contactLinkInfo}><a>travelix@gmail.com</a></Link>
                         </div>
                     </li>
                     <li className={classes.infoContact}>
                       <div>
                         <FontAwesomeIcon icon={faEarthAmerica}></FontAwesomeIcon>
-                        <Link href="/"className={classes.contactLinkInfo}>www.colorlib.com</Link>
+                        <Link href="/"className={classes.contactLinkInfo}><a>www.colorlib.com</a></Link>
                       </div>
                     </li>
               </ul>

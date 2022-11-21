@@ -34,7 +34,9 @@ const VerifySignup: NextPage = () => {
             <ModalBody>
                 You have successfully signed in. Please click button to back login page.
                 <Link href="/auth/login" >
+                  <a>
                   <Button btnType={BtnType.Linear} className={classes.linkBackTo}>Back to login</Button>
+                  </a>
                 </Link>
             </ModalBody>
         </Modal>

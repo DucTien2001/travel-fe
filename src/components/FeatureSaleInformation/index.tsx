@@ -1,18 +1,9 @@
-import React, {memo, useMemo, useState} from "react";
+import React, {memo} from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import {Row, Col, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
-import Button, {BtnType} from "components/common/buttons/Button";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { CommentForm } from "components/Popup/PopupAddComment";
-import { useFieldArray, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import * as yup from "yup";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import Link  from "next/link";
-
+import {Row, Col} from "reactstrap";
 
 
 // eslint-disable-next-line react/display-name

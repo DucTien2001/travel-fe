@@ -44,21 +44,36 @@ export interface IRoom {
 }
 
 export interface IRoomBillConfirm {
+  hotel: IHotel;
   rooms: IRoom[];
   startDate: string;
   endDate: string;
-}
 
+}
+export interface ITourBill {
+  userId: number;
+  userMail: string;
+  tourId: number;
+  amount: number;
+  price: number;
+  discount: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+}
 export interface NormalState {
   allTours: ITour[];
   allHotels: IHotel[];
   roomBillConfirm: IRoomBillConfirm;
+  allTourBills: ITourBill[];
 }
 
 const initial: NormalState = {
   allTours: [],
   allHotels: [],
   roomBillConfirm: null,
+  allTourBills: [],
 };
 
 export const normalReducer = (state = initial, action: any) =>
@@ -72,6 +87,9 @@ export const normalReducer = (state = initial, action: any) =>
         break;
       case types.SET_ROOM_BILL_CONFIRM_REDUCER:
         draft.roomBillConfirm = action.data;
+        break;
+      case types.SET_TOUR_BILLS_REDUCER:
+        draft.allTourBills = action.data;
         break;
       default:
         return state;

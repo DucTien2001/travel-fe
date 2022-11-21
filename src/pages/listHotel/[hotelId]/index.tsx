@@ -70,20 +70,7 @@ const listCmt = [
     date: new Date(),
   },
 ];
-const hotel = {
-  id: 0,
-  image: images.bgUser.src,
-  star: 4,
-  title: "Khach san ngan sao",
-  description: "6 months access to the library",
-  businessHours: "7AM - 10PM",
-  location: "Khanh Hoa",
-  contact: "09324343",
-  price: 70,
-  tags: "Sea",
-  rate: 4,
-  creator: "VietNam",
-};
+
 
 interface Props {}
 // eslint-disable-next-line react/display-name
@@ -113,7 +100,7 @@ const ProductPage = memo((Props) => {
         <SectionHotel hotel={hotel}
         />
         <div className={classes.container}>
-          <CheckRoomEmpty hotelId={hotel?.id}/>
+          <CheckRoomEmpty hotel={hotel}/>
           {/* <Comment comment={listCmt}/> */}
         </div>
         <GoogleMapBody />

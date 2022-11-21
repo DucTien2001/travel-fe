@@ -37,17 +37,11 @@ const Tour = memo(()=> {
         }      
     }, [user, dispatch])
     
-    const onDownloadBill = (id: number) => {
-        dispatch(setLoading(true))
-        TourBillService.getTourBill(id)
-          .then(res => {
-            const myFile = new File([res.data as BlobPart], `invoice-${moment().format('MM-DD-YYYY-hh-mm-ss')}.pdf`, {
-                type: "application/pdf",
-              });
-            saveAs(myFile, `invoice-${moment().format('MM-DD-YYYY-hh-mm-ss')}.pdf`);
-          })
-          .catch((e) => dispatch(setErrorMess(e)))
-          .finally(() => dispatch(setLoading(false)))
+    const onDownloadBill = (bill) => {
+        const myFile = new File([bill as BlobPart], `invoice-${moment().format('MM-DD-YYYY-hh-mm-ss')}.pdf`, {
+            type: "application/pdf",
+            });
+        saveAs(myFile, `invoice-${moment().format('MM-DD-YYYY-hh-mm-ss')}.pdf`);
     }
    return (
     <>
@@ -100,7 +94,7 @@ const Tour = memo(()=> {
                         <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>
                     </td>
                     <td className={classes.colIconDownload}>
-                        <div className={classes.iconDownload} onClick={() => {onDownloadBill(item?.id)}}>
+                        <div className={classes.iconDownload} onClick={() => {onDownloadBill(item)}}>
                             <FontAwesomeIcon icon={faDownload} />        
                         </div>
                     </td>
