@@ -1,73 +1,106 @@
-import React, {memo} from "react";
+import React, {memo, useState} from "react";
 import {
   Col,
   Input,
   Media,
+  Popover,
+  PopoverBody,
+  UncontrolledPopover,
+  Button,
 } from "reactstrap";
 import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
-import Button, {BtnType} from "components/common/buttons/Button";
-import {User} from "models/user";
+import CustomButton, {BtnType} from "components/common/buttons/Button";
+import {EUserType, User} from "models/user";
 import clsx from "clsx";
-
+import { faEllipsisVertical, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {Comment} from "models/comment";
 
 interface Props { 
-    user: User;
-    comment: string;
-    date: Date;
+    comment: Comment;
+    onEdit: (currentTarget: any, comment: Comment) => void;
 }
 
 // eslint-disable-next-line react/display-name
 const Comments = memo(( props: Props) => {
-  const {user, comment, date} = props;
+  const {comment, onEdit} = props;
+  const [openAction, setOpenAction] = useState(false);
+
+
+  const onToggleAction = () => {
+    setOpenAction(!openAction);
+  }
   return (
     <>  
         <Col>
             <div className={clsx("media-area",classes.containerMedia)}>
                 <Media>
-                    <a
-                        className="pull-left"
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                    >
+                    <div className="pull-left">
                         <div className="avatar">
                             <Media
                                 alt="..."
                                 className="img-raised"
                                 object
-                                src={user.avatar}
+                                src={comment?.user?.avatar}
                             ></Media>
                         </div>
-                    </a>
+                    </div>
                     <Media body>
+                        <div className={classes.containerHead}>
                         <Media heading tag="h5" className={classes.titleName}>
                         Tina Andrew{" "}
-                        <small className="text-muted">· <>{date.toDateString()}</></small>
+                        <small className="text-muted">· <>{comment?.date?.toDateString()}</></small>
                         </Media>
+                        <Button
+                            id="PopoverFocus"
+                            type="button"
+                            className={classes.boxAction}
+                        >
+                           <FontAwesomeIcon icon={faEllipsisVertical}/>
+                        </Button>
+                        <UncontrolledPopover
+                            placement="bottom"
+                            target="PopoverFocus"
+                            trigger="legacy"
+                        >
+                            <PopoverBody className={classes.itemAction} onClick={(e) => {onEdit(e, comment)}}>
+                                <FontAwesomeIcon icon={faPen}/>
+                                Edit
+                            </PopoverBody>
+                            <PopoverBody className={clsx(classes.itemAction, classes.actionDelete)}>
+                                <FontAwesomeIcon icon={faTrash} color="var(--danger-color)"/>
+                                 Delete
+                            </PopoverBody>
+                        </UncontrolledPopover>
+                        </div>
                         <p>
-                            {comment}
+                            {comment?.comment}
                         </p>
                         <Media className="media-post">
+                        {comment?.user?.role === EUserType.ENTERPRISE && (
                         <Media body>
                             <Input
                                 placeholder="Write a nice reply or go home..."
                                 type="textarea"
                                 rows="4"
-                                ></Input>
+                            ></Input>
                                 <div className="media-footer">
-                                <Button
+                                
+                                    <CustomButton
                                     className="pull-right"
                                     btnType={BtnType.Primary}
                                     href="#pablo"
                                     onClick={(e) => e.preventDefault()}
-                                >
+                                    >
                                     <i className="now-ui-icons ui-1_send mr-1"></i> Reply
-                                </Button>
+                                    </CustomButton>                   
                                 </div>
-                            </Media>
-                            </Media>
                         </Media>
-                    </Media>
+                        )}
+                        </Media>
+                    </Media>                      
+                </Media>
             </div>
         </Col> 
     </>

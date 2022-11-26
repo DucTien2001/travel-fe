@@ -22,8 +22,9 @@ export interface Image {
     src: string;
 }
 
-export interface Comment {
-    user: User;
-    comment: string;
+export interface HistoryBookTour {
+    id: number;
     date: Date;
-}
+    tourId: number;
+  }
+  

@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { TourBill } from "models/tourBill";
+import { IVerifyBookTour, TourBill } from "models/tourBill";
 import api from "services/configApi";
 
 export class TourBillService {
@@ -12,7 +12,7 @@ export class TourBillService {
             return Promise.reject(e?.response?.data);
           })
       }
-    static async getAllTourBill(userId: number): Promise<any> {
+    static async getAllTourBills(userId: number): Promise<any> {
         return await api.get(API.NORMAL.TOURBILL.GET_ALL_TOURBILL.replace(":id", `${userId}`))
             .then((res) => {
               return Promise.resolve(res.data)
@@ -29,5 +29,15 @@ export class TourBillService {
           .catch((e) => {
               return Promise.reject(e?.response?.data);
           })
+    }
+    static async verifyBookTour(data: IVerifyBookTour): Promise<any> {
+      return await api
+        .post(API.NORMAL.TOURBILL.VERIFY_BOOKTOUR, data)
+        .then((res) => {
+          return Promise.resolve(res.data.data);
+        })
+        .catch((e) => {
+          return Promise.reject(e?.response?.data);
+        });
     }
 }

@@ -10,3 +10,8 @@ export interface TourBill {
     firstName: string;
     lastName: string;
   }
+
+  export interface IVerifyBookTour {
+    code: string;
+    billId: number;
+  }

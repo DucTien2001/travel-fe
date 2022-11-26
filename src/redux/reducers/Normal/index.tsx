@@ -61,6 +61,7 @@ export interface ITourBill {
   phoneNumber: string;
   firstName: string;
   lastName: string;
+  verifyCode: string;
 }
 export interface NormalState {
   allTours: ITour[];

@@ -31,6 +31,13 @@ export const API = {
       ALL_TOURS: '/v1.0/tour/get-all-tours',
       DETAIL_TOUR: '/v1.0/tour/get-tour/:id',
     },
+    COMMENT: {
+      TOUR_COMMENT :{ 
+        GET_COMMENT: '/v1.0/tour-comment/get-tours-comment/:id',
+        CREATE: '/v1.0/tour-comment/create',
+        UPDATE: '/v1.0/tour-comment/update/:id',
+      }, 
+    },
     ROOMBILL: { 
       CREATE: '/v1.0/room-bill/create',
     },
@@ -38,6 +45,7 @@ export const API = {
       CREATE: '/v1.0/tour-bill/create',
       GET_ALL_TOURBILL: '/v1.0/tour-bill/get-all-user-tour-bills/:id',
       GET_TOURBILL: '/v1.0/tour-bill/get-tour-bill/:id',
+      VERIFY_BOOKTOUR: '/v1.0/tour-bill/verify-book-tour'
     },
     HOTEL: { 
       ALL_HOTELS: '/v1.0/hotel/get-all-hotels',

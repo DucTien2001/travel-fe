@@ -9,75 +9,20 @@ import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
-import { Tour } from "models/tour";
 import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container } from "reactstrap";
 import { faFaceFrown } from '@fortawesome/free-regular-svg-icons';
-
-
-const listCmt = [
-  {
-    user: { 
-      id: 1,
-      email: "khoiyahoo@gmail.com",
-      passWord: "1234",
-      role: 1,
-      avatar: images.michael.src,
-      firstName: "Khoi",
-      lastName: "Dinh",
-      address: "An thoi",
-      phoneNumber: "032323233",
-      introduction: "dsadsadsa",
-      isDelete: false,
-      isVerified: false,
-    },
-    comment: "Chuyen di that tuyet voi",
-    date: new Date(),
-  },
-  {
-    user: { 
-      id: 1,
-      email: "khoiyahoo@gmail.com",
-      passWord: "1234",
-      role: 1,
-      avatar: images.michael.src,
-      firstName: "Khoi",
-      lastName: "Dinh",
-      address: "An thoi",
-      phoneNumber: "032323233",
-      introduction: "dsadsadsa",
-      isDelete: false,
-      isVerified: false,
-    },
-    comment: "Chuyen di that tuyet voi",
-    date: new Date(),
-  },  {
-    user: { 
-      id: 1,
-      email: "khoiyahoo@gmail.com",
-      passWord: "1234",
-      role: 1,
-      avatar: images.michael.src,
-      firstName: "Khoi",
-      lastName: "Dinh",
-      address: "An thoi",
-      phoneNumber: "032323233",
-      introduction: "dsadsadsa",
-      isDelete: false,
-      isVerified: false,
-    },
-    comment: "Chuyen di that tuyet voi",
-    date: new Date(),
-  },
-]
+import { CommentService } from "services/normal/comment";
 
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(()=> {
   const dispatch = useDispatch();
   const router = useRouter()
   const [tour, setTour] = useState<any>();
+  const [listComment, setListComment] = useState([]);
+  const tourId = Number(router.query.tourId.slice(1))
   useEffect(() => {
     if(router){
       TourService.getTour(Number(router.query.tourId.slice(1))).
@@ -93,6 +38,24 @@ const ProductPage = memo(()=> {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+    CommentService.getTourComments(tourId)
+    .then((res) => {
+        setListComment(res.data);
+    })
+    .catch((e) => {
+        dispatch(setErrorMess(e));
+    })
+    .finally(() => {
+        dispatch(setLoading(false));
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch]);
+
+  console.log(listComment);
+
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>
@@ -110,7 +73,7 @@ const ProductPage = memo(()=> {
           <>
           <SectionTour tour={tour}/> 
           <div className={classes.containerComment}>
-            <Comment comment={listCmt}/>
+            <Comment comments={listComment}/>
           </div>
           {/* <GoogleMapBody/>
           <RelatedTour/>  */}

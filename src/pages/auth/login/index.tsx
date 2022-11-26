@@ -23,6 +23,7 @@ import InputCheckbox from "components/common/inputs/InputCheckbox";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import PopupDefault from "components/Popup/PopupDefault";
 import { getAllHotels, getAllTours } from "redux/reducers/Enterprise/actionTypes";
+import { getAllTourBills } from "redux/reducers/Normal/actionTypes";
 
 
 // hiển thị thông báo verify trên nút submit nếu có rồi thì check còn chưa có thì resend email
@@ -105,6 +106,7 @@ const Login: NextPage = () => {
           dispatch(getAllTours(res.user.id))
           dispatch(getAllHotels(res.user.id))
         }
+        dispatch(getAllTourBills(user?.id));
       })
       .catch(e => {
         if (e.detail === 'notVerified') setIsNotVerified(true)

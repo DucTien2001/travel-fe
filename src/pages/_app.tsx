@@ -28,7 +28,7 @@ import {
   getAllHotels as getAllHotelsOfEnterprise,
   getAllTours as getAllToursOfEnterprise,
 } from "redux/reducers/Enterprise/actionTypes";
-import { getAllTours as getAllToursOfNormal, getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
+import { getAllTours as getAllToursOfNormal, getAllHotels as getAllHotelsOfNormal, getAllTourBills } from "redux/reducers/Normal/actionTypes";
 // import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 
 // const { store } = createConfigureStore();
@@ -49,6 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         dispatch(getAllToursOfEnterprise(user?.id));
         dispatch(getAllHotelsOfEnterprise(user?.id));
       }
+      dispatch(getAllTourBills(user?.id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, user]);

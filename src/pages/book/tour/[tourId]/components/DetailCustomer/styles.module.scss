@@ -17,6 +17,11 @@
         font-weight: 600;
     }
 }
+.cardItem {
+    [class~='col']:last-child {
+        display: none;
+    }
+}
 .noteTipRecipient {
     padding: 0 16px 8px 16px;
     svg {

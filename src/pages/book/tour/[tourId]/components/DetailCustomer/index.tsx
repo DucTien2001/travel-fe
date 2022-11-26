@@ -25,6 +25,7 @@ import { TourBillService } from "services/normal/tourBill";
 
 interface Props {
   tour: Tour;
+  onAmount: (amount: number) => void;
 }
 
 export interface BookForm {
@@ -41,7 +42,7 @@ export interface BookForm {
   }[];
 }
 // eslint-disable-next-line react/display-name
-const DetailCustomer = memo(({tour}: Props)=> {
+const DetailCustomer = memo(({tour, onAmount}: Props)=> {
   const { user } = UseAuth();
   const dispatch = useDispatch();
   const [deactivate, setDeactivate] = useState(false);
@@ -78,6 +79,7 @@ const DetailCustomer = memo(({tour}: Props)=> {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
     control,
     } = useForm<BookForm>({
       resolver: yupResolver(schema),
@@ -115,11 +117,16 @@ const DetailCustomer = memo(({tour}: Props)=> {
     setDeactivate(!deactivate);
   }
 
-  
+  const _amount = watch("amount");
+
+  useEffect(() => {
+    onAmount(_amount);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_amount])
 
   const _onSubmit = (data: BookForm) => {
-      dispatch(setLoading(true));
-      const totalPrice = data?.amount * tour?.price;
+      dispatch(setLoading(true));  
+      const totalPrice = data?.amount * tour?.price * ((100 - tour?.discount) / 100);
       if(isShowRecipient) {
         if(user) {
           TourBillService.create({
@@ -200,6 +207,7 @@ const DetailCustomer = memo(({tour}: Props)=> {
         <Form onSubmit={handleSubmit(_onSubmit)}>
             <div className={classes.informationContainer}>
             <CardItemList
+              className={classes.cardItem}
               linkView="listTour"
               linkBook="book/tour"
               id = {tour?.id}

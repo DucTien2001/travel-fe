@@ -2,8 +2,8 @@ import React, {memo, useEffect, useMemo, useState} from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck, faDownload } from '@fortawesome/free-solid-svg-icons';
-import {Row, Col, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
+import { faCircleCheck, faDownload, faCircleMinus } from '@fortawesome/free-solid-svg-icons';
+import {Row, Col, Table} from "reactstrap";
 import SearchNotFound from "components/SearchNotFound";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
@@ -24,7 +24,7 @@ const Tour = memo(()=> {
     useEffect(() => {
         if(user) {
             dispatch(setLoading(true));
-            TourBillService.getAllTourBill(user?.id)
+            TourBillService.getAllTourBills(user?.id)
             .then((res) => {
                 setListHistory(res.data);
             })
@@ -85,13 +85,14 @@ const Tour = memo(()=> {
                         TV{item?.id}
                     </td>
                     <td>
-                        {moment(item?.createAt).format("DD/MM/YYYY")}
+                        {moment(item?.createdAt).format("DD/MM/YYYY")}
                     </td>
                     <td>
                        {fCurrency2(item?.totalBill)}
                     </td>
                     <td>
-                        <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>
+                        {item.verifyCode === null ? <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>
+                        : <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus}/>}
                     </td>
                     <td className={classes.colIconDownload}>
                         <div className={classes.iconDownload} onClick={() => {onDownloadBill(item)}}>

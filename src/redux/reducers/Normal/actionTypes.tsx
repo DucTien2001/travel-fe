@@ -57,9 +57,10 @@ export const setRoomBillConfirmReducer = (data: any) => {
 };
 
 // ********** TOUR bill **********
-export const getAllTourBills = () => {
+export const getAllTourBills = (userId: number) => {
   return {
     type: GET_TOUR_BILLS_REQUEST,
+    userId,
   };
 };
 

@@ -13,9 +13,10 @@ import useFormattedDate from "hooks/useFormatDate";
 // eslint-disable-next-line react/display-name
 interface Props {
   tour: Tour;
+  amount: number;
 }
 // eslint-disable-next-line react/display-name
-const DetailTour = memo(({tour}: Props)=> {
+const DetailTour = memo(({tour, amount}: Props)=> {
   const dayBook = useFormattedDate(new Date());
   return (
     <>
@@ -38,7 +39,7 @@ const DetailTour = memo(({tour}: Props)=> {
                   <div className={classes.boxCostSummary}>
                     <p>Tour name: <span>{tour?.title}</span></p>
                     <div className={classes.boxPrice}>
-                      <p className={classes.price}>Price: <span>{fCurrency2(tour?.price)} VND</span></p>
+                      <p className={classes.price}>Price: <span>{amount ? fCurrency2(tour?.price * amount * ((100 - tour?.discount) / 100)) : fCurrency2(tour?.price)} VND</span></p>
                       <p>(for all guests)</p>
                     </div>
                     <span>Taxes and fees are included</span>

@@ -59,17 +59,16 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
             </div>
             </Col>
             <Col className={classes.information}>
-            <h5 className={classes.title}>{title}{roomNumber} 
-            
+            <h5 className={classes.title}>{title}  
             </h5> 
             <h5 className={classes.title}> {tags?.map((tag,index) => (
                 <Badge pill color="var(--violet-color)" key={index}>{tag}</Badge>
             ))}  </h5> 
             <span>{location} {businessHours && - {businessHours}}{bookDates}</span>
             <br></br>
-            <span className={classes.checkTime}>Check in time: {checkInTime}</span>
+            {checkInTime && <span className={classes.checkTime}>Check in time: {checkInTime}</span>}
             <br></br>
-            <span className={classes.checkTime}>Check out time: {checkOutTime}</span>
+            {checkOutTime && <span className={classes.checkTime}>Check out time: {checkOutTime}</span>}
             <div className={classes.priceContainer}>
                 {price && <h3>{fCurrency2(price)} VND</h3> }
                 <Stars numberOfStars={rate}/>

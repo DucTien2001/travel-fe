@@ -6,7 +6,7 @@ import { TourBillService } from "services/normal/tourBill";
 function* requestGetAllTourBills(data: {type: string, userId: number}) {
     try {
       yield put(setLoading(true));
-      const tourBills = yield call(TourBillService.getAllTourBill, data.userId);
+      const tourBills = yield call(TourBillService.getAllTourBills, data.userId);
       yield put(setAllTourBillsReducer(tourBills?.data));
     } catch (e: any) {
       console.log(e);

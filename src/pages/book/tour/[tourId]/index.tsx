@@ -20,6 +20,12 @@ const BookTour = memo(()=> {
   const dispatch = useDispatch();
   const router = useRouter()
   const [tour, setTour] = useState<any>();
+  const [amount, setAmount] = useState<number>();
+
+  const onAmount = (amount: number) => {
+    setAmount(amount);
+  }
+
   useEffect(() => {
     if(router){
       TourService.getTour(Number(router.query.tourId.slice(1))).
@@ -46,10 +52,10 @@ const BookTour = memo(()=> {
         <Container>
             <Row className={classes.root}>
                 <Col xs={4} className={classes.boxLeft}>
-                  <DetailTour tour={tour}/>
+                  <DetailTour tour={tour} amount={amount}/>
                 </Col>
                 <Col xs={8} className={classes.boxRight}>
-                  <DetailCustomer tour={tour}/>
+                  <DetailCustomer tour={tour} onAmount={onAmount}/>
                 </Col>
             </Row>
         </Container>    

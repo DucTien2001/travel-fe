@@ -3,6 +3,7 @@ import classes from './styles.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
 import ErrorMessage from 'components/common/texts/ErrorMessage';
+import { Button } from 'reactstrap';
 
 interface InputsProps {
     className?: string;
@@ -35,18 +36,18 @@ const InputCounter = memo((props: InputsProps) => {
     <>
     <label className={classes.label}>{labelIcon} {label}</label>
     <div className={classes.contentNumber}>
-      <button className={classes.btnAction} type="button" onClick={minus} disabled={(min ?? null) !== null ? value <= min : false}>
-          <FontAwesomeIcon icon={faMinus}/>
-      </button>
+      <Button color="info" size="sm" type="button" onClick={minus} disabled={(min ?? null) !== null ? value <= min : false}>
+        <i className="now-ui-icons ui-1_simple-delete"></i>
+      </Button>
       <div className={classes.numberValue}>
           <input 
           value={value} 
           readOnly
           />
-      </div>                       
-      <button className={classes.btnAction} type="button" onClick={add} disabled={(max ?? null) !== null ? value >= max : false}>
-        <FontAwesomeIcon icon={faPlus}/>
-      </button>
+      </div>  
+      <Button color="info" size="sm" type="button" onClick={add} disabled={(max ?? null) !== null ? value >= max : false}>
+        <i className="now-ui-icons ui-1_simple-add"></i>
+      </Button>                     
     </div> 
     {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </>                                         
