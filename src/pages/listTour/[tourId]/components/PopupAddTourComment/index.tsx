@@ -21,16 +21,17 @@ export interface CommentForm {
   numberOfStars: number;
 }
 
-interface Props extends ModalProps{ 
+interface Props { 
     isOpen: boolean;
     commentEdit: Comment;
     onClose: () => void;
     toggle: () => void;
+    onGetTourComments: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddComment = memo((props: Props) => {
-    const {isOpen, commentEdit, toggle, rest} = props; 
+    const {isOpen, commentEdit, toggle, onGetTourComments} = props; 
     const {user} = useAuth();
     const router = useRouter();
     const tourId = Number(router.query.tourId.slice(1))
@@ -66,46 +67,55 @@ const PopupAddComment = memo((props: Props) => {
     }
   
     const _onSubmit = (data: CommentForm) => {
-      // dispatch(setLoading(true));
+      dispatch(setLoading(true));
       if(user) {
         if(commentEdit) {
-          console.log(commentEdit?.id);
-          // CommentService.updateCommentTour(commentEdit?.id, {
-          //   comment: commentEdit.comment,
-          //   rate: commentEdit.rate,
-          // })
-          // .then(() => {
-          //   dispatch(setSuccessMess("Update comment is successfully!"))
-          // })
-          // .catch((e) => {
-          //   dispatch(setErrorMess(e));
-          // })
-          // .finally(() => {
-          //   dispatch(setLoading(false));
-          //   toggle();
-          // })
+          console.log(commentEdit);
+          CommentService.updateCommentTour(commentEdit?.id, {
+            comment: data.comment,
+            rate: data.numberOfStars,
+          })
+          .then(() => {
+            dispatch(setSuccessMess("Update comment is successfully!"))
+            onGetTourComments();
+          })
+          .catch((e) => {
+            dispatch(setErrorMess(e));
+          })
+          .finally(() => {
+            dispatch(setLoading(false));
+            toggle();
+          })
         }
-        // else { 
-        //   CommentService.createCommentTour({
-        //     comment: data.comment,
-        //     rate: data.numberOfStars,
-        //     tourId: tourId,
-        //     userId: user.id
-        //   })
-        //   .then(() => {
-        //     dispatch(setSuccessMess("Comment is successfully!"))
-        //   })
-        //   .catch((e) => {
-        //     dispatch(setErrorMess(e));
-        //   })
-        //   .finally(() => {
-        //     dispatch(setLoading(false));
-        //     clearForm();
-        //     toggle();
-        //   })
-        // }
+        else { 
+          CommentService.createCommentTour({
+            comment: data.comment,
+            rate: data.numberOfStars,
+            tourId: tourId,
+            userId: user.id
+          })
+          .then(() => {
+            dispatch(setSuccessMess("Comment is successfully!"))
+            onGetTourComments();
+          })
+          .catch((e) => {
+            dispatch(setErrorMess(e));
+          })
+          .finally(() => {
+            dispatch(setLoading(false));
+            clearForm();
+            toggle();
+          })
+        }
       }
     }
+
+    // const _onSubmit = (data: CommentForm) => {
+    //   const form =new FormData();
+    //   form.append('comment', data.comment);
+    //   form.append('rate', `${data.numberOfStars}`);
+    //   onSubmit(form);
+    // }
 
     useEffect(() => {
       if(commentEdit) {
@@ -117,9 +127,16 @@ const PopupAddComment = memo((props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[commentEdit])
 
+    useEffect(() => {
+      if (!isOpen && !commentEdit) {
+        clearForm()
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps 
+    }, [isOpen, commentEdit])
+
   return (
     <>  
-        <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
+        <Modal isOpen={isOpen} toggle={toggle} className={classes.root}>
           <Form  method="post" role="form" onSubmit={handleSubmit(_onSubmit)}>
                 <ModalHeader toggle={toggle} className={classes.title}>What do you think about this tour?</ModalHeader>
                 <ModalBody>

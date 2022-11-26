@@ -13,7 +13,6 @@ import clsx from "clsx";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
@@ -32,7 +31,6 @@ interface VerifyForgotPasswordForm {
 }
 
 const VerifyForgotPassword: NextPage = () => {
-  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
 
   const schema = useMemo(() => {
@@ -48,7 +46,7 @@ const VerifyForgotPassword: NextPage = () => {
           .required("Confirm new password is required"),
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [i18n.language] );
+    }, [] );
   
   const {
       register,

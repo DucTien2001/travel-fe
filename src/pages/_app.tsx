@@ -50,6 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         dispatch(getAllHotelsOfEnterprise(user?.id));
       }
       dispatch(getAllTourBills(user?.id));
+      
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, user]);

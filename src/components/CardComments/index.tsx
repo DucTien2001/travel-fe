@@ -16,21 +16,19 @@ import clsx from "clsx";
 import { faEllipsisVertical, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Comment} from "models/comment";
+import moment from "moment";
 
 interface Props { 
     comment: Comment;
-    onEdit: (currentTarget: any, comment: Comment) => void;
+    onAction: (currentTarget: any, comment: Comment) => void;
+    onEdit: () => void;
+    onDelete: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const Comments = memo(( props: Props) => {
-  const {comment, onEdit} = props;
-  const [openAction, setOpenAction] = useState(false);
+  const {comment, onAction, onEdit, onDelete} = props;
 
-
-  const onToggleAction = () => {
-    setOpenAction(!openAction);
-  }
   return (
     <>  
         <Col>
@@ -50,12 +48,13 @@ const Comments = memo(( props: Props) => {
                         <div className={classes.containerHead}>
                         <Media heading tag="h5" className={classes.titleName}>
                         Tina Andrew{" "}
-                        <small className="text-muted">· <>{comment?.date?.toDateString()}</></small>
+                        <small className="text-muted">· <>{moment(comment?.createdAt).format("DD/MM/YYYY")}</></small>
                         </Media>
                         <Button
                             id="PopoverFocus"
                             type="button"
                             className={classes.boxAction}
+                            onClick={(e) => {onAction(e, comment)}}
                         >
                            <FontAwesomeIcon icon={faEllipsisVertical}/>
                         </Button>
@@ -64,11 +63,11 @@ const Comments = memo(( props: Props) => {
                             target="PopoverFocus"
                             trigger="legacy"
                         >
-                            <PopoverBody className={classes.itemAction} onClick={(e) => {onEdit(e, comment)}}>
+                            <PopoverBody className={classes.itemAction} onClick={onEdit}>
                                 <FontAwesomeIcon icon={faPen}/>
                                 Edit
                             </PopoverBody>
-                            <PopoverBody className={clsx(classes.itemAction, classes.actionDelete)}>
+                            <PopoverBody className={clsx(classes.itemAction, classes.actionDelete)} onClick={onDelete}>
                                 <FontAwesomeIcon icon={faTrash} color="var(--danger-color)"/>
                                  Delete
                             </PopoverBody>

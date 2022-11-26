@@ -14,6 +14,9 @@ export const SET_ROOM_BILL_CONFIRM_REDUCER = "SET_ROOM_BILL_CONFIRM_REDUCER";
 export const GET_TOUR_BILLS_REQUEST = "GET_TOUR_BILLS_REQUEST";
 export const SET_TOUR_BILLS_REDUCER = "SET_TOUR_BILLS_REDUCER";
 
+// comment tour 
+export const GET_TOUR_COMMENT_REQUEST = "GET_TOUR_COMMENT_REQUEST";
+export const SET_TOUR_COMMENT_REDUCER = "SET_TOUR_COMMENT_REDUCER";
 // ********** tour **********
 export const getAllTours = () => {
   return {
@@ -70,3 +73,4 @@ export const setAllTourBillsReducer = (data: any) => {
     data: data,
   };
 };
+

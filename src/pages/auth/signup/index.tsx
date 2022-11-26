@@ -13,7 +13,6 @@ import clsx from "clsx";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
@@ -39,7 +38,6 @@ interface SignUpForm {
 
 const Login: NextPage = () => {
   const dispatch = useDispatch();
-  const { t, i18n } = useTranslation();
   const [registerSuccess, setRegisterSuccess] = useState(false)
 
   const schema = useMemo(() => {
@@ -62,7 +60,7 @@ const Login: NextPage = () => {
         role: yup.number().required(),
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [i18n.language] );
+    }, [] );
   
   const {
       register,

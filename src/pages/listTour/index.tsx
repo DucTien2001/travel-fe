@@ -33,7 +33,6 @@ import BoxSmallLeft from "components/BoxSmallLeft";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import PaginationComponent from "react-reactstrap-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
@@ -49,7 +48,6 @@ const ListTours : NextPage = () => {
     const { query, pathname } = router;
 
     const {allTours} = useSelector((state: ReducerType) => state.normal);
-    const { t, i18n } = useTranslation();
     const [changeViewLayout, setChangeViewLayout] = useState(false);   
     const schema = useMemo(() => {
         return yup.object().shape({
@@ -57,7 +55,7 @@ const ListTours : NextPage = () => {
             checkOptions: yup.boolean().notRequired(),
           });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [i18n.language] );
+        }, [] );
       
       const {
           register,
@@ -119,6 +117,9 @@ const ListTours : NextPage = () => {
     useEffect(()=>{
         Aos.init({duration:500});
     },[]);
+
+
+
   return (
     <>
         <SectionHeader

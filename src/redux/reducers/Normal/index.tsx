@@ -1,4 +1,5 @@
 import produce from "immer";
+import { Comment } from "models/comment";
 import * as types from "./actionTypes";
 
 export interface ITour {

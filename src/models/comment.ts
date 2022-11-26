@@ -19,7 +19,9 @@ export interface Comment {
     rate: number;
     tourId?: number;
     roomId?: number;
+    userId?: number;
     user: User;
-    date: Date;
+    createdAt: Date;
+    replyComment?: string;
 }
   

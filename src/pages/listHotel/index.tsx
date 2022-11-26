@@ -25,7 +25,6 @@ import BoxSmallLeft from "components/BoxSmallLeft";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
 

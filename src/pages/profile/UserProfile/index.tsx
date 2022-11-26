@@ -9,7 +9,6 @@ import Button, {BtnType} from "components/common/buttons/Button";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import { VALIDATION } from "configs/constants";
 import UseAuth from "hooks/useAuth";
 import { useDispatch } from "react-redux";
@@ -34,7 +33,6 @@ interface Props {
 
 const UserProfile = memo((props: Props) => {
 
-    const { t, i18n } = useTranslation();
     const { user } = UseAuth();
     const dispatch = useDispatch();
     const schema = useMemo(() => {
@@ -48,7 +46,7 @@ const UserProfile = memo((props: Props) => {
           address: (user?.role === EUserType.ENTERPRISE || user?.role === EUserType.ADMIN) ? yup.string().required("Address is required") : yup.string().notRequired(),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [i18n.language] );
+      }, []);
     
     const {
         register,

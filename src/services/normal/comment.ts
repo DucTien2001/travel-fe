@@ -12,6 +12,7 @@ export class CommentService {
           return Promise.reject(e?.response?.data);
         })
     }
+
     static async createCommentTour(data: ICreateTourComment): Promise<any> {
         return await api.post(API.NORMAL.COMMENT.TOUR_COMMENT.CREATE, data)
           .then((res) => {
@@ -21,8 +22,19 @@ export class CommentService {
             return Promise.reject(e?.response?.data);
           })
       }
+
     static async updateCommentTour(commentId: number, data: IUpdateTourComment): Promise<any> {
         return await api.put(API.NORMAL.COMMENT.TOUR_COMMENT.UPDATE.replace(":id", `${commentId}`), data)
+          .then((res) => {
+            return Promise.resolve(res.data)
+          })
+          .catch((e) => {
+            return Promise.reject(e?.response?.data);
+          })
+      }
+
+    static async deleteCommentTour(commentId: number): Promise<any> {
+        return await api.put(API.NORMAL.COMMENT.TOUR_COMMENT.DELETE.replace(":id", `${commentId}`))
           .then((res) => {
             return Promise.resolve(res.data)
           })

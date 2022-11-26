@@ -10,7 +10,6 @@ import InputTags from "components/common/inputs/InputTags";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import UploadImage from "components/UploadImage";
 import UploadFile from "components/UploadFile";
 import { useDispatch } from "react-redux";
@@ -48,7 +47,6 @@ const PopupCreateTour = memo((props: Props) => {
   const dispatch = useDispatch();
   const { user } = useAuth();
   const { isOpen, toggle, onClose, itemEdit, rest } = props;
-  const { t, i18n } = useTranslation();
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -68,7 +66,7 @@ const PopupCreateTour = memo((props: Props) => {
       }),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
+  }, []);
 
   const {
     register,

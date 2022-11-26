@@ -23,7 +23,6 @@ import InputCheckbox from "components/common/inputs/InputCheckbox";
 import * as yup from "yup";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import { fData } from "utils/formatNumber";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -70,7 +69,6 @@ interface Props extends ModalProps {
 const PopupAddOrEditHotel = memo((props: Props) => {
   const dispatch = useDispatch();
   const { hotelId, isOpen, onClose } = props;
-  const { t, i18n } = useTranslation();
   const [isOpenToggleArr, setIsOpenToggleArr] = useState([true]);
 
   const schema = useMemo(() => {
@@ -125,7 +123,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
+  }, []);
 
   const {
     register,

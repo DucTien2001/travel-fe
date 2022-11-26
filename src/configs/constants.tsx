@@ -36,6 +36,7 @@ export const API = {
         GET_COMMENT: '/v1.0/tour-comment/get-tours-comment/:id',
         CREATE: '/v1.0/tour-comment/create',
         UPDATE: '/v1.0/tour-comment/update/:id',
+        DELETE: '/v1.0/tour-comment/delete/:id',
       }, 
     },
     ROOMBILL: { 

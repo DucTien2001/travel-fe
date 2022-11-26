@@ -9,7 +9,7 @@ import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container } from "reactstrap";
@@ -22,7 +22,7 @@ const ProductPage = memo(()=> {
   const router = useRouter()
   const [tour, setTour] = useState<any>();
   const [listComment, setListComment] = useState([]);
-  const tourId = Number(router.query.tourId.slice(1))
+  const tourId = Number(router.query.tourId.slice(1));
   useEffect(() => {
     if(router){
       TourService.getTour(Number(router.query.tourId.slice(1))).
@@ -39,6 +39,7 @@ const ProductPage = memo(()=> {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
+
   useEffect(() => {
     dispatch(setLoading(true));
     CommentService.getTourComments(tourId)
@@ -54,7 +55,24 @@ const ProductPage = memo(()=> {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch]);
 
-  console.log(listComment);
+  const getTourComments = () => {
+    CommentService.getTourComments(tourId)
+    .then((res) => {
+        setListComment(res.data);
+    })
+    .catch((e) => {
+        dispatch(setErrorMess(e));
+    })
+    .finally(() => {
+        dispatch(setLoading(false));
+    })
+  }
+
+  useEffect(() => {
+    getTourComments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
+
 
   return (
     <>
@@ -73,7 +91,7 @@ const ProductPage = memo(()=> {
           <>
           <SectionTour tour={tour}/> 
           <div className={classes.containerComment}>
-            <Comment comments={listComment}/>
+            <Comment comments={listComment} onGetTourComments={getTourComments}/>
           </div>
           {/* <GoogleMapBody/>
           <RelatedTour/>  */}

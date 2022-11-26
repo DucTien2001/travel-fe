@@ -9,7 +9,6 @@ import InputCheckbox from "components/common/inputs/InputCheckbox";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import ErrorMessage from 'components/common/texts/ErrorMessage';
 import { fData } from 'utils/formatNumber';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -35,7 +34,6 @@ interface Props {
 const PopupAddOrEditHotel = memo((props: Props) => {
     const {title, errorMessage, onChange, files} = props; 
 
-    const { t, i18n } = useTranslation();
     const isMountedRef = useIsMountedRef();
     const [imagesReview, setImagesReview] = useState<any>([]);
     const [isError, setIsError] = useState<string>('');

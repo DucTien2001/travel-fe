@@ -5,7 +5,6 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import useIsMountedRef from 'hooks/useIsMountedRef';
 import classes from './styles.module.scss';
 import ErrorMessage from 'components/common/texts/ErrorMessage';
-import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera} from '@fortawesome/free-solid-svg-icons';
 
@@ -44,7 +43,6 @@ const UploadImage = memo(
     const [isError, setIsError] = useState<string>('');
     const isMountedRef = useIsMountedRef();
     const [fileReview, setFileReview] = useState<string>('');
-    const { t } = useTranslation()
 
     const handleDrop = useCallback(
       async (acceptedFiles) => {
@@ -137,17 +135,19 @@ const UploadImage = memo(
             </>
           )}
         </p>
-        {isError === 'size-invalid' && <ErrorMessage translation-key="common_file_size">{t('common_file_size', { size: fData(photoSize) })}</ErrorMessage>}
+        {isError === 'size-invalid' && <ErrorMessage >Invalid size photo</ErrorMessage>}
         {isError === 'type-invalid' &&
           (
             <ErrorMessage  translation-key="common_file_type">
-              {
-                t('common_file_type', {
-                  fileFormats: fileFormats.map(format => (
-                    format.replace("image/", "*.")
-                  )).join(", ")
-                })
-              }
+              {/* {
+                // t('common_file_type', {
+                //   fileFormats: fileFormats.map(format => (
+                //     format.replace("image/", "*.")
+                //   )).join(", ")
+                // })
+                
+              } */}
+              Invalid format
             </ErrorMessage>
           )
         }

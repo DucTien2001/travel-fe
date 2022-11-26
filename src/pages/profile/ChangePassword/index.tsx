@@ -10,7 +10,6 @@ import Button, {BtnType} from "components/common/buttons/Button";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import { VALIDATION } from "configs/constants";
 import { Divider }from "components/common/Divider";
 import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
@@ -30,33 +29,32 @@ interface Props {
 const UserProfile = memo((props: Props) => {
     const dispatch = useDispatch();
     const { user } = UseAuth();
-    const { t, i18n } = useTranslation();
     const [isEmptyPassword, setIsEmptyPassword] = useState(false)
 
     const schema = useMemo(() => {
         return yup.object().shape({
-          currentPassword: isEmptyPassword ? yup.string() : yup.string().required(t("field_current_password_vali_required")),
+          currentPassword: isEmptyPassword ? yup.string() : yup.string().required("Current password is required"),
           newPassword: yup
             .string()
             .matches(VALIDATION.password, {
-              message: t("field_new_password_vali_password"),
+              message: "Password must contains at least 8 characters, including at least one letter and one number and a special character",
               excludeEmptyString: true,
             })
             .notOneOf(
               [yup.ref("currentPassword")],
-              t("field_confirm_new_password_different_current_password")
+              "New password must be different current password"
             )
-            .required(t("field_new_password_vali_required")),
+            .required("New password is required."),
           confirmPassword: yup
             .string()
             .oneOf(
               [yup.ref("newPassword")],
-              t("field_confirm_new_password_vali_password_do_not_match")
+              "Confirm new password do not match. Try again"
             )
-            .required(t("field_confirm_new_password_vali_required")),
+            .required("Confirm new password is required"),
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [i18n.language, isEmptyPassword]);
+      }, [isEmptyPassword]);
     
     const {
         register,

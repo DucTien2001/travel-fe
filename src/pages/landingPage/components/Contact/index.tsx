@@ -19,7 +19,6 @@ import {images} from "configs/images";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import Button, {BtnType} from "components/common/buttons/Button";
 import Link from "next/link";
 import classes from "./styles.module.scss";
@@ -38,7 +37,6 @@ export interface EmailForm {
 // eslint-disable-next-line react/display-name
 const Contact = memo(() => {
 
-  const { t, i18n } = useTranslation();
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -48,7 +46,7 @@ const Contact = memo(() => {
         message: yup.string().required("Message is required"),
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [i18n.language] );
+    }, []);
 
    const {
     register,

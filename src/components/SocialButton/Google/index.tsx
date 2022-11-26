@@ -1,17 +1,14 @@
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
-// import { useDispatch } from 'react-redux';
 // import { userSocialLogin } from 'redux/reducers/User/actionTypes';
 // import { setErrorMess } from 'redux/reducers/Status/actionTypes';
 // import { SocialProvider } from 'models/general';
 import classes from './styles.module.scss';
 import icGoogle from 'assets/img/icon/ic-google.svg';
 import { Button } from 'reactstrap';
-import { useTranslation } from 'react-i18next';
 import {images} from "configs/images";
 
 const Google = () => {
 //   const dispatch = useDispatch()
-//   const { t } = useTranslation()
   
   const onSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     // const userInfo = res as GoogleLoginResponse

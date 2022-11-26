@@ -10,7 +10,6 @@ import Star from "components/Stars";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import {HistoryBookRoom} from "models/room";
 import { Stars } from '@mui/icons-material';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
@@ -32,15 +31,13 @@ interface Props extends ModalProps{
 const PopupAddComment = memo((props: Props) => {
     const {isOpen, toggle, rest} = props; 
 
-    const { t, i18n } = useTranslation();
-
     const schema = useMemo(() => {
       return yup.object().shape({
           comment: yup.string().required("Content is required"),
           numberOfStars: yup.number().required(),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [i18n.language] );
+      }, []);
   
      const {
       register,

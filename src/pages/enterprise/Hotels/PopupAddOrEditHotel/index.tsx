@@ -10,7 +10,6 @@ import InputTags from "components/common/inputs/InputTags";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
 import UploadImage from "components/UploadImage";
 import { HotelService } from "services/enterprise/hotel";
 import { useDispatch, useSelector } from "react-redux";

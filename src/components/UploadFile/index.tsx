@@ -11,7 +11,6 @@ import {
 import { AddAPhoto as AddAPhotoIcon } from '@mui/icons-material';
 import classes from './styles.module.scss';
 import ErrorMessage from 'components/common/texts/ErrorMessage';
-import { useTranslation } from "react-i18next";
 import { Button, Col, Row } from 'reactstrap';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -53,7 +52,6 @@ const UploadImage = memo(
     const [isError, setIsError] = useState<string>('');
     const isMountedRef = useIsMountedRef();
     const [fileReview, setFileReview] = useState([]);
-    const { t } = useTranslation()
 
     const handleDrop = useCallback(
       async (acceptedFiles) => {
