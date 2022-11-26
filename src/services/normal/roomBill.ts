@@ -1,10 +1,10 @@
 import { API } from "configs/constants";
-import { RoomBill } from "models/roomBill";
+import { ICreateRoomBill } from "models/roomBill";
 import api from "services/configApi";
 
 
 export class RoomBillService {
-    static async create(data: RoomBill): Promise<any> {
+    static async create(data: ICreateRoomBill): Promise<any> {
         return await api.post(API.NORMAL.ROOMBILL.CREATE, data)
           .then((res) => {
             return Promise.resolve(res.data)

@@ -135,17 +135,16 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
       setValue("amountList", _listRooms.map(() => ({
         amount: 0,
       })))
-      console.log(_listRooms, "==========_listRooms=======");
       setListRoom(_listRooms);
     });
   };
 
   useEffect(() => {
-    if (_departure && _return) {
+    if (_departure && _return && hotel?.id) {
       getRoomsAvailable();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [_return]);
+  }, [_return, hotel]);
   const _onSubmit = (data) => {
     const roomBillConfirm = [];
     // let isError = false;

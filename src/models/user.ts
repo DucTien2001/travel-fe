@@ -2,7 +2,7 @@ import { OptionItem } from "./general";
 
 export interface User {
     id: number;
-    email: string;
+    username: string;
     passWord: string;
     role: number;
     avatar: any;
