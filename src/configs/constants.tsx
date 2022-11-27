@@ -50,6 +50,7 @@ export const API = {
     ROOMBILL: { 
       CREATE: '/v1.0/room-bill/create',
       GET_ALL_ROOMBILL: '/v1.0/room-bill/get-all-user-room-bills/:id',
+      VERIFY_BOOKROOM: '/v1.0/room-bill/verify-book-room'
     },
     TOURBILL: { 
       CREATE: '/v1.0/tour-bill/create',

@@ -20,7 +20,7 @@ import { wrapper } from "redux/configureStore";
 import { useEffect, useState } from "react";
 import { getMe } from "redux/reducers/User/actionTypes";
 import AppStatus from "components/AppStatus";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import LoadingScreen from "components/LoadingSrceen";
 import { EUserType } from "models/user";
 import { ReducerType } from "redux/reducers";
@@ -28,8 +28,9 @@ import {
   getAllHotels as getAllHotelsOfEnterprise,
   getAllTours as getAllToursOfEnterprise,
 } from "redux/reducers/Enterprise/actionTypes";
-import { getAllTours as getAllToursOfNormal, getAllHotels as getAllHotelsOfNormal, getAllTourBills, getAllRoomBills } from "redux/reducers/Normal/actionTypes";
 
+import { getAllTours as getAllToursOfNormal, getAllHotels as getAllHotelsOfNormal, getAllTourBills, getAllRoomBills } from "redux/reducers/Normal/actionTypes";
+import Home from "pages";
 // import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 
 // const { store } = createConfigureStore();
@@ -63,11 +64,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   Router.events.on("routeChangeComplete", (url) => {
     setLoading(false);
   });
+
+  let allowed = true;
+  const router = useRouter();
+  if (router.pathname.startsWith("/enterprise") && user?.role === 3) {
+    allowed = false;
+  }
+
+  const ComponentToRender = allowed ? Component : Home; 
   return (
     <LayoutAuth>
       {loading && <LoadingScreen />}
       <AppStatus />
-      <Component {...pageProps} />
+      <ComponentToRender {...pageProps} />
     </LayoutAuth>
   );
 }

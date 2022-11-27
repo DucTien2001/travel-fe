@@ -1,7 +1,6 @@
 import { API } from "configs/constants";
-import { ICreateRoomBill } from "models/roomBill";
+import { ICreateRoomBill, IVerifyBookRoom } from "models/roomBill";
 import api from "services/configApi";
-
 
 export class RoomBillService {
     static async create(data: ICreateRoomBill): Promise<any> {
@@ -22,4 +21,17 @@ export class RoomBillService {
               return Promise.reject(e?.response?.data);
             })
         }
+    static async verifyBookRoom(data: IVerifyBookRoom): Promise<any> {
+        return await api
+          .post(API.NORMAL.ROOMBILL.VERIFY_BOOKROOM, data)
+          .then((res) => {
+             return Promise.resolve(res.data.data);
+          })
+          .catch((e) => {
+             return Promise.reject(e?.response?.data);
+          });
+      }
 }
+
+
+
