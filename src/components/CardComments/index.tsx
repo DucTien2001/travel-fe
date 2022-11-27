@@ -77,7 +77,7 @@ const Comments = memo(( props: Props) => {
                             {comment?.comment}
                         </p>
                         <Media className="media-post">
-                        {comment?.user?.role === EUserType.ENTERPRISE && (
+                        {/* {comment?.user?.role === EUserType.ENTERPRISE && ( */}
                         <Media body>
                             <Input
                                 placeholder="Write a nice reply or go home..."
@@ -96,7 +96,7 @@ const Comments = memo(( props: Props) => {
                                     </CustomButton>                   
                                 </div>
                         </Media>
-                        )}
+                        {/* )} */}
                         </Media>
                     </Media>                      
                 </Media>

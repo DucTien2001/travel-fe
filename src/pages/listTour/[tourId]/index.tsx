@@ -91,7 +91,7 @@ const ProductPage = memo(()=> {
           <>
           <SectionTour tour={tour}/> 
           <div className={classes.containerComment}>
-            <Comment comments={listComment} onGetTourComments={getTourComments}/>
+            <Comment comments={listComment} onGetTourComments={getTourComments} tour={tour}/>
           </div>
           {/* <GoogleMapBody/>
           <RelatedTour/>  */}

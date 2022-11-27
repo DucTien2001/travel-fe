@@ -37,6 +37,7 @@ export const API = {
         CREATE: '/v1.0/tour-comment/create',
         UPDATE: '/v1.0/tour-comment/update/:id',
         DELETE: '/v1.0/tour-comment/delete/:id',
+        REPLY: '/v1.0/tour-comment/reply/:id',
       }, 
     },
     ROOMBILL: { 

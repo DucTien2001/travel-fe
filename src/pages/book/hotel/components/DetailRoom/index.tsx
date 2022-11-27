@@ -20,6 +20,26 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const DetailTour = memo(({roomBillConfirm}:Props)=> {
   const dayBook = useFormattedDate(new Date());
+
+  const totalPrice = [];
+
+  roomBillConfirm?.rooms.forEach(room => {
+    room?.priceDetail.map((price) => {
+      const _price = price?.price * room?.amount * (100 - room?.discount) / 100;
+      totalPrice.push(_price);
+    })
+  })
+  
+  const sumPrice = (totalPrice) => {
+    let sum = 0;
+    for (let i = 0; i < totalPrice.length; i++){
+      sum += totalPrice[i];
+    }
+    return sum;
+  } 
+
+
+
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>
@@ -46,7 +66,7 @@ const DetailTour = memo(({roomBillConfirm}:Props)=> {
                           <p>Room name: <span>{room?.title}</span></p>
                           <p>Price: {room?.priceDetail.map((price, index) => (
                             <>
-                              <span key={index}>{fCurrency2(price?.price)} VND</span>
+                              <span key={index}>{fCurrency2(price?.price * room?.amount * (100 - room?.discount) / 100)} VND</span>
                               <br></br>
                             </>
                           ))}</p>
@@ -54,7 +74,10 @@ const DetailTour = memo(({roomBillConfirm}:Props)=> {
                           {room?.discount && <p>Discount: <span>{room?.discount}%</span></p>}
                       </div>
                     ))}
-                    <span>Taxes and fees are included</span>
+                    <div className={classes.boxTotalPrice}>
+                      <p>Total price: <span>{fCurrency2(sumPrice(totalPrice))} VND</span></p>
+                    </div>
+                    <span>(Taxes and fees are included)</span>
                   </div>
                 </Box>
                 <Box title="Note for you">
