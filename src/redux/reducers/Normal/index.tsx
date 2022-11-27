@@ -65,6 +65,7 @@ export interface ITourBill {
   verifyCode: string;
 }
 export interface ICreateRoomBill {
+  id?:number;
   userId: number;
   userMail: string;
   hotelId: number;

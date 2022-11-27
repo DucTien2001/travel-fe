@@ -9,12 +9,13 @@ import Star from "components/Stars";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setErrorMess, setLoading, setSuccessMess } from 'redux/reducers/Status/actionTypes';
 import { CommentService } from 'services/normal/comment';
 import { useRouter } from 'next/router';
 import useAuth from 'hooks/useAuth';
 import {Comment} from "models/comment";
+import { ReducerType } from 'redux/reducers';
 
 export interface CommentForm { 
   comment: string;
@@ -32,6 +33,7 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const PopupAddComment = memo((props: Props) => {
     const {isOpen, commentEdit, toggle, onGetTourComments} = props; 
+    const {allRoomBills} = useSelector((state: ReducerType) => state.normal);
     const {user} = useAuth();
     const router = useRouter();
     const hotelId = Number(router.query.hotelId.slice(1))

@@ -1,13 +1,41 @@
-import React, {memo, useMemo, useState} from "react";
+import React, {memo, useEffect, useMemo, useState} from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faCircleMinus, faDownload } from '@fortawesome/free-solid-svg-icons';
 import {Row, Col, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
 import SearchNotFound from "components/SearchNotFound";
+import { useDispatch } from "react-redux";
+import useAuth from "hooks/useAuth";
+import { useRouter } from "next/router";
+import { RoomBillService } from "services/normal/roomBill";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import moment from "moment";
+import { fCurrency2 } from "utils/formatNumber";
 
 // eslint-disable-next-line react/display-name
 const Hotel = memo(()=> {
+    const dispatch = useDispatch();
+    const {user} = useAuth();
+    const router = useRouter();
+    const [listHistory, setListHistory] = useState([]);
+
+    useEffect(() => {
+        if(user) {
+            dispatch(setLoading(true));
+            RoomBillService.getAllRoomBills(user?.id)
+            .then((res) => {
+                setListHistory(res.data);
+            })
+            .catch((e) => {
+                dispatch(setErrorMess(e));
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
+            })
+        }      
+    }, [user, dispatch])
+
    return (
     <>
        <div className={classes.root}>
@@ -38,35 +66,41 @@ const Hotel = memo(()=> {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                {listHistory && listHistory?.map((item, index) => (
+                    <tr key={index}>
                     <th scope="row">
-                        <a href="" target="_blank" className={classes.hotelName}>                         
-                            Nha trang                       
+                        {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                        <a href={`/listTour/:${item?.hotelId}`} target="_blank" className={classes.tourName}>                         
+                            {item?.tourId}            
                         </a>
                     </th>
-                        <td>
-                        TV203
-                        </td>
-                        <td>
-                            20/3/2002
-                        </td>
-                        <td>
-                            2.000.000 VND
-                        </td>
-                        <td>
-                            <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>
-                        </td>
-                        <td className={classes.colIconDownload}>
-                            <div className={classes.iconDownload}>
-                                <FontAwesomeIcon icon={faDownload} />        
-                            </div>         
+                    <td>
+                        TV{item?.id}
+                    </td>
+                    <td>
+                        {moment(item?.bookedDates).format("DD/MM/YYYY")}
+                    </td>
+                    <td>
+                       {fCurrency2(item?.totalBill)}
+                    </td>
+                    <td>
+                        {item.verifyCode === null ? <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>
+                        : <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus}/>}
+                    </td>
+                    <td className={classes.colIconDownload}>
+                        <div className={classes.iconDownload}>
+                            <FontAwesomeIcon icon={faDownload} />        
+                        </div>
                     </td>
                     </tr>
+                    ))}
+                {!listHistory?.length && (
                     <tr>
                         <th scope="row" colSpan={6}>
-                            <SearchNotFound mess="No hotel found"/>
+                            <SearchNotFound mess="No hotel bill found"/>
                         </th>
                     </tr>
+                )}
                 </tbody>
       </Table> 
               {/* ===== Mobile ======== */}
