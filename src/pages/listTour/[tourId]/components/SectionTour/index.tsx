@@ -100,7 +100,7 @@ const SectionTour = memo(({tour} : Props)=> {
                 </Row>
               </Col>
             </Row>
-            <Row>
+            <Row className="ml-0 mr-0">
             <div
               aria-multiselectable={true}
               className={clsx("card-collapse", classes.description)}

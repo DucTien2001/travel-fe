@@ -1,10 +1,9 @@
 import React, {memo, useEffect, useState} from "react";
 // reactstrap components
 import {
+    Col,
   Container,
-  PopoverBody,
   Row,
-  UncontrolledPopover,
 } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons';
@@ -13,25 +12,26 @@ import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import {Comment} from "models/comment";
 import Pagination from "components/Pagination";
-import CardComment from "components/CardComments";
+import CardComment from "../CardComments";
 import PopupAddTourComment from "../PopupAddTourComment";
 import { ReducerType } from "redux/reducers";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Warning from "components/common/warning";
-import clsx from "clsx";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import { CommentService } from "services/normal/comment";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { getAllTourBills } from "redux/reducers/Normal/actionTypes";
+import { Tour } from "models/tour";
 
 interface Props { 
     comments: Comment[],
+    tour: Tour;
     onGetTourComments: () => void;
 }
 
 // eslint-disable-next-line react/display-name
-const Comments = memo(({comments, onGetTourComments}: Props) => {
+const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const tourId = Number(router.query.tourId.slice(1))
@@ -120,16 +120,22 @@ const Comments = memo(({comments, onGetTourComments}: Props) => {
     <Container className={classes.root}>
         {/* eslint-disable-next-line react/no-unescaped-entities */}
         <h3 className="text-center">CUSTOMER'S FEEDBACKS</h3>
-        <Row xs={3} className={classes.rowComment}>
+        <Row className={classes.rowComment}>  
             {comments?.map((cmt) => (
-                <CardComment 
-                key={cmt.id} 
+                <Col xs={4} key={cmt.id} className={classes.cardComment}>
+                <CardComment             
                 comment={cmt}
                 onAction={onAction}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                tour={tour}
+                onGetTourComments={onGetTourComments}
                 />
-            ))}      
+                </Col> 
+            ))} 
+            {!comments?.length && (
+                <p className={classes.noComment}>There are no comments yet !</p>
+            )}             
         </Row>
         <Row className={classes.rowControl}>
             <div className={classes.btnContainer}>

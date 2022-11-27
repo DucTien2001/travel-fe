@@ -41,6 +41,7 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
 
   const [modal, setModal] = useState(false);
 
+
   const schema = useMemo(() => {
     return yup.object().shape({
       firstName: yup.string().required("First name is required"),
@@ -67,7 +68,7 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
   });
 
   const _onSubmit = (data: HotelForm) => {
-    console.log(data, "=========");
+    
     const roomBillDetails = []
     const bookedDates = []
     let totalBill = 0
@@ -102,7 +103,18 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
       lastName: data?.lastName,
       test: [1,2,3],
     }
-    RoomBillService?.create(roomBill)
+      dispatch(setLoading(true));
+      RoomBillService?.create(roomBill)
+      .then(() => {
+        dispatch(setSuccessMess("Book room successfully"))
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+        toggle();
+      })
   };
 
   const toggle = () => setModal(!modal);

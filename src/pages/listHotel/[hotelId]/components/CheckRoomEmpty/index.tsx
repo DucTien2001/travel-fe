@@ -23,6 +23,7 @@ import { IHotel } from "models/hotel";
 import { useRouter } from "next/router";
 import { fCurrency2 } from "utils/formatNumber";
 import ErrorMessage from "components/common/texts/ErrorMessage";
+import PopupDefault from "components/Popup/PopupDefault";
 export interface CheckRoomForm {
   departure: Date;
   return: Date;
@@ -40,6 +41,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [listRooms, setListRoom] = useState([]);
+  const [warning, setWarning] = useState(false);
   const schema = useMemo(() => {
     return yup.object().shape({
       departure: yup.date().nullable().required("Departure is required"),
@@ -145,9 +147,10 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_return, hotel]);
+
   const _onSubmit = (data) => {
     const roomBillConfirm = [];
-    // let isError = false;
+    let isError = false;
     data?.amountList?.map((item, index)=>{
       if(item?.amount > 0){
         roomBillConfirm.push({
@@ -155,14 +158,19 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
           amount: item.amount
         })
       }
-      // else { 
-      //   isError = true;
-      // }
+      if(item?.amount === 0) { 
+        
+        isError = true;
+      }
       // console.log({
       //   ...listRooms[index],
       //   amount: item.amount
       // })
     })
+    if(isError) {
+      setWarning(!warning);
+    }
+    else { 
     dispatch(setRoomBillConfirmReducer({
       hotel: hotel,
       rooms: roomBillConfirm,
@@ -173,7 +181,11 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
     //   router.push(`/book/hotel`);
     // }
     router.push(`/book/hotel`);
+    }
+
   };
+
+  const toggleWarning = () => setWarning(!warning);
 
   return (
     <>
@@ -238,7 +250,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
                           {moment(priceInfo?.date).format("DD/MM/YYYY")}
                           {":"}
                           <br></br>
-                          <span>{fCurrency2(priceInfo?.price)} VND</span>
+                          <span>{fCurrency2(priceInfo?.price)} VND / day</span>
                         </p>
                       ))}
                     </td>
@@ -332,6 +344,15 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
             </Row>
           </BoxSmallLeft>
         </Form>
+        <PopupDefault
+            isOpen={warning}
+            onClose={toggleWarning}
+            toggle={toggleWarning}
+            title={"Warning"}
+            description={
+              "You hdsadasd"
+            }
+          />
       </Container>
     </>
   );

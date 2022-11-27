@@ -12,6 +12,16 @@ export interface IUpdateTourComment {
     comment: string;
     rate: number;
 }
+
+export interface TourReviewer{
+    address?: string;
+    avatar: string;
+    firstName?: string;
+    lastName?: string;
+    phoneNumber?: string;
+    role?: number;
+    userName?: string;
+}
   
 export interface Comment {
     id?: number;
@@ -20,8 +30,12 @@ export interface Comment {
     tourId?: number;
     roomId?: number;
     userId?: number;
-    user: User;
+    tourReviewer?: TourReviewer;
     createdAt: Date;
     replyComment?: string;
 }
+
+export interface IReplyTourComment {
+    replyComment: string;
+  }
   

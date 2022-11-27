@@ -34,25 +34,13 @@ export interface BookForm {
   email: string;
   phoneNumber: string;
   amount: number;
-  recipient? : {
-    firstNameRecipient: string;
-    lastNameRecipient: string;
-    phoneNumberRecipient: string;
-    emailRecipient: string;
-  }[];
 }
 // eslint-disable-next-line react/display-name
 const DetailCustomer = memo(({tour, onAmount}: Props)=> {
   const { user } = UseAuth();
   const dispatch = useDispatch();
-  const [deactivate, setDeactivate] = useState(false);
   const [modal, setModal] = useState(false);
 
-  
-  const handleDeactivate = () => {
-    setDeactivate(!deactivate);
-  };
-  
   const schema = useMemo(() => {
     return yup.object().shape({
         firstName: yup.string().required("First name is required"),
@@ -61,14 +49,6 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
         phoneNumber: yup.string()
         .required("Phone is required")
         .matches(VALIDATION.phone, { message: 'Please enter a valid phone number.', excludeEmptyString: true }),
-        recipient: yup.array(yup.object({ 
-          firstNameRecipient: yup.string().required("Full name recipient is required"),
-          lastNameRecipient: yup.string().required("Full name recipient is required"),
-          phoneNumberRecipient: yup.string()
-          .required("Phone is required")
-          .matches(VALIDATION.phone, { message: 'Please enter a valid phone number.', excludeEmptyString: true }),
-          emailRecipient: yup.string().email("Please enter a valid email address").required("Email recipient is required"),
-        })).notRequired(),
         amount: yup.number().required("Amount is required"),
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,33 +69,6 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
       }
   });
 
-  const { fields: fieldsRecipient, append: appendRecipient, remove: removeRecipient, move: moveRecipient } = useFieldArray({
-    control,
-    name: "recipient"
-  });
-
-  const isShowRecipient = useMemo(() => !!fieldsRecipient?.length, [fieldsRecipient])
-
-  const onToggleRecipient = () => {
-    if (deactivate) {
-      removeRecipient()
-    } else {
-      appendRecipient({
-        firstNameRecipient: "",
-        lastNameRecipient: "",
-        phoneNumberRecipient: "",
-        emailRecipient: "",
-    })
-    }
-    setDeactivate(!deactivate);
-  }
-
-  const clearForm = () => {
-    reset({
-      recipient: [],
-    })
-    setDeactivate(!deactivate);
-  }
 
   const _amount = watch("amount");
 
@@ -127,34 +80,6 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
   const _onSubmit = (data: BookForm) => {
       dispatch(setLoading(true));  
       const totalPrice = data?.amount * tour?.price * ((100 - tour?.discount) / 100);
-      if(isShowRecipient) {
-        if(user) {
-          TourBillService.create({
-            userId: user?.id,
-            userMail: data?.email,
-            tourId: tour?.id,
-            amount: data.amount,
-            price: totalPrice,
-            discount: tour?.discount,
-            email: data.recipient[0].emailRecipient,
-            phoneNumber: data.recipient[0].phoneNumberRecipient,
-            firstName: data.recipient[0].firstNameRecipient,
-            lastName: data.recipient[0].lastNameRecipient,
-          })
-          .then(() => {
-            dispatch(setSuccessMess("Book tour successfully"));
-          })
-          .catch((e) => {
-            dispatch(setErrorMess(e));
-          })
-          .finally(() => {
-            clearForm();
-            toggle();
-            dispatch(setLoading(false));
-          });
-        }
-      }
-      else { 
         if(user) {
           TourBillService.create({
             userId: user?.id,
@@ -179,7 +104,6 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
             dispatch(setLoading(false));
           });
         }
-      }
   }
  
   const toggle = () => setModal(!modal);
@@ -283,7 +207,7 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
                         /> 
                         </Col>
                       </Row>
-                      <Row className={classes.containerToggle}>
+                      {/* <Row className={classes.containerToggle}>
                         <div className={classes.boxToggle}>
                           <p>Book for friends</p>
                           <Switch value={deactivate} onChange={onToggleRecipient}/>
@@ -334,7 +258,7 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
                           </>
                           ))}</>
                         )}  
-                      </Row>
+                      </Row> */}
                         <Button type="submit" className={classes.btnBook} btnType={BtnType.Primary} isDot={true} >Confirm book</Button>
                   </div>
                 </Box>
