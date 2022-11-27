@@ -41,6 +41,7 @@ export const API = {
     },
     ROOMBILL: { 
       CREATE: '/v1.0/room-bill/create',
+      VERIFY_BOOKROOM: '/v1.0/room-bill/verify-book-room'
     },
     TOURBILL: { 
       CREATE: '/v1.0/tour-bill/create',
