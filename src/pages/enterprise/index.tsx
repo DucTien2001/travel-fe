@@ -25,13 +25,16 @@ import EmailTemplate from "./EmailTemplate";
 import Sidebar from "components/Sidebar";
 import { enterpriseRoutes } from "routes/routers";
 import SectionHeader from "components/Header/SectionHeader";
+import ToursRevenue from "./ToursRevenue";
 
 export enum EActiveNav {
   Tour_Active = 1,
   Hotel_Active = 2,
-  Sales_Active = 3,
-  Email_Active = 4,
-  Feedback_Active = 5,
+  Tour_Sales_Active = 3,
+  Hotel_Sales_Active = 4,
+  Sales_Active = 5,
+  Email_Active = 6,
+  Feedback_Active = 7,
 }
 
 const Enterprise: NextPage = () => {
@@ -44,6 +47,12 @@ const Enterprise: NextPage = () => {
         break;
       case EActiveNav.Hotel_Active:
         setVerticalTabs(EActiveNav.Hotel_Active);
+        break;
+      case EActiveNav.Tour_Sales_Active:
+        setVerticalTabs(EActiveNav.Tour_Sales_Active);
+        break;
+      case EActiveNav.Hotel_Sales_Active:
+        setVerticalTabs(EActiveNav.Hotel_Sales_Active);
         break;
       case EActiveNav.Sales_Active:
         setVerticalTabs(EActiveNav.Sales_Active);
@@ -105,6 +114,27 @@ const Enterprise: NextPage = () => {
                 Sales
               </NavLink>
             </NavItem>
+            <span>sales</span>
+            <NavItem>
+              <NavLink
+                href="#"
+                className={verticalTabs === EActiveNav.Tour_Sales_Active ? classes.active : classes.navLink}
+                onClick={() => onChangeTab(EActiveNav.Tour_Sales_Active)}
+              >
+                <FontAwesomeIcon icon={faPlaneDeparture} />
+                Tours
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                href="#"
+                className={verticalTabs === EActiveNav.Hotel_Sales_Active ? classes.active : classes.navLink}
+                onClick={() => onChangeTab(EActiveNav.Hotel_Sales_Active)}
+              >
+                <FontAwesomeIcon icon={faBuilding} />
+                Hotels
+              </NavLink>
+            </NavItem>
             <span>Notifications</span>
             <NavItem>
               <NavLink
@@ -137,9 +167,12 @@ const Enterprise: NextPage = () => {
               <Hotels />
             </TabPane>
             <TabPane tabId="verticalTabs3" className={classes.tabPane}>
+              <ToursRevenue />
+            </TabPane>
+            <TabPane tabId="verticalTabs5" className={classes.tabPane}>
               <Sales />
             </TabPane>
-            <TabPane tabId="verticalTabs4" className={classes.tabPane}>
+            <TabPane tabId="verticalTabs6" className={classes.tabPane}>
               <EmailTemplate />
             </TabPane>
           </TabContent>
