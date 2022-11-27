@@ -40,6 +40,7 @@ import { useRouter } from "next/router";
 import { CommentService } from "services/normal/comment";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/normal/tour";
+import SearchNotFound from "components/SearchNotFound";
 interface SearchData {
   tourName?: string;
   checkOptions?: boolean;
@@ -48,11 +49,7 @@ interface SearchData {
 const ListTours: NextPage = () => {
   const dispatch = useDispatch();
   const { allTours } = useSelector((state: ReducerType) => state.normal);
-  const router = useRouter();
-  const { query, pathname } = router;
-
   const [changeViewLayout, setChangeViewLayout] = useState(false);
-  const [listComment, setListComment] = useState([]);
   const [listTours, setListTours] = useState([]);
 
   const schema = useMemo(() => {
@@ -77,6 +74,7 @@ const ListTours: NextPage = () => {
 
   const onClearOption = () => {
     clearForm();
+    getAllTours();
   };
 
   useEffect(() => {
@@ -85,20 +83,6 @@ const ListTours: NextPage = () => {
 
   const onChangeViewLayout = () => {
     setChangeViewLayout(!changeViewLayout);
-  };
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState("");
-
-  const handlePagination = (pageIndex) => {
-    if (pathname !== "/") return;
-    let p = pageIndex >= 1 ? pageIndex : 1;
-    router.replace(`?page=${p}&limit=${limit}`);
-  };
-
-  const handlePerPage = (limitNumber) => {
-    if (pathname !== "/") return;
-    router.replace(`?page=${1}&limit=${limitNumber}`);
   };
 
   const handleSearch = () => {
@@ -114,22 +98,28 @@ const ListTours: NextPage = () => {
         dispatch(setLoading(false));
       });
   };
+  
+  const getAllTours = () => {
+    dispatch(setLoading(true));
+    TourService.getAllTours()
+    .then((res) => {
+      setListTours(res?.data);
+    })
+    .catch((e) => {
+      dispatch(setErrorMess(e));
+    })
+    .finally(() => {
+      dispatch(setLoading(false));
+    });
+  }
 
-  useEffect(() => {
-    if (query.page) {
-      let p = Number(query.page) >= 1 ? query.page : 1;
-      setPage(Number(p));
+  const handleKeyPress = (e) => {
+    var code = e.keyCode || e.which;
+    if (code === 13) {
+      handleSearch();
     }
-    console.log(query);
-    if (query.limit) {
-      let l = Number(query.limit) >= 1 ? query.page : 9;
-      setLimit(Number(l));
-    }
-  }, [query.page, query.limit]);
+  };
 
-  useEffect(() => {
-    Aos.init({ duration: 500 });
-  }, []);
 
   return (
     <>
@@ -192,16 +182,16 @@ const ListTours: NextPage = () => {
                             </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown> */}
-              <select className={classes.selectPerPage} value={limit} onChange={(e) => handlePerPage(e.target.value)}>
+              {/* <select className={classes.selectPerPage} value={limit} onChange={(e) => handlePerPage(e.target.value)}>
                 <option value="9" className={classes.option}>
                   9
                 </option>
                 <option value="12" className={classes.option}>
                   12
                 </option>
-              </select>
+              </select> */}
               <h5>
-                RESULTS-FOUND: <span>32</span>
+                RESULTS-FOUND: <span>{listTours?.length}</span>
               </h5>
             </Col>
           </Row>
@@ -217,6 +207,7 @@ const ListTours: NextPage = () => {
                   name="tourName"
                   // value={search}
                   // onChange={e => setSearch(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   startIcon={<FontAwesomeIcon icon={faSearch} />}
                   inputRef={register("tourName")}
                 />
@@ -286,8 +277,11 @@ const ListTours: NextPage = () => {
                   ))}
                 </div>
               )}
+              {!listTours.length && (<div>
+                <SearchNotFound mess="No tour found"/>
+              </div>)}
               <Row className={classes.pigination}>
-                <Pagination>
+                {/* <Pagination>
                   <PaginationItem onClick={() => handlePagination(page - 1)}>
                     <PaginationLink>
                       <span aria-hidden={true}>
@@ -307,7 +301,7 @@ const ListTours: NextPage = () => {
                       </span>
                     </PaginationLink>
                   </PaginationItem>
-                </Pagination>
+                </Pagination> */}
               </Row>
             </Col>
           </Row>

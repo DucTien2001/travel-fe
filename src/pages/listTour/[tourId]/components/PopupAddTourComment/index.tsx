@@ -153,7 +153,7 @@ const PopupAddComment = memo((props: Props) => {
                   />
                   <InputTextArea
                   className={classes.labelText}
-                  label ="Enter your question here:"
+                  label ="Enter your comment here:"
                   placeholder="Ex: This tour is wonderful"
                   autoComplete="family-name"
                   inputRef={register("comment")}

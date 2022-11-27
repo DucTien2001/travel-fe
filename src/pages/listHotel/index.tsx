@@ -27,8 +27,9 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
-import { HotelService } from "services/normal/hotel";
+import { HotelService} from "services/normal/hotel";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import SearchNotFound from "components/SearchNotFound";
 
 interface SearchData {
   hotelName?: string;
@@ -95,6 +96,7 @@ const ListHotels: NextPage = () => {
 
   const onClearOption = () => {
     clearForm();
+    getAllHotels();
   };
 
   useEffect(() => {
@@ -117,6 +119,27 @@ const ListHotels: NextPage = () => {
       .finally(() => {
         dispatch(setLoading(false));
       });
+  };
+
+  const getAllHotels = () => {
+    dispatch(setLoading(true));
+    HotelService.getAllHotels()
+    .then((res) => {
+      setListHotels(res?.data);
+    })
+    .catch((e) => {
+      dispatch(setErrorMess(e));
+    })
+    .finally(() => {
+      dispatch(setLoading(false));
+    });
+  }
+
+  const handleKeyPress = (e) => {
+    var code = e.keyCode || e.which;
+    if (code === 13) {
+      handleSearch();
+    }
   };
 
   const handleChooseOption = ()=>{
@@ -164,7 +187,7 @@ const ListHotels: NextPage = () => {
             </Col>
             <Col xs={8} className={classes.rowResult}>
               <h5>
-                RESULTS-FOUND: <span>32</span>
+                RESULTS-FOUND: <span>{listHotels?.length}</span>
               </h5>
             </Col>
           </Row>
@@ -180,6 +203,7 @@ const ListHotels: NextPage = () => {
                   labelIcon={<FontAwesomeIcon icon={faSearch} />}
                   placeholder="Hotel name"
                   name="hotelName"
+                  onKeyPress={handleKeyPress}
                   inputRef={register("hotelName")}
                 />
                 {/* <InputDatePicker
@@ -280,6 +304,9 @@ const ListHotels: NextPage = () => {
                   ))}
                 </div>
               )}
+              {!listHotels?.length && (<div>
+                <SearchNotFound mess="No hotel found"/>
+              </div>)}
               {/* <Row className={classes.pigination}>
                 <Pagination postPerPage={postsPerPage} totalPosts={listTour.length} paginate={paginate} />
               </Row> */}
