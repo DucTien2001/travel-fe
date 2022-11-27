@@ -13,4 +13,13 @@ export class RoomBillService {
             return Promise.reject(e?.response?.data);
           })
       }
+    static async getAllRoomBills(userId: number): Promise<any> {
+        return await api.get(API.NORMAL.ROOMBILL.GET_ALL_ROOMBILL.replace(":id", `${userId}`))
+            .then((res) => {
+              return Promise.resolve(res.data)
+            })
+            .catch((e) => {
+              return Promise.reject(e?.response?.data);
+            })
+        }
 }

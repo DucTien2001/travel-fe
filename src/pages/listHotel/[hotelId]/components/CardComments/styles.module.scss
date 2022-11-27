@@ -10,18 +10,16 @@
 .containerHead {
     display: flex;
     position: relative;
-    justify-content: space-between;
 }
 .titleName {
     display: flex;
     flex-direction: column;
 }
-.containerAction {
-    height: 30px;
-}
+
 .boxAction {
+    position: absolute;
+    top: -10px; right: -14px;
     padding: 8px 16px;
-    height: 30px !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,9 +35,6 @@
 }
 .boxAction:focus {
     color: black;
-}
-.dropdownMenu {
-    min-width: 7rem;
 }
 .itemAction {
     padding: 8px 16px;
@@ -74,14 +69,8 @@
 }
 .commentText {
     width: 100%;
-    margin-bottom: 8px;
     p {
         word-break: break-word !important;
-        margin:0;
     }
     
-}
-
-.inputReply {
-    margin-top:0 !important;
 }

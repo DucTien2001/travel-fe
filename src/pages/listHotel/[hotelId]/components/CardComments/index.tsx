@@ -1,17 +1,18 @@
 import React, {memo, useMemo, useState} from "react";
 import {
   Col,
+  Input,
   Media,
+  Popover,
+  PopoverBody,
+  UncontrolledPopover,
+  Button,
   Form,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
 } from "reactstrap";
 import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import CustomButton, {BtnType} from "components/common/buttons/Button";
-import {EUserType} from "models/user";
+import {EUserType, User} from "models/user";
 import clsx from "clsx";
 import { faEllipsisVertical, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,7 +25,8 @@ import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { CommentService } from "services/normal/comment";
 import { Tour } from "models/tour";
-import InputTextLineArea from "components/common/inputs/InputTextLineArea";
+import InputTextArea from "components/common/inputs/InputTextArea";
+import { IHotel } from "models/hotel";
 
 interface ReplyForm {
     reply: string;
@@ -34,13 +36,13 @@ interface Props {
     onAction: (currentTarget: any, comment: Comment) => void;
     onEdit: () => void;
     onDelete: () => void;
-    tour: Tour;
-    onGetTourComments: () => void;
+    hotel: IHotel;
+    onGetHotelComments: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const Comments = memo(( props: Props) => {
-  const {comment, onAction, tour, onEdit, onDelete, onGetTourComments} = props;
+  const {comment, onAction, hotel, onEdit, onDelete, onGetHotelComments} = props;
   const dispatch = useDispatch();
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -67,12 +69,12 @@ const Comments = memo(( props: Props) => {
     }
     const _onSubmit = (data: ReplyForm) => {
         dispatch(setLoading(true))
-        CommentService.replyTourComment(comment?.id, {
+        CommentService.replyHotelComment(comment?.id, {
             replyComment: data.reply,
         })
         .then(() => {
             dispatch(setSuccessMess("Reply comment is successfully"))
-            onGetTourComments();
+            onGetHotelComments();
         })
         .catch((e) => {
             dispatch(setErrorMess(e))
@@ -100,29 +102,28 @@ const Comments = memo(( props: Props) => {
                         {comment?.tourReviewer?.firstName}{" "}{comment?.tourReviewer?.lastName}
                         <small className="text-muted">· <>{moment(comment?.createdAt).format("DD/MM/YYYY")}</></small>
                         </Media>
-                        <UncontrolledDropdown className={classes.containerAction}>
-                        <DropdownToggle
-                        color="default"
-                        data-toggle="dropdown"
-                        href="#pablo"
-                        id="navbarDropdownMenuLink1"
-                        nav
-                        onClick={(e) => {onAction(e, comment)}}
-                        className={classes.boxAction}
+                        <Button
+                            id="PopoverFocus"
+                            type="button"
+                            className={classes.boxAction}
+                            onClick={(e) => {onAction(e, comment)}}
                         >
-                        <FontAwesomeIcon icon={faEllipsisVertical} />
-                        </DropdownToggle>
-                        <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                        <DropdownItem className={classes.itemAction} onClick={onEdit}>
-                            <FontAwesomeIcon icon={faPen}/>
-                            Edit
-                        </DropdownItem>
-                        <DropdownItem className={clsx(classes.itemAction, classes.actionDelete)} onClick={onDelete}>
-                            <FontAwesomeIcon icon={faTrash} color="var(--danger-color)"/>
-                            Delete
-                        </DropdownItem>
-                        </DropdownMenu>
-                        </UncontrolledDropdown>
+                           <FontAwesomeIcon icon={faEllipsisVertical}/>
+                        </Button>
+                        <UncontrolledPopover
+                            placement="bottom"
+                            target="PopoverFocus"
+                            trigger="legacy"
+                        >
+                            <PopoverBody className={classes.itemAction} onClick={onEdit}>
+                                <FontAwesomeIcon icon={faPen}/>
+                                Edit
+                            </PopoverBody>
+                            <PopoverBody className={clsx(classes.itemAction, classes.actionDelete)} onClick={onDelete}>
+                                <FontAwesomeIcon icon={faTrash} color="var(--danger-color)"/>
+                                 Delete
+                            </PopoverBody>
+                        </UncontrolledPopover>
                         </div>
                         <div className={classes.commentText}>
                         <p>
@@ -132,7 +133,7 @@ const Comments = memo(( props: Props) => {
                         {comment?.replyComment && (<div className={classes.boxReply}>
                             <div>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img alt="" src={tour?.images[0]}/>
+                                <img alt="" src={hotel?.images[0]}/>
                             </div>
                             <div className={classes.commentText}>
                                 <p>{comment?.replyComment}</p>
@@ -141,23 +142,23 @@ const Comments = memo(( props: Props) => {
                         <Media className="media-post">
                         {comment?.tourReviewer?.role === EUserType.ENTERPRISE && (
                         <Media body>         
-                            <InputTextLineArea
+                            <Input
                                 placeholder="Write a nice reply or go home..."
                                 type="textarea"
                                 rows="4"
                                 inputRef={register("reply")}
                                 errorMessage={errors?.reply?.message}
-                                className={classes.inputReply}
-                            ></InputTextLineArea>
-                            <div className="media-footer">                              
-                                <CustomButton
-                                className="pull-right"
-                                btnType={BtnType.Primary}
-                                type="submit"
-                            >
-                                <i className="now-ui-icons ui-1_send mr-1"></i> Reply
-                                </CustomButton>                   
-                            </div>                       
+                            ></Input>
+                                <div className="media-footer">                              
+                                    <CustomButton
+                                    className="pull-right"
+                                    btnType={BtnType.Primary}
+                                    type="submit"
+                                    >
+                                    <i className="now-ui-icons ui-1_send mr-1"></i> Reply
+                                    </CustomButton>                   
+                                </div>
+                            
                         </Media>
                         )}
                         </Media>

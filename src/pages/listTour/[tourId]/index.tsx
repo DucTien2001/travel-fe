@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container } from "reactstrap";
 import { faFaceFrown } from '@fortawesome/free-regular-svg-icons';
 import { CommentService } from "services/normal/comment";
+import { formatStar } from "utils/formatStar";
 
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(()=> {
@@ -23,6 +24,25 @@ const ProductPage = memo(()=> {
   const [tour, setTour] = useState<any>();
   const [listComment, setListComment] = useState([]);
   const tourId = Number(router.query.tourId.slice(1));
+
+  const listRates = [];
+  listComment.forEach(item => {
+    listRates.push(item.rate);
+  })
+
+  const getTourComments = () => {
+    CommentService.getTourComments(tourId)
+    .then((res) => {
+        setListComment(res.data);
+    })
+    .catch((e) => {
+        dispatch(setErrorMess(e));
+    })
+    .finally(() => {
+        dispatch(setLoading(false));
+    })
+  }
+
   useEffect(() => {
     if(router){
       TourService.getTour(Number(router.query.tourId.slice(1))).
@@ -55,24 +75,10 @@ const ProductPage = memo(()=> {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch]);
 
-  const getTourComments = () => {
-    CommentService.getTourComments(tourId)
-    .then((res) => {
-        setListComment(res.data);
-    })
-    .catch((e) => {
-        dispatch(setErrorMess(e));
-    })
-    .finally(() => {
-        dispatch(setLoading(false));
-    })
-  }
-
   useEffect(() => {
     getTourComments();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
-
 
   return (
     <>
@@ -89,7 +95,7 @@ const ProductPage = memo(()=> {
           </Container>
         ) : (
           <>
-          <SectionTour tour={tour}/> 
+          <SectionTour tour={tour} listRates={listRates}/> 
           <div className={classes.containerComment}>
             <Comment comments={listComment} onGetTourComments={getTourComments} tour={tour}/>
           </div>

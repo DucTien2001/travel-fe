@@ -5,14 +5,11 @@ import Box from "components/BoxSmallLeft";
 import Link from "next/link";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faBellConcierge, faCircleInfo, faPhone} from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from "react-redux";
-import { ReducerType } from "redux/reducers";
 import useFormattedDate from "hooks/useFormatDate";
-import { ICreateHotel } from "models/hotel";
-import { ICreateRoom } from "models/room";
 import { IRoomBillConfirm } from "models/roomBill";
 import moment from "moment";
 import { fCurrency2 } from "utils/formatNumber";
+import { sumPrice } from "utils/totalPrice";
 
 interface Props {
   roomBillConfirm: IRoomBillConfirm;
@@ -30,16 +27,6 @@ const DetailTour = memo(({roomBillConfirm}:Props)=> {
     })
   })
   
-  const sumPrice = (totalPrice) => {
-    let sum = 0;
-    for (let i = 0; i < totalPrice.length; i++){
-      sum += totalPrice[i];
-    }
-    return sum;
-  } 
-
-
-
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>

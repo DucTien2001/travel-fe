@@ -2,8 +2,22 @@
     background-color: #ffff;
 }
 .rowComment {
+    .cardComment { 
+        padding:0;
+    }
     @media only screen and (max-width: 768px) {
         display: block;
+        .cardComment {
+            max-width: 100%;
+        }
+    }
+    .noComment {
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 18px;
+        text-transform: uppercase;
+        color: var(--gray-40);
+        font-weight: 600;
     }
 }
 .containerMedia {

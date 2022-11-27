@@ -64,11 +64,35 @@ export interface ITourBill {
   lastName: string;
   verifyCode: string;
 }
+export interface ICreateRoomBill {
+  userId: number;
+  userMail: string;
+  hotelId: number;
+  rooms: {
+    roomId: string;
+    amount: string;
+    discount: number;
+    price: number;
+    bookedDate: Date;
+    totalPrice: number;
+  }[];
+  bookedDates: string;
+  startDate: Date;
+  endDate: Date;
+  totalBill: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+  verifyCode: string;
+
+}
 export interface NormalState {
   allTours: ITour[];
   allHotels: IHotel[];
   roomBillConfirm: IRoomBillConfirm;
   allTourBills: ITourBill[];
+  allRoomBills: ICreateRoomBill[];
 }
 
 const initial: NormalState = {
@@ -76,6 +100,7 @@ const initial: NormalState = {
   allHotels: [],
   roomBillConfirm: null,
   allTourBills: [],
+  allRoomBills: [],
 };
 
 export const normalReducer = (state = initial, action: any) =>
@@ -93,6 +118,9 @@ export const normalReducer = (state = initial, action: any) =>
       case types.SET_TOUR_BILLS_REDUCER:
         draft.allTourBills = action.data;
         break;
+      case types.SET_ROOM_BILLS_REDUCER:
+        draft.allRoomBills = action.data;
+        break;  
       default:
         return state;
     }

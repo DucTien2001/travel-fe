@@ -186,7 +186,7 @@ const PopupCreateTour = memo((props: Props) => {
       <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
         <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
           <ModalHeader toggle={toggle} className={classes.title}>
-            Create tour 
+            {!itemEdit ? <>Create tour</> : <>Edit tour</>}
           </ModalHeader>
           <ModalBody>
             <Row xs={6} sm={12} className={classes.row}>

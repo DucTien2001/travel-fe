@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { HotelService } from "services/normal/hotel";
 import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { CommentService } from "services/normal/comment";
 
 const listCmt = [
   {
@@ -78,6 +79,22 @@ const ProductPage = memo((Props) => {
   const dispatch = useDispatch();
   const router = useRouter()
   const [hotel, setHotel] = useState<any>();
+  const hotelId = Number(router.query.hotelId.slice(1));
+  const [listComment, setListComment] = useState([]);
+
+  const getHotelComments = () => {
+    CommentService.getHotelComments(hotelId)
+    .then((res) => {
+        setListComment(res.data);
+    })
+    .catch((e) => {
+        dispatch(setErrorMess(e));
+    })
+    .finally(() => {
+        dispatch(setLoading(false));
+    })
+  }
+
   useEffect(() => {
     if(router){
       dispatch(setLoading(true))
@@ -93,6 +110,26 @@ const ProductPage = memo((Props) => {
       })
     }
   }, [router]);
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+    CommentService.getHotelComments(hotelId)
+    .then((res) => {
+        setListComment(res.data);
+    })
+    .catch((e) => {
+        dispatch(setErrorMess(e));
+    })
+    .finally(() => {
+        dispatch(setLoading(false));
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch]);
+
+  useEffect(() => {
+    getHotelComments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>
@@ -101,7 +138,7 @@ const ProductPage = memo((Props) => {
         />
         <div className={classes.container}>
           <CheckRoomEmpty hotel={hotel}/>
-          {/* <Comment comment={listCmt}/> */}
+          <Comment comments={listComment} onGetHotelComments={getHotelComments} hotel={hotel}/>
         </div>
         <GoogleMapBody />
         {/* <RelatedHotel /> */}

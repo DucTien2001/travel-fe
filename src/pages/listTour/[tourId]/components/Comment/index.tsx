@@ -37,25 +37,14 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
     const tourId = Number(router.query.tourId.slice(1))
     const {allTourBills} = useSelector((state: ReducerType) => state.normal);
 
-    const [modal, setModal] = useState(false);
+    const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
     const [isAddComment, setIsAddComment] = useState(false);
     const [commentAction, setCommentAction] = useState<Comment>(null);
     const [commentDelete, setCommentDelete] = useState<Comment>(null);
-
     const [commentEdit, setCommentEdit] = useState(null);
-    const toggle = () => setModal(!modal);
 
-    useEffect(() => {
-        allTourBills.forEach(item => {
-            if (item.tourId === tourId && item.verifyCode === null) {     
-                setIsAddComment(!isAddComment);
-            }
-        })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [allTourBills])
+    const onOpenPopupAddComment = () => setOpenPopupAddComment(true);
 
-
-    
     const onAction = (e, comment: Comment) => {
         setCommentAction(comment);
     }
@@ -63,7 +52,7 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
     const onEdit = () => {
         if(!commentAction) return;
         setCommentEdit(commentAction);
-        toggle();
+        onOpenPopupAddComment();
     }
     const onDelete = () => {
         if(!commentAction) return;
@@ -75,46 +64,31 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
         setCommentDelete(null);
     }
 
+    const onClosePopupAddComment = () => {
+        setOpenPopupAddComment(false);
+        setCommentEdit(null);
+    }
+
     const onYesDelete = () => {
         if (!commentDelete) return
         onClosePopupConfirmDelete();
         dispatch(setLoading(true));
         CommentService.deleteCommentTour(commentDelete?.id)
         .then(()=> {        
-            dispatch(getAllTourBills(tourId)) 
             onGetTourComments();
         })
         .catch(e => dispatch(setErrorMess(e)))
         .finally(() => dispatch(setLoading(false)))
     }
 
-    // const onAddOrEditCommentTour = (data: FormData) => {
-    //     data.append('tourId', `${tourId}`)
-    //     if(commentEdit) {
-    //         dispatch(setLoading(true))
-    //         CommentService.updateCommentTour(commentEdit?.id, data)
-    //         .then(() => {
-    //             dispatch(getCommentTour(tourId))
-    //         })
-    //         .catch((e) => dispatch(setErrorMess(e)))
-    //         .finally(() => dispatch(setLoading(false)))
-    //     }
-    //     else {
-    //         dispatch(setLoading(true))
-    //         CommentService.createCommentTour(data)
-    //         .then(() => {
-    //             dispatch(getCommentTour(tourId))
-    //         })
-    //         .catch((e) => {
-    //             dispatch(setErrorMess(e));
-    //         })
-    //         .finally(() => {
-    //             dispatch(setLoading(false));
-    //         })
-    //     }
-    //     toggle();
-    // }
-
+    useEffect(() => {
+        allTourBills.forEach(item => {
+            if (item.tourId === tourId && item.verifyCode === null) {     
+                setIsAddComment(!isAddComment);
+            }
+        })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [allTourBills])
   return (
     <>  
     <Container className={classes.root}>
@@ -140,7 +114,7 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
         <Row className={classes.rowControl}>
             <div className={classes.btnContainer}>
                 <div>
-                <Button btnType={BtnType.Primary} onClick={toggle} disabled={!isAddComment}>
+                <Button btnType={BtnType.Primary} onClick={onOpenPopupAddComment} disabled={!isAddComment}>
                     <FontAwesomeIcon icon={faPlus} className="mr-1"/>
                     Add comments
                 </Button>
@@ -153,10 +127,10 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
             </div>
         </Row>
         <PopupAddTourComment
-        isOpen={modal}
+        isOpen={openPopupAddComment}
         commentEdit={commentEdit}
-        onClose={toggle}
-        toggle={toggle}
+        onClose={onClosePopupAddComment}
+        toggle={onClosePopupAddComment}
         onGetTourComments={onGetTourComments}
         />
         <PopupConfirmDelete

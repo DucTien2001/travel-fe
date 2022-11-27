@@ -39,9 +39,17 @@ export const API = {
         DELETE: '/v1.0/tour-comment/delete/:id',
         REPLY: '/v1.0/tour-comment/reply/:id',
       }, 
+      HOTEL_COMMENT :{ 
+        GET_COMMENT: '/v1.0/hotel-comment/get-hotels-comment/:id',
+        CREATE: '/v1.0/hotel-comment/create',
+        UPDATE: '/v1.0/hotel-comment/update/:id',
+        DELETE: '/v1.0/hotel-comment/delete/:id',
+        REPLY: '/v1.0/hotel-comment/reply/:id',
+      }, 
     },
     ROOMBILL: { 
       CREATE: '/v1.0/room-bill/create',
+      GET_ALL_ROOMBILL: '/v1.0/room-bill/get-all-user-room-bills/:id',
     },
     TOURBILL: { 
       CREATE: '/v1.0/tour-bill/create',

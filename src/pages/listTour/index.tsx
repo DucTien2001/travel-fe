@@ -37,6 +37,8 @@ import PaginationComponent from "react-reactstrap-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
 import { useRouter } from 'next/router'
+import { CommentService } from "services/normal/comment";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 interface SearchData {
     tourName?:string;
     checkOptions?:boolean;
@@ -48,7 +50,9 @@ const ListTours : NextPage = () => {
     const { query, pathname } = router;
 
     const {allTours} = useSelector((state: ReducerType) => state.normal);
-    const [changeViewLayout, setChangeViewLayout] = useState(false);   
+    const [changeViewLayout, setChangeViewLayout] = useState(false);  
+    const [listComment, setListComment] = useState([]);
+
     const schema = useMemo(() => {
         return yup.object().shape({
             tourName: yup.string().notRequired(),
@@ -102,6 +106,7 @@ const ListTours : NextPage = () => {
         setSearch("");
     }
 
+
     useEffect(() => {
         if(query.page) {
             let p = Number(query.page) >= 1 ? query.page : 1;
@@ -117,7 +122,6 @@ const ListTours : NextPage = () => {
     useEffect(()=>{
         Aos.init({duration:500});
     },[]);
-
 
 
   return (
@@ -239,27 +243,25 @@ const ListTours : NextPage = () => {
                         {/* ==================== Grid view ===================== */}                            
                         {!changeViewLayout && (<Row  className={classes.rowGridView}>
                             {allTours?.map((tour, index)=> ( 
-                            <>
-                            <CardItemGrid
-                            linkView="listTour"
-                            linkBook="book/tour"
-                            key={index}
-                            id = {tour.id}
-                            src = {tour.images[0]}
-                            title = {tour.title}
-                            description = {tour.description}
-                            businessHours = {tour.businessHours}
-                            location ={tour.location}
-                            contact={tour.contact}
-                            price ={tour.price}
-                            discount = {tour.discount}
-                            tags={tour.tags}
-                            // rate={tour.rate}
-                            creator={tour.creator}
-                            isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
-                            className={tour.isTemporarilyStopWorking ? classes.stopWorking : ""}
-                            />
-                            </>
+                                <CardItemGrid
+                                linkView="listTour"
+                                linkBook="book/tour"
+                                key={index}
+                                id = {tour.id}
+                                src = {tour.images[0]}
+                                title = {tour.title}
+                                description = {tour.description}
+                                businessHours = {tour.businessHours}
+                                location ={tour.location}
+                                contact={tour.contact}
+                                price ={tour.price}
+                                discount = {tour.discount}
+                                tags={tour.tags}
+                                // rate={tour.rate}
+                                creator={tour.creator}
+                                isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
+                                className={tour.isTemporarilyStopWorking ? classes.stopWorking : ""}
+                                />
                             ))}
                         </Row>)} 
                         {/* ==================== List view ===================== */}

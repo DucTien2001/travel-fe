@@ -22,11 +22,8 @@ import InputCheckbox from "components/common/inputs/InputCheckbox";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import PopupDefault from "components/Popup/PopupDefault";
 import { getAllHotels, getAllTours } from "redux/reducers/Enterprise/actionTypes";
-import { getAllTourBills } from "redux/reducers/Normal/actionTypes";
+import { getAllRoomBills, getAllTourBills } from "redux/reducers/Normal/actionTypes";
 
-
-// hiển thị thông báo verify trên nút submit nếu có rồi thì check còn chưa có thì resend email
-//  (call API resend)
 
 interface LoginForm {
   email: string;
@@ -105,6 +102,7 @@ const Login: NextPage = () => {
           dispatch(getAllHotels(res.user.id))
         }
         dispatch(getAllTourBills(user?.id));
+        dispatch(getAllRoomBills(user?.id));
       })
       .catch(e => {
         if (e.detail === 'notVerified') setIsNotVerified(true)

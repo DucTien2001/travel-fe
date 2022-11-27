@@ -34,7 +34,7 @@ const PopupAddComment = memo((props: Props) => {
     const {isOpen, commentEdit, toggle, onGetTourComments} = props; 
     const {user} = useAuth();
     const router = useRouter();
-    const tourId = Number(router.query.tourId.slice(1))
+    const hotelId = Number(router.query.hotelId.slice(1))
     const dispatch = useDispatch();
 
     const schema = useMemo(() => {
@@ -71,7 +71,7 @@ const PopupAddComment = memo((props: Props) => {
       if(user) {
         if(commentEdit) {
           console.log(commentEdit);
-          CommentService.updateCommentTour(commentEdit?.id, {
+          CommentService.updateCommentHotel(commentEdit?.id, {
             comment: data.comment,
             rate: data.numberOfStars,
           })
@@ -88,11 +88,12 @@ const PopupAddComment = memo((props: Props) => {
           })
         }
         else { 
-          CommentService.createCommentTour({
+          CommentService.createCommentHotel({
             comment: data.comment,
             rate: data.numberOfStars,
-            tourId: tourId,
-            userId: user.id
+            hotelId: hotelId,
+            userId: user.id,
+            billId: 1,
           })
           .then(() => {
             dispatch(setSuccessMess("Comment is successfully!"))
@@ -131,7 +132,7 @@ const PopupAddComment = memo((props: Props) => {
     <>  
         <Modal isOpen={isOpen} toggle={toggle} className={classes.root}>
           <Form  method="post" role="form" onSubmit={handleSubmit(_onSubmit)}>
-                <ModalHeader toggle={toggle} className={classes.title}>What do you think about this tour?</ModalHeader>
+                <ModalHeader toggle={toggle} className={classes.title}>What do you think about this hotel?</ModalHeader>
                 <ModalBody>
                   <Controller
                   name="numberOfStars" 

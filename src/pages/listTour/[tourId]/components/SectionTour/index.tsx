@@ -19,12 +19,15 @@ import { Tour } from "models/tour";
 import { fCurrency2 } from "utils/formatNumber";
 import clsx from "clsx";
 import useAuth from "hooks/useAuth";
+import Stars from "components/Stars";
+import { formatStar } from "utils/formatStar";
 interface Props { 
   tour: Tour;
+  listRates: number[];
 }
 
 // eslint-disable-next-line react/display-name
-const SectionTour = memo(({tour} : Props)=> {
+const SectionTour = memo(({tour, listRates} : Props)=> {
   const {user} = useAuth();
   const [images, setImages] = useState([]);
   const [collapses, setCollapses] = React.useState([1]);
@@ -57,6 +60,7 @@ const SectionTour = memo(({tour} : Props)=> {
     }})
     setImages(newImages);
   }, [tour])
+
   return (
     <>
         <div className="section">
@@ -80,6 +84,7 @@ const SectionTour = memo(({tour} : Props)=> {
                         
                       ))}
                 </div>}
+                {!!listRates.length && <Stars numberOfStars={formatStar(listRates)}/>}
                 <h2 className={`main-price ${classes.price}`}> {fCurrency2(tour?.price)} VND</h2>
                 <h2 className={`main-price ${classes.businessHours}`}>Time business: {tour?.businessHours}</h2>
                 <Row className="justify-content-end">
