@@ -10,12 +10,19 @@
 .containerHead {
     display: flex;
     position: relative;
+    justify-content: space-between;
+
+}
+.containerAction {
+    height: 30px;
 }
 .titleName {
     display: flex;
     flex-direction: column;
 }
-
+.dropdownMenu {
+    min-width: 7rem;
+}
 .boxAction {
     position: absolute;
     top: -10px; right: -14px;
@@ -73,4 +80,8 @@
         word-break: break-word !important;
     }
     
+}
+
+.inputReply {
+    margin-top:0 !important;
 }

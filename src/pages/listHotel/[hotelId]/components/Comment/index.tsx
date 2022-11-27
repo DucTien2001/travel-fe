@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { ReducerType } from "redux/reducers";
 import PopupAddHotelComment from "../PopupAddHotelComment";
+import Warning from "components/common/warning";
 
 interface Props { 
     comments: Comment[],
@@ -75,7 +76,7 @@ const Comments = memo(({comments, hotel, onGetHotelComments}: Props) => {
         if (!commentDelete) return
         onClosePopupConfirmDelete();
         dispatch(setLoading(true));
-        CommentService.deleteCommentTour(commentDelete?.id)
+        CommentService.deleteCommentHotel(commentDelete?.id)
         .then(()=> {        
             onGetHotelComments();
         })
@@ -85,7 +86,7 @@ const Comments = memo(({comments, hotel, onGetHotelComments}: Props) => {
 
     useEffect(() => {
         allRoomBills?.forEach(item => {
-            if (item.verifyCode === null) {     
+            if (item.hotelId && item.verifyCode === null) {     
                 setIsAddComment(!isAddComment);
             }
         })
@@ -110,16 +111,19 @@ const Comments = memo(({comments, hotel, onGetHotelComments}: Props) => {
                     />
                     </Col> 
                 ))} 
-                {!comments?.length && (
-                    <p className={classes.noComment}>There are no comments yet !</p>
+            {!comments?.length && (
+                <p className={classes.noComment}>There are no comments yet !</p>
             )}      
         </Row>
         <Row className={classes.rowControl}>
             <div className={classes.btnContainer}>
-                <Button btnType={BtnType.Primary} onClick={onOpenPopupAddComment}>
+                <div>
+                <Button btnType={BtnType.Primary} onClick={onOpenPopupAddComment} disabled={!isAddComment}>
                     <FontAwesomeIcon icon={faPlus} className="mr-1"/>
                     Add comments
                 </Button>
+                {!isAddComment && <Warning content="You don't book this hotel"/>} 
+                </div>
                 <Pagination className={classes.pagination} postPerPage={0} totalPosts={0} paginate={function (number: number): void {
                           throw new Error("Function not implemented.");
                       } }/>

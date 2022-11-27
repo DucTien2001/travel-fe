@@ -8,6 +8,10 @@ import {
   UncontrolledPopover,
   Button,
   Form,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
 } from "reactstrap";
 import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
@@ -24,9 +28,9 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { CommentService } from "services/normal/comment";
-import { Tour } from "models/tour";
-import InputTextArea from "components/common/inputs/InputTextArea";
 import { IHotel } from "models/hotel";
+import InputTextLineArea from "components/common/inputs/InputTextLineArea";
+import useAuth from "hooks/useAuth";
 
 interface ReplyForm {
     reply: string;
@@ -44,6 +48,7 @@ interface Props {
 const Comments = memo(( props: Props) => {
   const {comment, onAction, hotel, onEdit, onDelete, onGetHotelComments} = props;
   const dispatch = useDispatch();
+  const {user} = useAuth();
   const schema = useMemo(() => {
     return yup.object().shape({
         reply: yup.string().required("Reply is required"),
@@ -93,37 +98,38 @@ const Comments = memo(( props: Props) => {
                     <div className="pull-left">
                         <div className={classes.avatar}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img alt="" src={comment?.tourReviewer.avatar}/>
+                            <img alt="" src={comment?.hotelReviewer?.avatar}/>
                         </div>
                     </div>
                     <Media body>
                         <div className={classes.containerHead}>
                         <Media heading tag="h5" className={classes.titleName}>
-                        {comment?.tourReviewer?.firstName}{" "}{comment?.tourReviewer?.lastName}
+                        {comment?.hotelReviewer?.firstName}{" "}{comment?.hotelReviewer?.lastName}
                         <small className="text-muted">· <>{moment(comment?.createdAt).format("DD/MM/YYYY")}</></small>
                         </Media>
-                        <Button
-                            id="PopoverFocus"
-                            type="button"
-                            className={classes.boxAction}
-                            onClick={(e) => {onAction(e, comment)}}
+                        {user?.id && <UncontrolledDropdown className={classes.containerAction}>
+                        <DropdownToggle
+                        color="default"
+                        data-toggle="dropdown"
+                        href="#pablo"
+                        id="navbarDropdownMenuLink1"
+                        nav
+                        onClick={(e) => {onAction(e, comment)}}
+                        className={classes.boxAction}
                         >
-                           <FontAwesomeIcon icon={faEllipsisVertical}/>
-                        </Button>
-                        <UncontrolledPopover
-                            placement="bottom"
-                            target="PopoverFocus"
-                            trigger="legacy"
-                        >
-                            <PopoverBody className={classes.itemAction} onClick={onEdit}>
-                                <FontAwesomeIcon icon={faPen}/>
-                                Edit
-                            </PopoverBody>
-                            <PopoverBody className={clsx(classes.itemAction, classes.actionDelete)} onClick={onDelete}>
-                                <FontAwesomeIcon icon={faTrash} color="var(--danger-color)"/>
-                                 Delete
-                            </PopoverBody>
-                        </UncontrolledPopover>
+                        <FontAwesomeIcon icon={faEllipsisVertical} />
+                        </DropdownToggle>
+                        <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
+                        <DropdownItem className={classes.itemAction} onClick={onEdit}>
+                            <FontAwesomeIcon icon={faPen}/>
+                            Edit
+                        </DropdownItem>
+                        <DropdownItem className={clsx(classes.itemAction, classes.actionDelete)} onClick={onDelete}>
+                            <FontAwesomeIcon icon={faTrash} color="var(--danger-color)"/>
+                            Delete
+                        </DropdownItem>
+                        </DropdownMenu>
+                        </UncontrolledDropdown>}
                         </div>
                         <div className={classes.commentText}>
                         <p>
@@ -140,15 +146,16 @@ const Comments = memo(( props: Props) => {
                             </div>
                         </div>)}
                         <Media className="media-post">
-                        {comment?.tourReviewer?.role === EUserType.ENTERPRISE && (
+                        {comment?.hotelReviewer?.role === EUserType.ENTERPRISE && (
                         <Media body>         
-                            <Input
+                            <InputTextLineArea
                                 placeholder="Write a nice reply or go home..."
                                 type="textarea"
                                 rows="4"
                                 inputRef={register("reply")}
                                 errorMessage={errors?.reply?.message}
-                            ></Input>
+                                className={classes.inputReply}
+                            ></InputTextLineArea>
                                 <div className="media-footer">                              
                                     <CustomButton
                                     className="pull-right"

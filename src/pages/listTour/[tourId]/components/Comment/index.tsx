@@ -118,7 +118,6 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
                     <FontAwesomeIcon icon={faPlus} className="mr-1"/>
                     Add comments
                 </Button>
-
                 {!isAddComment && <Warning content="You don't book this tour"/>} 
                 </div>
                 <Pagination className={classes.pagination} postPerPage={0} totalPosts={0} paginate={function (number: number): void {

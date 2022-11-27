@@ -130,6 +130,8 @@ const ProductPage = memo((Props) => {
     getHotelComments();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
+  
+  console.log(listComment);
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>

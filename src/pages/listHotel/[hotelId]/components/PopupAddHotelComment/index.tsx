@@ -1,5 +1,5 @@
 import React, { useMemo, memo, useEffect } from 'react';
-import {Form, Modal, ModalProps, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {Form, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
@@ -9,13 +9,12 @@ import Star from "components/Stars";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setErrorMess, setLoading, setSuccessMess } from 'redux/reducers/Status/actionTypes';
 import { CommentService } from 'services/normal/comment';
 import { useRouter } from 'next/router';
 import useAuth from 'hooks/useAuth';
 import {Comment} from "models/comment";
-import { ReducerType } from 'redux/reducers';
 
 export interface CommentForm { 
   comment: string;
@@ -33,7 +32,6 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const PopupAddComment = memo((props: Props) => {
     const {isOpen, commentEdit, toggle, onGetTourComments} = props; 
-    const {allRoomBills} = useSelector((state: ReducerType) => state.normal);
     const {user} = useAuth();
     const router = useRouter();
     const hotelId = Number(router.query.hotelId.slice(1))
@@ -95,7 +93,6 @@ const PopupAddComment = memo((props: Props) => {
             rate: data.numberOfStars,
             hotelId: hotelId,
             userId: user.id,
-            billId: 1,
           })
           .then(() => {
             dispatch(setSuccessMess("Comment is successfully!"))
@@ -156,8 +153,8 @@ const PopupAddComment = memo((props: Props) => {
                   />
                   <InputTextArea
                   className={classes.labelText}
-                  label ="Enter your question here:"
-                  placeholder="Ex: This tour is wonderful"
+                  label ="Enter your comment here:"
+                  placeholder="Ex: This hotel is wonderful"
                   autoComplete="family-name"
                   inputRef={register("comment")}
                   errorMessage={errors.comment?.message}

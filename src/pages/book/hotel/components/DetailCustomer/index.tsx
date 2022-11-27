@@ -67,8 +67,7 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
     defaultValues: {},
   });
 
-  const _onSubmit = (data: HotelForm) => {
-    
+  const _onSubmit = (data: HotelForm) => { 
     const roomBillDetails = []
     const bookedDates = []
     let totalBill = 0
@@ -91,6 +90,7 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
     })
     const roomBill = {
       userId: user?.id,
+      hotelId: roomBillConfirm?.hotel?.id,
       userMail: user?.username,
       rooms: roomBillDetails,
       bookedDates: bookedDates,
@@ -101,7 +101,6 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
       phoneNumber: data?.phoneNumber,
       firstName: data?.firstName,
       lastName: data?.lastName,
-      test: [1,2,3],
     }
       dispatch(setLoading(true));
       RoomBillService?.create(roomBill)

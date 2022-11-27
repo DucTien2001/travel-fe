@@ -22,7 +22,15 @@ export interface TourReviewer{
     role?: number;
     userName?: string;
 }
-  
+export interface HotelReviewer{
+  address?: string;
+  avatar: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  role?: number;
+  userName?: string;
+}
 export interface Comment {
     id?: number;
     comment: string;
@@ -31,6 +39,7 @@ export interface Comment {
     roomId?: number;
     userId?: number;
     tourReviewer?: TourReviewer;
+    hotelReviewer?: HotelReviewer;
     createdAt: Date;
     replyComment?: string;
 }
@@ -45,7 +54,6 @@ export interface IReplyTourComment {
     comment: string;
     rate: number;
     hotelId: number;
-    billId: number;
     userId: number;
   }
   

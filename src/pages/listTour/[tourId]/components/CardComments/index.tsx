@@ -25,6 +25,7 @@ import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/
 import { CommentService } from "services/normal/comment";
 import { Tour } from "models/tour";
 import InputTextLineArea from "components/common/inputs/InputTextLineArea";
+import useAuth from "hooks/useAuth";
 
 interface ReplyForm {
     reply: string;
@@ -41,6 +42,7 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const Comments = memo(( props: Props) => {
   const {comment, onAction, tour, onEdit, onDelete, onGetTourComments} = props;
+  const {user} = useAuth();
   const dispatch = useDispatch();
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -100,7 +102,7 @@ const Comments = memo(( props: Props) => {
                         {comment?.tourReviewer?.firstName}{" "}{comment?.tourReviewer?.lastName}
                         <small className="text-muted">· <>{moment(comment?.createdAt).format("DD/MM/YYYY")}</></small>
                         </Media>
-                        <UncontrolledDropdown className={classes.containerAction}>
+                        {user?.id && <UncontrolledDropdown className={classes.containerAction}>
                         <DropdownToggle
                         color="default"
                         data-toggle="dropdown"
@@ -122,7 +124,7 @@ const Comments = memo(( props: Props) => {
                             Delete
                         </DropdownItem>
                         </DropdownMenu>
-                        </UncontrolledDropdown>
+                        </UncontrolledDropdown>}
                         </div>
                         <div className={classes.commentText}>
                         <p>
