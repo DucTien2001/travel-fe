@@ -30,6 +30,7 @@ export const API = {
       DEFAULT: '/v1.0/tour',
       ALL_TOURS: '/v1.0/tour/get-all-tours',
       DETAIL_TOUR: '/v1.0/tour/get-tour/:id',
+      SEARCH_TOURS: '/v1.0/tour/search-tours/:name',
     },
     COMMENT: {
       TOUR_COMMENT :{ 
@@ -61,6 +62,7 @@ export const API = {
     HOTEL: { 
       ALL_HOTELS: '/v1.0/hotel/get-all-hotels',
       DETAIL_HOTEL: '/v1.0/hotel/get-hotel/:id',
+      SEARCH_HOTELS: '/v1.0/hotel/search-hotels/:name',
     },
     ROOM: {
       GET_ROOMS: '/v1.0/room/get-all-rooms/:id',

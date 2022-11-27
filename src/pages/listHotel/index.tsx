@@ -27,12 +27,14 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
+import { HotelService } from "services/normal/hotel";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 
 interface SearchData {
   hotelName?: string;
-  departure?: Date;
-  return?: Date;
-  numberOfRoom: number;
+  // departure?: Date;
+  // return?: Date;
+  // numberOfRoom: number;
   checkOptions?: boolean;
 }
 
@@ -44,6 +46,7 @@ const ListHotels: NextPage = () => {
   }, []);
 
   const [changeViewLayout, setChangeViewLayout] = useState(false);
+  const [listHotels, setListHotels] = useState([]);
 
   // const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(9);
@@ -56,10 +59,10 @@ const ListHotels: NextPage = () => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      tourName: yup.string().notRequired(),
-      departure: yup.date().notRequired(),
-      return: yup.date().min(yup.ref("departure"), "Return date must be start departure").notRequired(),
-      numberOfRoom: yup.number().notRequired(),
+      hotelName: yup.string().notRequired(),
+      // departure: yup.date().notRequired(),
+      // return: yup.date().min(yup.ref("departure"), "Return date must be start departure").notRequired(),
+      // numberOfRoom: yup.number().notRequired(),
       checkOptions: yup.boolean().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,23 +71,24 @@ const ListHotels: NextPage = () => {
   const {
     register,
     handleSubmit,
+    getValues,
     reset,
     control,
     formState: { errors },
   } = useForm<SearchData>({
     resolver: yupResolver(schema),
     mode: "onChange",
-    defaultValues: {
-      numberOfRoom: 1,
-    },
+    // defaultValues: {
+    //   numberOfRoom: 1,
+    // },
   });
 
   const clearForm = () => {
     reset({
       hotelName: "",
-      departure: new Date(),
-      return: new Date(),
-      numberOfRoom: 1,
+      // departure: new Date(),
+      // return: new Date(),
+      // numberOfRoom: 1,
       checkOptions: false,
     });
   };
@@ -92,9 +96,32 @@ const ListHotels: NextPage = () => {
   const onClearOption = () => {
     clearForm();
   };
+
+  useEffect(() => {
+    setListHotels(allHotels);
+  }, [allHotels]);
+
   const onChangeViewLayout = () => {
     setChangeViewLayout(!changeViewLayout);
   };
+
+  const handleSearch = () => {
+    dispatch(setLoading(true));
+    HotelService.searchHotels(getValues("hotelName"))
+      .then((res) => {
+        setListHotels(res?.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
+
+  const handleChooseOption = ()=>{
+    console.log(getValues("checkOptions"))
+  }
 
   return (
     <>
@@ -109,8 +136,8 @@ const ListHotels: NextPage = () => {
             <h1>BROWSE OUR MULTI-HOTELS </h1>
             <div className={classes.divider}></div>
             <p data-aos="fade-up">
-              Choose from our portfolio of unforgettable multi-country tours of Asia and embark on the journey of a
-              lifetime. Each private tour is tailor-made to show the very best that Asia has to offer.
+              Choose from our portfolio of unforgettable multi-country tours of Asia and embark on the journey of a lifetime. Each private
+              tour is tailor-made to show the very best that Asia has to offer.
             </p>
           </Row>
           {/* ======================= RESULT DESKTOP ===================== */}
@@ -152,10 +179,10 @@ const ListHotels: NextPage = () => {
                   label="Hotel name"
                   labelIcon={<FontAwesomeIcon icon={faSearch} />}
                   placeholder="Hotel name"
-                  name="Hotel name"
+                  name="hotelName"
                   inputRef={register("hotelName")}
                 />
-                <InputDatePicker
+                {/* <InputDatePicker
                   className={classes.inputSearchDate}
                   label="Departure date"
                   labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
@@ -192,25 +219,25 @@ const ListHotels: NextPage = () => {
                       </div>
                     </>
                   )}
-                />
-                <Button btnType={BtnType.Primary} className={classes.btnSearch}>
+                /> */}
+                <Button btnType={BtnType.Primary} className={classes.btnSearch} onClick={() => handleSearch()}>
                   Search
                 </Button>
               </BoxSmallLeft>
               <BoxSmallLeft title="Options">
-                <InputCheckbox content="Sea" inputRef={register("checkOptions")} />
-                <InputCheckbox content="Shopping" inputRef={register("checkOptions")} />
-                <InputCheckbox content="3 stars" inputRef={register("checkOptions")} />
-                <InputCheckbox content="4 stars" inputRef={register("checkOptions")} />
-                <InputCheckbox content="5 stars" inputRef={register("checkOptions")} />
-                <InputCheckbox content="Discount" inputRef={register("checkOptions")} />
+                <InputCheckbox content="Sea" inputRef={register("checkOptions")} onChange={()=>handleChooseOption()}/>
+                <InputCheckbox content="Shopping" inputRef={register("checkOptions")}  onChange={()=>handleChooseOption()}/>
+                <InputCheckbox content="3 stars" inputRef={register("checkOptions")} onChange={()=>handleChooseOption()} />
+                <InputCheckbox content="4 stars" inputRef={register("checkOptions")} onChange={()=>handleChooseOption()} />
+                <InputCheckbox content="5 stars" inputRef={register("checkOptions")}  onChange={()=>handleChooseOption()}/>
+                <InputCheckbox content="Discount" inputRef={register("checkOptions")}  onChange={()=>handleChooseOption()}/>
               </BoxSmallLeft>
             </Col>
             <Col xs={10} className={classes.listTours}>
               {/* ==================== Grid view ===================== */}
               {!changeViewLayout && (
                 <Row className={classes.rowGridView}>
-                  {allHotels?.map((hotel, index) => (
+                  {listHotels?.map((hotel, index) => (
                     <CardItemGrid
                       linkView="listHotel"
                       linkBook="/book/hotel"
@@ -233,7 +260,7 @@ const ListHotels: NextPage = () => {
               {/* ==================== List view ===================== */}
               {changeViewLayout && (
                 <div>
-                  {allHotels.map((hotel, index) => (
+                  {listHotels.map((hotel, index) => (
                     <CardItemList
                       key={index}
                       linkView="listHotel"
