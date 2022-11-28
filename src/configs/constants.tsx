@@ -87,6 +87,7 @@ export const API = {
     },
     TOURBILL: {
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",
+      GET_TOURS_REVENUE_BY_YEAR: "/v1.0/tour-bill/get-tours-revenue-by-year",
     },
   },
 };

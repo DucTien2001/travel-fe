@@ -1,136 +1,211 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash, faCaretDown, faSearch, faPlus, faCircleCheck, faCircleMinus } from "@fortawesome/free-solid-svg-icons";
-import { Row, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
-import Button, { BtnType } from "components/common/buttons/Button";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import { ETour } from "models/enterprise";
+import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import { Row, Table } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
-import { TourService } from "services/enterprise/tour";
-import SearchNotFound from "components/SearchNotFound";
 import { ReducerType } from "redux/reducers";
-import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
-import { fCurrency2 } from "utils/formatNumber";
 import { TourBillService } from "services/enterprise/tourBill";
+import InputDatePicker from "components/common/inputs/InputDatePicker";
+import moment from "moment";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import CustomSelect from "components/common/CustomSelect";
+
+interface ITourSelection {
+  revenueType?: any;
+  monthValue?: Date;
+  yearValue?: Date;
+}
 
 // eslint-disable-next-line react/display-name
 const ToursRevenue = memo(() => {
   const dispatch = useDispatch();
   const { allTours } = useSelector((state: ReducerType) => state.enterprise);
-  const { user } = useSelector((state: ReducerType) => state.user);
-  const [openPopupCreateTour, setOpenPopupCreateTour] = useState(false);
-  const [tourEdit, setTourEdit] = useState<ETour>(null);
-  const [tourAction, setTourAction] = useState<ETour>();
-  const [tourDelete, setTourDelete] = useState<ETour>(null);
+  const [tourIds, setTourIds] = useState([]);
+  const [revenueData, setRevenueData] = useState([]);
 
-  useEffect(() => {
-    TourBillService.getRevenueOfToursByMonth({
-      tourIds: [1, 2],
-      month: 10,
-    }).then((res) => console.log(res, "===========res=========="));
+  const revenueType = [
+    { id: 1, name: "Revenue of a month", value: "Revenue of a month" },
+    { id: 2, name: "Revenue of a year", value: "Revenue of a year" },
+  ];
+
+  const schema = useMemo(() => {
+    return yup.object().shape({
+      revenueType: yup.object().required("This field is required"),
+      monthValue: yup.date().notRequired(),
+      yearValue: yup.date().notRequired(),
+    });
   }, []);
 
-  const onTogglePopupCreateTour = () => {
-    setOpenPopupCreateTour(!openPopupCreateTour);
-    setTourEdit(null);
-  };
+  const {
+    register,
+    setValue,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<ITourSelection>({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+    defaultValues: {
+      monthValue: new Date(),
+      revenueType: revenueType[0],
+    },
+  });
 
-  const handleAction = (currentTarget: any, item: ETour) => {
-    setTourAction(item);
-  };
+  const watchMonthValue = watch("monthValue");
+  const watchYearValue = watch("yearValue");
+  const watchRevenueType = watch("revenueType");
 
-  const onAction = (currentTarget: any, item: ETour) => {
-    onTogglePopupCreateTour();
-    setTourEdit(item);
-  };
+  useEffect(() => {
+    if (allTours) {
+      const tempTourIds = allTours.map((tour) => tour?.id);
+      setTourIds(tempTourIds);
+      setValue("monthValue", new Date());
+    }
+  }, [allTours]);
 
-  const onShowConfirm = () => {
-    if (!tourAction) return;
-    setTourDelete(tourAction);
+  useEffect(() => {
+    if (watchMonthValue) {
+      const month = new Date(watchMonthValue).getMonth();
+      const year = new Date(watchMonthValue).getFullYear();
+      TourBillService.getRevenueOfToursByMonth({
+        tourIds: tourIds,
+        month: month,
+        year: year,
+      }).then((revenue) => {
+        const numberDaysOfMonth = get_day_of_month(year, month + 1);
+        const temprevenueData = [];
+        revenue?.data?.forEach((element) => {
+          const costArr = [];
+          for (let i = 1; i <= numberDaysOfMonth; i++) {
+            const cost = element?.filter((item) => item?.date === i);
+            if (cost.length > 0) {
+              costArr.push(cost[0]?.cost);
+            } else {
+              costArr.push(0);
+            }
+          }
+          temprevenueData.push(costArr);
+        });
+        setRevenueData(temprevenueData);
+      });
+    }
+  }, [watchMonthValue]);
+
+  useEffect(() => {
+    if (watchYearValue) {
+      const year = new Date(watchYearValue).getFullYear();
+      TourBillService.getRevenueOfToursByYear({
+        tourIds: tourIds,
+        year: year,
+      }).then((revenue) => {
+        const temprevenueData = [];
+        revenue?.data?.forEach((element) => {
+          const costArr = [];
+          for (let i = 0; i < 12; i++) {
+            const cost = element?.filter((item) => item?.month === i);
+            if (cost.length > 0) {
+              costArr.push(cost[0]?.cost);
+            } else {
+              costArr.push(0);
+            }
+          }
+          temprevenueData.push(costArr);
+        });
+        setRevenueData(temprevenueData);
+      });
+    }
+  }, [watchYearValue]);
+
+  useEffect(() => {
+    if (watchRevenueType) {
+      if (watchRevenueType?.id == 1) {
+        setValue("monthValue", new Date());
+      } else {
+        setValue("yearValue", new Date());
+      }
+    }
+  }, [watchRevenueType]);
+
+  // Calculate number of days in month
+  const get_day_of_month = (year, month) => {
+    return new Date(year, month, 0).getDate();
   };
 
   return (
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Tours</h3>
+          <h3>Revenue of tours</h3>
         </Row>
-        <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
-          <div className={classes.boxInputSearch}>
-            <InputTextFieldBorder
-              placeholder="Search tours"
-              startIcon={<FontAwesomeIcon icon={faSearch} />}
-              className={classes.inputSearch}
+        <Row className="mb-3">
+          <div className={classes.inputContainer}>
+            <p className={classes.inputTitle}>Type of revenue:</p>
+            <CustomSelect
+              className={classes.input}
+              placeholder="Please choose the type of revenue"
+              name="revenueType"
+              control={control}
+              options={revenueType}
+              errorMessage={errors.revenueType?.message}
             />
           </div>
-          <Button btnType={BtnType.Primary} onClick={onTogglePopupCreateTour}>
-            <FontAwesomeIcon icon={faPlus} />
-            Create
-          </Button>
+        </Row>
+        <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
+          {watchRevenueType?.id === 1 && (
+            <InputDatePicker
+              className={classes.inputSearchDate}
+              label="Date"
+              placeholder="Date"
+              control={control}
+              name="monthValue"
+              minDate={moment().toDate()}
+              dateFormat="YYYY-MM"
+              timeFormat={false}
+              labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
+              inputRef={register("monthValue")}
+              errorMessage={errors.monthValue?.message}
+            />
+          )}
+          {watchRevenueType?.id === 2 && (
+            <InputDatePicker
+              className={classes.inputSearchDate}
+              label="Date"
+              placeholder="Date"
+              control={control}
+              name="yearValue"
+              minDate={moment().toDate()}
+              dateFormat="YYYY"
+              timeFormat={false}
+              labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
+              inputRef={register("yearValue")}
+              errorMessage={errors.yearValue?.message}
+            />
+          )}
         </Row>
         <Table className={classes.table} responsive>
           <thead>
             <tr>
-              <th scope="row">Id</th>
+              <th scope="row">#</th>
               <th>Name</th>
-              <th>Price</th>
-              <th>State</th>
-              <th className={classes.colAction}>Actions</th>
+              {revenueData.length > 0 && revenueData[0]?.map((item, index) => <th className="text-center">{index + 1}</th>)}
             </tr>
           </thead>
           <tbody>
             {allTours?.map((item, index) => {
               return (
                 <tr key={index}>
-                  <th scope="row">{item?.id}</th>
+                  <th scope="row">{index}</th>
                   <td>{item?.title}</td>
-                  <td>{fCurrency2(item?.price)} VND</td>
-                  <td>
-                    {!item?.isTemporarilyStopWorking ? (
-                      <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour} />
-                    ) : (
-                      <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour} />
-                    )}
-                  </td>
-                  <td className="text-center">
-                    <UncontrolledDropdown>
-                      <DropdownToggle
-                        color="default"
-                        data-toggle="dropdown"
-                        href="#pablo"
-                        id="navbarDropdownMenuLink1"
-                        nav
-                        onClick={(event) => {
-                          handleAction(event, item);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
-                      </DropdownToggle>
-                      <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onAction(e, item)}>
-                          <FontAwesomeIcon icon={faPen} />
-                          Edit
-                        </DropdownItem>
-                        <DropdownItem className={classes.dropdownItem} onClick={onShowConfirm}>
-                          <FontAwesomeIcon icon={faTrash} />
-                          Delete
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                  </td>
+                  {revenueData[index]?.map((item) => (
+                    <th className="text-center">{Math.floor(item)}</th>
+                  ))}
                 </tr>
               );
             })}
-            {!allTours?.length && (
-              <tr>
-                <td scope="row" colSpan={5}>
-                  <SearchNotFound />
-                </td>
-              </tr>
-            )}
           </tbody>
         </Table>
       </div>
