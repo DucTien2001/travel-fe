@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 // reactstrap components
 import {
@@ -33,14 +33,12 @@ import BoxSmallLeft from "components/BoxSmallLeft";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import PaginationComponent from "react-reactstrap-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
-import { useRouter } from "next/router";
-import { CommentService } from "services/normal/comment";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/normal/tour";
 import SearchNotFound from "components/SearchNotFound";
+import SliderProton from "components/SliderProton";
 interface SearchData {
   tourName?: string;
   checkOptions?: boolean;
@@ -51,6 +49,7 @@ const ListTours: NextPage = () => {
   const { allTours } = useSelector((state: ReducerType) => state.normal);
   const [changeViewLayout, setChangeViewLayout] = useState(false);
   const [listTours, setListTours] = useState([]);
+  const [filterTags, setFilterTags] = useState([])
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -77,9 +76,7 @@ const ListTours: NextPage = () => {
     getAllTours();
   };
 
-  useEffect(() => {
-    setListTours(allTours);
-  }, [allTours]);
+
 
   const onChangeViewLayout = () => {
     setChangeViewLayout(!changeViewLayout);
@@ -119,7 +116,52 @@ const ListTours: NextPage = () => {
       handleSearch();
     }
   };
+  
+  const filteredDATA = allTours.filter((node) =>
+  filterTags.length > 0
+    ? filterTags.every((filterTag) =>
+        node.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
+      )
+    : allTours
+  )
 
+  const filterHandler = (event) => {
+    if (event.target.checked) {
+      setFilterTags([...filterTags, event.target.value])
+    } else {
+      setFilterTags(
+        filterTags.filter((filterTag) => filterTag !== event.target.value)
+      )
+    }
+  }  
+  const [selectedPrice, setSelectedPrice] = useState([10000, 50000000]);
+
+  const minPrice = selectedPrice[0];
+  const maxPrice = selectedPrice[1];
+
+  const applyFilterPrice = () => {
+    let updatedList = allTours;
+    updatedList = updatedList.filter(
+      (item) => item.price >= minPrice && item.price <= maxPrice
+    );
+    setListTours(updatedList);
+  }
+
+  const handleChangePrice = (event, value) => {
+    setSelectedPrice(value);
+  };
+
+  useEffect(() => {
+    applyFilterPrice();
+  }, [selectedPrice]);
+  
+  useEffect(() => {
+    setListTours(allTours);
+  }, [allTours]);
+
+  useEffect(() => {
+    setListTours(filteredDATA);
+  }, [filteredDATA]);
 
   return (
     <>
@@ -216,12 +258,16 @@ const ListTours: NextPage = () => {
                 </Button>
               </BoxSmallLeft>
               <BoxSmallLeft title="Options">
-                <InputCheckbox content="Sea" inputRef={register("checkOptions")} />
-                <InputCheckbox content="Shopping" inputRef={register("checkOptions")} />
-                <InputCheckbox content="3 stars" inputRef={register("checkOptions")} />
+                <InputCheckbox id="sea"  content="Sea" value="sea" onChange={filterHandler} inputRef={register("checkOptions")}/>
+                <InputCheckbox id="shopping" content="Shopping" value="shopping" onChange={filterHandler} inputRef={register("checkOptions")}/>
+                <InputCheckbox id="family" content="Family" value="family" onChange={filterHandler} inputRef={register("checkOptions")}/>
+                <InputCheckbox id="mountain" content="Mountain" value="mountain" onChange={filterHandler} inputRef={register("checkOptions")}/>
+                {/* <InputCheckbox content="3 stars" inputRef={register("checkOptions")} />
                 <InputCheckbox content="4 stars" inputRef={register("checkOptions")} />
                 <InputCheckbox content="5 stars" inputRef={register("checkOptions")} />
-                <InputCheckbox content="Discount" inputRef={register("checkOptions")} />
+                <InputCheckbox content="Discount" inputRef={register("checkOptions")} /> */}
+                <SliderProton value={selectedPrice} changePrice={handleChangePrice} />
+                {/* <input type="range" value={selectedPrice[0]} min={minPrice} max={maxPrice} onChange={(e) => handleChangePrice(e, e.target.value)}/> */}
               </BoxSmallLeft>
             </Col>
             <Col xs={10} className={classes.listTours}>
