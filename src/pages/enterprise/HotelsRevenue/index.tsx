@@ -6,25 +6,25 @@ import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { Row, Table } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
-import { TourBillService } from "services/enterprise/tourBill";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import moment from "moment";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomSelect from "components/common/CustomSelect";
+import { RoomBillService } from "services/enterprise/roomBill";
 
-interface ITourSelection {
+interface IHotelSelection {
   revenueType?: any;
   monthValue?: Date;
   yearValue?: Date;
 }
 
 // eslint-disable-next-line react/display-name
-const ToursRevenue = memo(() => {
+const HotelsRevenue = memo(() => {
   const dispatch = useDispatch();
-  const { allTours } = useSelector((state: ReducerType) => state.enterprise);
-  const [tourIds, setTourIds] = useState([]);
+  const { allHotels } = useSelector((state: ReducerType) => state.enterprise);
+  const [hotelIds, setHotelIds] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
 
   const revenueType = [
@@ -46,7 +46,7 @@ const ToursRevenue = memo(() => {
     watch,
     control,
     formState: { errors },
-  } = useForm<ITourSelection>({
+  } = useForm<IHotelSelection>({
     resolver: yupResolver(schema),
     mode: "onChange",
     defaultValues: {
@@ -60,19 +60,19 @@ const ToursRevenue = memo(() => {
   const watchRevenueType = watch("revenueType");
 
   useEffect(() => {
-    if (allTours) {
-      const tempTourIds = allTours.map((tour) => tour?.id);
-      setTourIds(tempTourIds);
+    if (allHotels) {
+      const tempHotelIds = allHotels.map((hotel) => hotel?.id);
+      setHotelIds(tempHotelIds);
       setValue("monthValue", new Date());
     }
-  }, [allTours]);
+  }, [allHotels]);
 
   useEffect(() => {
     if (watchMonthValue) {
       const month = new Date(watchMonthValue).getMonth();
       const year = new Date(watchMonthValue).getFullYear();
-      TourBillService.getRevenueOfToursByMonth({
-        tourIds: tourIds,
+      RoomBillService.getRevenueOfHotelsByMonth({
+        hotelIds: hotelIds,
         month: month,
         year: year,
       }).then((revenue) => {
@@ -98,8 +98,8 @@ const ToursRevenue = memo(() => {
   useEffect(() => {
     if (watchYearValue) {
       const year = new Date(watchYearValue).getFullYear();
-      TourBillService.getRevenueOfToursByYear({
-        tourIds: tourIds,
+      RoomBillService.getRevenueOfHotelsByYear({
+        hotelIds: hotelIds,
         year: year,
       }).then((revenue) => {
         const temprevenueData = [];
@@ -139,7 +139,7 @@ const ToursRevenue = memo(() => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Revenue of tours</h3>
+          <h3>Revenue of hotels</h3>
         </Row>
         <Row className="mb-3">
           <div className={classes.inputContainer}>
@@ -195,11 +195,11 @@ const ToursRevenue = memo(() => {
             </tr>
           </thead>
           <tbody>
-            {allTours?.map((item, index) => {
+            {allHotels?.map((item, index) => {
               return (
                 <tr key={index}>
                   <th scope="row">{index}</th>
-                  <td>{item?.title}</td>
+                  <td>{item?.name}</td>
                   {revenueData[index]?.map((item) => (
                     <th className="text-center">{Math.floor(item)}</th>
                   ))}
@@ -213,7 +213,7 @@ const ToursRevenue = memo(() => {
   );
 });
 
-export default ToursRevenue;
+export default HotelsRevenue;
 function setMessSuccess(arg0: string): any {
   throw new Error("Function not implemented.");
 }

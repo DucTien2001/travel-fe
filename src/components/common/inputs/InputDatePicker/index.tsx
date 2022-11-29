@@ -19,15 +19,16 @@ interface Props {
   className?: string;
   placeholder?: string;
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrors<any>>;
-  name: string;
+  name?: string;
   control?: any;
+  dateFormat?: string;
   _onChange?: ()=>void;
   [key: string]: any;
 }
 
 // eslint-disable-next-line react/display-name
 const CustomDatePicker = memo(
-  ({ label, labelIcon, className, placeholder, errorMessage, name, handleChange, _onChange, control, ...rest }: Props) => {
+  ({ label, labelIcon, className, placeholder, errorMessage, name, handleChange, _onChange, control, dateFormat, ...rest }: Props) => {
     return (
       <FormGroup
         className={clsx(
@@ -52,6 +53,7 @@ const CustomDatePicker = memo(
                       _onChange && _onChange()
                       return field?.onChange(date)
                     }}
+                    dateFormat={dateFormat || "dd/mm/yyyy"}
                     inputProps={{
                         className: "form-control",
                         placeholder: `${placeholder}`,
@@ -71,6 +73,10 @@ const CustomDatePicker = memo(
               inputProps={{
                 className: "form-control",
                 placeholder: `${placeholder}`,
+              }}
+              dateFormat="YYYY-MM"
+              onChange={(date)=>{
+                _onChange && _onChange()
               }}
               {...rest}
             />
