@@ -33,3 +33,14 @@ export interface IVerifyBookRoom {
   code: string;
   billId: number;
 }
+
+export interface IHotelsRevenueByMonth {
+  hotelIds: number[];
+  month: number;
+  year: number;
+}
+
+export interface IHotelsRevenueByYear {
+  hotelIds: number[];
+  year: number;
+}

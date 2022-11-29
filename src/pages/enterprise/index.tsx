@@ -26,6 +26,7 @@ import Sidebar from "components/Sidebar";
 import { enterpriseRoutes } from "routes/routers";
 import SectionHeader from "components/Header/SectionHeader";
 import ToursRevenue from "./ToursRevenue";
+import HotelsRevenue from "./HotelsRevenue";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -168,6 +169,9 @@ const Enterprise: NextPage = () => {
             </TabPane>
             <TabPane tabId="verticalTabs3" className={classes.tabPane}>
               <ToursRevenue />
+            </TabPane>
+            <TabPane tabId="verticalTabs4" className={classes.tabPane}>
+              <HotelsRevenue />
             </TabPane>
             <TabPane tabId="verticalTabs5" className={classes.tabPane}>
               <Sales />
