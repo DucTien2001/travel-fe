@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles({
@@ -8,13 +7,13 @@ const useStyles = makeStyles({
     width: '100%',
   },
   thumb: {
-    color: '#000',
+    color: 'var(--violet-color) !important',
   },
   rail: {
-    color: `rgba(0, 0, 0, 0.26)`,
+    color: `var(--violet-color) !important`,
   },
   track: {
-    color: '#000',
+    color: 'var(--violet-color) !important',
   },
 });
 
@@ -27,8 +26,8 @@ const SliderProton = ({ value, changePrice }) => {
         value={value}
         onChange={changePrice}
         valueLabelDisplay='on'
-        min={1000}
-        max={5000}
+        min={10000}
+        max={3000000}
         classes={{
           thumb: classes.thumb,
           rail: classes.rail,

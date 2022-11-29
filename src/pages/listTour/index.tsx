@@ -38,7 +38,7 @@ import { ReducerType } from "redux/reducers";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/normal/tour";
 import SearchNotFound from "components/SearchNotFound";
-import SliderProton from "components/SliderProton";
+import FilterPanel from "../../components/FilterPanel";
 interface SearchData {
   tourName?: string;
   checkOptions?: boolean;
@@ -49,7 +49,14 @@ const ListTours: NextPage = () => {
   const { allTours } = useSelector((state: ReducerType) => state.normal);
   const [changeViewLayout, setChangeViewLayout] = useState(false);
   const [listTours, setListTours] = useState([]);
-  const [filterTags, setFilterTags] = useState([])
+  const [selectedPrice, setSelectedPrice] = useState([10000, 3000000]);
+  const [tags, setTags] = useState([
+    { id: 1, checked: false, label: 'Shopping' },
+    { id: 2, checked: false, label: 'Sea' },
+    { id: 3, checked: false, label: 'Family' },
+    { id: 4, checked: false, label: 'Mountain' },
+    { id: 5, checked: false, label: 'Trekking' },
+  ]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -74,9 +81,14 @@ const ListTours: NextPage = () => {
   const onClearOption = () => {
     clearForm();
     getAllTours();
+    setTags([
+      { id: 1, checked: false, label: 'Shopping' },
+      { id: 2, checked: false, label: 'Sea' },
+      { id: 3, checked: false, label: 'Family' },
+      { id: 4, checked: false, label: 'Mountain' },
+      { id: 5, checked: false, label: 'Trekking' },
+    ]);
   };
-
-
 
   const onChangeViewLayout = () => {
     setChangeViewLayout(!changeViewLayout);
@@ -116,52 +128,56 @@ const ListTours: NextPage = () => {
       handleSearch();
     }
   };
-  
-  const filteredDATA = allTours.filter((node) =>
-  filterTags.length > 0
-    ? filterTags.every((filterTag) =>
-        node.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
-      )
-    : allTours
-  )
 
-  const filterHandler = (event) => {
-    if (event.target.checked) {
-      setFilterTags([...filterTags, event.target.value])
-    } else {
-      setFilterTags(
-        filterTags.filter((filterTag) => filterTag !== event.target.value)
-      )
-    }
-  }  
-  const [selectedPrice, setSelectedPrice] = useState([10000, 50000000]);
-
-  const minPrice = selectedPrice[0];
-  const maxPrice = selectedPrice[1];
-
-  const applyFilterPrice = () => {
-    let updatedList = allTours;
-    updatedList = updatedList.filter(
-      (item) => item.price >= minPrice && item.price <= maxPrice
+  const handleChangeChecked = (id) => {
+    const tagStateList = tags;
+    const changeCheckedTags = tagStateList.map((item) =>
+      item.id === id ? { ...item, checked: !item.checked } : item
     );
-    setListTours(updatedList);
-  }
+    setTags(changeCheckedTags);
+  };
 
   const handleChangePrice = (event, value) => {
     setSelectedPrice(value);
   };
 
+  const applyFilters = () => {
+    let updatedList = allTours;
+    
+    //Tag filter
+    const tagsChecked = tags
+      .filter((item) => item.checked)
+      .map((item) => item.label.toLowerCase());
+    if (tagsChecked.length) {
+        updatedList = updatedList.filter((item) =>
+        tagsChecked.every((filterTag) =>
+        item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
+         )
+      );
+    }
+
+    // Price Filter
+    const minPrice = selectedPrice[0];
+    const maxPrice = selectedPrice[1];
+
+    updatedList = updatedList.filter(
+      (item) => item.price >= minPrice && item.price <= maxPrice
+    );
+    setListTours(updatedList);
+  };
+
   useEffect(() => {
-    applyFilterPrice();
-  }, [selectedPrice]);
-  
+    applyFilters();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tags, selectedPrice]);
+
   useEffect(() => {
     setListTours(allTours);
   }, [allTours]);
 
   useEffect(() => {
-    setListTours(filteredDATA);
-  }, [filteredDATA]);
+    Aos.init({ duration: 500 });
+  }, []);
 
   return (
     <>
@@ -258,17 +274,22 @@ const ListTours: NextPage = () => {
                 </Button>
               </BoxSmallLeft>
               <BoxSmallLeft title="Options">
-                <InputCheckbox id="sea"  content="Sea" value="sea" onChange={filterHandler} inputRef={register("checkOptions")}/>
+                {/* <InputCheckbox id="sea"  content="Sea" value="sea" onChange={filterHandler} inputRef={register("checkOptions")}/>
                 <InputCheckbox id="shopping" content="Shopping" value="shopping" onChange={filterHandler} inputRef={register("checkOptions")}/>
                 <InputCheckbox id="family" content="Family" value="family" onChange={filterHandler} inputRef={register("checkOptions")}/>
-                <InputCheckbox id="mountain" content="Mountain" value="mountain" onChange={filterHandler} inputRef={register("checkOptions")}/>
-                {/* <InputCheckbox content="3 stars" inputRef={register("checkOptions")} />
-                <InputCheckbox content="4 stars" inputRef={register("checkOptions")} />
-                <InputCheckbox content="5 stars" inputRef={register("checkOptions")} />
-                <InputCheckbox content="Discount" inputRef={register("checkOptions")} /> */}
-                <SliderProton value={selectedPrice} changePrice={handleChangePrice} />
-                {/* <input type="range" value={selectedPrice[0]} min={minPrice} max={maxPrice} onChange={(e) => handleChangePrice(e, e.target.value)}/> */}
+                <InputCheckbox id="mountain" content="Mountain" value="mountain" onChange={filterHandler} inputRef={register("checkOptions")}/> */}
+                <FilterPanel
+                // selectedCategory={selectedCategory}
+                // selectCategory={handleSelectCategory}
+                // selectedRating={selectedRating}
+                selectedPrice={selectedPrice}
+                // selectRating={handleSelectRating}
+                tags={tags}
+                changeChecked={handleChangeChecked}
+                changePrice={handleChangePrice}
+                />
               </BoxSmallLeft>
+
             </Col>
             <Col xs={10} className={classes.listTours}>
               {/* ==================== Grid view ===================== */}

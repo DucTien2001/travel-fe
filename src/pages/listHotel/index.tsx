@@ -30,6 +30,7 @@ import { ReducerType } from "redux/reducers";
 import { HotelService} from "services/normal/hotel";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import SearchNotFound from "components/SearchNotFound";
+import FilterPanel from "components/FilterPanel";
 
 interface SearchData {
   hotelName?: string;
@@ -48,7 +49,13 @@ const ListHotels: NextPage = () => {
 
   const [changeViewLayout, setChangeViewLayout] = useState(false);
   const [listHotels, setListHotels] = useState([]);
-
+  const [tags, setTags] = useState([
+    { id: 1, checked: false, label: 'Shopping' },
+    { id: 2, checked: false, label: 'Sea' },
+    { id: 3, checked: false, label: 'Family' },
+    { id: 4, checked: false, label: 'Mountain' },
+    { id: 5, checked: false, label: 'Trekking' },
+  ]);
   // const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(9);
 
@@ -87,9 +94,6 @@ const ListHotels: NextPage = () => {
   const clearForm = () => {
     reset({
       hotelName: "",
-      // departure: new Date(),
-      // return: new Date(),
-      // numberOfRoom: 1,
       checkOptions: false,
     });
   };
@@ -97,6 +101,13 @@ const ListHotels: NextPage = () => {
   const onClearOption = () => {
     clearForm();
     getAllHotels();
+    setTags([
+      { id: 1, checked: false, label: 'Shopping' },
+      { id: 2, checked: false, label: 'Sea' },
+      { id: 3, checked: false, label: 'Family' },
+      { id: 4, checked: false, label: 'Mountain' },
+      { id: 5, checked: false, label: 'Trekking' },
+    ]);
   };
 
   useEffect(() => {
@@ -142,9 +153,36 @@ const ListHotels: NextPage = () => {
     }
   };
 
-  const handleChooseOption = ()=>{
-    console.log(getValues("checkOptions"))
-  }
+  const handleChangeChecked = (id) => {
+    const tagStateList = tags;
+    const changeCheckedTags = tagStateList.map((item) =>
+      item.id === id ? { ...item, checked: !item.checked } : item
+    );
+    setTags(changeCheckedTags);
+  };
+
+  const applyFilters = () => {
+    let updatedList = allHotels;
+    
+    //Tag filter
+    const tagsChecked = tags
+      .filter((item) => item.checked)
+      .map((item) => item.label.toLowerCase());
+    if (tagsChecked.length) {
+        updatedList = updatedList.filter((item) =>
+        tagsChecked.every((filterTag) =>
+        item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
+         )
+      );
+    }
+
+    setListHotels(updatedList);
+  };
+
+  useEffect(() => {
+    applyFilters();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tags]);
 
   return (
     <>
@@ -206,55 +244,20 @@ const ListHotels: NextPage = () => {
                   onKeyPress={handleKeyPress}
                   inputRef={register("hotelName")}
                 />
-                {/* <InputDatePicker
-                  className={classes.inputSearchDate}
-                  label="Departure date"
-                  labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
-                  placeholder="Departure"
-                  name="Departure date"
-                  timeFormat={false}
-                  inputRef={register("departure")}
-                  errorMessage={errors.departure?.message}
-                />
-                <InputDatePicker
-                  className={classes.inputSearchDate}
-                  label="Return date"
-                  placeholder="Return"
-                  name="Return date"
-                  timeFormat={false}
-                  labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
-                  inputRef={register("return")}
-                  errorMessage={errors.return?.message}
-                />
-                <Controller
-                  name="numberOfRoom"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <div className={classes.numberRooms}>
-                        <InputCounter
-                          label="Rooms"
-                          labelIcon={<FontAwesomeIcon icon={faBed} />}
-                          max={9999}
-                          min={1}
-                          onChange={field.onChange}
-                          value={field.value}
-                        />
-                      </div>
-                    </>
-                  )}
-                /> */}
                 <Button btnType={BtnType.Primary} className={classes.btnSearch} onClick={() => handleSearch()}>
                   Search
                 </Button>
               </BoxSmallLeft>
               <BoxSmallLeft title="Options">
-                <InputCheckbox content="Sea" inputRef={register("checkOptions")} onChange={()=>handleChooseOption()}/>
-                <InputCheckbox content="Shopping" inputRef={register("checkOptions")}  onChange={()=>handleChooseOption()}/>
-                <InputCheckbox content="3 stars" inputRef={register("checkOptions")} onChange={()=>handleChooseOption()} />
-                <InputCheckbox content="4 stars" inputRef={register("checkOptions")} onChange={()=>handleChooseOption()} />
-                <InputCheckbox content="5 stars" inputRef={register("checkOptions")}  onChange={()=>handleChooseOption()}/>
-                <InputCheckbox content="Discount" inputRef={register("checkOptions")}  onChange={()=>handleChooseOption()}/>
+              <FilterPanel
+                // selectedCategory={selectedCategory}
+                // selectCategory={handleSelectCategory}
+                // selectedRating={selectedRating}
+                // selectRating={handleSelectRating}
+                tags={tags}
+                changeChecked={handleChangeChecked}
+                // changePrice={handleChangePrice}
+                />
               </BoxSmallLeft>
             </Col>
             <Col xs={10} className={classes.listTours}>

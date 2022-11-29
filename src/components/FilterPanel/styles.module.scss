@@ -1,0 +1,20 @@
+.label {
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+.inputGroup {
+  margin-bottom: 2rem;
+}
+.labelRange {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+.titlePrice {
+  display: flex;
+  align-items: center;
+  margin-bottom: 48px;
+  svg {
+    margin-right:  8px;
+  }
+}
