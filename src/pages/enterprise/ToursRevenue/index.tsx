@@ -158,7 +158,7 @@ const ToursRevenue = memo(() => {
           {watchRevenueType?.id === 1 && (
             <InputDatePicker
               className={classes.inputSearchDate}
-              label="Date"
+              label="Month"
               placeholder="Date"
               control={control}
               name="monthValue"
@@ -191,7 +191,7 @@ const ToursRevenue = memo(() => {
             <tr>
               <th scope="row">#</th>
               <th>Name</th>
-              {revenueData.length > 0 && revenueData[0]?.map((item, index) => <th className="text-center">{index + 1}</th>)}
+              {revenueData.length > 0 && revenueData[0]?.map((item, index) => <th key={index} className="text-center">{index + 1}</th>)}
             </tr>
           </thead>
           <tbody>
@@ -200,8 +200,8 @@ const ToursRevenue = memo(() => {
                 <tr key={index}>
                   <th scope="row">{index}</th>
                   <td>{item?.title}</td>
-                  {revenueData[index]?.map((item) => (
-                    <th className="text-center">{Math.floor(item)}</th>
+                  {revenueData[index]?.map((item, index) => (
+                    <th key={index}className="text-center">{Math.floor(item)}</th>
                   ))}
                 </tr>
               );

@@ -114,7 +114,7 @@ const Enterprise: NextPage = () => {
                 Hotels
               </NavLink>
             </NavItem>
-            <NavItem>
+            {/* <NavItem>
               <NavLink
                 href="#"
                 className={verticalTabs === EActiveNav.Sales_Active ? classes.active : classes.navLink}
@@ -123,8 +123,8 @@ const Enterprise: NextPage = () => {
                 <FontAwesomeIcon icon={faChartSimple} />
                 Sales
               </NavLink>
-            </NavItem>
-            <span>sales</span>
+            </NavItem> */}
+            <span>Sales</span>
             <NavItem>
               <NavLink
                 href="#"

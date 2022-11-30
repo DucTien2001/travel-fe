@@ -31,6 +31,17 @@ export class CommentService {
       });
   }
 
+  static async deleteCommentTour(commentId: number): Promise<any> {
+    return await api
+      .put(API.NORMAL.COMMENT.TOUR_COMMENT.DELETE.replace(":id", `${commentId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
   static async getHotelComments(hotelId: number): Promise<any> {
     return await api
       .get(API.NORMAL.COMMENT.HOTEL_COMMENT.GET_COMMENT.replace(":id", `${hotelId}`))

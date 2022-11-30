@@ -1,43 +1,40 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { Row, Table } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
-import { TourBillService } from "services/enterprise/tourBill";
-import InputDatePicker from "components/common/inputs/InputDatePicker";
 import moment from "moment";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomSelect from "components/common/CustomSelect";
 import { CommentService } from "services/enterprise/comment";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import SearchNotFound from "components/SearchNotFound";
+import Button, {BtnType} from "components/common/buttons/Button";
+import PopupReplyComment from "./PopupReplyComment";
+import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 
 interface ITourSelection {
-  revenueType?: any;
-  monthValue?: Date;
-  yearValue?: Date;
+  tours?: any;
 }
 
 // eslint-disable-next-line react/display-name
 const TourComments = memo(() => {
   const dispatch = useDispatch();
   const { allTours } = useSelector((state: ReducerType) => state.enterprise);
+  const [tours, setTours] = useState([]);
+  const [comments, setComments] = useState([]);
   const [tourIds, setTourIds] = useState([]);
-  const [revenueData, setRevenueData] = useState([]);
-
-  const revenueType = [
-    { id: 1, name: "Revenue of a month", value: "Revenue of a month" },
-    { id: 2, name: "Revenue of a year", value: "Revenue of a year" },
-  ];
+  const [openPopupReplyComment, setOpenPopupReplyComment] = useState(false);
+  const [commentAction, setCommentAction] = useState(null);
+  const [commentDelete, setCommentDelete] = useState(null);
+  const [commentEdit, setCommentEdit] = useState(null);
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      revenueType: yup.object().required("This field is required"),
-      monthValue: yup.date().notRequired(),
-      yearValue: yup.date().notRequired(),
+      tours: yup.object().required("This field is required"),
     });
   }, []);
 
@@ -51,173 +48,192 @@ const TourComments = memo(() => {
     resolver: yupResolver(schema),
     mode: "onChange",
     defaultValues: {
-      monthValue: new Date(),
-      revenueType: revenueType[0],
+      tours: tours[0],
     },
   });
 
-  const watchMonthValue = watch("monthValue");
-  const watchYearValue = watch("yearValue");
-  const watchRevenueType = watch("revenueType");
+    const watchTourValue = watch("tours");
 
-  useEffect(() => {
-    if (allTours) {
-      const tempTourIds = allTours.map((tour) => tour?.id);
-      CommentService.getAllTourComments({ tourIds: tempTourIds }).then((allTourComments) => {
-        console.log(allTourComments, "============");
-      });
-      setTourIds(tempTourIds);
-      setValue("monthValue", new Date());
-    }
-  }, [allTours]);
-
-  useEffect(() => {
-    if (watchMonthValue) {
-      const month = new Date(watchMonthValue).getMonth();
-      const year = new Date(watchMonthValue).getFullYear();
-      TourBillService.getRevenueOfToursByMonth({
-        tourIds: tourIds,
-        month: month,
-        year: year,
-      }).then((revenue) => {
-        const numberDaysOfMonth = get_day_of_month(year, month + 1);
-        const temprevenueData = [];
-        revenue?.data?.forEach((element) => {
-          const costArr = [];
-          for (let i = 1; i <= numberDaysOfMonth; i++) {
-            const cost = element?.filter((item) => item?.date === i);
-            if (cost.length > 0) {
-              costArr.push(cost[0]?.cost);
-            } else {
-              costArr.push(0);
-            }
-          }
-          temprevenueData.push(costArr);
-        });
-        setRevenueData(temprevenueData);
-      });
-    }
-  }, [watchMonthValue]);
-
-  useEffect(() => {
-    if (watchYearValue) {
-      const year = new Date(watchYearValue).getFullYear();
-      TourBillService.getRevenueOfToursByYear({
-        tourIds: tourIds,
-        year: year,
-      }).then((revenue) => {
-        const temprevenueData = [];
-        revenue?.data?.forEach((element) => {
-          const costArr = [];
-          for (let i = 0; i < 12; i++) {
-            const cost = element?.filter((item) => item?.month === i);
-            if (cost.length > 0) {
-              costArr.push(cost[0]?.cost);
-            } else {
-              costArr.push(0);
-            }
-          }
-          temprevenueData.push(costArr);
-        });
-        setRevenueData(temprevenueData);
-      });
-    }
-  }, [watchYearValue]);
-
-  useEffect(() => {
-    if (watchRevenueType) {
-      if (watchRevenueType?.id == 1) {
-        setValue("monthValue", new Date());
+    const sortDate = (a, b) => {
+      if (moment(a?.createdAt).toDate() > moment(b?.createdAt).toDate()) {
+        return 1;
+      } else if (
+        moment(a?.createdAt).toDate() < moment(b?.createdAt).toDate()
+      ) {
+        return -1;
       } else {
-        setValue("yearValue", new Date());
+        return 0;
       }
     }
-  }, [watchRevenueType]);
+    const onOpenPopupReplyComment = (e, itemAction) => {
+      setOpenPopupReplyComment(true);
+      setCommentAction(itemAction);
+      setCommentEdit(itemAction);
+    };
 
-  // Calculate number of days in month
-  const get_day_of_month = (year, month) => {
-    return new Date(year, month, 0).getDate();
-  };
+    const onOpenPopupConfirmDelete = (e, itemAction) => {
+      setCommentDelete(itemAction);
+    }
+
+    const onClosePopupConfirmDelete = () => {
+      if(!commentDelete) return
+      setCommentDelete(null);
+  }
+
+    const onClosePopupAddComment = () => {
+      setOpenPopupReplyComment(false);
+      setCommentEdit(null);
+  }
+
+
+  const onGetTourComments = () => {
+    CommentService.getAllTourComments({tourIds: tourIds})
+    .then((res) => {
+      setComments(res.data.sort(sortDate));
+    })
+    .catch((e) => {
+      dispatch(setErrorMess(e));
+    })
+    .finally(() => {
+      dispatch(setLoading(false));
+    })
+  }
+  const onYesDelete = () => {
+    if (!commentDelete) return
+    onClosePopupConfirmDelete();
+    dispatch(setLoading(true));
+    CommentService.deleteCommentTour(commentDelete?.id)
+    .then(()=> {        
+        onGetTourComments();
+    })
+    .catch(e => dispatch(setErrorMess(e)))
+    .finally(() => dispatch(setLoading(false)))
+  }
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+      CommentService.getAllTourComments({tourIds: tourIds})
+      .then((res) => {
+        setComments(res.data.sort(sortDate));
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[allTours])
+
+  useEffect(() => {
+    const newTours = allTours?.map((item, index) => {return {
+      id: item?.id,
+      name: item?.title,
+      value: item?.title,
+    }})
+    const tempTourIds = allTours.map((tour) => tour?.id);
+    setTourIds(tempTourIds);
+    setTours(newTours);
+  }, [allTours])
+
+  useEffect(() => {
+    if(watchTourValue) {
+      CommentService.getAllTourComments({tourIds: tourIds})
+      .then((res) => {
+        const filterTour = res.data.filter(item => item.tourId  === watchTourValue.id)
+        setComments(filterTour);
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchTourValue])
 
   return (
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Revenue of tours</h3>
+          <h3>comment of tours</h3>
         </Row>
-        <Row className="mb-3">
-          <div className={classes.inputContainer}>
-            <p className={classes.inputTitle}>Type of revenue:</p>
+        <Row className={classes.rowSelectTour}>
+            <p>Tour:</p>
             <CustomSelect
               className={classes.input}
-              placeholder="Please choose the type of revenue"
-              name="revenueType"
+              placeholder="Please choose tour"
+              name="tours"
               control={control}
-              options={revenueType}
-              errorMessage={errors.revenueType?.message}
+              options={tours}
+              errorMessage={errors.tours?.message}
             />
-          </div>
-        </Row>
-        <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
-          {watchRevenueType?.id === 1 && (
-            <InputDatePicker
-              className={classes.inputSearchDate}
-              label="Date"
-              placeholder="Date"
-              control={control}
-              name="monthValue"
-              minDate={moment().toDate()}
-              dateFormat="YYYY-MM"
-              timeFormat={false}
-              labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
-              inputRef={register("monthValue")}
-              errorMessage={errors.monthValue?.message}
-            />
-          )}
-          {watchRevenueType?.id === 2 && (
-            <InputDatePicker
-              className={classes.inputSearchDate}
-              label="Date"
-              placeholder="Date"
-              control={control}
-              name="yearValue"
-              minDate={moment().toDate()}
-              dateFormat="YYYY"
-              timeFormat={false}
-              labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
-              inputRef={register("yearValue")}
-              errorMessage={errors.yearValue?.message}
-            />
-          )}
         </Row>
         <Table className={classes.table} responsive>
           <thead>
             <tr>
               <th scope="row">#</th>
-              <th>Name</th>
-              {revenueData.length > 0 && revenueData[0]?.map((item, index) => <th className="text-center">{index + 1}</th>)}
+              <th>Tour name</th>
+              <th>User name</th>
+              <th>Created</th>
+              <th>Content</th>
+              <th>Reply</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {allTours?.map((item, index) => {
-              return (
-                <tr key={index}>
-                  <th scope="row">{index}</th>
-                  <td>{item?.title}</td>
-                  {revenueData[index]?.map((item) => (
-                    <th className="text-center">{Math.floor(item)}</th>
-                  ))}
-                </tr>
-              );
-            })}
+            {comments?.map((cmt, index) => (
+              <tr key={index}>
+                <td scope="row">{index + 1}</td>
+                <td>{cmt?.tourInfo.title}</td>
+                <td>{cmt?.tourReviewer?.firstName}{" "}{cmt?.tourReviewer?.lastName}</td>
+                <td>{moment(cmt?.createdAt).format("DD/MM/YYYY")}</td>
+                <td>{cmt?.comment}</td>
+                <td>{cmt?.replyComment || "No reply"}</td>
+                <td className={clsx("text-right", classes.colActionBtn)}>
+                  <Button
+                  className="btn-icon mr-1"
+                  color="info"
+                  size="sm"
+                  type="button"
+                  onClick={(e) => onOpenPopupReplyComment(e, cmt)}
+                  >
+                 <i className="now-ui-icons ui-1_send mr-1"></i>
+                  </Button>
+                  <Button
+                  className="btn-icon"
+                  color="danger"
+                  size="sm"
+                  type="button"
+                  onClick={(e) => onOpenPopupConfirmDelete(e, cmt)}
+                  >
+                  <i className="now-ui-icons ui-1_simple-remove"></i>
+                  </Button>
+                  </td>
+              </tr>
+            ))}
+            {!comments?.length && (
+              <tr>
+                <td scope="row" colSpan={5}> 
+                  <SearchNotFound mess="No comment"/>
+                </td>                 
+              </tr>
+            )}
           </tbody>
         </Table>
+        <PopupReplyComment
+        isOpen={openPopupReplyComment}
+        commentEdit={commentEdit}
+        commentId={commentAction?.id}
+        onClose={onClosePopupAddComment}
+        toggle={onClosePopupAddComment}
+        onGetTourComments={onGetTourComments}
+        />
+        <PopupConfirmDelete
+        title="Are you sure delete this comment?"
+        isOpen={!!commentDelete}
+        onClose={onClosePopupConfirmDelete}
+        toggle={onClosePopupConfirmDelete}
+        onYes={onYesDelete}
+        />
       </div>
     </>
   );
 });
 
 export default TourComments;
-function setMessSuccess(arg0: string): any {
-  throw new Error("Function not implemented.");
-}
