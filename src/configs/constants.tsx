@@ -71,6 +71,16 @@ export const API = {
     },
   },
   ENTERPRISE: {
+    COMMENT: {
+      TOUR_COMMENT: {
+        GET_All_COMMENTS: "/v1.0/tour-comment/get-all-tour-comments",
+        REPLY: "/v1.0/tour-comment/reply/:id",
+      },
+      HOTEL_COMMENT: {
+        GET_All_COMMENTS: "/v1.0/hotel-comment/get-all-hotel-comments",
+        REPLY: "/v1.0/hotel-comment/reply/:id",
+      },
+    },
     TOUR: {
       CREATE_TOUR: "/v1.0/tour/create",
       UPDATE_TOUR: "/v1.0/tour/update/:id",

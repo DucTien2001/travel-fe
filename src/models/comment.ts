@@ -1,5 +1,9 @@
 import { User } from "./user";
 
+export interface IGetAllTourComments {
+  tourIds: number[];
+}
+
 export interface ICreateTourComment {
     id?: number;
     comment: string;

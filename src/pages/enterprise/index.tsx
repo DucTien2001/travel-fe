@@ -27,15 +27,18 @@ import { enterpriseRoutes } from "routes/routers";
 import SectionHeader from "components/Header/SectionHeader";
 import ToursRevenue from "./ToursRevenue";
 import HotelsRevenue from "./HotelsRevenue";
+import TourComments from "./TourComments";
 
 export enum EActiveNav {
   Tour_Active = 1,
   Hotel_Active = 2,
   Tour_Sales_Active = 3,
   Hotel_Sales_Active = 4,
-  Sales_Active = 5,
-  Email_Active = 6,
-  Feedback_Active = 7,
+  Tour_Feedbacks_Active = 5,
+  Hotel_Feedbacks_Active = 6,
+  Sales_Active = 7,
+  Email_Active = 8,
+  Feedback_Active = 9,
 }
 
 const Enterprise: NextPage = () => {
@@ -55,6 +58,12 @@ const Enterprise: NextPage = () => {
       case EActiveNav.Hotel_Sales_Active:
         setVerticalTabs(EActiveNav.Hotel_Sales_Active);
         break;
+        case EActiveNav.Tour_Feedbacks_Active:
+          setVerticalTabs(EActiveNav.Tour_Feedbacks_Active);
+          break;
+        case EActiveNav.Hotel_Feedbacks_Active:
+          setVerticalTabs(EActiveNav.Hotel_Feedbacks_Active);
+          break;
       case EActiveNav.Sales_Active:
         setVerticalTabs(EActiveNav.Sales_Active);
         break;
@@ -136,6 +145,27 @@ const Enterprise: NextPage = () => {
                 Hotels
               </NavLink>
             </NavItem>
+            <span>Feedbacks</span>
+            <NavItem>
+              <NavLink
+                href="#"
+                className={verticalTabs === EActiveNav.Tour_Feedbacks_Active ? classes.active : classes.navLink}
+                onClick={() => onChangeTab(EActiveNav.Tour_Feedbacks_Active)}
+              >
+                <FontAwesomeIcon icon={faPlaneDeparture} />
+                Tours
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                href="#"
+                className={verticalTabs === EActiveNav.Hotel_Feedbacks_Active ? classes.active : classes.navLink}
+                onClick={() => onChangeTab(EActiveNav.Hotel_Feedbacks_Active)}
+              >
+                <FontAwesomeIcon icon={faBuilding} />
+                Hotels
+              </NavLink>
+            </NavItem>
             <span>Notifications</span>
             <NavItem>
               <NavLink
@@ -174,9 +204,15 @@ const Enterprise: NextPage = () => {
               <HotelsRevenue />
             </TabPane>
             <TabPane tabId="verticalTabs5" className={classes.tabPane}>
-              <Sales />
+              <TourComments />
             </TabPane>
             <TabPane tabId="verticalTabs6" className={classes.tabPane}>
+              <TourComments />
+            </TabPane>
+            <TabPane tabId="verticalTabs7" className={classes.tabPane}>
+              <Sales />
+            </TabPane>
+            <TabPane tabId="verticalTabs8" className={classes.tabPane}>
               <EmailTemplate />
             </TabPane>
           </TabContent>
