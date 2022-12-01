@@ -134,3 +134,14 @@
   display: flex;
   justify-content: center;
 }
+
+.textNoReply {
+  color: var(--warning-color);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.linkDetail {
+  color: #000!important;
+  text-decoration: underline;
+}

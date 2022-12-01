@@ -15,6 +15,8 @@ import SearchNotFound from "components/SearchNotFound";
 import Button, {BtnType} from "components/common/buttons/Button";
 import PopupReplyComment from "./PopupReplyComment";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface ITourSelection {
   tours?: any;
@@ -22,10 +24,13 @@ interface ITourSelection {
 
 // eslint-disable-next-line react/display-name
 const TourComments = memo(() => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { allTours } = useSelector((state: ReducerType) => state.enterprise);
   const [tours, setTours] = useState([]);
   const [comments, setComments] = useState([]);
+  const [allComments, setAllComments] = useState([]);
+
   const [tourIds, setTourIds] = useState([]);
   const [openPopupReplyComment, setOpenPopupReplyComment] = useState(false);
   const [commentAction, setCommentAction] = useState(null);
@@ -98,6 +103,7 @@ const TourComments = memo(() => {
       dispatch(setLoading(false));
     })
   }
+
   const onYesDelete = () => {
     if (!commentDelete) return
     onClosePopupConfirmDelete();
@@ -115,6 +121,7 @@ const TourComments = memo(() => {
       CommentService.getAllTourComments({tourIds: tourIds})
       .then((res) => {
         setComments(res.data.sort(sortDate));
+        setAllComments(res.data.sort(sortDate));
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
@@ -126,26 +133,33 @@ const TourComments = memo(() => {
   },[allTours])
 
   useEffect(() => {
-    const newTours = allTours?.map((item, index) => {return {
+    const newTours = [{id: 0, name: "All", value: "All"}];
+    allTours?.map((item, index) => {newTours.push({
       id: item?.id,
       name: item?.title,
       value: item?.title,
-    }})
+    })
+    })
     const tempTourIds = allTours.map((tour) => tour?.id);
     setTourIds(tempTourIds);
     setTours(newTours);
+    setValue("tours", tours[0]);
   }, [allTours])
 
   useEffect(() => {
     if(watchTourValue) {
-      CommentService.getAllTourComments({tourIds: tourIds})
-      .then((res) => {
-        const filterTour = res.data.filter(item => item.tourId  === watchTourValue.id)
+      if(watchTourValue.id === 0){
+        setComments(allComments);
+      }
+      else { 
+        const filterTour = allComments.filter(item => item.tourId  === watchTourValue.id)
         setComments(filterTour);
-      })
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchTourValue])
+
+  console.log(allComments);
 
   return (
     <>
@@ -180,11 +194,11 @@ const TourComments = memo(() => {
             {comments?.map((cmt, index) => (
               <tr key={index}>
                 <td scope="row">{index + 1}</td>
-                <td>{cmt?.tourInfo.title}</td>
+                <td><Link href={`/listTour/:${cmt?.tourId}`}><a className={classes.linkDetail}>{cmt?.tourInfo.title}</a></Link></td>
                 <td>{cmt?.tourReviewer?.firstName}{" "}{cmt?.tourReviewer?.lastName}</td>
                 <td>{moment(cmt?.createdAt).format("DD/MM/YYYY")}</td>
                 <td>{cmt?.comment}</td>
-                <td>{cmt?.replyComment || "No reply"}</td>
+                <td>{cmt?.replyComment || <span className={classes.textNoReply}>Not reply</span>}</td>
                 <td className={clsx("text-right", classes.colActionBtn)}>
                   <Button
                   className="btn-icon mr-1"

@@ -2,7 +2,7 @@ import React, { memo, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash, faCaretDown, faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash, faCaretDown, faSearch, faPlus, faCircleCheck, faCircleMinus } from "@fortawesome/free-solid-svg-icons";
 import {
   Row,
   Col,
@@ -24,14 +24,19 @@ import PopupAddOrEditTour from "../Tours/PopupAddOrEditTour";
 import PopupAddOrEditHotel from "./PopupAddOrEditHotel";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import PopupAddOrEditRoom from "../components/PopupAddOrEditRoom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { RoomService } from "services/enterprise/room";
+import { ICreateRoom } from "models/room";
 
 // eslint-disable-next-line react/display-name
 const Hotel = memo(() => {
+  const dispatch = useDispatch();
   const enterpriseState = useSelector((state: ReducerType) => state.enterprise);
   const { user } = useSelector((state: ReducerType) => state.user);
   const { allHotels } = useSelector((state: ReducerType) => state.enterprise);
+  const [listRooms, setListRooms] = useState<any>([]);
   const [openPopupCreateHotel, setOpenPopupCreateHotel] = useState(false);
   const [openPopupConfirmDelete, setOpenPopupConfirmDelete] = useState(false);
   const [modalCreateRoom, setModalCreateRoom] = useState({
@@ -66,8 +71,27 @@ const Hotel = memo(() => {
   };
 
   useEffect(() => {
-    console.log(enterpriseState, user, "========enterpriseState=======");
   }, [enterpriseState, user]);
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+    allHotels.map(item => {
+      RoomService.getAllRooms(item.id)
+      .then((res) => {
+        setListRooms(res.data);
+        console.log(res.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      })
+    })
+  }, [allHotels, dispatch])
+
+  console.log(listRooms);
+
   return (
     <>
       <div className={classes.root}>
@@ -144,23 +168,31 @@ const Hotel = memo(() => {
                         </UncontrolledDropdown>
                       </td>
                     </tr>
-                    {/* <tr>
+                    {/* {listRooms?.map((room) => (*/}
+                    <tr> 
                       <td colSpan={7} className={classes.subTable}>
                         <Collapse isOpen={isOpenToggleArr[index]}>
                           <Table>
                             <thead className={classes.headerSubTable}>
                               <tr>
                                 <th>Room number</th>
-                                <th>Price</th>
+                                <th>Number of bed</th>
+                                <th>Number of room</th>
                                 <th>State</th>
                                 <th>Action</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
-                                <td>{item.room.numberRoom}</td>
-                                <td>{item.room.price}</td>
-                                <td>{item.room.state}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                  {/* {!item?.isTemporarilyStopWorking ?
+                                  <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour}/>
+                                  : <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour}/>
+                                } */}
+                                </td>
                                 <td>
                                   <UncontrolledDropdown>
                                     <DropdownToggle
@@ -181,7 +213,7 @@ const Hotel = memo(() => {
                                         <FontAwesomeIcon icon={faPen} />
                                         Edit
                                       </DropdownItem>
-                                      <DropdownItem className={classes.dropdownItem} onClick={onTogglePopupCreateRoom}>
+                                      <DropdownItem className={classes.dropdownItem}>
                                         <FontAwesomeIcon icon={faPlus} />
                                         Add room
                                       </DropdownItem>
@@ -200,7 +232,8 @@ const Hotel = memo(() => {
                           </Table>
                         </Collapse>
                       </td>
-                    </tr> */}
+                    </tr>
+                    {/* ))} */}
                   </>
                 );
               })}
