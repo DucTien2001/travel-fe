@@ -27,6 +27,7 @@ interface Props {
   rate?: number;
   creator: number;
   isTemporarilyStopWorking?: boolean;
+  isDelete?: boolean;
   roomNumber?: string;
   bookDates?: string;
   isHotel?: boolean;
@@ -36,11 +37,11 @@ interface Props {
 const ListServices = memo(({className, linkView, linkBook, id, src, title, description, businessHours, 
     location, contact, price, discount, 
     tags, rate, creator, 
-    isTemporarilyStopWorking, roomNumber, bookDates, isHotel} : Props) => {
+    isTemporarilyStopWorking, isDelete, roomNumber, bookDates, isHotel} : Props) => {
     const {user} = useAuth();
     return (
     <>
-        <Col xs={4} className={clsx(classes.cardItem, className)} key={id}>
+        <Col xs={4} className={clsx({[classes.stopWorking]: isTemporarilyStopWorking || isDelete}, classes.cardItem, className)} key={id}>
             <Link href={`/${linkView}/:${id}`}>
                 <a>
                 <Card className={clsx("card-pricing card-background", classes.cardImage)}

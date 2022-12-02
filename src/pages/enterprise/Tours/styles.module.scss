@@ -70,6 +70,11 @@
     width: 5% !important;
 } 
 
+.colActionStop {
+    text-align: center !important;
+    display: flex;
+    justify-content: center;
+}
 .iconAction {
     color: var(--violet-color);
 }

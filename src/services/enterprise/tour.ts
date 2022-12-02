@@ -42,4 +42,14 @@ export class TourService {
           return Promise.reject(e?.response?.data);
         })
   }
+
+  static async temporarilyStopWorking(tourId: number): Promise<any> {
+    return await api.put(API.ENTERPRISE.TOUR.STOP_WORKING.replace(":id", `${tourId}`))
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
 }

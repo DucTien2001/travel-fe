@@ -1,4 +1,4 @@
-import React, { useMemo, memo } from "react";
+import React, { useMemo, memo, useEffect } from "react";
 import { Row, Form, Modal, ModalProps, ModalHeader, ModalBody, ModalFooter, Col } from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { ImageService } from "services/image";
 import { ReducerType } from "redux/reducers";
+import { IHotel } from "models/enterprise";
+import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
 
 export interface HotelForm {
   name: string;
@@ -34,13 +36,14 @@ interface Props extends ModalProps {
   isOpen: boolean;
   onClose: () => void;
   toggle: () => void;
+  itemEdit: IHotel;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddOrEditHotel = memo((props: Props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: ReducerType) => state.user);
-  const { isOpen, toggle, onClose, rest } = props;
+  const { isOpen, toggle, onClose, itemEdit, rest } = props;
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -102,36 +105,70 @@ const PopupAddOrEditHotel = memo((props: Props) => {
     await Promise.all(uploader)
       .then((res) => {
         if (user) {
-          HotelService.createHotel({
-            name: data.name,
-            description: data.description,
-            checkInTime: data.checkInTime,
-            checkOutTime: data.checkOutTime,
-            location: data.location,
-            contact: data.contact,
-            tags: data.tags,
-            images: res,
-            creator: user?.id,
-          })
-            .then(() => {
-              dispatch(setSuccessMess("Create hotel successfully"));
-              // clearForm();
-              // toggle();
+          if(itemEdit) {
+            HotelService.updateHotel(itemEdit?.id, {
+              name: itemEdit.name,
+              description: itemEdit.description,
+              checkInTime: itemEdit.checkInTime,
+              checkOutTime: itemEdit.checkOutTime,
+              location: itemEdit.location,
+              contact: itemEdit.contact,
+              tags: itemEdit.tags,
+              images: itemEdit.images,
             })
-            .catch((e) => {
-              dispatch(setErrorMess(e));
-            });
+            // console.log(res);
+          }
+          else { 
+            HotelService.createHotel({
+              name: data.name,
+              description: data.description,
+              checkInTime: data.checkInTime,
+              checkOutTime: data.checkOutTime,
+              location: data.location,
+              contact: data.contact,
+              tags: data.tags,
+              images: res,
+              creator: user?.id,
+            })
+              .then(() => {
+                dispatch(getAllHotels(user?.id))
+                dispatch(setSuccessMess("Create hotel successfully"));
+              })
+              .catch((e) => {
+                dispatch(setErrorMess(e));
+              });
+          }
         }
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
       })
       .finally(() => {
-        // onClose();
+        onClose();
         dispatch(setLoading(false));
       });
   };
+  useEffect(() => {
+    if (itemEdit) {
+      reset({
+        name: itemEdit.name,
+        description: itemEdit.description,
+        checkInTime: itemEdit.checkInTime,
+        checkOutTime: itemEdit.checkOutTime,
+        location: itemEdit.location,
+        contact: itemEdit.contact,
+        tags: itemEdit.tags,
+        imagesHotel: itemEdit.images,
+      })
+    }
+  }, [reset, itemEdit])
 
+    useEffect(() => {
+    if (!isOpen && !itemEdit) {
+      clearForm()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, itemEdit])
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
@@ -228,11 +265,6 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                 />
               )}
             />
-            <Row className={classes.row}>
-              <Col>
-                <InputCheckbox content="Temporarily stop working" inputRef={register("isTemporarilyStopWorking")} />
-              </Col>
-            </Row>
           </ModalBody>
           <ModalFooter className={classes.footer}>
             <Button btnType={BtnType.Primary} type="submit">

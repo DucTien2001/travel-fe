@@ -145,7 +145,7 @@ const Comments = memo(( props: Props) => {
                                 <p>{comment?.replyComment}</p>
                             </div>
                         </div>)}
-                        <Media className="media-post">
+                        {/* <Media className="media-post">
                         {comment?.hotelReviewer?.role === EUserType.ENTERPRISE && (
                         <Media body>         
                             <InputTextLineArea
@@ -168,7 +168,7 @@ const Comments = memo(( props: Props) => {
                             
                         </Media>
                         )}
-                        </Media>
+                        </Media> */}
                     </Media>                      
                 </Media>
             </div>

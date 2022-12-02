@@ -22,9 +22,10 @@ export interface IHotel {
   checkInTime: string;
   checkOutTime: string;
   location: string;
-  tags: string;
-  images: string;
+  tags: string[];
+  images: string[];
   creator: number;
+  isTemporarilyStopWorking?: boolean;
 }
 
 export interface IRoom {
@@ -43,6 +44,7 @@ export interface IRoom {
   saturdayPrice: number;
   sundayPrice: number;
   hotelId: number;
+  isTemporarilyStopWorking?: boolean;
 }
 export interface EnterpriseState {
   allTours: ITour[];

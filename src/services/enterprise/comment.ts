@@ -1,6 +1,7 @@
 import { API } from "configs/constants";
 import {
   ICreateHotelComment,
+  IGetAllHotelComments,
   IGetAllTourComments,
   IReplyHotelComment,
   IReplyTourComment,
@@ -22,7 +23,7 @@ export class CommentService {
 
   static async replyTourComment(commentId: number, data: IReplyTourComment): Promise<any> {
     return await api
-      .put(API.NORMAL.COMMENT.TOUR_COMMENT.REPLY.replace(":id", `${commentId}`), data)
+      .put(API.ENTERPRISE.COMMENT.TOUR_COMMENT.REPLY.replace(":id", `${commentId}`), data)
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -33,7 +34,7 @@ export class CommentService {
 
   static async deleteCommentTour(commentId: number): Promise<any> {
     return await api
-      .put(API.NORMAL.COMMENT.TOUR_COMMENT.DELETE.replace(":id", `${commentId}`))
+      .put(API.ENTERPRISE.COMMENT.TOUR_COMMENT.DELETE.replace(":id", `${commentId}`))
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -42,58 +43,36 @@ export class CommentService {
       });
   }
 
-  // static async getHotelComments(hotelId: number): Promise<any> {
-  //   return await api
-  //     .get(API.NORMAL.COMMENT.HOTEL_COMMENT.GET_COMMENT.replace(":id", `${hotelId}`))
-  //     .then((res) => {
-  //       return Promise.resolve(res.data);
-  //     })
-  //     .catch((e) => {
-  //       return Promise.reject(e?.response?.data);
-  //     });
-  // }
+  static async getAllHotelComments(data: IGetAllHotelComments): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.COMMENT.HOTEL_COMMENT.GET_All_COMMENTS, data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 
-  // static async createCommentHotel(data: ICreateHotelComment): Promise<any> {
-  //   return await api
-  //     .post(API.NORMAL.COMMENT.HOTEL_COMMENT.CREATE, data)
-  //     .then((res) => {
-  //       return Promise.resolve(res.data);
-  //     })
-  //     .catch((e) => {
-  //       return Promise.reject(e?.response?.data);
-  //     });
-  // }
+  static async deleteCommentHotel(commentId: number): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.COMMENT.HOTEL_COMMENT.DELETE.replace(":id", `${commentId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 
-  // static async updateCommentHotel(commentId: number, data: IUpdateHotelComment): Promise<any> {
-  //   return await api
-  //     .put(API.NORMAL.COMMENT.HOTEL_COMMENT.UPDATE.replace(":id", `${commentId}`), data)
-  //     .then((res) => {
-  //       return Promise.resolve(res.data);
-  //     })
-  //     .catch((e) => {
-  //       return Promise.reject(e?.response?.data);
-  //     });
-  // }
-
-  // static async deleteCommentHotel(commentId: number): Promise<any> {
-  //   return await api
-  //     .put(API.NORMAL.COMMENT.HOTEL_COMMENT.DELETE.replace(":id", `${commentId}`))
-  //     .then((res) => {
-  //       return Promise.resolve(res.data);
-  //     })
-  //     .catch((e) => {
-  //       return Promise.reject(e?.response?.data);
-  //     });
-  // }
-
-  // static async replyHotelComment(commentId: number, data: IReplyHotelComment): Promise<any> {
-  //   return await api
-  //     .put(API.NORMAL.COMMENT.HOTEL_COMMENT.REPLY.replace(":id", `${commentId}`), data)
-  //     .then((res) => {
-  //       return Promise.resolve(res.data);
-  //     })
-  //     .catch((e) => {
-  //       return Promise.reject(e?.response?.data);
-  //     });
-  // }
+  static async replyHotelComment(commentId: number, data: IReplyHotelComment): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.COMMENT.HOTEL_COMMENT.REPLY.replace(":id", `${commentId}`), data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 }

@@ -28,6 +28,7 @@ import SectionHeader from "components/Header/SectionHeader";
 import ToursRevenue from "./ToursRevenue";
 import HotelsRevenue from "./HotelsRevenue";
 import TourComments from "./TourComments";
+import HotelComments from "./HotelComments";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -192,28 +193,28 @@ const Enterprise: NextPage = () => {
         <Col xs={10} className={classes.content}>
           <TabContent activeTab={"verticalTabs" + verticalTabs} className={classes.tabContent}>
             <TabPane tabId="verticalTabs1" className={classes.tabPane}>
-              <Tours />
+              <Tours/>
             </TabPane>
             <TabPane tabId="verticalTabs2" className={classes.tabPane}>
-              <Hotels />
+              <Hotels/>
             </TabPane>
             <TabPane tabId="verticalTabs3" className={classes.tabPane}>
-              <ToursRevenue />
+              <ToursRevenue/>
             </TabPane>
             <TabPane tabId="verticalTabs4" className={classes.tabPane}>
-              <HotelsRevenue />
+              <HotelsRevenue/>
             </TabPane>
             <TabPane tabId="verticalTabs5" className={classes.tabPane}>
-              <TourComments />
+              <TourComments/>
             </TabPane>
             <TabPane tabId="verticalTabs6" className={classes.tabPane}>
-              <TourComments />
+              <HotelComments/>
             </TabPane>
             <TabPane tabId="verticalTabs7" className={classes.tabPane}>
               <Sales />
             </TabPane>
             <TabPane tabId="verticalTabs8" className={classes.tabPane}>
-              <EmailTemplate />
+              <EmailTemplate/>
             </TabPane>
           </TabContent>
         </Col>

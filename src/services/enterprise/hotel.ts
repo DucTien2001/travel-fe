@@ -1,6 +1,6 @@
 import { API } from "configs/constants";
-import { ETour, EUpdateTour } from "models/enterprise";
-import { ICreateHotel } from "models/hotel";
+import { ETour, EUpdateTour, IHotel } from "models/enterprise";
+import { ICreateHotel, IUpdateHotel } from "models/hotel";
 import api from "../configApi";
 
 export class HotelService {
@@ -15,9 +15,20 @@ export class HotelService {
       });
   }
 
-  static async updateTour(tourId: number, data: EUpdateTour): Promise<any> {
+  static async updateHotel(hotelId: number, data: IHotel): Promise<any> {
     return await api
-      .put(API.ENTERPRISE.TOUR.UPDATE_TOUR.replace(":id", `${tourId}`), data)
+      .put(API.ENTERPRISE.HOTEL.UPDATE_HOTEL.replace(":id", `${hotelId}`), data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async deleteHotel(hotelId: number): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.HOTEL.DELETE_HOTEL.replace(":id", `${hotelId}`))
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -35,5 +46,15 @@ export class HotelService {
       .catch((e) => {
         return Promise.reject(e?.response?.data);
       });
+  }
+
+  static async temporarilyStopWorking(hotelId: number): Promise<any> {
+    return await api.put(API.ENTERPRISE.HOTEL.STOP_WORKING.replace(":id", `${hotelId}`))
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
   }
 }

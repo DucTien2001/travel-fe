@@ -18,20 +18,20 @@ import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-interface ITourSelection {
-  tours?: any;
+interface IHotelSelection {
+  hotels?: any;
 }
 
 // eslint-disable-next-line react/display-name
 const TourComments = memo(() => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { allTours } = useSelector((state: ReducerType) => state.enterprise);
-  const [tours, setTours] = useState([]);
+  const { allHotels } = useSelector((state: ReducerType) => state.enterprise);
+  const [hotels, setHotels] = useState([]);
   const [comments, setComments] = useState([]);
   const [allComments, setAllComments] = useState([]);
 
-  const [tourIds, setTourIds] = useState([]);
+  const [hotelIds, setHotelIds] = useState([]);
   const [openPopupReplyComment, setOpenPopupReplyComment] = useState(false);
   const [commentAction, setCommentAction] = useState(null);
   const [commentDelete, setCommentDelete] = useState(null);
@@ -49,15 +49,15 @@ const TourComments = memo(() => {
     watch,
     control,
     formState: { errors },
-  } = useForm<ITourSelection>({
+  } = useForm<IHotelSelection>({
     resolver: yupResolver(schema),
     mode: "onChange",
     defaultValues: {
-      tours: tours[0],
+      hotels: hotels[0],
     },
   });
 
-    const watchTourValue = watch("tours");
+    const watchHotelValue = watch("hotels");
 
     const sortDate = (a, b) => {
       if (moment(a?.createdAt).toDate() > moment(b?.createdAt).toDate()) {
@@ -91,8 +91,8 @@ const TourComments = memo(() => {
   }
 
 
-  const onGetTourComments = () => {
-    CommentService.getAllTourComments({tourIds: tourIds})
+  const onGetHotelComments = () => {
+    CommentService.getAllHotelComments({hotelIds: hotelIds})
     .then((res) => {
       setComments(res.data.sort(sortDate));
     })
@@ -108,9 +108,9 @@ const TourComments = memo(() => {
     if (!commentDelete) return
     onClosePopupConfirmDelete();
     dispatch(setLoading(true));
-    CommentService.deleteCommentTour(commentDelete?.id)
+    CommentService.deleteCommentHotel(commentDelete?.id)
     .then(()=> {        
-        onGetTourComments();
+        onGetHotelComments();
     })
     .catch(e => dispatch(setErrorMess(e)))
     .finally(() => dispatch(setLoading(false)))
@@ -118,7 +118,7 @@ const TourComments = memo(() => {
 
   useEffect(() => {
     dispatch(setLoading(true));
-      CommentService.getAllTourComments({tourIds: tourIds})
+      CommentService.getAllHotelComments({hotelIds: hotelIds})
       .then((res) => {
         setComments(res.data.sort(sortDate));
         setAllComments(res.data.sort(sortDate));
@@ -130,57 +130,57 @@ const TourComments = memo(() => {
         dispatch(setLoading(false));
       })
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[allTours])
+  },[allHotels])
 
   useEffect(() => {
-    const newTours = [{id: 0, name: "All", value: "All"}];
-    allTours?.map((item, index) => {newTours.push({
+    const newHotels = [{id: 0, name: "All", value: "All"}];
+    allHotels?.map((item, index) => {newHotels.push({
       id: item?.id,
-      name: item?.title,
-      value: item?.title,
+      name: item?.name,
+      value: item?.name,
     })
     })
-    const tempTourIds = allTours.map((tour) => tour?.id);
-    setTourIds(tempTourIds);
-    setTours(newTours);
-    setValue("tours", tours[0]);
-  }, [allTours])
+    const tempHotelIds = newHotels.map((tour) => tour?.id);
+    setHotelIds(tempHotelIds);
+    setHotels(newHotels);
+    setValue("hotels", hotels[0]);
+  }, [allHotels])
 
   useEffect(() => {
-    if(watchTourValue) {
-      if(watchTourValue.id === 0){
+    if(watchHotelValue) {
+      if(watchHotelValue.id === 0){
         setComments(allComments);
       }
       else { 
-        const filterTour = allComments.filter(item => item.tourId  === watchTourValue.id)
-        setComments(filterTour);
+        const filterHotel = allComments.filter(item => item.hotelId  === watchHotelValue.id)
+        setComments(filterHotel);
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watchTourValue])
+  }, [watchHotelValue])
 
   return (
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>comment of tours</h3>
+          <h3>comment of hotels</h3>
         </Row>
         <Row className={classes.rowSelectTour}>
             <p>Tour:</p>
             <CustomSelect
               className={classes.input}
               placeholder="Please choose tour"
-              name="tours"
+              name="hotels"
               control={control}
-              options={tours}
-              errorMessage={errors.tours?.message}
+              options={hotels}
+              errorMessage={errors.hotels?.message}
             />
         </Row>
         <Table className={classes.table} responsive>
           <thead>
             <tr>
               <th scope="row">#</th>
-              <th>Tour name</th>
+              <th>Hotel name</th>
               <th>User name</th>
               <th>Created</th>
               <th>Content</th>
@@ -192,8 +192,8 @@ const TourComments = memo(() => {
             {comments?.map((cmt, index) => (
               <tr key={index}>
                 <td scope="row">{index + 1}</td>
-                <td><Link href={`/listTour/:${cmt?.tourId}`}><a className={classes.linkDetail}>{cmt?.tourInfo.title}</a></Link></td>
-                <td>{cmt?.tourReviewer?.firstName}{" "}{cmt?.tourReviewer?.lastName}</td>
+                <td><Link href={`/listHotel/:${cmt?.hotelId}`}><a className={classes.linkDetail}>{cmt?.hotelInfo.name}</a></Link></td>
+                <td>{cmt?.hotelReviewer?.firstName}{" "}{cmt?.hotelReviewer?.lastName}</td>
                 <td>{moment(cmt?.createdAt).format("DD/MM/YYYY")}</td>
                 <td>{cmt?.comment}</td>
                 <td>{cmt?.replyComment || <span className={classes.textNoReply}>Not reply</span>}</td>
@@ -234,7 +234,7 @@ const TourComments = memo(() => {
         commentId={commentAction?.id}
         onClose={onClosePopupAddComment}
         toggle={onClosePopupAddComment}
-        onGetTourComments={onGetTourComments}
+        onGetHotelComments={onGetHotelComments}
         />
         <PopupConfirmDelete
         title="Are you sure delete this comment?"
