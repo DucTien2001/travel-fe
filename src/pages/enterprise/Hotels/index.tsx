@@ -2,25 +2,19 @@ import React, { memo, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash, faCaretDown, faSearch, faPlus, faCircleCheck, faCircleMinus, faHourglass } from "@fortawesome/free-solid-svg-icons";
 import {
-  Row,
-  Col,
-  Table,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  UncontrolledDropdown,
-  Collapse,
-} from "reactstrap";
+  faPen,
+  faTrash,
+  faCaretDown,
+  faSearch,
+  faPlus,
+  faCircleCheck,
+  faCircleMinus,
+  faHourglass,
+} from "@fortawesome/free-solid-svg-icons";
+import { Row, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Collapse } from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { CommentForm } from "components/Popup/PopupAddComment";
-import { useFieldArray, useForm } from "react-hook-form";
-import * as yup from "yup";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import Link from "next/link";
-import PopupAddOrEditTour from "../Tours/PopupAddOrEditTour";
 import PopupAddOrEditHotel from "./PopupAddOrEditHotel";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import PopupAddOrEditRoom from "../components/PopupAddOrEditRoom";
@@ -28,7 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { RoomService } from "services/enterprise/room";
-import { ICreateRoom } from "models/room";
 import { HotelService } from "services/enterprise/hotel";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
 import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
@@ -37,11 +30,9 @@ import { IHotel } from "models/enterprise";
 // eslint-disable-next-line react/display-name
 const Hotel = memo(() => {
   const dispatch = useDispatch();
-  const enterpriseState = useSelector((state: ReducerType) => state.enterprise);
   const { user } = useSelector((state: ReducerType) => state.user);
   const { allHotels } = useSelector((state: ReducerType) => state.enterprise);
 
-  const [listRooms, setListRooms] = useState<any>([]);
   const [subTable, setSubTable] = useState([]);
   const [hotelAction, setHotelAction] = useState<IHotel>();
   const [hotelEdit, setHotelEdit] = useState<IHotel>(null);
@@ -54,12 +45,23 @@ const Hotel = memo(() => {
     isOpen: false,
     hotelId: null,
   });
-  const [isOpenToggleArr, setIsOpenToggleArr] = useState([true]);
+  const [isOpenToggleArr, setIsOpenToggleArr] = useState([]);
 
   const onTogglePopupCreateHotel = () => {
     setOpenPopupCreateHotel(!openPopupCreateHotel);
     setHotelEdit(null);
   };
+
+  useEffect(() => {
+    const tempSubTable = [];
+    allHotels.map((item) => {
+      tempSubTable.push({
+        allRooms: [],
+        isCallGet: false,
+      });
+    });
+    setSubTable(tempSubTable);
+  }, [allHotels, dispatch]);
 
   const onOpenModalCreateRoom = (hotelId) => {
     setModalCreateRoom({
@@ -75,37 +77,34 @@ const Hotel = memo(() => {
     });
   };
 
-  const handleAction = (
-    currentTarget: any,
-    item: IHotel
-  ) => {
-    setHotelAction(item)
+  const handleAction = (currentTarget: any, item: IHotel) => {
+    setHotelAction(item);
   };
   const onAction = (currentTarget: any, item: IHotel) => {
     onTogglePopupCreateHotel();
     setHotelEdit(item);
-  }
+  };
 
   const onShowConfirm = () => {
-    if (!hotelAction) return
-    setHotelDelete(hotelAction)
-  }
+    if (!hotelAction) return;
+    setHotelDelete(hotelAction);
+  };
 
   const onClosePopupConfirmDelete = () => {
-    if(!hotelDelete) return
+    if (!hotelDelete) return;
     setHotelDelete(null);
-  }
+  };
 
   const onYesDelete = () => {
-    if (!hotelDelete) return
+    if (!hotelDelete) return;
     onClosePopupConfirmDelete();
     dispatch(setLoading(true));
     HotelService.deleteHotel(hotelDelete?.id)
-    .then(()=> {        
-        dispatch(getAllHotels(user?.id)) 
-    })
-    .catch(e => dispatch(setErrorMess(e)))
-    .finally(() => dispatch(setLoading(false)))
+      .then(() => {
+        dispatch(getAllHotels(user?.id));
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
   };
 
   const handleToggleSubTable = (hotel, index) => {
@@ -142,62 +141,26 @@ const Hotel = memo(() => {
     }
   };
 
-  useEffect(() => {}, [enterpriseState, user]);
-
-  useEffect(() => {
-    // dispatch(setLoading(true));
-    // allHotels.map(item => {
-    //   RoomService.getAllRooms(item.id)
-    //   .then((res) => {
-    //     const tempSubTable = []
-    //     res.data.map((item)=>{
-    //       tempSubTable.push
-    //     })
-    //     setListRooms(res.data);
-
-    //     console.log(res.data);
-    //   })
-    //   .catch((e) => {
-    //     dispatch(setErrorMess(e));
-    //   })
-    //   .finally(() => {
-    //     dispatch(setLoading(false));
-    //   })
-    // })
-    const tempSubTable = [];
-    allHotels.map((item) => {
-      tempSubTable.push({
-        allRooms: [],
-        isCallGet: false,
-      });
-    });
-  }, [allHotels, dispatch]);
-
-  console.log(listRooms);
-
   const onToggleConfirmStop = () => {
     setOpenPopupConfirmStop(!openPopupConfirmStop);
-  }
-  
+  };
+
   const onTemporarilyStopWorking = (e, item) => {
     setHotelStop(item);
     onToggleConfirmStop();
-  }
+  };
 
   const onYesStopWorking = () => {
-    if (!hotelStop) return
+    if (!hotelStop) return;
     onToggleConfirmStop();
     dispatch(setLoading(true));
     HotelService.temporarilyStopWorking(hotelStop?.id)
-    .then(()=> {        
-        dispatch(getAllHotels(user?.id)) 
-    })
-    .catch(e => dispatch(setErrorMess(e)))
-    .finally(() => dispatch(setLoading(false)))
-  }
-
-  useEffect(() => {
-  }, [enterpriseState, user]);
+      .then(() => {
+        dispatch(getAllHotels(user?.id));
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
 
   return (
     <>
@@ -221,7 +184,7 @@ const Hotel = memo(() => {
         <Table className={classes.table} responsive>
           <thead>
             <tr>
-              <th scope="row">Id</th>
+              <th scope="row">#</th>
               <th>Name</th>
               <th>Check in time</th>
               <th>Check out time</th>
@@ -242,26 +205,27 @@ const Hotel = memo(() => {
                       <td>{item.checkInTime}</td>
                       <td>{item.checkOutTime}</td>
                       <td>
-                      {!item?.isTemporarilyStopWorking ?
-                        <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour}/>
-                      : <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour}/>
-                      }
-                    </td>
-                      <td onClick={() => handleToggleSubTable(item, index)} className="text-center">
+                        {!item?.isTemporarilyStopWorking ? (
+                          <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour} />
+                        ) : (
+                          <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour} />
+                        )}
+                      </td>
+                      <td onClick={() => handleToggleSubTable(item, index)} className={clsx("text-center", classes.showRoomBtn)}>
                         Show room {"  "}
                         <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
                       </td>
                       <td className={classes.colActionStop}>
-                      <Button
-                      className="btn-icon"
-                      btnType={BtnType.Secondary}
-                      size="sm"
-                      type="button"
-                      onClick={(e) => onTemporarilyStopWorking(e, item)}
-                      >
-                      <FontAwesomeIcon icon={faHourglass}/>
-                      </Button>
-                    </td>
+                        <Button
+                          className="btn-icon"
+                          btnType={BtnType.Secondary}
+                          size="sm"
+                          type="button"
+                          onClick={(e) => onTemporarilyStopWorking(e, item)}
+                        >
+                          <FontAwesomeIcon icon={faHourglass} />
+                        </Button>
+                      </td>
                       <td className="text-center">
                         <UncontrolledDropdown>
                           <DropdownToggle
@@ -278,7 +242,7 @@ const Hotel = memo(() => {
                           </DropdownToggle>
                           <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
                             <DropdownItem className={classes.dropdownItem} onClick={(e) => onAction(e, item)}>
-                              <FontAwesomeIcon icon={faPen}/>
+                              <FontAwesomeIcon icon={faPen} />
                               Edit
                             </DropdownItem>
                             <DropdownItem className={classes.dropdownItem} onClick={() => onOpenModalCreateRoom(item?.id)}>
@@ -286,74 +250,74 @@ const Hotel = memo(() => {
                               Add room
                             </DropdownItem>
                             <DropdownItem className={classes.dropdownItem} onClick={onShowConfirm}>
-                              <FontAwesomeIcon icon={faTrash}/>
+                              <FontAwesomeIcon icon={faTrash} />
                               Delete
                             </DropdownItem>
                           </DropdownMenu>
                         </UncontrolledDropdown>
                       </td>
                     </tr>
-                    {/* {listRooms?.map((room) => (
-                    <tr> 
-                      <td colSpan={7} className={classes.subTable}>
+                    {/* {listRooms?.map((room) => ( */}
+                    <tr>
+                      <td colSpan={10} className={classes.subTable}>
                         <Collapse isOpen={isOpenToggleArr[index]}>
                           <Table>
                             <thead className={classes.headerSubTable}>
                               <tr>
-                                <th>Room number</th>
+                                <th>#</th>
+                                <th>Room title</th>
                                 <th>Number of bed</th>
                                 <th>Number of room</th>
                                 <th>State</th>
                                 <th>Action</th>
                               </tr>
                             </thead>
-                            <tbody>
-                              {subTable[index]?.map(itemSubtable=>(
-                              <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                  {!item?.isTemporarilyStopWorking ?
-                                  <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour}/>
-                                  : <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour}/>
-                                }
-                                </td>
-                                <td>
-                                  <UncontrolledDropdown>
-                                    <DropdownToggle
-                                      color="default"
-                                      data-toggle="dropdown"
-                                      href="#pablo"
-                                      id="navbarDropdownMenuLink1"
-                                      nav
-                                      onClick={(e) => e.preventDefault()}
-                                    >
-                                      <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
-                                    </DropdownToggle>
-                                    <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                                      <DropdownItem className={classes.dropdownItem}>
-                                        <FontAwesomeIcon icon={faPen} />
-                                        Edit
-                                      </DropdownItem>
-                                      <DropdownItem className={classes.dropdownItem}>
-                                        <FontAwesomeIcon icon={faPlus} />
-                                        Add room
-                                      </DropdownItem>
-                                      <DropdownItem className={classes.dropdownItem} onClick={onTogglePopupConfirmDelete}>
-                                        <FontAwesomeIcon icon={faTrash} />
-                                        Delete
-                                      </DropdownItem>
-                                    </DropdownMenu>
-                                  </UncontrolledDropdown>
-                                </td>
-                              </tr>))}
+                            <tbody className={classes.bodySubTable}>
+                              {subTable[index]?.allRooms?.map((itemSubtable, indexSub) => (
+                                <tr>
+                                  <td>{indexSub}</td>
+                                  <td>{itemSubtable?.title}</td>
+                                  <td>{itemSubtable?.numberOfBed}</td>
+                                  <td>{itemSubtable?.numberOfRoom}</td>
+                                  <td>
+                                    {!item?.isTemporarilyStopWorking ? (
+                                      <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour} />
+                                    ) : (
+                                      <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour} />
+                                    )}
+                                  </td>
+                                  <td>
+                                    <UncontrolledDropdown>
+                                      <DropdownToggle
+                                        color="default"
+                                        data-toggle="dropdown"
+                                        href="#pablo"
+                                        id="navbarDropdownMenuLink1"
+                                        nav
+                                        onClick={(e) => e.preventDefault()}
+                                      >
+                                        <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
+                                      </DropdownToggle>
+                                      <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
+                                        <DropdownItem className={classes.dropdownItem}>
+                                          <FontAwesomeIcon icon={faPen} />
+                                          Edit
+                                        </DropdownItem>
+                                        <DropdownItem className={classes.dropdownItem}>
+                                          <FontAwesomeIcon icon={faTrash} />
+                                          Delete
+                                        </DropdownItem>
+                                      </DropdownMenu>
+                                    </UncontrolledDropdown>
+                                  </td>
+                                </tr>
+                              ))}
                             </tbody>
                           </Table>
                         </Collapse>
                       </td>
                     </tr>
-                    ))}  */}
+                    {/* ))}  */}
                   </>
                 );
               })}
@@ -372,17 +336,13 @@ const Hotel = memo(() => {
           toggle={onClosePopupConfirmDelete}
           onYes={onYesDelete}
         />
-        <PopupAddOrEditRoom
-          hotelId={modalCreateRoom.hotelId}
-          isOpen={modalCreateRoom.isOpen}
-          onClose={onCloseModalCreateRoom}
-        />
+        <PopupAddOrEditRoom hotelId={modalCreateRoom.hotelId} isOpen={modalCreateRoom.isOpen} onClose={onCloseModalCreateRoom} />
         <PopupConfirmWarning
-        title="Are you sure stop working ?"
-        isOpen={openPopupConfirmStop}
-        onClose={onToggleConfirmStop}
-        toggle={onToggleConfirmStop}
-        onYes={onYesStopWorking}
+          title="Are you sure stop working ?"
+          isOpen={openPopupConfirmStop}
+          onClose={onToggleConfirmStop}
+          toggle={onToggleConfirmStop}
+          onYes={onYesStopWorking}
         />
       </div>
     </>
