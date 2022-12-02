@@ -75,10 +75,12 @@ export const API = {
       TOUR_COMMENT: {
         GET_All_COMMENTS: "/v1.0/tour-comment/get-all-tour-comments",
         REPLY: "/v1.0/tour-comment/reply/:id",
+        DELETE: "/v1.0/tour-comment/delete/:id",
       },
       HOTEL_COMMENT: {
         GET_All_COMMENTS: "/v1.0/hotel-comment/get-all-hotel-comments",
         REPLY: "/v1.0/hotel-comment/reply/:id",
+        DELETE: "/v1.0/hotel-comment/delete/:id",
       },
     },
     TOUR: {
@@ -86,11 +88,14 @@ export const API = {
       UPDATE_TOUR: "/v1.0/tour/update/:id",
       DELETE_TOUR: "/v1.0/tour/delete/:id",
       GET_TOURS: "/v1.0/tour/get-tours/:id",
+      STOP_WORKING: "/v1.0/tour/temporarily-stop-working/:id"
     },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",
       UPDATE_HOTEL: "/v1.0/hotel/update/:id",
+      DELETE_HOTEL: "/v1.0/hotel/delete/:id",
       GET_HOTELS: "/v1.0/hotel/get-hotels/:id",
+      STOP_WORKING: "/v1.0/hotel/temporarily-stop-working/:id"
     },
     ROOM: {
       CREATE_ROOM: "/v1.0/room/create",

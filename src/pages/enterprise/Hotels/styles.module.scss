@@ -69,6 +69,11 @@
 .colRoom {
     width: 10% !important;
 }
+.colActionStop {
+    text-align: center !important;
+    display: flex;
+    justify-content: center;
+}
 .iconAction {
     color: var(--violet-color);
 }
@@ -84,5 +89,15 @@
 
 .subTable {
     padding: 0 !important;
+}
+
+.iconActiveTour {
+    color: var(--green-color);
+    font-size: 16px;
+}
+
+.iconStopTour {
+    color: var(--gray-40);
+    font-size: 16px;
 }
 

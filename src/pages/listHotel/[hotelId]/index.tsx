@@ -14,6 +14,9 @@ import { HotelService } from "services/normal/hotel";
 import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { CommentService } from "services/normal/comment";
+import { Container } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFaceFrown } from "@fortawesome/free-solid-svg-icons";
 
 const listCmt = [
   {
@@ -136,14 +139,23 @@ const ProductPage = memo((Props) => {
     <>
       <div className={clsx("wrapper", classes.root)}>
         <SectionHeader title="VIEW HOTEL" src={images.bgUser.src} />
+        {hotel?.isTemporarilyStopWorking || hotel?.isDelete ? (
+          <Container className={classes.boxStopWorking}>
+            <h3>Sorry, our service is temporarily in active use </h3>
+            <FontAwesomeIcon icon={faFaceFrown}/>
+          </Container>
+        ) : (
+          <>
         <SectionHotel hotel={hotel}
         />
         <div className={classes.container}>
           <CheckRoomEmpty hotel={hotel}/>
           <Comment comments={listComment} onGetHotelComments={getHotelComments} hotel={hotel}/>
         </div>
-        <GoogleMapBody />
+        {/* <GoogleMapBody /> */}
         {/* <RelatedHotel /> */}
+        </>
+        )}
       </div>
     </>
   );

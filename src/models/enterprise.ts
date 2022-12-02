@@ -32,3 +32,17 @@ export interface EGetRoomsAvailable {
   startDate: Date;
   endDate: Date;
 }
+
+export interface IHotel {
+  id?: number;
+  name: string;
+  description: string;
+  checkInTime: string;
+  checkOutTime: string;
+  location: string;
+  contact?: string;
+  tags: string[];
+  images: string[];
+  creator?: number;
+  isTemporarilyStopWorking?: boolean;
+}

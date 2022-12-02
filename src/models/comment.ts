@@ -70,3 +70,6 @@ export interface IReplyTourComment {
     replyComment: string;
   }
   
+  export interface IGetAllHotelComments {
+    hotelIds: number[];
+  }

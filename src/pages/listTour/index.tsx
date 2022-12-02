@@ -313,6 +313,7 @@ const ListTours: NextPage = () => {
                       // rate={tour.rate}
                       creator={tour.creator}
                       isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
+                      isDelete={tour.isDelete}
                       className={tour.isTemporarilyStopWorking ? classes.stopWorking : ""}
                     />
                   ))}
