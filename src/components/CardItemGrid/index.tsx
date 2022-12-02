@@ -18,7 +18,9 @@ interface Props {
   src: string;
   title: string;
   description: string;
-  businessHours: string;
+  businessHours?: string[];
+  checkInTime?: string;
+  checkOutTime?: string;
   location: string;
   contact?: string;
   price?: number;
@@ -35,7 +37,7 @@ interface Props {
 
 // eslint-disable-next-line react/display-name
 const ListServices = memo(({className, linkView, linkBook, id, src, title, description, businessHours, 
-    location, contact, price, discount, 
+    location, contact, price, discount, checkInTime, checkOutTime,
     tags, rate, creator, 
     isTemporarilyStopWorking, isDelete, roomNumber, bookDates, isHotel} : Props) => {
     const {user} = useAuth();
@@ -59,7 +61,11 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                                 <Badge pill color="var(--violet-color)" key={index}>{item}</Badge>
                             ))}
                         </div>}
-                        <p>{businessHours}{bookDates}</p>
+                        {/* {businessHours?.map((item, index) => (
+                            <p key={index}>{item}</p>
+                        ))} */}
+                        <p>{businessHours}</p>
+                        {checkInTime && <p>{checkInTime} - {checkOutTime}</p>}
                         {price && <CardTitle tag="h3">{fCurrency2(price)} VND</CardTitle> }
                             <div>
                                 <p>{contact}</p>

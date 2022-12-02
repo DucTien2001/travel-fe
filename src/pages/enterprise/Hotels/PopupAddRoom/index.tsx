@@ -35,6 +35,8 @@ import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { ImageService } from "services/image";
 import { RoomService } from "services/enterprise/room";
+import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
+import useAuth from "hooks/useAuth";
 
 const FILE_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const PHOTO_SIZE = 10000000000; // bytes
@@ -70,7 +72,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
   const dispatch = useDispatch();
   const { hotelId, isOpen, onClose } = props;
   const [isOpenToggleArr, setIsOpenToggleArr] = useState([true]);
-
+  const {user} = useAuth();
   const schema = useMemo(() => {
     return yup.object().shape({
       room: yup.array(
@@ -220,6 +222,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
     Promise.all(arrRequest)
       .then(() => {
         dispatch(setSuccessMess("Create room(s) successfully"));
+        dispatch(getAllHotels(user?.id));
       })
       .catch((e) => {
         dispatch(setErrorMess(e));

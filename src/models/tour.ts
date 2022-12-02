@@ -4,7 +4,7 @@ export interface Tour {
     id?: number;
     title: string;
     description: string;
-    businessHours: string;
+    businessHours: string[];
     location: string;
     price: number;
     discount: number;

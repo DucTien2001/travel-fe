@@ -17,15 +17,18 @@ import Button, { BtnType } from "components/common/buttons/Button";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import PopupAddOrEditHotel from "./PopupAddOrEditHotel";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
-import PopupAddOrEditRoom from "../components/PopupAddOrEditRoom";
+import PopupAddRoom from "./PopupAddRoom";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { RoomService } from "services/enterprise/room";
 import { HotelService } from "services/enterprise/hotel";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
 import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
 import { IHotel } from "models/enterprise";
+import { getAllHotels as getAllHotelsOfNormal} from "redux/reducers/Normal/actionTypes";
+import PopupEditRoomInformation from "./PopupEditRoomInformation";
+import PopupEditRoomPrice from "./PopupEditRoomPrice";
 
 // eslint-disable-next-line react/display-name
 const Hotel = memo(() => {
@@ -40,6 +43,15 @@ const Hotel = memo(() => {
   const [hotelDelete, setHotelDelete] = useState<IHotel>(null);
   const [openPopupCreateHotel, setOpenPopupCreateHotel] = useState(false);
   const [openPopupConfirmStop, setOpenPopupConfirmStop] = useState(false);
+  const [editRoomInformation, setEditRoomInformation] = useState(null);
+  const [openPopupEditRoomInformation, setOpenPopupEditRoomInformation] = useState(null);
+  const [editRoomPrice, setEditRoomPrice] = useState(null);
+  const [openPopupEditRoomPrice, setOpenPopupEditRoomPrice] = useState(null);
+  const [deleteRoom, setDeleteRoom] = useState(null);
+  const [openPopupDeleteRoom, setOpenPopupDeleteRoom] = useState(null);
+  const [roomStop, setRoomStop] = useState(null);
+  const [openPopupConfirmStopRoom, setOpenPopupConfirmStopRoom] = useState(false);
+
 
   const [modalCreateRoom, setModalCreateRoom] = useState({
     isOpen: false,
@@ -106,7 +118,7 @@ const Hotel = memo(() => {
       .catch((e) => dispatch(setErrorMess(e)))
       .finally(() => dispatch(setLoading(false)));
   };
-
+  
   const handleToggleSubTable = (hotel, index) => {
     if (subTable[index]?.isCallGet) {
       const newIsOpen = [...isOpenToggleArr];
@@ -157,6 +169,69 @@ const Hotel = memo(() => {
     HotelService.temporarilyStopWorking(hotelStop?.id)
       .then(() => {
         dispatch(getAllHotels(user?.id));
+        dispatch(getAllHotelsOfNormal());
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  const onTogglePopupEditRoomInformation = () => {
+    setOpenPopupEditRoomInformation(!openPopupEditRoomInformation);
+  }
+
+  const onEditRoomInformation = (e: any, item: any) => {
+    setEditRoomInformation(item);
+    onTogglePopupEditRoomInformation();
+  }
+  const onTogglePopupEditRoomPrice = () => {
+    setOpenPopupEditRoomPrice(!openPopupEditRoomPrice);
+  }
+  const onEditRoomPrice = (e: any, item: any) => {
+    setEditRoomPrice(item);
+    onTogglePopupEditRoomPrice();
+  }
+
+  const onTogglePopupDeleteRoom = () => {
+    setOpenPopupDeleteRoom(!openPopupDeleteRoom);
+  }
+
+  const onDeleteRoom = (e: any, item: any) => {
+    setDeleteRoom(item);
+    onTogglePopupDeleteRoom();
+  }
+
+  const onYesDeleteRoom = () => {
+    dispatch(setLoading(true));
+    RoomService.deleteRoom(deleteRoom?.id)
+    .then((res) => {
+      dispatch(setSuccessMess("Delete room successfully"))
+      onTogglePopupDeleteRoom();
+      dispatch(getAllHotels(user?.id));
+    })
+    .catch((err) => {
+      dispatch(setErrorMess(err))
+    })
+    .finally(() => {
+      dispatch(setLoading(false));
+    })
+  }
+
+  const onTogglePopupConfirmStopWorkingRoom = () => {
+    setOpenPopupConfirmStopRoom(!openPopupConfirmStopRoom);
+  }
+  const onTemporarilyStopWorkingRoom = (e:any, item:any) => {
+    setRoomStop(item);
+    onTogglePopupConfirmStopWorkingRoom();
+  }
+
+  const onYesStopWorkingRoom = () => {
+    if (!roomStop) return;
+    onTogglePopupConfirmStopWorkingRoom();
+    dispatch(setLoading(true));
+    RoomService.temporarilyStopWorkingRoom(roomStop?.id)
+      .then(() => {
+        dispatch(getAllHotels(user?.id));
+        dispatch(getAllHotelsOfNormal());
       })
       .catch((e) => dispatch(setErrorMess(e)))
       .finally(() => dispatch(setLoading(false)));
@@ -257,7 +332,6 @@ const Hotel = memo(() => {
                         </UncontrolledDropdown>
                       </td>
                     </tr>
-                    {/* {listRooms?.map((room) => ( */}
                     <tr>
                       <td colSpan={10} className={classes.subTable}>
                         <Collapse isOpen={isOpenToggleArr[index]}>
@@ -269,12 +343,13 @@ const Hotel = memo(() => {
                                 <th>Number of bed</th>
                                 <th>Number of room</th>
                                 <th>State</th>
+                                <th className={classes.colActionStop}>Action stop</th>
                                 <th>Action</th>
                               </tr>
                             </thead>
                             <tbody className={classes.bodySubTable}>
                               {subTable[index]?.allRooms?.map((itemSubtable, indexSub) => (
-                                <tr>
+                                <tr key={indexSub}>
                                   <td>{indexSub}</td>
                                   <td>{itemSubtable?.title}</td>
                                   <td>{itemSubtable?.numberOfBed}</td>
@@ -285,6 +360,17 @@ const Hotel = memo(() => {
                                     ) : (
                                       <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour} />
                                     )}
+                                  </td>
+                                  <td className={classes.colActionStop}>
+                                  <Button
+                                    className="btn-icon"
+                                    btnType={BtnType.Secondary}
+                                    size="sm"
+                                    type="button"
+                                    onClick={(e) => onTemporarilyStopWorkingRoom(e, item)}
+                                  >
+                                    <FontAwesomeIcon icon={faHourglass}/>
+                                  </Button>
                                   </td>
                                   <td>
                                     <UncontrolledDropdown>
@@ -299,11 +385,15 @@ const Hotel = memo(() => {
                                         <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
                                       </DropdownToggle>
                                       <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                                        <DropdownItem className={classes.dropdownItem}>
-                                          <FontAwesomeIcon icon={faPen} />
-                                          Edit
+                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onEditRoomInformation(e, itemSubtable)}>
+                                          <FontAwesomeIcon icon={faPen}/>
+                                          Edit information
                                         </DropdownItem>
-                                        <DropdownItem className={classes.dropdownItem}>
+                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onEditRoomPrice(e, itemSubtable)}>
+                                          <FontAwesomeIcon icon={faPen} />
+                                          Edit price
+                                        </DropdownItem>
+                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onDeleteRoom(e, itemSubtable)}>
                                           <FontAwesomeIcon icon={faTrash} />
                                           Delete
                                         </DropdownItem>
@@ -317,7 +407,6 @@ const Hotel = memo(() => {
                         </Collapse>
                       </td>
                     </tr>
-                    {/* ))}  */}
                   </>
                 );
               })}
@@ -336,13 +425,41 @@ const Hotel = memo(() => {
           toggle={onClosePopupConfirmDelete}
           onYes={onYesDelete}
         />
-        <PopupAddOrEditRoom hotelId={modalCreateRoom.hotelId} isOpen={modalCreateRoom.isOpen} onClose={onCloseModalCreateRoom} />
+        <PopupAddRoom 
+        hotelId={modalCreateRoom.hotelId} 
+        isOpen={modalCreateRoom.isOpen} 
+        onClose={onCloseModalCreateRoom} 
+        />
+        <PopupEditRoomInformation
+        isOpen={openPopupEditRoomInformation} 
+        onClose={onTogglePopupEditRoomInformation} 
+        itemEdit={editRoomInformation}
+        />
+        <PopupEditRoomPrice
+        isOpen={openPopupEditRoomPrice} 
+        onClose={onTogglePopupEditRoomPrice} 
+        itemEdit={editRoomPrice}
+        />
+        <PopupConfirmDelete
+          title="Are you sure delete this room ?"
+          isOpen={openPopupDeleteRoom}
+          onClose={onTogglePopupDeleteRoom}
+          toggle={onTogglePopupDeleteRoom}
+          onYes={onYesDeleteRoom}
+        />
         <PopupConfirmWarning
-          title="Are you sure stop working ?"
+          title="Are you sure stop working this hotel ?"
           isOpen={openPopupConfirmStop}
           onClose={onToggleConfirmStop}
           toggle={onToggleConfirmStop}
           onYes={onYesStopWorking}
+        />
+        <PopupConfirmWarning
+          title="Are you sure stop working this room?"
+          isOpen={openPopupConfirmStopRoom}
+          onClose={onTogglePopupConfirmStopWorkingRoom}
+          toggle={onTogglePopupConfirmStopWorkingRoom}
+          onYes={onYesStopWorkingRoom}
         />
       </div>
     </>

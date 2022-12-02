@@ -25,7 +25,7 @@ import { VALIDATION } from "configs/constants";
 export interface TourForm {
   name: string;
   description: string;
-  businessHours: string;
+  businessHours: string[];
   location: string;
   price: number;
   discount?: number;
@@ -52,7 +52,7 @@ const PopupCreateTour = memo((props: Props) => {
     return yup.object().shape({
       name: yup.string().required("Name is required"),
       description: yup.string().required("Description is required"),
-      businessHours: yup.string().required("Hours is required"),
+      businessHours: yup.array().required("Hours is required"),
       location: yup.string().required("Location is required"),
       price: yup.number().typeError("Price must be a number").required("Price is required"),
       discount: yup.number().transform(value => (isNaN(value) ? undefined : value)).typeError("Discount must be a number").notRequired(),
@@ -86,7 +86,7 @@ const PopupCreateTour = memo((props: Props) => {
     reset({
       name: "",
       description: "",
-      businessHours: "",
+      businessHours: [],
       location: "",
       price: null,
       discount: null,

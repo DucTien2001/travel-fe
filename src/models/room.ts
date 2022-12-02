@@ -39,13 +39,33 @@ export interface IRoom {
   title: string;
   description: string;
   discount: number;
-  tags: string;
-  images: string;
+  tags: string[];
+  images: string[];
   numberOfBed: number;
   numberOfRoom: number;
   hotelId: number;
   amount: number;
   priceDetail: any;
+}
+
+export interface EditRoomInformation {
+  id?:number;
+  title: string;
+  description: string;
+  tags: string[];
+  images: string[];
+  numberOfBed: number;
+  numberOfRoom: number;
+  discount?: number;
+}
+export interface EditRoomPrice{
+  mondayPrice: number;
+  tuesdayPrice: number;
+  wednesdayPrice: number;
+  thursdayPrice: number;
+  fridayPrice: number;
+  saturdayPrice: number;
+  sundayPrice: number;
 }
 export interface EGetPrice {
   date: Date;

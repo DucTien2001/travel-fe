@@ -25,7 +25,17 @@ export class RoomService {
   }
   static async updateInformation(roomId: number): Promise<any> {
     return await api
-      .get(API.ENTERPRISE.ROOM.UPDATE_INFORMATION.replace(":id", `${roomId}`))
+      .put(API.ENTERPRISE.ROOM.UPDATE_INFORMATION.replace(":id", `${roomId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  static async updatePrice(roomId: number): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.ROOM.UPDATE_PRICE.replace(":id", `${roomId}`))
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -35,7 +45,17 @@ export class RoomService {
   }
   static async deleteRoom(roomId: number): Promise<any> {
     return await api
-      .get(API.ENTERPRISE.ROOM.DELETE.replace(":id", `${roomId}`))
+      .put(API.ENTERPRISE.ROOM.DELETE.replace(":id", `${roomId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  static async temporarilyStopWorkingRoom(roomId: number): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.ROOM.STOP_WORKING.replace(":id", `${roomId}`))
       .then((res) => {
         return Promise.resolve(res.data);
       })

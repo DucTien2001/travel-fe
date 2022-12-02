@@ -19,7 +19,7 @@ import { ReducerType } from "redux/reducers";
 import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
 import { fCurrency2 } from "utils/formatNumber";
 import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
-
+import { getAllTours as getAllToursOfNormal} from "redux/reducers/Normal/actionTypes";
 
 // eslint-disable-next-line react/display-name
 const Tour = memo(()=> {
@@ -87,6 +87,7 @@ const Tour = memo(()=> {
         TourService.temporarilyStopWorking(tourStop?.id)
         .then(()=> {        
             dispatch(getAllTours(user?.id)) 
+            dispatch(getAllToursOfNormal())
         })
         .catch(e => dispatch(setErrorMess(e)))
         .finally(() => dispatch(setLoading(false)))

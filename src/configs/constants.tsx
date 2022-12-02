@@ -101,7 +101,9 @@ export const API = {
       CREATE_ROOM: "/v1.0/room/create",
       GET_ALL_ROOM:"/v1.0/room/get-all-rooms/:id",
       UPDATE_INFORMATION:"/v1.0/room/update-information/:id",
+      UPDATE_PRICE:"/v1.0/room/update-price/:id",
       DELETE:"/v1.0/room/delete/:id",
+      STOP_WORKING:"/v1.0/room/temporarily-stop-working/:id",
     },
     TOURBILL: {
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",

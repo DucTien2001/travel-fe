@@ -21,7 +21,7 @@ interface Props {
     src: string;
     title: string;
     description: string;
-    businessHours?: string;
+    businessHours?: string[];
     checkInTime?: string;
     checkOutTime?: string;
     location: string;

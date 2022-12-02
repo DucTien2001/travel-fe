@@ -273,7 +273,8 @@ const ListHotels: NextPage = () => {
                       src={hotel.images[0]}
                       title={hotel.name}
                       description={hotel.description}
-                      businessHours={hotel.checkInTime}
+                      checkInTime={hotel.checkInTime}
+                      checkOutTime={hotel.checkOutTime}
                       location={hotel.location}
                       contact={hotel.contact}
                       tags={hotel.tags}
@@ -296,7 +297,8 @@ const ListHotels: NextPage = () => {
                       src={hotel.images[0]}
                       title={hotel.name}
                       description={hotel.description}
-                      businessHours={hotel.checkInTime}
+                      checkInTime={hotel.checkInTime}
+                      checkOutTime={hotel.checkOutTime}
                       location={hotel.location}
                       contact={hotel.contact}
                       tags={hotel.tags}
