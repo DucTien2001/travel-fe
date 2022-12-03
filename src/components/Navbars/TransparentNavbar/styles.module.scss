@@ -38,9 +38,13 @@
 .headerTitle {
   color: var(--orange-color) !important
 }
-
+.navMobile {
+  @media only screen and (max-width: 991px) {
+    margin-bottom: 16px;
+  }
+}
 .collapseMobile::before {
   @media only screen and (max-width: 991px) {
-    background: var(--linear-second-color);
+    background: var(--linear-second-color) !important;
   }
 }

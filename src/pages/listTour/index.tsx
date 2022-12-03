@@ -1,21 +1,14 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 // reactstrap components
 import {
   Container,
   Row,
   Col,
-  PaginationLink,
-  PaginationItem,
-  Pagination,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
 } from "reactstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGrip, faList, faXmark, faSearch, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faGrip, faList, faXmark, faSearch, } from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
 import clsx from "clsx";

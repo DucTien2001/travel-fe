@@ -32,16 +32,17 @@ export interface IHotel {
 }
 
 export interface IRoom {
+  id?:number;
   title: string;
   description: string;
-  discount: number;
-  tags: string;
-  images: string;
+  discount?: number;
+  tags: string[];
+  images: string[];
   numberOfBed: number;
   numberOfRoom: number;
-  hotelId: number;
-  amount: number;
-  priceDetail: any;
+  hotelId?: number;
+  amount?: number;
+  priceDetail?: any;
 }
 
 export interface IRoomBillConfirm {

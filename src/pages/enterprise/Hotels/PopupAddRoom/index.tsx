@@ -82,8 +82,8 @@ const PopupAddOrEditHotel = memo((props: Props) => {
           description: yup.string().required("Name is required"),
           tags: yup.array().required("Name is required"),
           discount: yup.number().transform(value => (isNaN(value) ? undefined : value)).typeError("Discount must be a number").notRequired(),
-          numberOfBed: yup.number().required("Name is required"),
-          numberOfRoom: yup.number().required("Name is required"),
+          numberOfBed: yup.number().typeError("Number of room must be a number").required("Number of room is required"),
+          numberOfRoom: yup.number().typeError("Number of bed must be a number").required("Number of bed is required"),
           imagesRoom: yup.mixed().test("required", "Please select images", (value) => {
             return value && value.length;
           }),

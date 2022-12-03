@@ -39,6 +39,6 @@
   
   .collapseMobile::before {
     @media only screen and (max-width: 991px) {
-      background: var(--linear-second-color);
+      background: var(--linear-second-color) !important;
     }
   }

@@ -359,7 +359,7 @@ const Hotel = memo(() => {
                                   <td>{itemSubtable?.numberOfBed}</td>
                                   <td>{itemSubtable?.numberOfRoom}</td>
                                   <td>
-                                    {!item?.isTemporarilyStopWorking ? (
+                                    {!itemSubtable?.isTemporarilyStopWorking ? (
                                       <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour} />
                                     ) : (
                                       <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour} />

@@ -200,7 +200,7 @@ const WhiteNavbar = memo(() => {
               )   
               :     
               (<>
-                <NavItem>
+                <NavItem className={classes.navMobile}>
                   <Link href="/auth/login" passHref>
                     <a>
                     <Button btnType={BtnType.Secondary}>Sign in</Button>
