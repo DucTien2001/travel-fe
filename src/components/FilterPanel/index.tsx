@@ -6,8 +6,10 @@ import React from 'react';
 import classes from './styles.module.scss';
 import CheckboxProton from "components/CheckboxProton";
 import SliderProton from "components/SliderProton";
+import FilterListToggle from "components/FilterListToggle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import { ratingList } from 'configs/constants';
 interface Props {
   selectedCategory?: any;
   selectCategory?: any;
@@ -53,12 +55,12 @@ const FilterPanel = ({
       <SliderProton value={selectedPrice} changePrice={changePrice} />
     </div>}
     <div className={classes.inputGroup}>
-      {/* <p className='label'>Star Rating</p> */}
-      {/* <FilterListToggle
+      <p className={classes.labelRange}>Star Rating</p>
+      <FilterListToggle
         options={ratingList}
         value={selectedRating}
         selectToggle={selectRating}
-      /> */}
+      />
     </div>
   </div>
 );

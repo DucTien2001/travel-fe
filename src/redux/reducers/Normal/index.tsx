@@ -14,6 +14,7 @@ export interface ITour {
   images: string[];
   creator: number;
   contact: string;
+  rate?: number;
   isTemporarilyStopWorking?: boolean;
 }
 
@@ -28,6 +29,7 @@ export interface IHotel {
   tags: string[];
   images: string[];
   creator: number;
+  rate?: number;
   isTemporarilyStopWorking?: boolean;
 }
 

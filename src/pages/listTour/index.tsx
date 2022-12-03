@@ -43,6 +43,7 @@ const ListTours: NextPage = () => {
   const [changeViewLayout, setChangeViewLayout] = useState(false);
   const [listTours, setListTours] = useState([]);
   const [selectedPrice, setSelectedPrice] = useState([10000, 3000000]);
+  const [selectedRating, setSelectedRating] = useState(null);
   const [tags, setTags] = useState([
     { id: 1, checked: false, label: 'Shopping' },
     { id: 2, checked: false, label: 'Sea' },
@@ -122,6 +123,9 @@ const ListTours: NextPage = () => {
     }
   };
 
+  const handleSelectRating = (event, value) =>
+    !value ? null : setSelectedRating(value);
+
   const handleChangeChecked = (id) => {
     const tagStateList = tags;
     const changeCheckedTags = tagStateList.map((item) =>
@@ -136,7 +140,12 @@ const ListTours: NextPage = () => {
 
   const applyFilters = () => {
     let updatedList = allTours;
-    
+        // Rating Filter
+    if (selectedRating) {
+      updatedList = updatedList.filter(
+        (item) => Math.floor(item?.rate) === parseInt(selectedRating)
+      );
+    }
     //Tag filter
     const tagsChecked = tags
       .filter((item) => item.checked)
@@ -162,7 +171,7 @@ const ListTours: NextPage = () => {
   useEffect(() => {
     applyFilters();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tags, selectedPrice]);
+  }, [tags, selectedPrice, selectedRating]);
 
   useEffect(() => {
     setListTours(allTours);
@@ -274,9 +283,9 @@ const ListTours: NextPage = () => {
                 <FilterPanel
                 // selectedCategory={selectedCategory}
                 // selectCategory={handleSelectCategory}
-                // selectedRating={selectedRating}
+                selectedRating={selectedRating}
                 selectedPrice={selectedPrice}
-                // selectRating={handleSelectRating}
+                selectRating={handleSelectRating}
                 tags={tags}
                 changeChecked={handleChangeChecked}
                 changePrice={handleChangePrice}
@@ -303,7 +312,7 @@ const ListTours: NextPage = () => {
                       price={tour.price}
                       discount={tour.discount}
                       tags={tour.tags}
-                      // rate={tour.rate}
+                      rate={Math.floor(tour?.rate)}
                       creator={tour.creator}
                       isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
                       isDelete={tour.isDelete}
@@ -330,7 +339,7 @@ const ListTours: NextPage = () => {
                       price={tour.price}
                       discount={tour.discount}
                       tags={tour.tags}
-                      // rate={tour.rate}
+                      rate={Math.floor(tour?.rate)}
                       creator={tour.creator}
                       isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
                       className={tour.isTemporarilyStopWorking ? classes.stopWorking : ""}

@@ -21,6 +21,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBellConcierge, faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import Stars from "components/Stars";
 
 interface Props {
   hotel: ICreateHotel;
@@ -79,6 +80,7 @@ const SectionTour = memo(({hotel} : Props)=> {
               </Col>
               <Col className="ml-auto mr-auto" md="6">
                 <h2 className={`title ${classes.nameTour}`}>{hotel?.name} - {hotel?.location}</h2>
+                {hotel?.rate && <Stars numberOfStars={Math.floor(hotel?.rate)}/>}
                 {<div className={classes.tags}>
                     {hotel?.tags?.map((item, index) => (
                         <Badge pill className={classes.badgeTags} key={index}>{item}</Badge>

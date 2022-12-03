@@ -4,6 +4,7 @@ export interface ICreateHotel {
   checkInTime: string;
   checkOutTime: string;
   location: string;
+  rate?: number;
   contact: string;
   tags: string[];
   images: string[];

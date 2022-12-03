@@ -49,6 +49,7 @@ const ListHotels: NextPage = () => {
 
   const [changeViewLayout, setChangeViewLayout] = useState(false);
   const [listHotels, setListHotels] = useState([]);
+  const [selectedRating, setSelectedRating] = useState(null);
   const [tags, setTags] = useState([
     { id: 1, checked: false, label: 'Shopping' },
     { id: 2, checked: false, label: 'Sea' },
@@ -56,22 +57,11 @@ const ListHotels: NextPage = () => {
     { id: 4, checked: false, label: 'Mountain' },
     { id: 5, checked: false, label: 'Trekking' },
   ]);
-  // const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(9);
 
-  // const indexOfLastPost = currentPage * postsPerPage;
-  // const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  // const currentPosts = listTour.slice(indexOfFirstPost, indexOfLastPost);
-
-  // const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const schema = useMemo(() => {
     return yup.object().shape({
       hotelName: yup.string().notRequired(),
-      // departure: yup.date().notRequired(),
-      // return: yup.date().min(yup.ref("departure"), "Return date must be start departure").notRequired(),
-      // numberOfRoom: yup.number().notRequired(),
-      checkOptions: yup.boolean().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -86,9 +76,6 @@ const ListHotels: NextPage = () => {
   } = useForm<SearchData>({
     resolver: yupResolver(schema),
     mode: "onChange",
-    // defaultValues: {
-    //   numberOfRoom: 1,
-    // },
   });
 
   const clearForm = () => {
@@ -152,6 +139,8 @@ const ListHotels: NextPage = () => {
       handleSearch();
     }
   };
+  const handleSelectRating = (event, value) =>
+    !value ? null : setSelectedRating(value);
 
   const handleChangeChecked = (id) => {
     const tagStateList = tags;
@@ -163,7 +152,12 @@ const ListHotels: NextPage = () => {
 
   const applyFilters = () => {
     let updatedList = allHotels;
-    
+     // Rating Filter
+    if (selectedRating) {
+      updatedList = updatedList.filter(
+        (item) => Math.floor(item?.rate) === parseInt(selectedRating)
+      );
+    }
     //Tag filter
     const tagsChecked = tags
       .filter((item) => item.checked)
@@ -182,7 +176,7 @@ const ListHotels: NextPage = () => {
   useEffect(() => {
     applyFilters();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tags]);
+  }, [tags, selectedRating]);
 
   return (
     <>
@@ -252,8 +246,8 @@ const ListHotels: NextPage = () => {
               <FilterPanel
                 // selectedCategory={selectedCategory}
                 // selectCategory={handleSelectCategory}
-                // selectedRating={selectedRating}
-                // selectRating={handleSelectRating}
+                selectedRating={selectedRating}
+                selectRating={handleSelectRating}
                 tags={tags}
                 changeChecked={handleChangeChecked}
                 // changePrice={handleChangePrice}
@@ -278,6 +272,7 @@ const ListHotels: NextPage = () => {
                       location={hotel.location}
                       contact={hotel.contact}
                       tags={hotel.tags}
+                      rate={Math.floor(hotel?.rate)}
                       creator={hotel.creator}
                       isTemporarilyStopWorking={hotel.isTemporarilyStopWorking}
                       isHotel={true}
@@ -302,6 +297,7 @@ const ListHotels: NextPage = () => {
                       location={hotel.location}
                       contact={hotel.contact}
                       tags={hotel.tags}
+                      rate={Math.floor(hotel?.rate)}
                       creator={hotel.creator}
                       isTemporarilyStopWorking={hotel.isTemporarilyStopWorking}
                       isHotel={true}

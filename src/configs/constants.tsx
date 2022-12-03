@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+
 export const API = {
   CONFIG: {
     DEFAULT: "/v1.0/config",
@@ -120,4 +123,38 @@ export const VALIDATION = {
   password: /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[a-zA-Z0-9!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]*$/,
   phone: /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/,
 };
+
+export const ratingList = [
+  {
+    id: 1,
+    value: '1',
+    // label: '🌟',
+    label: 1,
+  },
+  {
+    id: 2,
+    value: '2',
+    // label: '🌟🌟',
+    label: 2,
+  },
+  {
+    id: 3,
+    value: '3',
+    // label: '🌟🌟🌟',
+    label: 3,
+  },
+  {
+    id: 4,
+    value: '4',
+    // label: '🌟🌟🌟🌟',
+    label:4,
+  },
+  {
+    id: 5,
+    value: '5',
+    // label: '🌟🌟🌟🌟🌟',
+    label: 5,
+  },
+];
+
 

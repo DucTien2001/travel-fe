@@ -16,7 +16,7 @@ import Carousel from "components/Carousel";
 import Button, {BtnType} from "components/common/buttons/Button";
 import Link from "next/link";
 import { Tour } from "models/tour";
-import { fCurrency2VND } from "utils/formatNumber";
+import { fCurrency2 } from "utils/formatNumber";
 import clsx from "clsx";
 import useAuth from "hooks/useAuth";
 import Stars from "components/Stars";
@@ -84,8 +84,8 @@ const SectionTour = memo(({tour, listRates} : Props)=> {
                         
                       ))}
                 </div>}
-                {!!listRates.length && <Stars numberOfStars={formatStar(listRates)}/>}
-                <h2 className={`main-price ${classes.price}`}> {fCurrency2VND(tour?.price)} VND</h2>
+                {tour?.rate && <Stars numberOfStars={Math.floor(tour?.rate)}/>}
+                <h2 className={`main-price ${classes.price}`}> {fCurrency2(tour?.price)} VND</h2>
                 <h2 className={`main-price ${classes.businessHours}`}>Time business: {tour?.businessHours}</h2>
                 <Row className="justify-content-end">
                   {user ? <Link href={`/book/tour/:${tour?.id}`}>

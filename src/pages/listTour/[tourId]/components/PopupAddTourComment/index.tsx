@@ -15,6 +15,7 @@ import { CommentService } from 'services/normal/comment';
 import { useRouter } from 'next/router';
 import useAuth from 'hooks/useAuth';
 import {Comment} from "models/comment";
+import { getAllTours } from 'redux/reducers/Normal/actionTypes';
 
 export interface CommentForm { 
   comment: string;
@@ -96,6 +97,7 @@ const PopupAddComment = memo((props: Props) => {
           })
           .then(() => {
             dispatch(setSuccessMess("Comment is successfully!"))
+            dispatch(getAllTours());
             onGetTourComments();
           })
           .catch((e) => {

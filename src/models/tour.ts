@@ -9,6 +9,7 @@ export interface Tour {
     price: number;
     discount: number;
     tags: string[];
+    rate?: number;
     images: string[];
     creator: number;
     contact: string;
