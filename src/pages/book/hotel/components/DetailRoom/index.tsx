@@ -8,7 +8,7 @@ import { faCircleCheck, faBellConcierge, faCircleInfo, faPhone} from '@fortaweso
 import useFormattedDate from "hooks/useFormatDate";
 import { IRoomBillConfirm } from "models/roomBill";
 import moment from "moment";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2VND } from "utils/formatNumber";
 import { sumPrice } from "utils/totalPrice";
 
 interface Props {
@@ -53,7 +53,7 @@ const DetailTour = memo(({roomBillConfirm}:Props)=> {
                           <p>Room name: <span>{room?.title}</span></p>
                           <p>Price: {room?.priceDetail.map((price, index) => (
                             <>
-                              <span key={index}>{fCurrency2(price?.price * room?.amount * (100 - room?.discount) / 100)} VND</span>
+                              <span key={index}>{fCurrency2VND(price?.price * room?.amount * (100 - room?.discount) / 100)} VND</span>
                               <br></br>
                             </>
                           ))}</p>
@@ -62,7 +62,7 @@ const DetailTour = memo(({roomBillConfirm}:Props)=> {
                       </div>
                     ))}
                     <div className={classes.boxTotalPrice}>
-                      <p>Total price: <span>{fCurrency2(sumPrice(totalPrice))} VND</span></p>
+                      <p>Total price: <span>{fCurrency2VND(sumPrice(totalPrice))} VND</span></p>
                     </div>
                     <span>(Taxes and fees are included)</span>
                   </div>

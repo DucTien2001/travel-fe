@@ -39,7 +39,7 @@ const TourComments = memo(() => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      tours: yup.object().required("This field is required"),
+      hotels: yup.object().required("This field is required"),
     });
   }, []);
 
@@ -140,7 +140,7 @@ const TourComments = memo(() => {
       value: item?.name,
     })
     })
-    const tempHotelIds = newHotels.map((tour) => tour?.id);
+    const tempHotelIds = newHotels.map((hotel) => hotel?.id);
     setHotelIds(tempHotelIds);
     setHotels(newHotels);
     setValue("hotels", hotels[0]);
@@ -169,7 +169,7 @@ const TourComments = memo(() => {
             <p>Tour:</p>
             <CustomSelect
               className={classes.input}
-              placeholder="Please choose tour"
+              placeholder="Please choose hotel"
               name="hotels"
               control={control}
               options={hotels}

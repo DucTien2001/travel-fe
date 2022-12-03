@@ -11,7 +11,7 @@ import useAuth from "hooks/useAuth";
 import {TourBillService} from "services/normal/tourBill";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2VND } from "utils/formatNumber";
 import {saveAs} from 'file-saver';
 import {useRouter} from "next/router";
 
@@ -88,7 +88,7 @@ const Tour = memo(()=> {
                         {moment(item?.createdAt).format("DD/MM/YYYY")}
                     </td>
                     <td>
-                       {fCurrency2(item?.totalBill)}
+                       {fCurrency2VND(item?.totalBill)}
                     </td>
                     <td>
                         {item.verifyCode === null ? <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>

@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { RoomBillService } from "services/normal/roomBill";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2VND } from "utils/formatNumber";
 
 // eslint-disable-next-line react/display-name
 const Hotel = memo(()=> {
@@ -81,7 +81,7 @@ const Hotel = memo(()=> {
                         {moment(item?.bookedDates).format("DD/MM/YYYY")}
                     </td>
                     <td>
-                       {fCurrency2(item?.totalBill)}
+                       {fCurrency2VND(item?.totalBill)}
                     </td>
                     <td>
                         {item.verifyCode === null ? <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>

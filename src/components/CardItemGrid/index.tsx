@@ -7,7 +7,7 @@ import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import Button, { BtnType } from "components/common/buttons/Button";
 import Stars from "components/Stars";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2VND } from "utils/formatNumber";
 import useAuth from "hooks/useAuth";
 
 interface Props {
@@ -66,7 +66,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                         ))} */}
                         <p>{businessHours}</p>
                         {checkInTime && <p>{checkInTime} - {checkOutTime}</p>}
-                        {price && <CardTitle tag="h3">{fCurrency2(price)} VND</CardTitle> }
+                        {price && <CardTitle tag="h3">{fCurrency2VND(price)} VND</CardTitle> }
                             <div>
                                 <p>{contact}</p>
                             </div>

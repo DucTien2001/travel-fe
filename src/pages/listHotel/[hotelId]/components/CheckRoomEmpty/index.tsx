@@ -21,7 +21,7 @@ import { useDispatch } from "react-redux";
 import { setRoomBillConfirmReducer } from "redux/reducers/Normal/actionTypes";
 import { IHotel } from "models/hotel";
 import { useRouter } from "next/router";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2VND } from "utils/formatNumber";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import PopupDefault from "components/Popup/PopupDefault";
 export interface CheckRoomForm {
@@ -230,7 +230,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
                           {moment(priceInfo?.date).format("DD/MM/YYYY")}
                           {":"}
                           <br></br>
-                          <span>{fCurrency2(priceInfo?.price)} VND / day</span>
+                          <span>{fCurrency2VND(priceInfo?.price)} VND / day</span>
                         </p>
                       ))}
                     </td>
@@ -289,7 +289,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
                       <p key={index} className={classes.colPrice}>
                         <span>{moment(priceInfo?.date).format("DD/MM/YYYY")} {":"}</span>             
                         <br></br>
-                        <span>{fCurrency2(priceInfo?.price)} VND</span>
+                        <span>{fCurrency2VND(priceInfo?.price)} VND</span>
                       </p>
                   ))}
                 </div>

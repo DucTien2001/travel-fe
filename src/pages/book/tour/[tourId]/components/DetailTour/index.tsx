@@ -8,7 +8,7 @@ import Link from "next/link";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faBellConcierge, faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 import { Tour } from "models/tour";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2VND } from "utils/formatNumber";
 import useFormattedDate from "hooks/useFormatDate";
 // eslint-disable-next-line react/display-name
 interface Props {
@@ -39,7 +39,7 @@ const DetailTour = memo(({tour, amount}: Props)=> {
                   <div className={classes.boxCostSummary}>
                     <p>Tour name: <span>{tour?.title}</span></p>
                     <div className={classes.boxPrice}>
-                      <p className={classes.price}>Price: <span>{amount ? fCurrency2(tour?.price * amount * ((100 - tour?.discount) / 100)) : fCurrency2(tour?.price)} VND</span></p>
+                      <p className={classes.price}>Price: <span>{amount ? fCurrency2VND(tour?.price * amount * ((100 - tour?.discount) / 100)) : fCurrency2VND(tour?.price)} VND</span></p>
                       <p>(for all guests)</p>
                     </div>
                     <span>Taxes and fees are included</span>

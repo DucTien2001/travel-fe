@@ -11,7 +11,7 @@ import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import Stars from "components/Stars";
 import clsx from "clsx";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2VND } from "utils/formatNumber";
 import useAuth from "hooks/useAuth";
 interface Props { 
     className?: string;
@@ -71,7 +71,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
             <br></br>
             {checkOutTime && <span className={classes.checkTime}>Check out time: {checkOutTime}</span>}
             <div className={classes.priceContainer}>
-                {price && <h3>{fCurrency2(price)} VND</h3> }
+                {price && <h3>{fCurrency2VND(price)} VND</h3> }
                 <Stars numberOfStars={rate}/>
             </div>
                 <span className={classes.contact}>{contact}</span>

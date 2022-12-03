@@ -17,7 +17,7 @@ import { TourService } from "services/enterprise/tour";
 import SearchNotFound from "components/SearchNotFound";
 import { ReducerType } from "redux/reducers";
 import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2VND } from "utils/formatNumber";
 import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
 import { getAllTours as getAllToursOfNormal} from "redux/reducers/Normal/actionTypes";
 
@@ -147,7 +147,7 @@ const Tour = memo(()=> {
                         {item?.title}
                     </td>
                     <td>
-                        {fCurrency2(item?.price)} VND
+                        {fCurrency2VND(item?.price)} VND
                     </td>
                     <td>
                     {!item?.isTemporarilyStopWorking ?

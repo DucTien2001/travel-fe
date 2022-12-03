@@ -159,7 +159,7 @@ const HotelsRevenue = memo(() => {
             <InputDatePicker
               className={classes.inputSearchDate}
               label="Month"
-              placeholder="Date"
+              placeholder="Month"
               control={control}
               name="monthValue"
               minDate={moment().toDate()}
@@ -173,8 +173,8 @@ const HotelsRevenue = memo(() => {
           {watchRevenueType?.id === 2 && (
             <InputDatePicker
               className={classes.inputSearchDate}
-              label="Date"
-              placeholder="Date"
+              label="Year"
+              placeholder="Year"
               control={control}
               name="yearValue"
               minDate={moment().toDate()}

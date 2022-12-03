@@ -13,6 +13,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomSelect from "components/common/CustomSelect";
+import { fCurrency2VND } from "utils/formatNumber";
 
 interface ITourSelection {
   revenueType?: any;
@@ -159,7 +160,7 @@ const ToursRevenue = memo(() => {
             <InputDatePicker
               className={classes.inputSearchDate}
               label="Month"
-              placeholder="Date"
+              placeholder="Month"
               control={control}
               name="monthValue"
               minDate={moment().toDate()}
@@ -173,8 +174,8 @@ const ToursRevenue = memo(() => {
           {watchRevenueType?.id === 2 && (
             <InputDatePicker
               className={classes.inputSearchDate}
-              label="Date"
-              placeholder="Date"
+              label="Year"
+              placeholder="Year"
               control={control}
               name="yearValue"
               minDate={moment().toDate()}
@@ -201,7 +202,7 @@ const ToursRevenue = memo(() => {
                   <th scope="row">{index}</th>
                   <td>{item?.title}</td>
                   {revenueData[index]?.map((item, index) => (
-                    <th key={index}className="text-center">{Math.floor(item)}</th>
+                    <th key={index}className="text-center">{fCurrency2VND(Math.floor(item))}</th>
                   ))}
                 </tr>
               );

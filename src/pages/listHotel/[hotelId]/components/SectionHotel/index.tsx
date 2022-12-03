@@ -15,7 +15,7 @@ import classes from "./styles.module.scss";
 import Button, {BtnType} from "components/common/buttons/Button";
 import Carousel from "components/Carousel";
 import { ICreateHotel } from "models/hotel";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2VND } from "utils/formatNumber";
 import useAuth from "hooks/useAuth";
 import Link from "next/link";
 import clsx from "clsx";
