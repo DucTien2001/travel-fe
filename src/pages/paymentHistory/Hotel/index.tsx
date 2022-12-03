@@ -81,7 +81,7 @@ const Hotel = memo(()=> {
                         {moment(item?.bookedDates).format("DD/MM/YYYY")}
                     </td>
                     <td>
-                       {fCurrency2VND(item?.totalBill)}
+                       {fCurrency2VND(item?.totalBill)} VND
                     </td>
                     <td>
                         {item.verifyCode === null ? <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>

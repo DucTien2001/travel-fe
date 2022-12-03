@@ -88,7 +88,7 @@ const Tour = memo(()=> {
                         {moment(item?.createdAt).format("DD/MM/YYYY")}
                     </td>
                     <td>
-                       {fCurrency2VND(item?.totalBill)}
+                       {fCurrency2VND(item?.totalBill)} VND
                     </td>
                     <td>
                         {item.verifyCode === null ? <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>

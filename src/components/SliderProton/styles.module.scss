@@ -1,0 +1,13 @@
+.main {
+  padding: 0 16px;
+    [class~="PrivateValueLabel-circle-16"] {
+      background-color: transparent;
+
+      span {
+        color: var(--violet-color) !important;
+      }
+    }
+    [class~="PrivateValueLabel-offset-15"] {
+      top: 25px;
+    }
+}
