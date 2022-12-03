@@ -152,6 +152,7 @@ const HotelsRevenue = memo(() => {
               options={revenueType}
               errorMessage={errors.revenueType?.message}
             />
+            <p className={classes.inputTitle}>Unit: VND</p>
           </div>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
