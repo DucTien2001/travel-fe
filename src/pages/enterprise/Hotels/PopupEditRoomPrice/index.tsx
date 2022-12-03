@@ -42,6 +42,7 @@ const PHOTO_SIZE = 10000000000; // bytes
 const MAX_IMAGES = 9;
 const MIN_IMAGES = 3;
 export interface RoomForm {
+    discount?: number;
     monday?: number;
     tuesday?: number;
     wednesday?: number;
@@ -64,7 +65,11 @@ const PopupEditRoomPrice = memo((props: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-        monday: yup
+      discount: yup.number()
+      .transform(value => (isNaN(value) ? undefined : value))
+      .typeError("Discount must be a number")
+      .notRequired(),
+      monday: yup
         .number()
         .typeError("Price is must be number")
         .positive("Price must be than 0")
@@ -113,64 +118,35 @@ const PopupEditRoomPrice = memo((props: Props) => {
     mode: "onChange",
   });
 
-  const clearForm = () => {
-    reset({
-        monday: null,
-        tuesday: null,
-        wednesday: null,
-        thursday: null,
-        friday: null,
-        saturday: null,
-        sunday: null,
+  const _onSubmit = () => {
+    dispatch(setLoading(true));
+    RoomService.updatePrice(itemEdit?.id, {
+      discount: itemEdit?.discount,
+      mondayPrice: itemEdit.mondayPrice,
+      tuesdayPrice: itemEdit.tuesdayPrice,
+      wednesdayPrice: itemEdit.wednesdayPrice,
+      thursdayPrice: itemEdit.thursdayPrice,
+      fridayPrice: itemEdit.fridayPrice,
+      saturdayPrice: itemEdit.saturdayPrice,
+      sundayPrice: itemEdit.sundayPrice,
     })
-  }
-  const _onSubmit = async (data: RoomForm) => {
-    // dispatch(setLoading(true));
-    // const arrRequest = [];
-    // await data?.room.map(async (item) => {
-    //   const uploader = [];
-    //   await item?.imagesRoom?.map(async (file) => {
-    //     const formData: any = new FormData();
-    //     formData.append("file", file);
-    //     formData.append("tags", "codeinfuse, medium, gist");
-    //     formData.append("upload_preset", "my-uploads");
-    //     formData.append("api_key", "859398113752799");
-    //     formData.append("timestamp", Date.now() / 1000 / 0);
-    //     uploader.push(ImageService.uploadImage(formData));
-    //   });
+    .then((res) => {
+      dispatch(setSuccessMess("Update room price successfully"))
+    })
+    .catch((err) => {
+      dispatch(setErrorMess(err))
+    })
+    .finally(() => {
+      dispatch(setLoading(false))
+      onClose();
+    })
 
-    //   await Promise.all(uploader).then((images) => {
-    //     const roomData = {
-    //       title: item?.title,
-    //       description: item?.description,
-    //       tags: item.tags,
-    //       images: images,
-    //       hotelId: hotelId,
-    //       discount: item?.discount,
-    //       numberOfBed: item?.numberOfRoom,
-    //       numberOfRoom: item?.numberOfBed,
-    //     };
-
-    //     // arrRequest.push(RoomService.createRoom(roomData));
-    //   });
-    // });
-    // Promise.all(arrRequest)
-    //   .then(() => {
-    //     dispatch(setSuccessMess("Create room(s) successfully"));
-    //   })
-    //   .catch((e) => {
-    //     dispatch(setErrorMess(e));
-    //   })
-    //   .finally(() => {
-    //     onClose();
-    //     clearForm();
-    //     dispatch(setLoading(false));
-    //   });
   };
 
   useEffect(() => {
     if (itemEdit) {
       reset({
+        discount: itemEdit.discount,
         monday: itemEdit.mondayPrice,
         tuesday: itemEdit.tuesdayPrice,
         wednesday: itemEdit.wednesdayPrice,
@@ -190,6 +166,17 @@ const PopupEditRoomPrice = memo((props: Props) => {
         </ModalHeader>
         <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
           <ModalBody>
+                  <Row className={classes.row}>
+                    <Col>
+                    <InputTextFieldBorder
+                        label="Discount"
+                        className="mr-3"
+                        placeholder="Enter discount"
+                        inputRef={register("discount")}
+                        errorMessage={errors.discount?.message}
+                      />                      
+                    </Col>
+                  </Row>
                   <Row className={classes.row}>
                     <Col>
                     <Table bordered className={classes.table}>

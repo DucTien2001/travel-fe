@@ -17,6 +17,7 @@ import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/
 import { ImageService } from "services/image";
 import { ReducerType } from "redux/reducers";
 import { IHotel } from "models/enterprise";
+import { getAllHotels as getAllHotelsOfNormal} from "redux/reducers/Normal/actionTypes";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
 
 export interface HotelForm {
@@ -101,7 +102,6 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       formData.append("timestamp", Date.now() / 1000 / 0);
       uploader.push(ImageService.uploadImage(formData));
     });
-    console.log(data);
     await Promise.all(uploader)
       .then((res) => {
         if (user) {
@@ -131,6 +131,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
               creator: user?.id,
             })
               .then(() => {
+                dispatch(getAllHotelsOfNormal())
                 dispatch(getAllHotels(user?.id))
                 dispatch(setSuccessMess("Create hotel successfully"));
               })

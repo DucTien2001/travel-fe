@@ -86,9 +86,9 @@ const ProductPage = memo(()=> {
         <SectionHeader
           title="VIEW TOUR"
           src={images.bgUser.src}
-          className={ tour?.isTemporarilyStopWorking ? classes.sectionHeader : ""}
+          className={ tour?.isTemporarilyStopWorking || tour?.isDeleted ? classes.sectionHeader : ""}
           /> 
-        {tour?.isTemporarilyStopWorking || tour?.isDelete ? (
+        {tour?.isTemporarilyStopWorking || tour?.isDeleted ? (
           <Container className={classes.boxStopWorking}>
             <h3>Sorry, our service is temporarily in active use </h3>
             <FontAwesomeIcon icon={faFaceFrown}/>

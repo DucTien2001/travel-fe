@@ -46,7 +46,6 @@ export interface RoomForm {
     description: string;
     imagesRoom: string[];
     tags: string[];
-    discount: number;
     numberOfBed: number;
     numberOfRoom: number;
 }
@@ -64,12 +63,11 @@ const PopupEditRoomInformation = memo((props: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      title: yup.string().required("Name is required"),
-      description: yup.string().required("Name is required"),
-      tags: yup.string().required("Name is required"),
-      discount: yup.number().required("Name is required"),
-      numberOfBed: yup.number().required("Name is required"),
-      numberOfRoom: yup.number().required("Name is required"),
+      title: yup.string().required("Title is required"),
+      description: yup.string().required("Description is required"),
+      tags: yup.array().required("Tag is required"),
+      numberOfBed: yup.number().typeError("Number of bed must be a number").required("Number of bed is required"),
+      numberOfRoom: yup.number().typeError("Number of room must be a number").required("Number of room is required"),
       imagesRoom: yup.mixed().test("required", "Please select images", (value) => {
         return value && value.length;
       }),
@@ -96,51 +94,40 @@ const PopupEditRoomInformation = memo((props: Props) => {
       numberOfBed: null,
       numberOfRoom: null,
       imagesRoom: [],
-      discount: null,
     })
   }
   const _onSubmit = async (data: RoomForm) => {
-    // dispatch(setLoading(true));
-    // const arrRequest = [];
-    // await data?.room.map(async (item) => {
-    //   const uploader = [];
-    //   await item?.imagesRoom?.map(async (file) => {
-    //     const formData: any = new FormData();
-    //     formData.append("file", file);
-    //     formData.append("tags", "codeinfuse, medium, gist");
-    //     formData.append("upload_preset", "my-uploads");
-    //     formData.append("api_key", "859398113752799");
-    //     formData.append("timestamp", Date.now() / 1000 / 0);
-    //     uploader.push(ImageService.uploadImage(formData));
-    //   });
+    dispatch(setLoading(true));
+      const uploader = [];
+      await data?.imagesRoom?.map(async (file) => {
+        const formData: any = new FormData();
+        formData.append("file", file);
+        formData.append("tags", "codeinfuse, medium, gist");
+        formData.append("upload_preset", "my-uploads");
+        formData.append("api_key", "859398113752799");
+        formData.append("timestamp", Date.now() / 1000 / 0);
+        uploader.push(ImageService.uploadImage(formData));
+      });
 
-    //   await Promise.all(uploader).then((images) => {
-    //     const roomData = {
-    //       title: item?.title,
-    //       description: item?.description,
-    //       tags: item.tags,
-    //       images: images,
-    //       hotelId: hotelId,
-    //       discount: item?.discount,
-    //       numberOfBed: item?.numberOfRoom,
-    //       numberOfRoom: item?.numberOfBed,
-    //     };
-
-    //     // arrRequest.push(RoomService.createRoom(roomData));
-    //   });
-    // });
-    // Promise.all(arrRequest)
-    //   .then(() => {
-    //     dispatch(setSuccessMess("Create room(s) successfully"));
-    //   })
-    //   .catch((e) => {
-    //     dispatch(setErrorMess(e));
-    //   })
-    //   .finally(() => {
-    //     onClose();
-    //     clearForm();
-    //     dispatch(setLoading(false));
-    //   });
+      await Promise.all(uploader).then((images) => {
+          if(itemEdit) {
+            RoomService.updateInformation(itemEdit?.id, { 
+              title: itemEdit?.title,
+              description: itemEdit?.description,
+              tags: itemEdit.tags,
+              images: itemEdit?.images,
+              numberOfBed: itemEdit?.numberOfRoom,
+              numberOfRoom: itemEdit?.numberOfBed,
+            })
+          }
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        onClose();
+        dispatch(setLoading(false));
+      });
   };
 
   useEffect(() => {
@@ -152,17 +139,10 @@ const PopupEditRoomInformation = memo((props: Props) => {
         numberOfBed: itemEdit.numberOfBed,
         numberOfRoom: itemEdit.numberOfRoom,
         imagesRoom: itemEdit.images,
-        discount: itemEdit.discount || null,
       })
     }
   }, [reset, itemEdit])
 
-    useEffect(() => {
-    if (!isOpen && !itemEdit) {
-      clearForm()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, itemEdit])
   return (
     <>
       <Modal isOpen={isOpen} toggle={onClose} className={classes.root}>
@@ -223,17 +203,6 @@ const PopupEditRoomInformation = memo((props: Props) => {
                         placeholder="Enter number of room"
                         inputRef={register("numberOfRoom")}
                         errorMessage={errors.numberOfRoom?.message}
-                      />
-                    </Col>
-                  </Row>
-                  <Row className={classes.row}>
-                    <Col>
-                      <InputTextFieldBorder
-                        label="Discount"
-                        className="mr-3"
-                        placeholder="Enter discount"
-                        inputRef={register("discount")}
-                        errorMessage={errors.discount?.message}
                       />
                     </Col>
                   </Row>

@@ -52,6 +52,7 @@ const Tour = memo(()=> {
         TourService.delete(tourDelete?.id)
         .then(()=> {        
             dispatch(getAllTours(user?.id)) 
+            dispatch(getAllToursOfNormal())
         })
         .catch(e => dispatch(setErrorMess(e)))
         .finally(() => dispatch(setLoading(false)))

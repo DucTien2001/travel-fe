@@ -114,6 +114,7 @@ const Hotel = memo(() => {
     HotelService.deleteHotel(hotelDelete?.id)
       .then(() => {
         dispatch(getAllHotels(user?.id));
+        dispatch(getAllHotelsOfNormal());
       })
       .catch((e) => dispatch(setErrorMess(e)))
       .finally(() => dispatch(setLoading(false)));
@@ -207,6 +208,7 @@ const Hotel = memo(() => {
       dispatch(setSuccessMess("Delete room successfully"))
       onTogglePopupDeleteRoom();
       dispatch(getAllHotels(user?.id));
+      dispatch(getAllHotelsOfNormal());
     })
     .catch((err) => {
       dispatch(setErrorMess(err))
@@ -236,6 +238,8 @@ const Hotel = memo(() => {
       .catch((e) => dispatch(setErrorMess(e)))
       .finally(() => dispatch(setLoading(false)));
   };
+
+  console.log(roomStop);
 
   return (
     <>
@@ -367,7 +371,7 @@ const Hotel = memo(() => {
                                     btnType={BtnType.Secondary}
                                     size="sm"
                                     type="button"
-                                    onClick={(e) => onTemporarilyStopWorkingRoom(e, item)}
+                                    onClick={(e) => onTemporarilyStopWorkingRoom(e, itemSubtable)}
                                   >
                                     <FontAwesomeIcon icon={faHourglass}/>
                                   </Button>

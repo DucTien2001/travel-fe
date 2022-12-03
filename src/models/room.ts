@@ -56,9 +56,10 @@ export interface EditRoomInformation {
   images: string[];
   numberOfBed: number;
   numberOfRoom: number;
-  discount?: number;
 }
 export interface EditRoomPrice{
+  id?: number;
+  discount?: number;
   mondayPrice: number;
   tuesdayPrice: number;
   wednesdayPrice: number;

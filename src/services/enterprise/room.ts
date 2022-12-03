@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { ICreateRoom } from "models/room";
+import { EditRoomInformation, EditRoomPrice, ICreateRoom } from "models/room";
 import api from "../configApi";
 
 export class RoomService {
@@ -23,9 +23,9 @@ export class RoomService {
         return Promise.reject(e?.response?.data);
       });
   }
-  static async updateInformation(roomId: number): Promise<any> {
+  static async updateInformation(roomId: number, data: EditRoomInformation): Promise<any> {
     return await api
-      .put(API.ENTERPRISE.ROOM.UPDATE_INFORMATION.replace(":id", `${roomId}`))
+      .put(API.ENTERPRISE.ROOM.UPDATE_INFORMATION.replace(":id", `${roomId}`), data)
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -33,9 +33,9 @@ export class RoomService {
         return Promise.reject(e?.response?.data);
       });
   }
-  static async updatePrice(roomId: number): Promise<any> {
+  static async updatePrice(roomId: number, data: EditRoomPrice): Promise<any> {
     return await api
-      .put(API.ENTERPRISE.ROOM.UPDATE_PRICE.replace(":id", `${roomId}`))
+      .put(API.ENTERPRISE.ROOM.UPDATE_PRICE.replace(":id", `${roomId}`), data)
       .then((res) => {
         return Promise.resolve(res.data);
       })

@@ -139,7 +139,7 @@ const ProductPage = memo((Props) => {
     <>
       <div className={clsx("wrapper", classes.root)}>
         <SectionHeader title="VIEW HOTEL" src={images.bgUser.src} />
-        {hotel?.isTemporarilyStopWorking || hotel?.isDelete ? (
+        {hotel?.isTemporarilyStopWorking || hotel?.isDeleted ? (
           <Container className={classes.boxStopWorking}>
             <h3>Sorry, our service is temporarily in active use </h3>
             <FontAwesomeIcon icon={faFaceFrown}/>

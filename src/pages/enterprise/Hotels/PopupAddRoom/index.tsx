@@ -37,6 +37,7 @@ import { ImageService } from "services/image";
 import { RoomService } from "services/enterprise/room";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
 import useAuth from "hooks/useAuth";
+import InputTags from "components/common/inputs/InputTags";
 
 const FILE_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const PHOTO_SIZE = 10000000000; // bytes
@@ -79,8 +80,8 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         yup.object({
           title: yup.string().required("Name is required"),
           description: yup.string().required("Name is required"),
-          tags: yup.string().required("Name is required"),
-          discount: yup.number().required("Name is required"),
+          tags: yup.array().required("Name is required"),
+          discount: yup.number().transform(value => (isNaN(value) ? undefined : value)).typeError("Discount must be a number").notRequired(),
           numberOfBed: yup.number().required("Name is required"),
           numberOfRoom: yup.number().required("Name is required"),
           imagesRoom: yup.mixed().test("required", "Please select images", (value) => {
@@ -287,13 +288,24 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                   </Row>
                   <Row className={classes.row}>
                     <Col>
-                      <InputTextFieldBorder
+                      <Controller
+                      name={`room.${index}.tags`}
+                      control={control}
+                      render={({ field }) => (
+                      <InputTags
+                        {...field}
                         label="Tags"
-                        className="mr-3"
+                        name="tags"
                         placeholder="Enter tags"
-                        inputRef={register(`room.${index}.tags`)}
+                        onChange={(value: any) => {
+                          return field.onChange(value);
+                        }}
+                        value={field.value ? field.value : []}
+                        control={control}
                         errorMessage={errors.room && errors.room[index]?.tags?.message}
-                      />
+                    />
+                  )}
+                />
                     </Col>
                   </Row>
                   <Row className={classes.row}>
