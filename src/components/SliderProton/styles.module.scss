@@ -1,13 +1,11 @@
 .main {
   padding: 0 16px;
-    [class~="PrivateValueLabel-circle-16"] {
-      background-color: transparent;
-
+    [class~="MuiSlider-valueLabel"] {  
+      top: 25px !important;
       span {
+        background-color: transparent !important;
         color: var(--violet-color) !important;
       }
     }
-    [class~="PrivateValueLabel-offset-15"] {
-      top: 25px;
-    }
+
 }

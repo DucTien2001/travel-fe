@@ -55,7 +55,7 @@ const Hotel = memo(()=> {
                             Date
                         </th>
                         <th>
-                            Amount
+                            Total bill
                         </th>
                         <th>
                             Status

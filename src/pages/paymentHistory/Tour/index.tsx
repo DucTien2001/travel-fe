@@ -62,7 +62,7 @@ const Tour = memo(()=> {
                             Date
                         </th>
                         <th>
-                            Amount
+                            Total bill
                         </th>
                         <th>
                             Status
@@ -104,7 +104,7 @@ const Tour = memo(()=> {
                 {!listHistory?.length && (
                     <tr>
                         <th scope="row" colSpan={6}>
-                            <SearchNotFound mess="No tour found"/>
+                            <SearchNotFound mess="No tour bill found"/>
                         </th>
                     </tr>
                 )}
@@ -127,7 +127,7 @@ const Tour = memo(()=> {
             </Col>
         </Row>
         <Row className={classes.row}>
-            <SearchNotFound mess="No tour found"/>
+            <SearchNotFound mess="No tour bill found"/>
         </Row>
         </div>
        </div>

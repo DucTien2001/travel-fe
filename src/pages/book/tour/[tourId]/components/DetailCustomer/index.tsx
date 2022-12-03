@@ -6,7 +6,6 @@ import CardItemList from "components/CardItemList";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import Switch from "components/common/Switch";
 import {Row, Col} from "reactstrap";
 import Button, {BtnType} from "components/common/buttons/Button";
 import PopupDefault from "components/Popup/PopupConfirmSucess";
@@ -79,14 +78,13 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
 
   const _onSubmit = (data: BookForm) => {
       dispatch(setLoading(true));  
-      const totalPrice = data?.amount * tour?.price * ((100 - tour?.discount) / 100);
         if(user) {
           TourBillService.create({
             userId: user?.id,
             userMail: data?.email,
             tourId: tour?.id,
             amount: data.amount,
-            price: totalPrice,
+            price: tour?.price,
             discount: tour?.discount,
             email: data?.email,
             phoneNumber: data?.phoneNumber,
@@ -207,58 +205,6 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
                         /> 
                         </Col>
                       </Row>
-                      {/* <Row className={classes.containerToggle}>
-                        <div className={classes.boxToggle}>
-                          <p>Book for friends</p>
-                          <Switch value={deactivate} onChange={onToggleRecipient}/>
-                        </div>
-                        {!!fieldsRecipient.length && (
-                          <>{fieldsRecipient.map((field, index) => (
-                            <>
-                            <Row key={index}>
-                            <div className={classes.noteTipRecipient}>
-                                <FontAwesomeIcon icon={faCircleInfo}/>
-                                <span>The recipient will receive the ticket information via email after completing the booking. Please fill in the information</span>
-                            </div>
-                            <Col xs={6}>
-                                <InputTextFieldBorder
-                                label="First name recipient"
-                                placeholder="Enter first name recipient"
-                                inputRef={register(`recipient.${index}.firstNameRecipient`)}
-                                errorMessage={errors.recipient?.[index]?.firstNameRecipient?.message}
-                                />
-                            </Col>
-                            <Col xs={6}>
-                                <InputTextFieldBorder
-                                label="Last name recipient"
-                                placeholder="Enter last name recipient"
-                                inputRef={register(`recipient.${index}.lastNameRecipient`)}
-                                errorMessage={errors.recipient?.[index]?.lastNameRecipient?.message}
-                                />
-                            </Col>
-                          </Row>
-                          <Row key={index}>
-                            <Col xs={6}>
-                                <InputTextFieldBorder
-                                label="Email recipient"
-                                placeholder="Enter email recipient"
-                                inputRef={register(`recipient.${index}.emailRecipient`)}
-                                errorMessage={errors.recipient?.[index]?.emailRecipient?.message}
-                                />
-                            </Col>
-                            <Col xs={6}>
-                                <InputTextFieldBorder
-                                label="Phone recipient"
-                                placeholder="Enter phone recipient"
-                                inputRef={register(`recipient.${index}.phoneNumberRecipient`)}
-                                errorMessage={errors.recipient?.[index]?.phoneNumberRecipient?.message}
-                                />
-                            </Col>
-                          </Row>
-                          </>
-                          ))}</>
-                        )}  
-                      </Row> */}
                         <Button type="submit" className={classes.btnBook} btnType={BtnType.Primary} isDot={true} >Confirm book</Button>
                   </div>
                 </Box>
