@@ -53,11 +53,15 @@ const PopupCreateTour = memo((props: Props) => {
     return yup.object().shape({
       name: yup.string().required("Name is required"),
       description: yup.string().required("Description is required"),
-      businessHours: yup.array().required("Hours is required"),
+      businessHours: yup.mixed().test("required", "Hours is required", (value) => {
+        return value && value.length;
+      }),
       location: yup.string().required("Location is required"),
       price: yup.number().typeError("Price must be a number").required("Price is required"),
       discount: yup.number().transform(value => (isNaN(value) ? undefined : value)).typeError("Discount must be a number").notRequired(),
-      tags: yup.array().required("Tags is required"),
+      tags: yup.mixed().test("required", "Tags is required", (value) => {
+        return value && value.length;
+      }),
       contact: yup.string()
       .required("Contact is required")
       .matches(VALIDATION.phone, { message: 'Please enter a valid phone number.', excludeEmptyString: true }),
@@ -293,11 +297,6 @@ const PopupCreateTour = memo((props: Props) => {
                 />
               )}
             />
-            <Row className={classes.row}>
-              <Col>
-                <InputCheckbox content="Temporarily stop working" inputRef={register("isTemporarilyStopWorking")} />
-              </Col>
-            </Row>
           </ModalBody>
           <ModalFooter className={classes.footer}>
             <Button btnType={BtnType.Primary} type="submit">

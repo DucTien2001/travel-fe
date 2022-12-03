@@ -54,7 +54,9 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       contact: yup.string().required("Contact is required"),
       checkInTime: yup.string().required("Check in time is required"),
       checkOutTime: yup.string().required("Check out time is required"),
-      tags: yup.array().required("Tags is required"),
+      tags: yup.mixed().test("required", "Tags is required", (value) => {
+        return value && value.length;
+      }),
       isTemporarilyStopWorking: yup.boolean().required(),
       imagesHotel: yup.mixed().test("required", "Please select images", (value) => {
         return value && value.length;

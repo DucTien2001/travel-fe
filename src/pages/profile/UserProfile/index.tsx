@@ -43,7 +43,7 @@ const UserProfile = memo((props: Props) => {
           .email("Please enter a valid email address")
           .required("Email is required"),
           phoneNumber: yup.string().required().matches(VALIDATION.phone, { message: 'Please enter a valid phone number.', excludeEmptyString : true }),
-          address: (user?.role === EUserType.ENTERPRISE || user?.role === EUserType.ADMIN) ? yup.string().required("Address is required") : yup.string().notRequired(),
+          address: yup.string().nullable().notRequired(),
         });
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
@@ -76,7 +76,7 @@ const UserProfile = memo((props: Props) => {
                     avatar: res,
                     firstName: data.firstName,
                     lastName: data.lastName,
-                    address: data.address || null,
+                    address: data.address || "",
                     phoneNumber: data.phoneNumber,    
                 })
                 .then(() => {
@@ -104,7 +104,7 @@ const UserProfile = memo((props: Props) => {
                     lastName: res.lastName,
                     email: res.email,
                     phoneNumber: res.phoneNumber,
-                    address: res.address || null,                   
+                    address: res.address || "",                   
                 })
             })
             .catch((err) => dispatch(setErrorMess(err)))
@@ -176,7 +176,6 @@ const UserProfile = memo((props: Props) => {
                     <InputTextFieldBorder
                         className="mb-4"
                         label="Phone"
-                        optional={true}
                         name="phone"
                         placeholder="Phone"
                         type="text"
@@ -187,6 +186,7 @@ const UserProfile = memo((props: Props) => {
                         className="mb-4"
                         label="Address"
                         name="address"
+                        optional={true}
                         placeholder="Address"
                         type="text"
                         inputRef={register("address")}
