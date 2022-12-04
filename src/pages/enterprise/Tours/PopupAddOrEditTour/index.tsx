@@ -58,13 +58,18 @@ const PopupCreateTour = memo((props: Props) => {
       }),
       location: yup.string().required("Location is required"),
       price: yup.number().typeError("Price must be a number").required("Price is required"),
-      discount: yup.number().transform(value => (isNaN(value) ? undefined : value)).typeError("Discount must be a number").notRequired(),
+      discount: yup
+        .number()
+        .transform((value) => (isNaN(value) ? undefined : value))
+        .typeError("Discount must be a number")
+        .notRequired(),
       tags: yup.mixed().test("required", "Tags is required", (value) => {
         return value && value.length;
       }),
-      contact: yup.string()
-      .required("Contact is required")
-      .matches(VALIDATION.phone, { message: 'Please enter a valid phone number.', excludeEmptyString: true }),
+      contact: yup
+        .string()
+        .required("Contact is required")
+        .matches(VALIDATION.phone, { message: "Please enter a valid phone number.", excludeEmptyString: true }),
       isTemporarilyStopWorking: yup.boolean().required(),
       images: yup.mixed().test("required", "Please select images", (value) => {
         return value && value.length;
@@ -101,10 +106,9 @@ const PopupCreateTour = memo((props: Props) => {
       images: [],
     });
   };
-  
+
   const _onSubmit = async (data: TourForm) => {
     dispatch(setLoading(true));
-    console.log("===========", data);
     const uploader = [];
     data?.images?.map((file) => {
       const formData: any = new FormData();
@@ -117,7 +121,7 @@ const PopupCreateTour = memo((props: Props) => {
     });
     await Promise.all(uploader)
       .then((res) => {
-        if(itemEdit) {
+        if (itemEdit) {
           TourService.updateTour(itemEdit?.id, {
             title: itemEdit.title,
             description: itemEdit.description,
@@ -128,32 +132,31 @@ const PopupCreateTour = memo((props: Props) => {
             tags: itemEdit.tags,
             contact: itemEdit.contact,
             images: itemEdit.images,
-          })
+          });
           // console.log(res);
-        }
-        else {
-        if (user) {
-          TourService.createTour({
-            title: data.name,
-            description: data.description,
-            businessHours: data.businessHours,
-            location: data.location,
-            price: data.price,
-            discount: data.discount,
-            tags: data.tags,
-            contact: data.contact,
-            images: res,
-            creator: user?.id,
-          })
-            .then(() => {
-              dispatch(getAllTours(user?.id))
-              dispatch(getAllToursNormal())
-              dispatch(setSuccessMess("Create tour successfully"));
+        } else {
+          if (user) {
+            TourService.createTour({
+              title: data.name,
+              description: data.description,
+              businessHours: data.businessHours,
+              location: data.location,
+              price: data.price,
+              discount: data.discount,
+              tags: data.tags,
+              contact: data.contact,
+              images: res,
+              creator: user?.id,
             })
-            .catch((e) => {
-              dispatch(setErrorMess(e));
-            });
-        }
+              .then(() => {
+                dispatch(getAllTours(user?.id));
+                dispatch(getAllToursNormal());
+                dispatch(setSuccessMess("Create tour successfully"));
+              })
+              .catch((e) => {
+                dispatch(setErrorMess(e));
+              });
+          }
         }
       })
       .catch((e) => {
@@ -164,7 +167,7 @@ const PopupCreateTour = memo((props: Props) => {
         dispatch(setLoading(false));
       });
   };
- 
+
   useEffect(() => {
     if (itemEdit) {
       reset({
@@ -177,16 +180,16 @@ const PopupCreateTour = memo((props: Props) => {
         tags: itemEdit.tags,
         contact: itemEdit.contact,
         images: itemEdit.images,
-      })
+      });
     }
-  }, [reset, itemEdit])
+  }, [reset, itemEdit]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!isOpen && !itemEdit) {
-      clearForm()
+      clearForm();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, itemEdit])
+  }, [isOpen, itemEdit]);
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
@@ -255,7 +258,7 @@ const PopupCreateTour = memo((props: Props) => {
             </Row>
             <Row className={classes.row}>
               <Col>
-              <Controller
+                <Controller
                   name="tags"
                   control={control}
                   render={({ field }) => (
@@ -285,13 +288,25 @@ const PopupCreateTour = memo((props: Props) => {
                 />
               </Col>
             </Row>
-            <Controller
+            {/* <Controller
               name="images"
               control={control}
               render={({ field }) => (
                 <UploadFile
                   title="Upload your tour images"
                   file={field.value ? field.value : []}
+                  onChange={(value) => field.onChange(value)}
+                  errorMessage={errors.images?.message}
+                />
+              )}
+            /> */}
+            <Controller
+              name="images"
+              control={control}
+              render={({ field }) => (
+                <UploadImage
+                  title="Upload your tour images"
+                  files={field.value as unknown as File[]}
                   onChange={(value) => field.onChange(value)}
                   errorMessage={errors.images?.message}
                 />

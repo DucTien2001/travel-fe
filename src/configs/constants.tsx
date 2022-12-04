@@ -83,6 +83,7 @@ export const API = {
       HOTEL_COMMENT: {
         GET_All_COMMENTS: "/v1.0/hotel-comment/get-all-hotel-comments",
         REPLY: "/v1.0/hotel-comment/reply/:id",
+        REQUEST_DELETE: "/v1.0/hotel-comment/request-delete/:id",
         DELETE: "/v1.0/hotel-comment/delete/:id",
       },
     },
@@ -117,6 +118,17 @@ export const API = {
       GET_HOTELS_REVENUE_BY_YEAR: "/v1.0/room-bill/get-hotels-revenue-by-year",
     },
   },
+  ADMIN: {
+    USER: {
+      ALL_PROFILES: "/v1.0/user/all-profiles",
+    },
+    COMMENT: {
+      HOTEL_COMMENT: {
+        GET_COMMENT_NEED_DELETE: "/v1.0/hotel-comment/get-hotel-comments-need-delete",
+        DELETE: "/v1.0/hotel-comment/delete/:id",
+      }
+    }
+  }
 };
 
 export const VALIDATION = {

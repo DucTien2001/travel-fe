@@ -5,6 +5,7 @@ import {
   IGetAllTourComments,
   IReplyHotelComment,
   IReplyTourComment,
+  IRequestDeleteHotelComment,
   IUpdateHotelComment,
 } from "models/comment";
 import api from "services/configApi";
@@ -68,6 +69,17 @@ export class CommentService {
   static async replyHotelComment(commentId: number, data: IReplyHotelComment): Promise<any> {
     return await api
       .put(API.ENTERPRISE.COMMENT.HOTEL_COMMENT.REPLY.replace(":id", `${commentId}`), data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async requestDeleteHotelComment(commentId: number, data: IRequestDeleteHotelComment): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.COMMENT.HOTEL_COMMENT.REQUEST_DELETE.replace(":id", `${commentId}`), data)
       .then((res) => {
         return Promise.resolve(res.data);
       })

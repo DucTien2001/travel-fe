@@ -73,3 +73,7 @@ export interface IReplyTourComment {
   export interface IGetAllHotelComments {
     hotelIds: number[];
   }
+  
+  export interface IRequestDeleteHotelComment {
+    reasonForDelete: string;
+  }

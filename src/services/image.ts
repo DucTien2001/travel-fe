@@ -10,7 +10,6 @@ export class ImageService {
         headers: { "X-Requested-With": "XMLHttpRequest" },
       })
       .then((res) => {
-        // console.log
         return Promise.resolve(res?.data?.secure_url);
       })
       .catch((e) => {
