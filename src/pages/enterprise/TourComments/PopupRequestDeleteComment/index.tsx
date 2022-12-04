@@ -54,7 +54,7 @@ const PopupRequestDeleteComment = memo((props: Props) => {
   
     const _onSubmit = (data: ReplyForm) => {
       dispatch(setLoading(true));
-        CommentService.requestDeleteHotelComment(commentId, {
+        CommentService.requestDeleteTourComment(commentId, {
             reasonForDelete: data.reasonForDelete,
           })
           .then(res => {

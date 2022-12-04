@@ -78,6 +78,7 @@ export const API = {
       TOUR_COMMENT: {
         GET_All_COMMENTS: "/v1.0/tour-comment/get-all-tour-comments",
         REPLY: "/v1.0/tour-comment/reply/:id",
+        REQUEST_DELETE: "/v1.0/tour-comment/request-delete/:id",
         DELETE: "/v1.0/tour-comment/delete/:id",
       },
       HOTEL_COMMENT: {
@@ -126,6 +127,10 @@ export const API = {
       HOTEL_COMMENT: {
         GET_COMMENT_NEED_DELETE: "/v1.0/hotel-comment/get-hotel-comments-need-delete",
         DELETE: "/v1.0/hotel-comment/delete/:id",
+      },
+      TOUR_COMMENT: {
+        GET_COMMENT_NEED_DELETE: "/v1.0/tour-comment/get-tour-comments-need-delete",
+        DELETE: "/v1.0/tour-comment/delete/:id",
       }
     }
   }

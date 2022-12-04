@@ -5,28 +5,28 @@ export interface IGetAllTourComments {
 }
 
 export interface ICreateTourComment {
-    id?: number;
-    comment: string;
-    rate: number;
-    tourId: number;
-    userId: number;
-  }
+  id?: number;
+  comment: string;
+  rate: number;
+  tourId: number;
+  userId: number;
+}
 
 export interface IUpdateTourComment {
-    comment: string;
-    rate: number;
+  comment: string;
+  rate: number;
 }
 
-export interface TourReviewer{
-    address?: string;
-    avatar: string;
-    firstName?: string;
-    lastName?: string;
-    phoneNumber?: string;
-    role?: number;
-    userName?: string;
+export interface TourReviewer {
+  address?: string;
+  avatar: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  role?: number;
+  userName?: string;
 }
-export interface HotelReviewer{
+export interface HotelReviewer {
   address?: string;
   avatar: string;
   firstName?: string;
@@ -36,44 +36,47 @@ export interface HotelReviewer{
   userName?: string;
 }
 export interface Comment {
-    id?: number;
-    comment: string;
-    rate: number;
-    tourId?: number;
-    roomId?: number;
-    userId?: number;
-    tourReviewer?: TourReviewer;
-    hotelReviewer?: HotelReviewer;
-    createdAt: Date;
-    replyComment?: string;
+  id?: number;
+  comment: string;
+  rate: number;
+  tourId?: number;
+  roomId?: number;
+  userId?: number;
+  tourReviewer?: TourReviewer;
+  hotelReviewer?: HotelReviewer;
+  createdAt: Date;
+  replyComment?: string;
 }
 
 export interface IReplyTourComment {
-    replyComment: string;
-  }
-  
+  replyComment: string;
+}
 
-  export interface ICreateHotelComment {
-    id?: number;
-    comment: string;
-    rate: number;
-    hotelId: number;
-    userId: number;
-  }
-  
-  export interface IUpdateHotelComment {
-    comment: string;
-    rate: number;
-  }
-  
-  export interface IReplyHotelComment {
-    replyComment: string;
-  }
-  
-  export interface IGetAllHotelComments {
-    hotelIds: number[];
-  }
-  
-  export interface IRequestDeleteHotelComment {
-    reasonForDelete: string;
-  }
+export interface ICreateHotelComment {
+  id?: number;
+  comment: string;
+  rate: number;
+  hotelId: number;
+  userId: number;
+}
+
+export interface IUpdateHotelComment {
+  comment: string;
+  rate: number;
+}
+
+export interface IReplyHotelComment {
+  replyComment: string;
+}
+
+export interface IGetAllHotelComments {
+  hotelIds: number[];
+}
+
+export interface IRequestDeleteHotelComment {
+  reasonForDelete: string;
+}
+
+export interface IRequestDeleteTourComment {
+  reasonForDelete: string;
+}

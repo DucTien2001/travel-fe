@@ -17,6 +17,7 @@ import PopupReplyComment from "./PopupReplyComment";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import PopupRequestDeleteComment from "./PopupRequestDeleteComment";
 
 interface ITourSelection {
   tours?: any;
@@ -33,6 +34,7 @@ const TourComments = memo(() => {
 
   const [tourIds, setTourIds] = useState([]);
   const [openPopupReplyComment, setOpenPopupReplyComment] = useState(false);
+  const [openPopupRequestDeleteComment, setOpenPopupRequestDeleteComment] = useState(false);
   const [commentAction, setCommentAction] = useState(null);
   const [commentDelete, setCommentDelete] = useState(null);
   const [commentEdit, setCommentEdit] = useState(null);
@@ -75,6 +77,12 @@ const TourComments = memo(() => {
       setCommentAction(itemAction);
       setCommentEdit(itemAction);
     };
+    
+    const onOpenPopupRequestDeleteComment = (e, itemAction) => {
+      setOpenPopupRequestDeleteComment(true);
+      setCommentAction(itemAction);
+      setCommentEdit(itemAction);
+    };
 
     const onOpenPopupConfirmDelete = (e, itemAction) => {
       setCommentDelete(itemAction);
@@ -89,6 +97,11 @@ const TourComments = memo(() => {
       setOpenPopupReplyComment(false);
       setCommentEdit(null);
   }
+  
+  const onClosePopupRequesttDeleteComment = () => {
+    setOpenPopupRequestDeleteComment(false);
+    setCommentEdit(null);
+}
 
 
   const onGetTourComments = () => {
@@ -208,11 +221,12 @@ const TourComments = memo(() => {
                  <i className="now-ui-icons ui-1_send mr-1"></i>
                   </Button>
                   <Button
+                  disabled={cmt?.isRequestDelete}
                   className="btn-icon"
                   color="danger"
                   size="sm"
                   type="button"
-                  onClick={(e) => onOpenPopupConfirmDelete(e, cmt)}
+                  onClick={(e) => onOpenPopupRequestDeleteComment(e, cmt)}
                   >
                   <i className="now-ui-icons ui-1_simple-remove"></i>
                   </Button>
@@ -235,6 +249,14 @@ const TourComments = memo(() => {
         onClose={onClosePopupAddComment}
         toggle={onClosePopupAddComment}
         onGetTourComments={onGetTourComments}
+        />
+        <PopupRequestDeleteComment
+        isOpen={openPopupRequestDeleteComment}
+        commentEdit={commentEdit}
+        commentId={commentAction?.id}
+        onClose={onClosePopupRequesttDeleteComment}
+        toggle={onClosePopupRequesttDeleteComment}
+        onGetHotelComments={onGetTourComments}
         />
         <PopupConfirmDelete
         title="Are you sure delete this comment?"

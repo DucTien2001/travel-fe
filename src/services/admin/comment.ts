@@ -10,9 +10,9 @@ import {
 import api from "services/configApi";
 
 export class CommentService {
-  static async getTourComments(tourId: number): Promise<any> {
+  static async getTourCommentsNeedDelete(): Promise<any> {
     return await api
-      .get(API.NORMAL.COMMENT.TOUR_COMMENT.GET_COMMENT.replace(":id", `${tourId}`))
+      .get(API.ADMIN.COMMENT.TOUR_COMMENT.GET_COMMENT_NEED_DELETE)
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -23,7 +23,7 @@ export class CommentService {
 
   static async deleteCommentTour(commentId: number): Promise<any> {
     return await api
-      .put(API.NORMAL.COMMENT.TOUR_COMMENT.DELETE.replace(":id", `${commentId}`))
+      .put(API.ADMIN.COMMENT.TOUR_COMMENT.DELETE.replace(":id", `${commentId}`))
       .then((res) => {
         return Promise.resolve(res.data);
       })

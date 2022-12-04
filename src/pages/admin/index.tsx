@@ -11,6 +11,7 @@ import { images } from "configs/images";
 import Users from "./Users";
 import Sales from "./Sales";
 import HotelFeedbacks from "./HotelFeedbacks";
+import TourFeedbacks from "./TourFeedbacks";
 
 export enum EActiveNav {
   User_Active = 1,
@@ -114,7 +115,7 @@ const Enterprise: NextPage = () => {
               <HotelFeedbacks />
             </TabPane>
             <TabPane tabId="verticalTabs4" className={classes.tabPane}>
-              <HotelFeedbacks />
+              <TourFeedbacks />
             </TabPane>
           </TabContent>
         </Col>
