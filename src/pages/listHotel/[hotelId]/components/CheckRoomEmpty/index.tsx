@@ -43,8 +43,12 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
   const [listRooms, setListRoom] = useState([]);
   const schema = useMemo(() => {
     return yup.object().shape({
-      departure: yup.date().nullable().required("Departure is required"),
-      return: yup.date().nullable().required("Return is required"),
+      departure: yup.date().max(yup.ref("return"), 'Departure date can\'t be after return date')
+      .required('Start datetime is required'),
+      return: yup.date().min(
+        yup.ref('departure'),
+        "Return date can't be before departure date"
+      ).required('End datetime is required'),
       amountList: yup.array().of(
         yup.object().shape({
           amount: yup.number(),
@@ -147,25 +151,39 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_return, hotel]);
 
+    const isValid = () => {
+      for(var i =0; i < listRooms.length; i++) {
+        if (watch(`amountList.${i}.amount`) !== 0){
+          return true;
+        }
+        else {
+          return false;
+        }
+      }    
+    }
+
+
   const _onSubmit = (data) => {
-    const roomBillConfirm = [];
-    let isError = false;  
-    data?.amountList?.map((item, index)=>{
-      if(item?.amount > 0){
-        roomBillConfirm.push({
-          ...listRooms[index],
-          amount: item.amount
-        })
-      }
-    })
-    dispatch(setRoomBillConfirmReducer({
-      hotel: hotel,
-      rooms: roomBillConfirm,
-      startDate: new Date(data?.departure),
-      endDate: new Date(data?.return)
-    }))
-    router.push(`/book/hotel`);
+    // const roomBillConfirm = [];
+    // let isError = false;  
+    // data?.amountList?.map((item, index)=>{
+    //   if(item?.amount > 0){
+    //     roomBillConfirm.push({
+    //       ...listRooms[index],
+    //       amount: item.amount
+    //     })
+    //   }
+    // })
+    // dispatch(setRoomBillConfirmReducer({
+    //   hotel: hotel,
+    //   rooms: roomBillConfirm,
+    //   startDate: new Date(data?.departure),
+    //   endDate: new Date(data?.return)
+    // }))
+    // router.push(`/book/hotel`);
+    console.log(isValid());
   };
+
 
   return (
     <>
@@ -264,7 +282,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
               <tbody>
                 <tr>
                   <td className={clsx(classes.colConfirm, classes.col)}>
-                      <Button btnType={BtnType.Secondary} type="submit">
+                      <Button btnType={BtnType.Secondary} type="submit" disabled={!isValid()}>
                         Book
                       </Button>
                   </td>

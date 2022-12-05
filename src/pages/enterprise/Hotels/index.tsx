@@ -29,6 +29,7 @@ import { IHotel } from "models/enterprise";
 import { getAllHotels as getAllHotelsOfNormal} from "redux/reducers/Normal/actionTypes";
 import PopupEditRoomInformation from "./PopupEditRoomInformation";
 import PopupEditRoomPrice from "./PopupEditRoomPrice";
+import SearchNotFound from "components/SearchNotFound";
 
 // eslint-disable-next-line react/display-name
 const Hotel = memo(() => {
@@ -414,6 +415,13 @@ const Hotel = memo(() => {
                   </>
                 );
               })}
+            {!allHotels?.length && 
+              <tr>
+                <td scope="row" colSpan={8}> 
+                  <SearchNotFound/>
+                </td>                 
+              </tr>
+            }
           </tbody>
         </Table>
         <PopupAddOrEditHotel
