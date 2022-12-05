@@ -164,24 +164,23 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
 
 
   const _onSubmit = (data) => {
-    // const roomBillConfirm = [];
-    // let isError = false;  
-    // data?.amountList?.map((item, index)=>{
-    //   if(item?.amount > 0){
-    //     roomBillConfirm.push({
-    //       ...listRooms[index],
-    //       amount: item.amount
-    //     })
-    //   }
-    // })
-    // dispatch(setRoomBillConfirmReducer({
-    //   hotel: hotel,
-    //   rooms: roomBillConfirm,
-    //   startDate: new Date(data?.departure),
-    //   endDate: new Date(data?.return)
-    // }))
-    // router.push(`/book/hotel`);
-    console.log(isValid());
+    const roomBillConfirm = [];
+    let isError = false;  
+    data?.amountList?.map((item, index)=>{
+      if(item?.amount > 0){
+        roomBillConfirm.push({
+          ...listRooms[index],
+          amount: item.amount
+        })
+      }
+    })
+    dispatch(setRoomBillConfirmReducer({
+      hotel: hotel,
+      rooms: roomBillConfirm,
+      startDate: new Date(data?.departure),
+      endDate: new Date(data?.return)
+    }))
+    router.push(`/book/hotel`);
   };
 
 
