@@ -57,4 +57,14 @@ export class HotelService {
         return Promise.reject(e?.response?.data);
       })
   }
+
+  static async workAgain(hotelId: number): Promise<any> {
+    return await api.put(API.ENTERPRISE.HOTEL.WORK_AGAIN.replace(":id", `${hotelId}`))
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
 }

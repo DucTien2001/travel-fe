@@ -63,4 +63,14 @@ export class RoomService {
         return Promise.reject(e?.response?.data);
       });
   }
+
+  static async workAgain(roomId: number): Promise<any> {
+    return await api.put(API.ENTERPRISE.ROOM.WORK_AGAIN.replace(":id", `${roomId}`))
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
 }

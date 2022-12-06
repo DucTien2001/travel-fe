@@ -93,14 +93,16 @@ export const API = {
       UPDATE_TOUR: "/v1.0/tour/update/:id",
       DELETE_TOUR: "/v1.0/tour/delete/:id",
       GET_TOURS: "/v1.0/tour/get-tours/:id",
-      STOP_WORKING: "/v1.0/tour/temporarily-stop-working/:id"
+      STOP_WORKING: "/v1.0/tour/temporarily-stop-working/:id",
+      WORK_AGAIN: "/v1.0/tour/work-again/:id",
     },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",
       UPDATE_HOTEL: "/v1.0/hotel/update/:id",
       DELETE_HOTEL: "/v1.0/hotel/delete/:id",
       GET_HOTELS: "/v1.0/hotel/get-hotels/:id",
-      STOP_WORKING: "/v1.0/hotel/temporarily-stop-working/:id"
+      STOP_WORKING: "/v1.0/hotel/temporarily-stop-working/:id",
+      WORK_AGAIN: "/v1.0/hotel/work-again/:id",
     },
     ROOM: {
       CREATE_ROOM: "/v1.0/room/create",
@@ -109,6 +111,7 @@ export const API = {
       UPDATE_PRICE:"/v1.0/room/update-price/:id",
       DELETE:"/v1.0/room/delete/:id",
       STOP_WORKING:"/v1.0/room/temporarily-stop-working/:id",
+      WORK_AGAIN: "/v1.0/room/work-again/:id",
     },
     TOURBILL: {
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",

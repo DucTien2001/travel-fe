@@ -52,4 +52,13 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       })
   }
+  static async workAgain(tourId: number): Promise<any> {
+    return await api.put(API.ENTERPRISE.TOUR.WORK_AGAIN.replace(":id", `${tourId}`))
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
 }

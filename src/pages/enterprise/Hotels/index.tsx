@@ -177,6 +177,17 @@ const Hotel = memo(() => {
       .finally(() => dispatch(setLoading(false)));
   };
 
+  const onWorkAgain = (e, item) => {
+    dispatch(setLoading(true));
+    HotelService.workAgain(item.id)
+    .then(() => {
+      dispatch(getAllHotels(user?.id));
+      dispatch(getAllHotelsOfNormal());
+    })
+    .catch((e) => dispatch(setErrorMess(e)))
+    .finally(() => dispatch(setLoading(false)));
+  }
+
   const onTogglePopupEditRoomInformation = () => {
     setOpenPopupEditRoomInformation(!openPopupEditRoomInformation);
   }
@@ -240,7 +251,16 @@ const Hotel = memo(() => {
       .finally(() => dispatch(setLoading(false)));
   };
 
-  console.log(roomStop);
+  const onWorkAgainRoom = (e, item) => {
+    dispatch(setLoading(true));
+    RoomService.workAgain(item.id)
+    .then(() => {
+      dispatch(getAllHotels(user?.id));
+      dispatch(getAllHotelsOfNormal());
+    })
+    .catch((e) => dispatch(setErrorMess(e)))
+    .finally(() => dispatch(setLoading(false)));
+  }
 
   return (
     <>
@@ -296,15 +316,25 @@ const Hotel = memo(() => {
                         <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
                       </td>
                       <td className={classes.colActionStop}>
+                      { !item?.isTemporarilyStopWorking ?
                         <Button
-                          className="btn-icon"
-                          btnType={BtnType.Secondary}
-                          size="sm"
-                          type="button"
-                          onClick={(e) => onTemporarilyStopWorking(e, item)}
+                        className="btn-icon"
+                        btnType={BtnType.Secondary}
+                        size="sm"
+                        type="button"
+                        onClick={(e) => onTemporarilyStopWorking(e, item)}
                         >
-                          <FontAwesomeIcon icon={faHourglass} />
-                        </Button>
+                        <FontAwesomeIcon icon={faHourglass}/>
+                        </Button> :
+                        <Button
+                        className="btn-icon"
+                        color="info"
+                        size="sm"
+                        type="button"
+                        onClick={(e) => onWorkAgain(e, item)}
+                        >
+                        <FontAwesomeIcon icon={faHourglass}/>
+                        </Button>}
                       </td>
                       <td className="text-center">
                         <UncontrolledDropdown>
@@ -367,15 +397,25 @@ const Hotel = memo(() => {
                                     )}
                                   </td>
                                   <td className={classes.colActionStop}>
+                                  { !itemSubtable?.isTemporarilyStopWorking ?
                                   <Button
-                                    className="btn-icon"
-                                    btnType={BtnType.Secondary}
-                                    size="sm"
-                                    type="button"
-                                    onClick={(e) => onTemporarilyStopWorkingRoom(e, itemSubtable)}
+                                  className="btn-icon"
+                                  btnType={BtnType.Secondary}
+                                  size="sm"
+                                  type="button"
+                                  onClick={(e) => onTemporarilyStopWorkingRoom(e, itemSubtable)}
                                   >
-                                    <FontAwesomeIcon icon={faHourglass}/>
-                                  </Button>
+                                  <FontAwesomeIcon icon={faHourglass}/>
+                                  </Button> :
+                                  <Button
+                                  className="btn-icon"
+                                  color="info"
+                                  size="sm"
+                                  type="button"
+                                  onClick={(e) => onWorkAgainRoom(e, itemSubtable)}
+                                  >
+                                  <FontAwesomeIcon icon={faHourglass}/>
+                                  </Button>}
                                   </td>
                                   <td>
                                     <UncontrolledDropdown>

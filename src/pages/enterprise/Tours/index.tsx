@@ -32,7 +32,7 @@ const Tour = memo(()=> {
     const [tourDelete, setTourDelete] = useState<ETour>(null);
     const [tourStop, setTourStop] = useState<ETour>(null);
     const [openPopupConfirmStop, setOpenPopupConfirmStop] = useState(false);
-    
+
     const onTogglePopupCreateTour = () => {
         setOpenPopupCreateTour(!openPopupCreateTour)
         setTourEdit(null)
@@ -86,6 +86,16 @@ const Tour = memo(()=> {
         onToggleConfirmStop();
         dispatch(setLoading(true));
         TourService.temporarilyStopWorking(tourStop?.id)
+        .then(()=> {        
+            dispatch(getAllTours(user?.id)) 
+            dispatch(getAllToursOfNormal())
+        })
+        .catch(e => dispatch(setErrorMess(e)))
+        .finally(() => dispatch(setLoading(false)))
+    }
+    const onWorkAgain = (e, item) => {
+        dispatch(setLoading(true));
+        TourService.workAgain(item.id)
         .then(()=> {        
             dispatch(getAllTours(user?.id)) 
             dispatch(getAllToursOfNormal())
@@ -156,6 +166,7 @@ const Tour = memo(()=> {
                     }
                     </td>
                     <td className={classes.colActionStop}>
+                    { !item?.isTemporarilyStopWorking ?
                     <Button
                     className="btn-icon"
                     btnType={BtnType.Secondary}
@@ -164,7 +175,16 @@ const Tour = memo(()=> {
                     onClick={(e) => onTemporarilyStopWorking(e, item)}
                     >
                     <FontAwesomeIcon icon={faHourglass}/>
-                    </Button>
+                    </Button> :
+                    <Button
+                    className="btn-icon"
+                    color="info"
+                    size="sm"
+                    type="button"
+                    onClick={(e) => onWorkAgain(e, item)}
+                    >
+                    <FontAwesomeIcon icon={faHourglass}/>
+                    </Button>}
                     </td>
                     <td className="text-center">
                     <UncontrolledDropdown>
