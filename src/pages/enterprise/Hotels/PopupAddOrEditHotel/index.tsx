@@ -19,6 +19,9 @@ import { ReducerType } from "redux/reducers";
 import { IHotel } from "models/enterprise";
 import { getAllHotels as getAllHotelsOfNormal} from "redux/reducers/Normal/actionTypes";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
+import InputSelect from "components/common/inputs/InputSelect";
+import { tagsOption } from "configs/constants";
+import { OptionItem } from "models/general";
 
 export interface HotelForm {
   name: string;
@@ -27,7 +30,7 @@ export interface HotelForm {
   contact: string;
   checkInTime: string;
   checkOutTime: string;
-  tags: string[];
+  tags: OptionItem<string>[];
   isTemporarilyStopWorking: boolean;
   imagesHotel: string[];
   creator: number;
@@ -54,9 +57,10 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       contact: yup.string().required("Contact is required"),
       checkInTime: yup.string().required("Check in time is required"),
       checkOutTime: yup.string().required("Check out time is required"),
-      tags: yup.mixed().test("required", "Tags is required", (value) => {
-        return value && value.length;
-      }),
+      tags: yup.array(yup.object({
+        id: yup.string().required('Tags is required.'),
+        name: yup.string().required('Tags is required.')
+      })).required('Tags is required.').min(1, 'Tags is required.'),
       isTemporarilyStopWorking: yup.boolean().required(),
       imagesHotel: yup.mixed().test("required", "Please select images", (value) => {
         return value && value.length;
@@ -115,7 +119,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
               checkOutTime: itemEdit.checkOutTime,
               location: itemEdit.location,
               contact: itemEdit.contact,
-              tags: itemEdit.tags,
+              tags: data.tags.map((it) => it.name),
               images: itemEdit.images,
             })
             // console.log(res);
@@ -128,7 +132,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
               checkOutTime: data.checkOutTime,
               location: data.location,
               contact: data.contact,
-              tags: data.tags,
+              tags: data.tags.map((it) => it.name),
               images: res,
               creator: user?.id,
             })
@@ -160,7 +164,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         checkOutTime: itemEdit.checkOutTime,
         location: itemEdit.location,
         contact: itemEdit.contact,
-        tags: itemEdit.tags,
+        tags: itemEdit.tags.map(it => ({ name: it})),
         imagesHotel: itemEdit.images,
       })
     }
@@ -228,23 +232,15 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                 />
               </Col>
               <Col>
-                <Controller
-                  name="tags"
-                  control={control}
-                  render={({ field }) => (
-                    <InputTags
-                      {...field}
-                      label="Tags"
-                      name="tags"
-                      placeholder="Enter tags"
-                      onChange={(value: any) => {
-                        return field.onChange(value);
-                      }}
-                      value={field.value ? field.value : []}
-                      control={control}
-                      errorMessage={errors.tags?.message}
-                    />
-                  )}
+                <InputSelect
+                label="Tags"
+                className={classes.input}
+                placeholder="Please choose the tags your tour"
+                name="tags"
+                control={control}
+                options={tagsOption}
+                isMulti
+                errorMessage={errors.tags?.message}
                 />
               </Col>
             </Row>

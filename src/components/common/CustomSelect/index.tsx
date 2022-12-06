@@ -75,6 +75,7 @@ interface Props extends StateManagerProps {
   bindLabel?: any;
 }
 
+// eslint-disable-next-line react/display-name
 const CustomSelect = memo(
   ({
     className,
@@ -106,6 +107,7 @@ const CustomSelect = memo(
                   getOptionValue={(option) => option[bindKey || "id"]}
                   getOptionLabel={(option) => option[bindLabel || "name"]}
                   noOptionsMessage={() => "..."}
+                  
                   {...rest}
                 />
               )}

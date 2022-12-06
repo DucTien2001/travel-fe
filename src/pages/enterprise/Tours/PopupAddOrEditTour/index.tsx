@@ -21,8 +21,9 @@ import axios from "axios";
 import { ImageService } from "services/image";
 import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
 import { getAllTours as getAllToursNormal } from "redux/reducers/Normal/actionTypes";
-import { VALIDATION } from "configs/constants";
-
+import { tagsOption, VALIDATION } from "configs/constants";
+import InputSelect from "components/common/inputs/InputSelect";
+import { OptionItem } from "models/general";
 export interface TourForm {
   name: string;
   description: string;
@@ -31,7 +32,7 @@ export interface TourForm {
   price: number;
   discount?: number;
   contact: string;
-  tags: string[];
+  tags: OptionItem<string>[];
   isTemporarilyStopWorking: boolean;
   images?: string[] | File[];
 }
@@ -63,9 +64,10 @@ const PopupCreateTour = memo((props: Props) => {
         .transform((value) => (isNaN(value) ? undefined : value))
         .typeError("Discount must be a number")
         .notRequired(),
-      tags: yup.mixed().test("required", "Tags is required", (value) => {
-        return value && value.length;
-      }),
+      tags: yup.array(yup.object({
+          id: yup.string().required('Tags is required.'),
+          name: yup.string().required('Tags is required.')
+      })).required('Tags is required.').min(1, 'Tags is required.'),
       contact: yup
         .string()
         .required("Contact is required")
@@ -129,11 +131,10 @@ const PopupCreateTour = memo((props: Props) => {
             location: itemEdit.location,
             price: itemEdit.price,
             discount: itemEdit.discount,
-            tags: itemEdit.tags,
+            tags: data.tags.map((it) => it.name),
             contact: itemEdit.contact,
             images: itemEdit.images,
           });
-          // console.log(res);
         } else {
           if (user) {
             TourService.createTour({
@@ -143,7 +144,7 @@ const PopupCreateTour = memo((props: Props) => {
               location: data.location,
               price: data.price,
               discount: data.discount,
-              tags: data.tags,
+              tags: data.tags.map((it) => it.name),
               contact: data.contact,
               images: res,
               creator: user?.id,
@@ -177,7 +178,7 @@ const PopupCreateTour = memo((props: Props) => {
         location: itemEdit.location,
         price: itemEdit.price,
         discount: itemEdit.discount || null,
-        tags: itemEdit.tags,
+        tags: itemEdit.tags.map(it => ({ name: it})),
         contact: itemEdit.contact,
         images: itemEdit.images,
       });
@@ -258,23 +259,15 @@ const PopupCreateTour = memo((props: Props) => {
             </Row>
             <Row className={classes.row}>
               <Col>
-                <Controller
-                  name="tags"
-                  control={control}
-                  render={({ field }) => (
-                    <InputTags
-                      {...field}
-                      label="Tags"
-                      name="tags"
-                      placeholder="Enter tags"
-                      onChange={(value: any) => {
-                        return field.onChange(value);
-                      }}
-                      value={field.value ? field.value : []}
-                      control={control}
-                      errorMessage={errors.tags?.message}
-                    />
-                  )}
+                <InputSelect
+                label="Tags"
+                className={classes.input}
+                placeholder="Please choose the tags your tour"
+                name="tags"
+                control={control}
+                options={tagsOption}
+                isMulti
+                errorMessage={errors.tags?.message}
                 />
               </Col>
             </Row>

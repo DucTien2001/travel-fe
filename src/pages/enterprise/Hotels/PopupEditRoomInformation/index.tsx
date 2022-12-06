@@ -36,6 +36,7 @@ import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/
 import { ImageService } from "services/image";
 import { RoomService } from "services/enterprise/room";
 import { EditRoomInformation } from "models/room";
+import { OptionItem } from "models/general";
 
 const FILE_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const PHOTO_SIZE = 10000000000; // bytes
@@ -45,7 +46,7 @@ export interface RoomForm {
     title: string;
     description: string;
     imagesRoom: string[];
-    tags: string[];
+    tags: OptionItem<string>[];
     numberOfBed: number;
     numberOfRoom: number;
 }
@@ -65,7 +66,10 @@ const PopupEditRoomInformation = memo((props: Props) => {
     return yup.object().shape({
       title: yup.string().required("Title is required"),
       description: yup.string().required("Description is required"),
-      tags: yup.array().required("Tag is required"),
+      tags: yup.array(yup.object({
+        id: yup.string().required('Tags is required.'),
+        name: yup.string().required('Tags is required.')
+      })).required('Tags is required.').min(1, 'Tags is required.'),
       numberOfBed: yup.number().typeError("Number of bed must be a number").required("Number of bed is required"),
       numberOfRoom: yup.number().typeError("Number of room must be a number").required("Number of room is required"),
       imagesRoom: yup.mixed().test("required", "Please select images", (value) => {
@@ -114,7 +118,7 @@ const PopupEditRoomInformation = memo((props: Props) => {
             RoomService.updateInformation(itemEdit?.id, { 
               title: itemEdit?.title,
               description: itemEdit?.description,
-              tags: itemEdit.tags,
+              tags: data.tags.map((it) => it.name),
               images: itemEdit?.images,
               numberOfBed: itemEdit?.numberOfRoom,
               numberOfRoom: itemEdit?.numberOfBed,
@@ -135,7 +139,7 @@ const PopupEditRoomInformation = memo((props: Props) => {
       reset({
         title: itemEdit.title,
         description: itemEdit.description,
-        tags: itemEdit.tags,
+        tags: itemEdit.tags.map(it => ({ name: it})),
         numberOfBed: itemEdit.numberOfBed,
         numberOfRoom: itemEdit.numberOfRoom,
         imagesRoom: itemEdit.images,

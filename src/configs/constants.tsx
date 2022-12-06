@@ -174,4 +174,13 @@ export const ratingList = [
   },
 ];
 
-
+export const tagsOption = [
+  { id: 1, name: "Shopping", value: "Shopping" },
+  { id: 2, name: "Sea", value: "Sea" },
+  { id: 3, name: "Family", value: "Family" },
+  { id: 4, name: "Mountain", value: "Mountain" },
+  { id: 5, name: "Trekking", value: "Trekking" },
+  { id: 6, name: "Chill", value: "Chill" },
+  { id: 7, name: "Music", value: "Music" },
+  { id: 8, name: "Eat", value: "Eat" },
+]

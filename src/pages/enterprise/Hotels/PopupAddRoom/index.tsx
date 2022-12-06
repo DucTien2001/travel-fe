@@ -38,6 +38,9 @@ import { RoomService } from "services/enterprise/room";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
 import useAuth from "hooks/useAuth";
 import InputTags from "components/common/inputs/InputTags";
+import { OptionItem } from "models/general";
+import { tagsOption } from "configs/constants";
+import InputSelect from "components/common/inputs/InputSelect";
 
 const FILE_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const PHOTO_SIZE = 10000000000; // bytes
@@ -48,7 +51,7 @@ export interface RoomForm {
     title: string;
     description: string;
     imagesRoom: string[];
-    tags: string[];
+    tags: OptionItem<string>[];
     discount: number;
     numberOfBed: number;
     numberOfRoom: number;
@@ -80,7 +83,10 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         yup.object({
           title: yup.string().required("Name is required"),
           description: yup.string().required("Name is required"),
-          tags: yup.array().required("Name is required"),
+          tags: yup.array(yup.object({
+            id: yup.string().required('Tags is required.'),
+            name: yup.string().required('Tags is required.')
+          })).required('Tags is required.').min(1, 'Tags is required.'),
           discount: yup.number().transform(value => (isNaN(value) ? undefined : value)).typeError("Discount must be a number").notRequired(),
           numberOfBed: yup.number().typeError("Number of room must be a number").required("Number of room is required"),
           numberOfRoom: yup.number().typeError("Number of bed must be a number").required("Number of bed is required"),
@@ -202,7 +208,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         const roomData = {
           title: item?.title,
           description: item?.description,
-          tags: item.tags,
+          tags: item.tags.map((it) => it.name),
           images: images,
           hotelId: hotelId,
           discount: item?.discount,
@@ -288,24 +294,16 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                   </Row>
                   <Row className={classes.row}>
                     <Col>
-                      <Controller
-                      name={`room.${index}.tags`}
-                      control={control}
-                      render={({ field }) => (
-                      <InputTags
-                        {...field}
-                        label="Tags"
-                        name="tags"
-                        placeholder="Enter tags"
-                        onChange={(value: any) => {
-                          return field.onChange(value);
-                        }}
-                        value={field.value ? field.value : []}
-                        control={control}
-                        errorMessage={errors.room && errors.room[index]?.tags?.message}
+                    <InputSelect
+                    label="Tags"
+                    className={classes.input}
+                    placeholder="Please choose the tags your tour"
+                    name={`room.${index}.tags`}
+                    control={control}
+                    options={tagsOption}
+                    isMulti
+                    errorMessage={errors.room && errors.room[index]?.tags?.message}
                     />
-                  )}
-                />
                     </Col>
                   </Row>
                   <Row className={classes.row}>
