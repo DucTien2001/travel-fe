@@ -33,7 +33,7 @@ import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "components/FilterPanel";
 
 interface SearchData {
-  hotelName?: string;
+  location?: string;
   // departure?: Date;
   // return?: Date;
   // numberOfRoom: number;
@@ -61,7 +61,7 @@ const ListHotels: NextPage = () => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      hotelName: yup.string().notRequired(),
+      location: yup.string().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -80,7 +80,7 @@ const ListHotels: NextPage = () => {
 
   const clearForm = () => {
     reset({
-      hotelName: "",
+      location: "",
       checkOptions: false,
     });
   };
@@ -107,7 +107,7 @@ const ListHotels: NextPage = () => {
 
   const handleSearch = () => {
     dispatch(setLoading(true));
-    HotelService.searchHotels(getValues("hotelName"))
+    HotelService.searchLocationHotels(getValues("location"))
       .then((res) => {
         setListHotels(res?.data);
       })
@@ -231,12 +231,12 @@ const ListHotels: NextPage = () => {
               <BoxSmallLeft title="Search hotels">
                 <InputTextField
                   className={classes.inputSearch}
-                  label="Hotel name"
+                  label="Search"
                   labelIcon={<FontAwesomeIcon icon={faSearch} />}
-                  placeholder="Hotel name"
-                  name="hotelName"
+                  placeholder="Search"
+                  name="location"
                   onKeyPress={handleKeyPress}
-                  inputRef={register("hotelName")}
+                  inputRef={register("location")}
                 />
                 <Button btnType={BtnType.Primary} className={classes.btnSearch} onClick={() => handleSearch()}>
                   Search

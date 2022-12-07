@@ -32,4 +32,14 @@ export class HotelService {
         return Promise.reject(e?.response?.data);
       });
   }
+  static async searchLocationHotels(location: string): Promise<any> {
+    return await api
+      .get(API.NORMAL.HOTEL.SEARCH_LOCATION_HOTELS.replace(":location", `${location}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 }

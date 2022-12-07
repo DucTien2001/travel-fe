@@ -33,7 +33,7 @@ import { TourService } from "services/normal/tour";
 import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "../../components/FilterPanel";
 interface SearchData {
-  tourName?: string;
+  location?: string;
   checkOptions?: boolean;
 }
 
@@ -54,7 +54,7 @@ const ListTours: NextPage = () => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      tourName: yup.string().notRequired(),
+      location: yup.string().notRequired(),
       checkOptions: yup.boolean().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,7 +67,7 @@ const ListTours: NextPage = () => {
 
   const clearForm = () => {
     reset({
-      tourName: "",
+      location: "",
       checkOptions: false,
     });
   };
@@ -90,7 +90,7 @@ const ListTours: NextPage = () => {
 
   const handleSearch = () => {
     dispatch(setLoading(true));
-    TourService.searchTours(getValues("tourName"))
+    TourService.searchLocationTours(getValues("location"))
       .then((res) => {
         setListTours(res?.data);
       })
@@ -101,6 +101,8 @@ const ListTours: NextPage = () => {
         dispatch(setLoading(false));
       });
   };
+
+  
   
   const getAllTours = () => {
     dispatch(setLoading(true));
@@ -262,14 +264,15 @@ const ListTours: NextPage = () => {
               </Button>
               <BoxSmallLeft title="Search tours">
                 <InputTextField
+                  label="Search"
                   className={classes.inputSearch}
-                  placeholder="Tour name"
-                  name="tourName"
+                  placeholder="Search"
+                  name="location"
                   // value={search}
                   // onChange={e => setSearch(e.target.value)}
                   onKeyPress={handleKeyPress}
                   startIcon={<FontAwesomeIcon icon={faSearch} />}
-                  inputRef={register("tourName")}
+                  inputRef={register("location")}
                 />
                 <Button btnType={BtnType.Primary} className={classes.btnSearch} onClick={() => handleSearch()}>
                   Search

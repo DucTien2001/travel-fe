@@ -33,4 +33,14 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       });
   }
+  static async searchLocationTours(location: string): Promise<any> {
+    return await api
+      .get(API.NORMAL.TOUR.SEARCH_LOCATION_TOURS.replace(":location", `${location}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 }
