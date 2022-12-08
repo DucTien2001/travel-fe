@@ -30,6 +30,13 @@ import { getAllHotels as getAllHotelsOfNormal} from "redux/reducers/Normal/actio
 import PopupEditRoomInformation from "./PopupEditRoomInformation";
 import PopupEditRoomPrice from "./PopupEditRoomPrice";
 import SearchNotFound from "components/SearchNotFound";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+interface SearchData {
+  name?: string;
+}
 
 // eslint-disable-next-line react/display-name
 const Hotel = memo(() => {
@@ -52,7 +59,19 @@ const Hotel = memo(() => {
   const [openPopupDeleteRoom, setOpenPopupDeleteRoom] = useState(null);
   const [roomStop, setRoomStop] = useState(null);
   const [openPopupConfirmStopRoom, setOpenPopupConfirmStopRoom] = useState(false);
+  const [listHotels, setListHotels] = useState([]);
+  
+  const schema = useMemo(() => {
+    return yup.object().shape({
+      name: yup.string().notRequired(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  const { register, getValues, handleSubmit, reset, watch } = useForm<SearchData>({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+  });  
 
   const [modalCreateRoom, setModalCreateRoom] = useState({
     isOpen: false,
@@ -261,6 +280,38 @@ const Hotel = memo(() => {
     .catch((e) => dispatch(setErrorMess(e)))
     .finally(() => dispatch(setLoading(false)));
   }
+  const watchSearch = watch("name");
+
+  const handleKeyPress = (e) => {
+    var code = e.keyCode || e.which;
+    if (code === 13) { 
+      if(watchSearch === "" ) {
+        setListHotels(allHotels);
+      }
+      else { 
+        handleSearch();
+      }
+    }
+  };
+
+  console.log(watchSearch,"========");
+
+  const handleSearch = () => {
+      dispatch(setLoading(true));
+      HotelService.searchHotel(user?.id, getValues("name"))
+        .then((res) => {
+          setListHotels(res?.data);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+  };
+  useEffect(() => {
+      setListHotels(allHotels);
+  },[dispatch, allHotels])
 
   return (
     <>
@@ -274,6 +325,8 @@ const Hotel = memo(() => {
               placeholder="Search hotels"
               startIcon={<FontAwesomeIcon icon={faSearch} />}
               className={classes.inputSearch}
+              onKeyPress={handleKeyPress}
+              inputRef={register("name")}
             />
           </div>
           <Button btnType={BtnType.Primary} onClick={onTogglePopupCreateHotel}>
@@ -295,8 +348,8 @@ const Hotel = memo(() => {
             </tr>
           </thead>
           <tbody>
-            {allHotels &&
-              allHotels?.map((item, index) => {
+            {listHotels &&
+              listHotels?.map((item, index) => {
                 return (
                   <>
                     <tr key={item?.id}>
@@ -455,7 +508,7 @@ const Hotel = memo(() => {
                   </>
                 );
               })}
-            {!allHotels?.length && 
+            {!listHotels?.length && 
               <tr>
                 <td scope="row" colSpan={8}> 
                   <SearchNotFound/>

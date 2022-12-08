@@ -1,4 +1,4 @@
-import React, {memo, useState} from "react";
+import React, {memo, useEffect, useMemo, useState} from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,6 +20,13 @@ import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
 import { fCurrency2VND } from "utils/formatNumber";
 import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
 import { getAllTours as getAllToursOfNormal} from "redux/reducers/Normal/actionTypes";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+interface SearchData {
+    name?: string;
+}
 
 // eslint-disable-next-line react/display-name
 const Tour = memo(()=> {
@@ -32,6 +39,19 @@ const Tour = memo(()=> {
     const [tourDelete, setTourDelete] = useState<ETour>(null);
     const [tourStop, setTourStop] = useState<ETour>(null);
     const [openPopupConfirmStop, setOpenPopupConfirmStop] = useState(false);
+    const [listTours, setListTours] = useState([]);
+
+    const schema = useMemo(() => {
+        return yup.object().shape({
+          name: yup.string().notRequired(),
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
+
+      const { register, getValues, watch } = useForm<SearchData>({
+        resolver: yupResolver(schema),
+        mode: "onChange",
+      });   
 
     const onTogglePopupCreateTour = () => {
         setOpenPopupCreateTour(!openPopupCreateTour)
@@ -104,6 +124,37 @@ const Tour = memo(()=> {
         .finally(() => dispatch(setLoading(false)))
     }
 
+    const watchSearch = watch("name");
+
+    const handleKeyPress = (e) => {
+        var code = e.keyCode || e.which;
+        if (code === 13) {
+            if(watchSearch === "" ) {
+                setListTours(allTours);
+              }
+            else { 
+                handleSearch();
+            }
+        }
+      };
+
+    const handleSearch = () => {
+        dispatch(setLoading(true));
+        TourService.searchTour(user?.id, getValues("name"))
+          .then((res) => {
+            setListTours(res?.data);
+          })
+          .catch((e) => {
+            dispatch(setErrorMess(e));
+          })
+          .finally(() => {
+            dispatch(setLoading(false));
+          });
+    };
+    useEffect(() => {
+        setListTours(allTours);
+    },[dispatch, allTours])
+    
    return (
     <>
        <div className={classes.root}>
@@ -116,6 +167,8 @@ const Tour = memo(()=> {
                     placeholder="Search tours"
                     startIcon={<FontAwesomeIcon icon={faSearch}/>}
                     className={classes.inputSearch}
+                    onKeyPress={handleKeyPress}
+                    inputRef={register("name")}
                     />
                 </div>
                     <Button btnType={BtnType.Primary} onClick={onTogglePopupCreateTour}><FontAwesomeIcon icon={faPlus}/>Create</Button>
@@ -147,7 +200,7 @@ const Tour = memo(()=> {
                     </tr>
                 </thead>
                 <tbody>
-                {allTours?.map((item, index) => {
+                {listTours?.map((item, index) => {
                     return (
                     <tr key={index}>
                     <th scope="row">
@@ -214,7 +267,7 @@ const Tour = memo(()=> {
                     </td>
                     </tr>
                 )})}
-                {!allTours?.length && 
+                {!listTours?.length && 
                     <tr>
                         <td scope="row" colSpan={5}> 
                         <SearchNotFound/>

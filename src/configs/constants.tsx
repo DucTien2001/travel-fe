@@ -97,6 +97,7 @@ export const API = {
       GET_TOURS: "/v1.0/tour/get-tours/:id",
       STOP_WORKING: "/v1.0/tour/temporarily-stop-working/:id",
       WORK_AGAIN: "/v1.0/tour/work-again/:id",
+      SEARCH_TOUR: "/v1.0/tour/enterprise-search-tours/user/:userId/tour/:name",
     },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",

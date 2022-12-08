@@ -61,4 +61,13 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       })
   }
+  static async searchTour(userId: number, name: string): Promise<any> {
+    return await api.get(`/v1.0/tour/enterprise-search-tours/user/${userId}/tour/${name}`)
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
 }

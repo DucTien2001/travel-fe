@@ -67,4 +67,13 @@ export class HotelService {
         return Promise.reject(e?.response?.data);
       })
   }
+  static async searchHotel(userId: number, name: string): Promise<any> {
+    return await api.get(`/v1.0/hotel/enterprise-search-hotels/user/${userId}/hotel/${name}`)
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
 }
