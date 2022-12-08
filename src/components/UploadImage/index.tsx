@@ -20,7 +20,7 @@ import useIsMountedRef from 'hooks/useIsMountedRef';
 const FILE_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 const PHOTO_SIZE = 10000000000; // bytes
 const MAX_IMAGES = 9;
-const MIN_IMAGES = 3;
+const MIN_IMAGES = 2;
 
 
 interface Props { 

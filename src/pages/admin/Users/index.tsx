@@ -78,7 +78,7 @@ const User = memo(() => {
                 <th scope="row">{index}</th>
                 <td>{user?.firstName}</td>
                 <td>{user?.lastName}</td>
-                <td>{user?.role === 2 ? "Enterprise" : "Normal"}</td>
+                <td>{user?.role === 1 ? "Admin" : user?.role === 2 ? "Enterprise" : "Normal"}</td>
                 <td>{user?.phoneNumber}</td>
                 <td>{user?.email}</td>
                 {/* <td className="text-center">

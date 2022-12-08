@@ -15,7 +15,7 @@ interface Props {
   linkView: string;
   linkBook: string;
   id: number;
-  src: string;
+  src?: string;
   title: string;
   description: string;
   businessHours?: string[];

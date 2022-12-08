@@ -44,7 +44,10 @@
     text-decoration: underline;
     line-height: 24px !important;
 }
-
+.colActionBtn {
+    display: flex;
+    justify-content: center;
+}
 // ============ Mobile ====================================
 .containerMobile {
     display: none;

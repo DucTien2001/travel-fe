@@ -42,4 +42,14 @@ export class HotelService {
         return Promise.reject(e?.response?.data);
       });
   }
+  static async getAllHotelsByPage(page: number): Promise<any> {
+    return await api
+      .get(API.NORMAL.HOTEL.GET_ALL_HOTELS_BY_PAGE.replace(":page", `${page}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 }

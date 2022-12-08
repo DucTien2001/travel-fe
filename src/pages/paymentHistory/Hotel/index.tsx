@@ -71,7 +71,7 @@ const Hotel = memo(()=> {
                     <th scope="row">
                         {/* eslint-disable-next-line react/jsx-no-target-blank */}
                         <a href={`/listTour/:${item?.hotelId}`} target="_blank" className={classes.tourName}>                         
-                            {item?.tourId}            
+                            {item?.hotelId}            
                         </a>
                     </th>
                     <td>
@@ -105,23 +105,32 @@ const Hotel = memo(()=> {
       </Table> 
               {/* ===== Mobile ======== */}
         <div className={classes.containerMobile}>
-            <Row className={clsx(classes.row,classes.boxInvoiceMobile)}>
-                <Col className={classes.colInformation}>
-                    <div className={classes.boxInformation}>
-                        <p className={classes.hotelNameMobile}>Nha trang</p>
-                        <p>TV202</p> 
-                        <p><span>2.000.000 VND</span></p>                  
-                    </div>
-                </Col>
-                <Col className={classes.boxDownload}>
-                    <div className={classes.iconDownload}>
-                            <FontAwesomeIcon icon={faDownload} />        
-                    </div>
-                </Col>
-            </Row>
-            <Row className={classes.row}>
-                <SearchNotFound mess="No hotel found"/>
-            </Row>
+        {listHistory && listHistory?.map((item, index) => (
+        <Row key={index} className={clsx(classes.row,classes.boxInvoiceMobile)}>
+            <Col className={classes.colInformation}>
+                <div className={classes.boxInformation}>
+                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                    <a href={`/listTour/:${item?.hotelId}`} target="_blank" className={classes.tourName}>                         
+                         {item?.hotelId}            
+                    </a>
+                    <p>TV{item?.id}</p> 
+                    <p><span> {fCurrency2VND(item?.totalBill)} VND</span></p>                  
+                </div>
+            </Col>
+            <Col className={classes.boxDownload}>
+                <div>
+                {item.verifyCode === null ? <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>
+                        : <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus}/>}
+                </div>
+                <div className={classes.iconDownload}>
+                        <FontAwesomeIcon icon={faDownload} />        
+                </div>
+            </Col>
+        </Row>
+        ))}
+        {!listHistory?.length && (<Row className={classes.row}>
+            <SearchNotFound mess="No hotel bill found"/>
+        </Row>)}
         </div>
        </div>
     </>

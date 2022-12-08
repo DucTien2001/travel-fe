@@ -1,16 +1,15 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 // reactstrap components
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, PaginationItem, PaginationLink, Pagination } from "reactstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGrip, faList, faXmark, faSearch, faCalendarDays, faBed } from "@fortawesome/free-solid-svg-icons";
+import { faGrip, faList, faXmark, faSearch, faCalendarDays, faBed, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import Social from "components/Social";
-import Pagination from "components/Pagination";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
@@ -56,6 +55,9 @@ const ListHotels: NextPage = () => {
     { id: 3, checked: false, label: 'Family' },
     { id: 4, checked: false, label: 'Mountain' },
     { id: 5, checked: false, label: 'Trekking' },
+    { id: 6, checked: false, label: 'Music' },
+    { id: 7, checked: false, label: 'Chill' },
+    { id: 8, checked: false, label: 'Eat' },
   ]);
 
 
@@ -87,14 +89,18 @@ const ListHotels: NextPage = () => {
 
   const onClearOption = () => {
     clearForm();
-    getAllHotels();
+    getAllHotelsDefault();
     setTags([
       { id: 1, checked: false, label: 'Shopping' },
       { id: 2, checked: false, label: 'Sea' },
       { id: 3, checked: false, label: 'Family' },
       { id: 4, checked: false, label: 'Mountain' },
       { id: 5, checked: false, label: 'Trekking' },
+      { id: 6, checked: false, label: 'Music' },
+      { id: 7, checked: false, label: 'Chill' },
+      { id: 8, checked: false, label: 'Eat' },
     ]);
+    setSelectedRating(null);
   };
 
   useEffect(() => {
@@ -119,9 +125,9 @@ const ListHotels: NextPage = () => {
       });
   };
 
-  const getAllHotels = () => {
+  const getAllHotelsDefault = () => {
     dispatch(setLoading(true));
-    HotelService.getAllHotels()
+    HotelService.getAllHotelsByPage(1)
     .then((res) => {
       setListHotels(res?.data);
     })
@@ -173,10 +179,37 @@ const ListHotels: NextPage = () => {
     setListHotels(updatedList);
   };
 
+  const handleChangePage = (e, page: number) =>{
+    dispatch(setLoading(true));
+    HotelService.getAllHotelsByPage(page + 1)
+    .then((res) => {
+      setListHotels(res?.data)
+    })
+    .catch((err) => {
+      dispatch(setErrorMess(err))
+    })
+    .finally(() => {
+      dispatch(setLoading(false));
+    })
+  }
+  useEffect(() => {
+    HotelService.getAllHotelsByPage(1)
+    .then((res) => {
+      setListHotels(res?.data)
+    })
+    .catch((err) => {
+      dispatch(setErrorMess(err))
+    })
+    .finally(() => {
+    })
+  }, [dispatch])
+
   useEffect(() => {
     applyFilters();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tags, selectedRating]);
+
+  const numberOfPage = Math.ceil(allHotels.length / 9);
 
   return (
     <>
@@ -255,6 +288,7 @@ const ListHotels: NextPage = () => {
               </BoxSmallLeft>
             </Col>
             <Col xs={10} className={classes.listTours}>
+              <div className={classes.containerListHotel}>
               {/* ==================== Grid view ===================== */}
               {!changeViewLayout && (
                 <Row className={classes.rowGridView}>
@@ -308,9 +342,34 @@ const ListHotels: NextPage = () => {
               {!listHotels?.length && (<div>
                 <SearchNotFound mess="No hotel found"/>
               </div>)}
-              {/* <Row className={classes.pigination}>
-                <Pagination postPerPage={postsPerPage} totalPosts={listTour.length} paginate={paginate} />
-              </Row> */}
+              </div>
+              <Row className={classes.pigination}>
+                <Pagination>
+                  <PaginationItem>
+                    <PaginationLink>
+                      <span aria-hidden={true}>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                      </span>
+                    </PaginationLink>
+                  </PaginationItem>
+                    {[...Array(numberOfPage)].map((page, index) => {
+                        return (
+                          <PaginationItem key={index} onClick={(e) => handleChangePage(e, index)}>
+                            <PaginationLink>
+                                {index + 1}
+                            </PaginationLink>
+                          </PaginationItem>
+                        )
+                    })}
+                  <PaginationItem >
+                    <PaginationLink>
+                      <span aria-hidden={true}>
+                        <FontAwesomeIcon icon={faChevronRight} />
+                      </span>
+                    </PaginationLink>
+                  </PaginationItem>
+                </Pagination>
+              </Row>
             </Col>
           </Row>
         </Container>

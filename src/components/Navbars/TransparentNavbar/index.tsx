@@ -186,7 +186,16 @@ const WhiteNavbar = memo(() => {
                     </Link>
                   </DropdownItem>
                     )}
-
+                    {user?.role === EUserType.ADMIN && (
+                    <DropdownItem className={classes.dropdownItem}>
+                    <Link href="/admin" passHref>
+                      <a>
+                        <FontAwesomeIcon icon={faBarsProgress} className={classes.iconNav}/>
+                         Management 
+                      </a>
+                    </Link>
+                  </DropdownItem>
+                    )}
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 <NavItem onClick={logout}> 

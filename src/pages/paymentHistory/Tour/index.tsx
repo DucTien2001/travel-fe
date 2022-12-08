@@ -89,7 +89,7 @@ const Tour = memo(()=> {
                     </td>
                     <td>
                        {fCurrency2VND(item?.totalBill)} VND
-                    </td>
+                    </td>                   
                     <td>
                         {item.verifyCode === null ? <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>
                         : <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus}/>}
@@ -112,23 +112,32 @@ const Tour = memo(()=> {
         </Table> 
         {/* ===== Mobile ======== */}
         <div className={classes.containerMobile}>
-        <Row className={clsx(classes.row,classes.boxInvoiceMobile)}>
+        {listHistory && listHistory?.map((item, index) => (
+        <Row key={index} className={clsx(classes.row,classes.boxInvoiceMobile)}>
             <Col className={classes.colInformation}>
                 <div className={classes.boxInformation}>
-                    <p className={classes.tourNameMobile}>Nha trang</p>
-                    <p>TV202</p> 
-                    <p><span>2.000.000 VND</span></p>                  
+                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                    <a href={`/listTour/:${item?.tourId}`} target="_blank" className={classes.tourName}>                         
+                        {item?.tourId}            
+                    </a>
+                    <p>TV{item?.id}</p> 
+                    <p><span>{fCurrency2VND(item?.totalBill)} VND</span></p>                  
                 </div>
             </Col>
             <Col className={classes.boxDownload}>
-                     <div className={classes.iconDownload}>
+                <div>
+                {item.verifyCode === null ? <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck}/>
+                        : <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus}/>}
+                </div>
+                <div className={classes.iconDownload}>
                             <FontAwesomeIcon icon={faDownload} />        
-                    </div>
+                 </div>
             </Col>
         </Row>
-        <Row className={classes.row}>
+        ))}
+        {!listHistory?.length && (<Row className={classes.row}>
             <SearchNotFound mess="No tour bill found"/>
-        </Row>
+        </Row>)}
         </div>
        </div>
     </>

@@ -35,6 +35,7 @@ export const API = {
       DETAIL_TOUR: "/v1.0/tour/get-tour/:id",
       SEARCH_TOURS: "/v1.0/tour/search-tours/:name",
       SEARCH_LOCATION_TOURS: "/v1.0/tour/search-by-location/:location",
+      GET_ALL_TOURS_BY_PAGE: "/v1.0/tour/get-all-tours-by-page/:page",
     },
     COMMENT: {
       TOUR_COMMENT: {
@@ -68,6 +69,7 @@ export const API = {
       DETAIL_HOTEL: "/v1.0/hotel/get-hotel/:id",
       SEARCH_HOTELS: "/v1.0/hotel/search-hotels/:name",
       SEARCH_LOCATION_HOTELS: "/v1.0/hotel/search-by-location/:location",
+      GET_ALL_HOTELS_BY_PAGE: "/v1.0/hotel/get-all-hotels-by-page/:page",
     },
     ROOM: {
       GET_ROOMS: "/v1.0/room/get-all-rooms/:id",

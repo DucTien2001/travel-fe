@@ -104,10 +104,11 @@
     @media only screen and (max-width: 768px) {
         max-width: 100%;
       }
-
+}
+.containerListTour {
+    min-height: 1248px;
 }
 .rowGridView {
-    // display: none;
     @media only screen and (max-width: 768px) {
         display: block;
       }

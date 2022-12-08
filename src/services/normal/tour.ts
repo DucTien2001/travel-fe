@@ -43,4 +43,14 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       });
   }
+  static async getAllToursByPage(page: number): Promise<any> {
+    return await api
+      .get(API.NORMAL.TOUR.GET_ALL_TOURS_BY_PAGE.replace(":page", `${page}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 }

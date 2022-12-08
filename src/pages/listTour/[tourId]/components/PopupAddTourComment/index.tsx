@@ -27,7 +27,7 @@ interface Props {
     commentEdit: Comment;
     onClose: () => void;
     toggle: () => void;
-    onGetTourComments: () => void;
+    onGetTourComments?: () => void;
 }
 
 // eslint-disable-next-line react/display-name

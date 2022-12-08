@@ -5,10 +5,13 @@ import {
   Container,
   Row,
   Col,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
 } from "reactstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGrip, faList, faXmark, faSearch, } from "@fortawesome/free-solid-svg-icons";
+import { faGrip, faList, faXmark, faSearch, faChevronLeft, faChevronRight, } from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
 import clsx from "clsx";
@@ -32,6 +35,8 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/normal/tour";
 import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "../../components/FilterPanel";
+import ReactPaginate from 'react-paginate';
+
 interface SearchData {
   location?: string;
   checkOptions?: boolean;
@@ -50,6 +55,9 @@ const ListTours: NextPage = () => {
     { id: 3, checked: false, label: 'Family' },
     { id: 4, checked: false, label: 'Mountain' },
     { id: 5, checked: false, label: 'Trekking' },
+    { id: 6, checked: false, label: 'Music' },
+    { id: 7, checked: false, label: 'Chill' },
+    { id: 8, checked: false, label: 'Eat' },
   ]);
 
   const schema = useMemo(() => {
@@ -74,14 +82,19 @@ const ListTours: NextPage = () => {
 
   const onClearOption = () => {
     clearForm();
-    getAllTours();
+    getAllToursDefault();
     setTags([
       { id: 1, checked: false, label: 'Shopping' },
       { id: 2, checked: false, label: 'Sea' },
       { id: 3, checked: false, label: 'Family' },
       { id: 4, checked: false, label: 'Mountain' },
       { id: 5, checked: false, label: 'Trekking' },
+      { id: 6, checked: false, label: 'Music' },
+      { id: 7, checked: false, label: 'Chill' },
+      { id: 8, checked: false, label: 'Eat' },
     ]);
+    setSelectedRating(null);
+    setSelectedPrice([10000, 3000000]);
   };
 
   const onChangeViewLayout = () => {
@@ -104,18 +117,18 @@ const ListTours: NextPage = () => {
 
   
   
-  const getAllTours = () => {
+  const getAllToursDefault = () => {
     dispatch(setLoading(true));
-    TourService.getAllTours()
+    TourService.getAllToursByPage(1)
     .then((res) => {
-      setListTours(res?.data);
+      setListTours(res?.data)
     })
-    .catch((e) => {
-      dispatch(setErrorMess(e));
+    .catch((err) => {
+      dispatch(setErrorMess(err))
     })
     .finally(() => {
       dispatch(setLoading(false));
-    });
+    })
   }
 
   const handleKeyPress = (e) => {
@@ -170,18 +183,44 @@ const ListTours: NextPage = () => {
     setListTours(updatedList);
   };
 
+  // pagination
+  const handleChangePage = (e, page: number) =>{
+    dispatch(setLoading(true));
+    TourService.getAllToursByPage(page + 1)
+    .then((res) => {
+      setListTours(res?.data)
+    })
+    .catch((err) => {
+      dispatch(setErrorMess(err))
+    })
+    .finally(() => {
+      dispatch(setLoading(false));
+    })
+  }
+
   useEffect(() => {
     applyFilters();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tags, selectedPrice, selectedRating]);
 
   useEffect(() => {
-    setListTours(allTours);
-  }, [allTours]);
+    TourService.getAllToursByPage(1)
+    .then((res) => {
+      setListTours(res?.data)
+    })
+    .catch((err) => {
+      dispatch(setErrorMess(err))
+    })
+    .finally(() => {
+    })
+  }, [dispatch])
 
   useEffect(() => {
     Aos.init({ duration: 500 });
   }, []);
+
+  const numberOfPage = Math.ceil(allTours.length / 9);
+
 
   return (
     <>
@@ -297,6 +336,7 @@ const ListTours: NextPage = () => {
 
             </Col>
             <Col xs={10} className={classes.listTours}>
+              <div className={classes.containerListTour}>
               {/* ==================== Grid view ===================== */}
               {!changeViewLayout && (
                 <Row className={classes.rowGridView}>
@@ -306,7 +346,7 @@ const ListTours: NextPage = () => {
                       linkBook="book/tour"
                       key={index}
                       id={tour.id}
-                      src={tour.images[0]}
+                      src={tour?.images[0]}
                       title={tour.title}
                       description={tour.description}
                       businessHours={tour.businessHours}
@@ -333,7 +373,7 @@ const ListTours: NextPage = () => {
                       linkBook="book/tour"
                       key={index}
                       id={index}
-                      src={tour.images[0]}
+                      src={tour?.images[0]}
                       title={tour.title}
                       description={tour.description}
                       businessHours={tour.businessHours}
@@ -353,28 +393,33 @@ const ListTours: NextPage = () => {
               {!listTours.length && (<div>
                 <SearchNotFound mess="No tour found"/>
               </div>)}
+              </div>
               <Row className={classes.pigination}>
-                {/* <Pagination>
-                  <PaginationItem onClick={() => handlePagination(page - 1)}>
+                <Pagination>
+                  <PaginationItem>
                     <PaginationLink>
                       <span aria-hidden={true}>
                         <FontAwesomeIcon icon={faChevronLeft} />
                       </span>
                     </PaginationLink>
                   </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem onClick={() => handlePagination(page + 1)}>
+                    {[...Array(numberOfPage)].map((page, index) => {
+                        return (
+                          <PaginationItem key={index} onClick={(e) => handleChangePage(e, index)}>
+                            <PaginationLink>
+                                {index + 1}
+                            </PaginationLink>
+                          </PaginationItem>
+                        )
+                    })}
+                  <PaginationItem >
                     <PaginationLink>
                       <span aria-hidden={true}>
                         <FontAwesomeIcon icon={faChevronRight} />
                       </span>
                     </PaginationLink>
                   </PaginationItem>
-                </Pagination> */}
+                </Pagination>
               </Row>
             </Col>
           </Row>

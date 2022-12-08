@@ -18,7 +18,7 @@ import 'aos/dist/aos.css';
 import CustomButton, {BtnType} from "components/common/buttons/Button";
 import {EUserType, User} from "models/user";
 import clsx from "clsx";
-import { faEllipsisVertical, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisVertical, faPen, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Comment} from "models/comment";
 import moment from "moment";
@@ -98,7 +98,7 @@ const Comments = memo(( props: Props) => {
                     <div className="pull-left">
                         <div className={classes.avatar}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img alt="" src={comment?.hotelReviewer?.avatar}/>
+                            <img alt="No avatar" src={comment?.hotelReviewer?.avatar}/>
                         </div>
                     </div>
                     <Media body>
