@@ -110,6 +110,7 @@ const TourComments = memo(() => {
     CommentService.getAllTourComments({tourIds: tourIds})
     .then((res) => {
       setComments(res.data.sort(sortDate));
+      setAllComments(res.data.sort(sortDate));
     })
     .catch((e) => {
       dispatch(setErrorMess(e));
@@ -133,19 +134,9 @@ const TourComments = memo(() => {
 
   useEffect(() => {
     dispatch(setLoading(true));
-      CommentService.getAllTourComments({tourIds: tourIds})
-      .then((res) => {
-        setComments(res.data.sort(sortDate));
-        setAllComments(res.data.sort(sortDate));
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      })
+    onGetTourComments()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[allTours])
+  },[tourIds])
 
   useEffect(() => {
     const newTours = [{id: 0, name: "All", value: "All"}];
