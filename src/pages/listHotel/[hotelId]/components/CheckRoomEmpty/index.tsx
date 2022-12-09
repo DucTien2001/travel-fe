@@ -261,7 +261,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
                           <InputCounter
                             className={classes.inputCounter}
                             max={room?.numberOfRoom}
-                            min={1}
+                            min={0}
                             onChange={field.onChange}
                             value={field.value}                       
                           />                       

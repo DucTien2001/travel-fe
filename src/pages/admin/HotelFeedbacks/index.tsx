@@ -16,6 +16,9 @@ import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { CommentService } from "services/admin/comment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRotateRight } from "@fortawesome/free-solid-svg-icons";
+import PopupDeclineDeleteComment from "./PopupDeclineDeleteComment";
 
 interface IHotelSelection {
   hotels?: any;
@@ -32,6 +35,9 @@ const TourComments = memo(() => {
 
   const [hotelIds, setHotelIds] = useState([]);
   const [commentDelete, setCommentDelete] = useState(null);
+  const [openPopupDeclineDeleteComment, setOpenPopupDeclineDeleteComment] = useState(false);
+  const [commentEdit, setCommentEdit] = useState(null);
+  const [commentAction, setCommentAction] = useState(null);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -103,6 +109,16 @@ const TourComments = memo(() => {
     .finally(() => dispatch(setLoading(false)))
   }
 
+  const onClosePopupDeleteDeclineComment = () => {
+    setOpenPopupDeclineDeleteComment(false);
+    setCommentEdit(null);
+  }
+  
+  const onOpenPopupDeclineDeleteComment = (e, cmt) => {
+    setOpenPopupDeclineDeleteComment(true);
+    setCommentEdit(cmt);
+    setCommentAction(cmt);
+  }
   useEffect(() => {
     dispatch(setLoading(true));
     onGetHotelComments()
@@ -162,7 +178,8 @@ const TourComments = memo(() => {
               <th>Created</th>
               <th>Content</th>
               <th>Reason for delete</th>
-              <th>Actions</th>
+              <th>Decline</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -174,6 +191,11 @@ const TourComments = memo(() => {
                 <td>{moment(cmt?.createdAt).format("DD/MM/YYYY")}</td>
                 <td>{cmt?.comment}</td>
                 <td>{cmt?.reasonForDelete}</td>
+                <td className={clsx("text-right", classes.colActionBtn)}>
+                  <Button className="btn-icon" color="info" size="sm" type="button" onClick={(e) => onOpenPopupDeclineDeleteComment(e, cmt)}>
+                    <FontAwesomeIcon icon={faArrowRotateRight}/>
+                  </Button>
+                </td>
                 <td className={clsx("text-right", classes.colActionBtn)}>
                   <Button
                   className="btn-icon"
@@ -202,6 +224,13 @@ const TourComments = memo(() => {
         onClose={onClosePopupConfirmDelete}
         toggle={onClosePopupConfirmDelete}
         onYes={onYesDelete}
+        />
+        <PopupDeclineDeleteComment
+        isOpen={openPopupDeclineDeleteComment}
+        commentEdit={commentEdit}
+        commentId={commentAction?.id}
+        onClose={onClosePopupDeleteDeclineComment}
+        toggle={onClosePopupDeleteDeclineComment}
         />
       </div>
     </>

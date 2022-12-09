@@ -78,7 +78,7 @@ const Tour = memo(()=> {
                     <th scope="row">
                         {/* eslint-disable-next-line react/jsx-no-target-blank */}
                         <a href={`/listTour/:${item?.tourId}`} target="_blank" className={classes.tourName}>                         
-                            {item?.tourId}            
+                            {item?.tourInfo?.title}            
                         </a>
                     </th>
                     <td>
@@ -118,7 +118,7 @@ const Tour = memo(()=> {
                 <div className={classes.boxInformation}>
                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
                     <a href={`/listTour/:${item?.tourId}`} target="_blank" className={classes.tourName}>                         
-                        {item?.tourId}            
+                        {item?.tourInfo?.title}           
                     </a>
                     <p>TV{item?.id}</p> 
                     <p><span>{fCurrency2VND(item?.totalBill)} VND</span></p>                  

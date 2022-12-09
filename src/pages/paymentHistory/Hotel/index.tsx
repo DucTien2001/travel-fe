@@ -70,8 +70,8 @@ const Hotel = memo(()=> {
                     <tr key={index}>
                     <th scope="row">
                         {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                        <a href={`/listTour/:${item?.hotelId}`} target="_blank" className={classes.tourName}>                         
-                            {item?.hotelId}            
+                        <a href={`/listHotel/:${item?.hotelId}`} target="_blank" className={classes.hotelName}>                         
+                            {item?.hotelInfo?.name}              
                         </a>
                     </th>
                     <td>
@@ -110,8 +110,8 @@ const Hotel = memo(()=> {
             <Col className={classes.colInformation}>
                 <div className={classes.boxInformation}>
                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                    <a href={`/listTour/:${item?.hotelId}`} target="_blank" className={classes.tourName}>                         
-                         {item?.hotelId}            
+                    <a href={`/listHotel/:${item?.hotelId}`} target="_blank" className={classes.hotelName}>                         
+                         {item?.hotelInfo?.title}            
                     </a>
                     <p>TV{item?.id}</p> 
                     <p><span> {fCurrency2VND(item?.totalBill)} VND</span></p>                  

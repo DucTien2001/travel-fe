@@ -80,3 +80,11 @@ export interface IRequestDeleteHotelComment {
 export interface IRequestDeleteTourComment {
   reasonForDelete: string;
 }
+
+export interface IDeclineDeleteTourComment {
+  reasonForDecline: string;
+}
+
+export interface IDeclineDeleteHotelComment {
+  reasonForDecline: string;
+}

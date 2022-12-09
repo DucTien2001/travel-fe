@@ -98,7 +98,7 @@ const Comments = memo(( props: Props) => {
                     <div className="pull-left">
                         <div className={classes.avatar}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img alt="No avatar" src={comment?.hotelReviewer?.avatar}/>
+                            <img alt="" src={comment?.hotelReviewer?.avatar}/>
                         </div>
                     </div>
                     <Media body>

@@ -18,6 +18,8 @@ import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import PopupRequestDeleteComment from "./PopupRequestDeleteComment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHourglass } from "@fortawesome/free-solid-svg-icons";
 
 interface ITourSelection {
   tours?: any;
@@ -172,6 +174,8 @@ const TourComments = memo(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchTourValue])
 
+  console.log(comments);
+
   return (
     <>
       <div className={classes.root}>
@@ -196,9 +200,10 @@ const TourComments = memo(() => {
               <th>Tour name</th>
               <th>User name</th>
               <th>Created</th>
-              <th>Content</th>
+              <th>Content</th>            
               <th>Reply</th>
-              <th>Actions</th>
+              <th>Reason for decline delete</th>
+              <th className={classes.colActionBtn}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -210,7 +215,8 @@ const TourComments = memo(() => {
                 <td>{moment(cmt?.createdAt).format("DD/MM/YYYY")}</td>
                 <td>{cmt?.comment}</td>
                 <td>{cmt?.replyComment || <span className={classes.textNoReply}>Not reply</span>}</td>
-                <td className={clsx("text-right", classes.colActionBtn)}>
+                <td>{cmt?.reasonForDecline || <span className={classes.textNoReply}>Not decline</span>}</td>
+                <td className={classes.colActionBtn}>
                   <Button
                   className="btn-icon mr-1"
                   color="info"
@@ -221,7 +227,6 @@ const TourComments = memo(() => {
                  <i className="now-ui-icons ui-1_send mr-1"></i>
                   </Button>
                   <Button
-                  disabled={cmt?.isRequestDelete}
                   className="btn-icon"
                   color="danger"
                   size="sm"

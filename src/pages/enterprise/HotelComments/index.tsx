@@ -189,6 +189,7 @@ const TourComments = memo(() => {
               <th>Created</th>
               <th>Content</th>
               <th>Reply</th>
+              <th>Reason for decline delete</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -201,6 +202,7 @@ const TourComments = memo(() => {
                 <td>{moment(cmt?.createdAt).format("DD/MM/YYYY")}</td>
                 <td>{cmt?.comment}</td>
                 <td>{cmt?.replyComment || <span className={classes.textNoReply}>Not reply</span>}</td>
+                <td>{cmt?.reasonForDecline || <span className={classes.textNoReply}>Not decline</span>}</td>
                 <td className={clsx("text-right", classes.colActionBtn)}>
                   <Button
                   className="btn-icon mr-1"
@@ -212,7 +214,6 @@ const TourComments = memo(() => {
                  <i className="now-ui-icons ui-1_send mr-1"></i>
                   </Button>
                   <Button
-                  disabled={cmt?.isRequestDelete}
                   className="btn-icon"
                   color="danger"
                   size="sm"

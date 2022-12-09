@@ -58,7 +58,7 @@ const DetailTour = memo(({roomBillConfirm}:Props)=> {
                             </>
                           ))}</p>
                           <p>Amount: <span>{room?.amount}</span></p>
-                          {room?.discount && <p>Discount: <span>{room?.discount}%</span></p>}
+                          <p>Discount: {room?.discount && <span>{room?.discount}%</span>}</p>
                       </div>
                     ))}
                     <div className={classes.boxTotalPrice}>

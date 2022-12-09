@@ -134,10 +134,12 @@ export const API = {
     COMMENT: {
       HOTEL_COMMENT: {
         GET_COMMENT_NEED_DELETE: "/v1.0/hotel-comment/get-hotel-comments-need-delete",
+        DECLINE_DELETE_COMMENT: "/v1.0/hotel-comment/decline-delete/:id",
         DELETE: "/v1.0/hotel-comment/delete/:id",
       },
       TOUR_COMMENT: {
         GET_COMMENT_NEED_DELETE: "/v1.0/tour-comment/get-tour-comments-need-delete",
+        DECLINE_DELETE_COMMENT: "/v1.0/tour-comment/decline-delete/:id",
         DELETE: "/v1.0/tour-comment/delete/:id",
       }
     }
