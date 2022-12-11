@@ -10,6 +10,7 @@ import FilterListToggle from "components/FilterListToggle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { ratingList } from 'configs/constants';
+import BoxSmallLeft from 'components/BoxSmallLeft';
 interface Props {
   selectedCategory?: any;
   selectCategory?: any;
@@ -38,6 +39,7 @@ const FilterPanel = ({
         selectToggle={selectCategory}
       /> */}
     </div>
+    <BoxSmallLeft title="Options">
     <div className={classes.inputGroup}>
       {tags?.map((tag) => (
         <CheckboxProton
@@ -47,21 +49,23 @@ const FilterPanel = ({
         />
       ))}
     </div>
-    {changePrice && <div className={classes.inputGroup}>
+    </BoxSmallLeft>
+    {changePrice &&<BoxSmallLeft title="Price Range">
+     <div className={classes.inputGroup}>
       <div className={classes.titlePrice}>
-      <FontAwesomeIcon icon={faCreditCard} />
-      <p className={classes.labelRange}>Price Range</p>
       </div>
       <SliderProton value={selectedPrice} changePrice={changePrice} />
-    </div>}
+    </div>
+    </BoxSmallLeft>}
+    <BoxSmallLeft title="Star Rating">
     <div className={classes.inputGroup}>
-      <p className={classes.labelRange}>Star Rating</p>
       <FilterListToggle
         options={ratingList}
         value={selectedRating}
         selectToggle={selectRating}
       />
     </div>
+    </BoxSmallLeft>
   </div>
 );
 
