@@ -1,0 +1,35 @@
+.modal {
+  position: absolute;
+  left: 300px;
+  [class~="modal-content"]{
+    width: unset;
+  }
+}
+
+.pdfWrapper {
+  // width: 841px;
+  padding: 20px;
+  width: 595px;
+}
+
+.title {
+  font-weight: 600 !important;
+  font-size: 1.3em !important;
+  margin-bottom: 8px !important;
+  text-align: center;
+}
+
+.subTitle {
+  font-weight: 500 !important;
+  font-size: 1em !important;
+}
+
+.paragraphFontSize {
+  font-size: 0.7em !important;
+}
+
+.downloadBtnWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
