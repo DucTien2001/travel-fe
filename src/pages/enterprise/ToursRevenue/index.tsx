@@ -3,7 +3,7 @@ import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
-import { Row, Table } from "reactstrap";
+import { Button, Row, Table } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
 import { TourBillService } from "services/enterprise/tourBill";
@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomSelect from "components/common/CustomSelect";
 import { fCurrency2VND } from "utils/formatNumber";
+import DownloadRevenue from "./DownloadRevenue";
 
 interface ITourSelection {
   revenueType?: any;
@@ -27,6 +28,12 @@ const ToursRevenue = memo(() => {
   const { allTours } = useSelector((state: ReducerType) => state.enterprise);
   const [tourIds, setTourIds] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
+  const [modalDownloadRevenue, setModalDownloadRevenue] = useState({
+    isOpenModal: false,
+    revenue: [],
+    revenueType: null,
+    monthOrYearValue: null,
+  });
 
   const revenueType = [
     { id: 1, name: "Revenue of a month", value: "Revenue of a month" },
@@ -136,6 +143,68 @@ const ToursRevenue = memo(() => {
     return new Date(year, month, 0).getDate();
   };
 
+  const handleSumArray = (array) => {
+    let result = 0;
+    array.forEach((item) => {
+      result += item;
+    });
+    return result;
+  };
+
+  const handleDownloadRevenue = () => {
+    let _revenueData = [];
+    if (watchRevenueType?.id === 1) {
+      revenueData.map((itemRevenue) => {
+        const week1 = itemRevenue.slice(0, 7);
+        const week2 = itemRevenue.slice(7, 14);
+        const week3 = itemRevenue.slice(14, 21);
+        const week4 = itemRevenue.slice(21, 28);
+        let tempRevenue = [
+          {
+            date: "1 - 7",
+            revenue: handleSumArray(week1),
+          },
+          {
+            date: "8 - 14",
+            revenue: handleSumArray(week2),
+          },
+          {
+            date: "15 - 21",
+            revenue: handleSumArray(week3),
+          },
+          {
+            date: "22 - 28",
+            revenue: handleSumArray(week4),
+          },
+        ];
+
+        if (itemRevenue.length > 28) {
+          const week5 = itemRevenue.slice(28);
+          tempRevenue.push({
+            date: `28 - ${itemRevenue.length}`,
+            revenue: handleSumArray(week5),
+          });
+        }
+        _revenueData.push(tempRevenue);
+      });
+    }
+    setModalDownloadRevenue({
+      isOpenModal: true,
+      revenue: watchRevenueType?.id === 1 ? _revenueData : revenueData,
+      revenueType: watchRevenueType?.id,
+      monthOrYearValue: watchRevenueType?.id === 1 ? new Date(watchMonthValue)?.getMonth() : new Date(watchYearValue)?.getFullYear(),
+    });
+  };
+
+  const onCloseModalDownloadRevenue = () => {
+    setModalDownloadRevenue({
+      isOpenModal: false,
+      revenue: [],
+      revenueType: null,
+      monthOrYearValue: null,
+    });
+  };
+
   return (
     <>
       <div className={classes.root}>
@@ -187,13 +256,19 @@ const ToursRevenue = memo(() => {
               errorMessage={errors.yearValue?.message}
             />
           )}
+          <Button className="m-0" color="primary" onClick={() => handleDownloadRevenue()}>Download revenue</Button>
         </Row>
         <Table className={classes.table} responsive>
           <thead>
             <tr>
               <th scope="row">#</th>
               <th>Name</th>
-              {revenueData.length > 0 && revenueData[0]?.map((item, index) => <th key={index} className="text-center">{index + 1}</th>)}
+              {revenueData.length > 0 &&
+                revenueData[0]?.map((item, index) => (
+                  <th key={index} className="text-center">
+                    {index + 1}
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody>
@@ -203,7 +278,9 @@ const ToursRevenue = memo(() => {
                   <th scope="row">{index}</th>
                   <td>{item?.title}</td>
                   {revenueData[index]?.map((item, index) => (
-                    <th key={index}className="text-center">{fCurrency2VND(Math.floor(item))}</th>
+                    <th key={index} className="text-center">
+                      {fCurrency2VND(Math.floor(item))}
+                    </th>
                   ))}
                 </tr>
               );
@@ -211,6 +288,14 @@ const ToursRevenue = memo(() => {
           </tbody>
         </Table>
       </div>
+
+      <DownloadRevenue
+        onClose={onCloseModalDownloadRevenue}
+        isOpen={modalDownloadRevenue.isOpenModal}
+        revenue={modalDownloadRevenue.revenue}
+        revenueType={modalDownloadRevenue.revenueType}
+        monthOrYearValue={modalDownloadRevenue.monthOrYearValue}
+      />
     </>
   );
 });
