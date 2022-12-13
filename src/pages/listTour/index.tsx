@@ -35,7 +35,6 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/normal/tour";
 import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "../../components/FilterPanel";
-import ReactPaginate from 'react-paginate';
 
 interface SearchData {
   location?: string;
