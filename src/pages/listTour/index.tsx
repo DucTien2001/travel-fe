@@ -317,7 +317,6 @@ const ListTours: NextPage = () => {
                   Search
                 </Button>
               </BoxSmallLeft>
-              <BoxSmallLeft title="Options">
                 {/* <InputCheckbox id="sea"  content="Sea" value="sea" onChange={filterHandler} inputRef={register("checkOptions")}/>
                 <InputCheckbox id="shopping" content="Shopping" value="shopping" onChange={filterHandler} inputRef={register("checkOptions")}/>
                 <InputCheckbox id="family" content="Family" value="family" onChange={filterHandler} inputRef={register("checkOptions")}/>
@@ -332,8 +331,6 @@ const ListTours: NextPage = () => {
                 changeChecked={handleChangeChecked}
                 changePrice={handleChangePrice}
                 />
-              </BoxSmallLeft>
-
             </Col>
             <Col xs={10} className={classes.listTours}>
               <div className={classes.containerListTour}>

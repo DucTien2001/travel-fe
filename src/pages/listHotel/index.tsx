@@ -275,7 +275,6 @@ const ListHotels: NextPage = () => {
                   Search
                 </Button>
               </BoxSmallLeft>
-              <BoxSmallLeft title="Options">
               <FilterPanel
                 // selectedCategory={selectedCategory}
                 // selectCategory={handleSelectCategory}
@@ -285,7 +284,6 @@ const ListHotels: NextPage = () => {
                 changeChecked={handleChangeChecked}
                 // changePrice={handleChangePrice}
                 />
-              </BoxSmallLeft>
             </Col>
             <Col xs={10} className={classes.listTours}>
               <div className={classes.containerListHotel}>
