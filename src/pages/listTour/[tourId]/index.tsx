@@ -3,8 +3,6 @@ import SectionHeader from "components/Header/SectionHeader";
 import {images} from "configs/images";
 import SectionTour from "./components/SectionTour";
 import Comment from "./components/Comment";
-import GoogleMapBody from "./components/GoogleMapBody";
-import RelatedTour from "./components/RelatedTour";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { useRouter } from "next/router";
