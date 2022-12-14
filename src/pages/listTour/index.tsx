@@ -250,7 +250,7 @@ const ListTours: NextPage = () => {
                 GRID VIEW
               </Button>
             </Col>
-            <Col xs={2} className={classes.colBtnLayout}>
+            <Col xs={2} className={clsx("pl-3",classes.colBtnLayout)}>
               <Button
                 className={clsx(changeViewLayout ? "active" : null, classes.layoutBtn)}
                 btnType={BtnType.Outlined}
