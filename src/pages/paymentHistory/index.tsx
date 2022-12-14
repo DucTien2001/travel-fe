@@ -63,13 +63,13 @@ const PaymentHistory : NextPage = () => {
         <Button btnType={tabs === EActiveNav.Tour_Active ? BtnType.Secondary : BtnType.Primary} onClick={() => onChangeTab(EActiveNav.Tour_Active)}>Tour</Button>
         <Button btnType={tabs === EActiveNav.Hotel_Active ? BtnType.Secondary : BtnType.Primary} onClick={() => onChangeTab(EActiveNav.Hotel_Active)}>Hotel</Button>
         </div>
-        <Col xs={4} className={classes.searchTour}>
+        {/* <Col xs={4} className={classes.searchTour}>
         <InputTextFieldBorder
         startIcon={<FontAwesomeIcon icon={faSearch}/>}
         placeholder="Search invoice"
         className={classes.inputSearch}
         />
-        </Col>
+        </Col> */}
       </Row>
         <TabContent className="text-center" activeTab={"tabs" + tabs}>
                     <TabPane tabId="tabs1" className="mt-4">

@@ -167,7 +167,7 @@ const Enterprise: NextPage = () => {
                 Hotels
               </NavLink>
             </NavItem>
-            <span>Notifications</span>
+            {/* <span>Notifications</span>
             <NavItem>
               <NavLink
                 href="#"
@@ -187,7 +187,7 @@ const Enterprise: NextPage = () => {
                 <FontAwesomeIcon icon={faComments} />
                 Feedbacks
               </NavLink>
-            </NavItem>
+            </NavItem> */}
           </Nav>
         </Col>
         <Col xs={10} className={classes.content}>
