@@ -2,6 +2,7 @@
     position: relative;
     height: 100%;
     img {
+        width: 100%;
         height: 100%;
         object-fit: cover;
     }
@@ -17,7 +18,7 @@
     position: absolute;
     padding: 10px 20px;
     background: var(--orange-color);
-    top: 179px;
+    top: 130px;
     left: 0;
     p {
         margin: 0;
@@ -32,6 +33,7 @@
 }
 .cardBody {
     padding:0;
+    height: 100%;
     h6 {
         color: var(--violet-color);
     }
@@ -49,6 +51,11 @@
     font-weight: 600;
     span {
         font-size:12px;
+    }
+    .titleDesktop {
+        @media only screen and (max-width:1024px) {
+           display: none;
+        }
     }
     .tagMobile {
         display: none;
@@ -87,4 +94,18 @@
 .btnViewMore {
     display: flex;
     justify-content:center;
+}
+
+.col {
+    max-height: 236px;
+}
+
+.textDesc {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.badge {
+    color: var(--violet-background);
 }

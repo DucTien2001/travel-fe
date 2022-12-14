@@ -6,7 +6,7 @@ import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faChartSimple, faCircleArrowRight, faCircleArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faChartSimple, faCircleArrowRight, faCircleArrowLeft, faPlaneDeparture, faBuilding } from "@fortawesome/free-solid-svg-icons";
 import { images } from "configs/images";
 import Users from "./Users";
 import Sales from "./Sales";
@@ -68,7 +68,7 @@ const Enterprise: NextPage = () => {
                 Users
               </NavLink>
             </NavItem>
-            <NavItem>
+            {/* <NavItem>
               <NavLink
                 href="#"
                 className={verticalTabs === EActiveNav.Sales_Active ? classes.active : classes.navLink}
@@ -77,28 +77,28 @@ const Enterprise: NextPage = () => {
                 <FontAwesomeIcon icon={faChartSimple} />
                 Sales
               </NavLink>
-            </NavItem>
+            </NavItem> */}
           </Nav>
           <Nav tabs className={classes.nav}>
             <span>Feedbacks</span>
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.HotelFeedbacks_Active ? classes.active : classes.navLink}
-                onClick={() => onChangeTab(EActiveNav.HotelFeedbacks_Active)}
+                className={verticalTabs === EActiveNav.TourFeedbacks_Active ? classes.active : classes.navLink}
+                onClick={() => onChangeTab(EActiveNav.TourFeedbacks_Active)}
               >
-                <FontAwesomeIcon icon={faUser} />
-                Hotel
+                <FontAwesomeIcon icon={faPlaneDeparture} />
+                Tour
               </NavLink>
             </NavItem>
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.TourFeedbacks_Active ? classes.active : classes.navLink}
-                onClick={() => onChangeTab(EActiveNav.TourFeedbacks_Active)}
+                className={verticalTabs === EActiveNav.HotelFeedbacks_Active ? classes.active : classes.navLink}
+                onClick={() => onChangeTab(EActiveNav.HotelFeedbacks_Active)}
               >
-                <FontAwesomeIcon icon={faChartSimple} />
-                Tour
+                <FontAwesomeIcon icon={faBuilding} />
+                Hotel
               </NavLink>
             </NavItem>
           </Nav>
@@ -108,9 +108,9 @@ const Enterprise: NextPage = () => {
             <TabPane tabId="verticalTabs1" className={classes.tabPane}>
               <Users />
             </TabPane>
-            <TabPane tabId="verticalTabs2" className={classes.tabPane}>
+            {/* <TabPane tabId="verticalTabs2" className={classes.tabPane}>
               <Sales />
-            </TabPane>
+            </TabPane> */}
             <TabPane tabId="verticalTabs3" className={classes.tabPane}>
               <HotelFeedbacks />
             </TabPane>

@@ -18,4 +18,24 @@
     margin: 0;
 } 
 
+.rowSelect {
+    display: flex;
+    align-items: center;
+    margin:0;
+    padding-bottom: 24px;
+    p{
+        margin:0;
+    }
+}
 
+.table {
+    th {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        border-right: 1px solid #dee2e6 !important;
+    }
+    thead{
+        background-color: var(--violet-color);
+        color: #ffff;
+    }
+}

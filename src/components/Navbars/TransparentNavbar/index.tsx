@@ -108,7 +108,7 @@ const WhiteNavbar = memo(() => {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <UncontrolledDropdown nav>
+              {/* <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
                   color="default"
@@ -139,7 +139,7 @@ const WhiteNavbar = memo(() => {
                     </Link>
                   </DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
+              </UncontrolledDropdown> */}
               {isLoggedIn ?
               (
                 <>

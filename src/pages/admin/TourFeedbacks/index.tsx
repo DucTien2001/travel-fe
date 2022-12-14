@@ -153,8 +153,8 @@ const TourFeedbacks = memo(() => {
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
           <h3>comment of tours</h3>
         </Row>
-        <Row className={classes.rowSelectTour}>
-          <p>Tour:</p>
+        <Row className={classes.rowSelect}>
+          <p className="mr-2">Tour:</p>
           <CustomSelect
             className={classes.input}
             placeholder="Please choose tour"

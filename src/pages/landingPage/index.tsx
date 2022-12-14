@@ -60,7 +60,7 @@ const LandingPage: NextPage = () => {
         <img alt="section" src={images.section.src}></img>
       </Row>
       <Section/>
-      <Testimonials/>
+      {/* <Testimonials/> */}
       <Contact/>
       <Social/>
     </>
