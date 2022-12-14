@@ -70,6 +70,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   if (router.pathname.startsWith("/enterprise") && user?.role === 3) {
     allowed = false;
   }
+  if (router.pathname.startsWith("/admin") && user?.role !== 1) {
+    allowed = false;
+  }
 
   const ComponentToRender = allowed ? Component : Home; 
   return (
