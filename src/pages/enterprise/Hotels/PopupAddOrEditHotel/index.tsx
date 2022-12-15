@@ -58,13 +58,11 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       checkInTime: yup.string().required("Check in time is required"),
       checkOutTime: yup.string().required("Check out time is required"),
       tags: yup.array(yup.object({
-        id: yup.string().required('Tags is required.'),
         name: yup.string().required('Tags is required.')
       })).required('Tags is required.').min(1, 'Tags is required.'),
-      isTemporarilyStopWorking: yup.boolean().required(),
-      imagesHotel: yup.mixed().test("required", "Please select images", (value) => {
-        return value && value.length;
-      }),
+      // imagesHotel: yup.mixed().test("required", "Please select images", (value) => {
+      //   return value && value.length;
+      // }),
     });
   }, []);
 
@@ -113,16 +111,23 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         if (user) {
           if(itemEdit) {
             HotelService.updateHotel(itemEdit?.id, {
-              name: itemEdit.name,
-              description: itemEdit.description,
-              checkInTime: itemEdit.checkInTime,
-              checkOutTime: itemEdit.checkOutTime,
-              location: itemEdit.location,
-              contact: itemEdit.contact,
+              name: data.name,
+              description: data.description,
+              checkInTime: data.checkInTime,
+              checkOutTime: data.checkOutTime,
+              location: data.location,
+              contact: data.contact,
               tags: data.tags.map((it) => it.name),
-              images: itemEdit.images,
+              images: res,
             })
-            // console.log(res);
+            .then(() => {
+              dispatch(getAllHotelsOfNormal())
+              dispatch(getAllHotels(user?.id))
+              dispatch(setSuccessMess("Update hotel successfully"));
+            })
+            .catch((e) => {
+              dispatch(setErrorMess(e));
+            });
           }
           else { 
             HotelService.createHotel({

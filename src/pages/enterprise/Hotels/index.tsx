@@ -294,8 +294,6 @@ const Hotel = memo(() => {
     }
   };
 
-  console.log(watchSearch,"========");
-
   const handleSearch = () => {
       dispatch(setLoading(true));
       HotelService.searchHotel(user?.id, getValues("name"))

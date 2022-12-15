@@ -4,7 +4,7 @@ export enum EKey {
 }
 
 export interface OptionItem<T=number> {
-  id: T | string;
+  id?: T | string;
   name: string;
   translation?: string;
   img?: string;
