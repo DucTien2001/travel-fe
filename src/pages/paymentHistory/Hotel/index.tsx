@@ -98,7 +98,7 @@ const Hotel = memo(() => {
                     </a>
                   </th>
                   <td>TV{item?.id}</td>
-                  <td>{moment(item?.bookedDates).format("DD/MM/YYYY")}</td>
+                  <td>{moment(item?.createdAt).format("DD/MM/YYYY")}</td>
                   <td>{fCurrency2VND(item?.totalBill)} VND</td>
                   <td>
                     {item.verifyCode === null ? (

@@ -47,7 +47,8 @@ const DetailTour = memo(({roomBillConfirm}:Props)=> {
                 </Box>
                 <Box title="Cost summary">
                   <div className={classes.boxCostSummary}>
-                    <p>Tour name: <span>{roomBillConfirm?.hotel?.name}</span></p>
+                    <p>Hotel name: <span>{roomBillConfirm?.hotel?.name}</span></p>
+                    <br/>
                     {roomBillConfirm?.rooms.map((room, index) => (
                       <div className={classes.boxRoom} key={index}>
                           <p>Room name: <span>{room?.title}</span></p>

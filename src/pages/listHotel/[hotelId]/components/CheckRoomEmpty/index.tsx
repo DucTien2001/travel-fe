@@ -24,6 +24,7 @@ import { fCurrency2 } from "utils/formatNumber";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import PopupDefault from "components/Popup/PopupDefault";
 import { format, formatDistance, formatRelative, subDays } from 'date-fns'
+import useAuth from "hooks/useAuth";
 export interface CheckRoomForm {
   departure: Date;
   return: Date;
@@ -39,6 +40,7 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const CheckRoomEmpty = memo(({ hotel }: Props) => {
   const dispatch = useDispatch();
+  const {user} = useAuth();
   const router = useRouter();
   const [listRooms, setListRoom] = useState([]);
   const schema = useMemo(() => {
@@ -165,7 +167,6 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
 
   const _onSubmit = (data) => {
     const roomBillConfirm = [];
-    let isError = false;  
     data?.amountList?.map((item, index)=>{
       if(item?.amount > 0){
         roomBillConfirm.push({
@@ -180,7 +181,12 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
       startDate: new Date(data?.departure),
       endDate: new Date(data?.return)
     }))
-    router.push(`/book/hotel`);
+    if(!user) {
+      router.push(`/auth/login`);
+    }
+    else {
+      router.push(`/book/hotel`);
+    }
   };
 
   const yesterday = moment().subtract(1, 'day');
