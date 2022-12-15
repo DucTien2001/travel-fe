@@ -16,7 +16,6 @@ import Link from "next/link";
 import BoxSmallLeft from "components/BoxSmallLeft";
 import { RoomService } from "services/normal/room";
 import moment from "moment";
-import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 import { setRoomBillConfirmReducer } from "redux/reducers/Normal/actionTypes";
 import { IHotel } from "models/hotel";
@@ -24,6 +23,7 @@ import { useRouter } from "next/router";
 import { fCurrency2 } from "utils/formatNumber";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import PopupDefault from "components/Popup/PopupDefault";
+import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 export interface CheckRoomForm {
   departure: Date;
   return: Date;
@@ -183,6 +183,15 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
     router.push(`/book/hotel`);
   };
 
+  const yesterday = moment().subtract(1, 'day');
+  const disablePastDt = current => {
+    return current.isAfter(yesterday);
+  };
+
+  const watchStartDate = watch("departure");
+  const disableEndDt = current => {
+    return current.isAfter(watchStartDate);
+  };
 
   return (
     <>
@@ -203,6 +212,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
               labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
               inputRef={register("departure")}
               errorMessage={errors.departure?.message}
+              isValidDate={disablePastDt}
             />
             <InputDatePicker
               className={classes.inputSearchDate}
@@ -216,6 +226,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
               labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
               inputRef={register("return")}
               errorMessage={errors.return?.message}
+              isValidDate={disableEndDt}
             />
           </Row>
 
