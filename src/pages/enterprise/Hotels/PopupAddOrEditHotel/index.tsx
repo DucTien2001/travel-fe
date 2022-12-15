@@ -63,6 +63,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       // imagesHotel: yup.mixed().test("required", "Please select images", (value) => {
       //   return value && value.length;
       // }),
+      imagesRoom: yup.array().notRequired(),
     });
   }, []);
 

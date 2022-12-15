@@ -65,17 +65,16 @@ const PopupCreateTour = memo((props: Props) => {
         .typeError("Discount must be a number")
         .notRequired(),
       tags: yup.array(yup.object({
-          id: yup.string().required('Tags is required.'),
           name: yup.string().required('Tags is required.')
       })).required('Tags is required.').min(1, 'Tags is required.'),
       contact: yup
         .string()
         .required("Contact is required")
         .matches(VALIDATION.phone, { message: "Please enter a valid phone number.", excludeEmptyString: true }),
-      isTemporarilyStopWorking: yup.boolean().required(),
-      images: yup.mixed().test("required", "Please select images", (value) => {
-        return value && value.length;
-      }),
+      // images: yup.mixed().test("required", "Please select images", (value) => {
+      //   return value && value.length;
+      // }),
+      imagesRoom: yup.array().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -104,7 +103,6 @@ const PopupCreateTour = memo((props: Props) => {
       discount: null,
       tags: [],
       contact: "",
-      isTemporarilyStopWorking: false,
       images: [],
     });
   };
@@ -125,15 +123,23 @@ const PopupCreateTour = memo((props: Props) => {
       .then((res) => {
         if (itemEdit) {
           TourService.updateTour(itemEdit?.id, {
-            title: itemEdit.title,
-            description: itemEdit.description,
-            businessHours: itemEdit.businessHours,
-            location: itemEdit.location,
-            price: itemEdit.price,
-            discount: itemEdit.discount,
+            title: data.name,
+            description: data.description,
+            businessHours: data.businessHours,
+            location: data.location,
+            price: data.price,
+            discount: data.discount,
             tags: data.tags.map((it) => it.name),
-            contact: itemEdit.contact,
-            images: itemEdit.images,
+            contact: data.contact,
+            images: res,
+          })
+          .then(() => {
+            dispatch(getAllTours(user?.id));
+            dispatch(getAllToursNormal());
+            dispatch(setSuccessMess("Update tour successfully"));
+          })
+          .catch((e) => {
+            dispatch(setErrorMess(e));
           });
         } else {
           if (user) {

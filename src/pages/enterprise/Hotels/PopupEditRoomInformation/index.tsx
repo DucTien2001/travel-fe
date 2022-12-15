@@ -31,12 +31,17 @@ import { useDropzone } from "react-dropzone";
 import { clsx } from "clsx";
 import InputTextField from "components/common/inputs/InputTextField";
 import UploadImage from "components/UploadImage";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { ImageService } from "services/image";
 import { RoomService } from "services/enterprise/room";
 import { EditRoomInformation } from "models/room";
 import { OptionItem } from "models/general";
+import InputSelect from "components/common/inputs/InputSelect";
+import { tagsOption } from "configs/constants";
+import { getAllHotels as getAllHotelsOfNormal} from "redux/reducers/Normal/actionTypes";
+import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
+import { ReducerType } from "redux/reducers";
 
 const FILE_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const PHOTO_SIZE = 10000000000; // bytes
@@ -61,20 +66,21 @@ interface Props extends ModalProps {
 const PopupEditRoomInformation = memo((props: Props) => {
   const dispatch = useDispatch();
   const { isOpen, onClose, itemEdit } = props;
+  const { user } = useSelector((state: ReducerType) => state.user);
 
   const schema = useMemo(() => {
     return yup.object().shape({
       title: yup.string().required("Title is required"),
       description: yup.string().required("Description is required"),
       tags: yup.array(yup.object({
-        id: yup.string().required('Tags is required.'),
         name: yup.string().required('Tags is required.')
       })).required('Tags is required.').min(1, 'Tags is required.'),
       numberOfBed: yup.number().typeError("Number of bed must be a number").required("Number of bed is required"),
       numberOfRoom: yup.number().typeError("Number of room must be a number").required("Number of room is required"),
-      imagesRoom: yup.mixed().test("required", "Please select images", (value) => {
-        return value && value.length;
-      }),
+      // imagesRoom: yup.mixed().test("required", "Please select images", (value) => {
+      //   return value && value.length;
+      // }),
+      imagesRoom: yup.array().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -116,13 +122,21 @@ const PopupEditRoomInformation = memo((props: Props) => {
       await Promise.all(uploader).then((images) => {
           if(itemEdit) {
             RoomService.updateInformation(itemEdit?.id, { 
-              title: itemEdit?.title,
-              description: itemEdit?.description,
+              title: data?.title,
+              description: data?.description,
               tags: data.tags.map((it) => it.name),
-              images: itemEdit?.images,
-              numberOfBed: itemEdit?.numberOfRoom,
-              numberOfRoom: itemEdit?.numberOfBed,
+              images: images,
+              numberOfBed: data?.numberOfBed,
+              numberOfRoom: data?.numberOfRoom,
             })
+            .then(() => {
+              dispatch(getAllHotelsOfNormal())
+              dispatch(getAllHotels(user?.id))
+              dispatch(setSuccessMess("Update hotel successfully"));
+            })
+            .catch((e) => {
+              dispatch(setErrorMess(e));
+            });
           }
       })
       .catch((e) => {
@@ -179,13 +193,16 @@ const PopupEditRoomInformation = memo((props: Props) => {
                   </Row>
                   <Row className={classes.row}>
                     <Col>
-                      <InputTextFieldBorder
-                        label="Tags"
-                        className="mr-3"
-                        placeholder="Enter tags"
-                        inputRef={register("tags")}
-                        errorMessage={errors.tags?.message}
-                      />
+                    <InputSelect
+                    label="Tags"
+                    className={classes.input}
+                    placeholder="Please choose the tags your tour"
+                    name="tags"
+                    control={control}
+                    options={tagsOption}
+                    isMulti
+                    errorMessage={errors.tags?.message}
+                    />
                     </Col>
                   </Row>
                   <Row className={classes.row}>
