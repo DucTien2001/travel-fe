@@ -38,6 +38,7 @@ interface Props {
 const Comments = memo(({comments, hotel, onGetHotelComments}: Props) => {
     const dispatch = useDispatch();
     const router = useRouter()
+    const hotelId = Number(router.query.hotelId.slice(1))
     const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
     const [commentAction, setCommentAction] = useState<Comment>(null);
     const [isAddComment, setIsAddComment] = useState(false);
@@ -86,7 +87,7 @@ const Comments = memo(({comments, hotel, onGetHotelComments}: Props) => {
 
     useEffect(() => {
         allRoomBills?.forEach(item => {
-            if (item.hotelId && item.verifyCode === null) {     
+            if (item.hotelId === hotelId && item.verifyCode === null) {     
                 setIsAddComment(!isAddComment);
             }
         })
