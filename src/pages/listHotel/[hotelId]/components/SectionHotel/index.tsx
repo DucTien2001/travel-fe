@@ -80,8 +80,8 @@ const SectionTour = memo(({hotel} : Props)=> {
               </Col>
               <Col className="ml-auto mr-auto" md="6">
                 <h2 className={`title ${classes.nameTour}`}>{hotel?.name} - {hotel?.location}</h2>
-                {hotel?.rate && <Stars numberOfStars={Math.floor(hotel?.rate)}/>}
-                {<div className={classes.tags}>
+                {hotel?.rate !== 0 && <Stars numberOfStars={Math.floor(hotel?.rate)}/>}
+                {<div className={clsx("mt-2",classes.tags)}>
                     {hotel?.tags?.map((item, index) => (
                         <Badge pill className={classes.badgeTags} key={index}>{item}</Badge>
                         
