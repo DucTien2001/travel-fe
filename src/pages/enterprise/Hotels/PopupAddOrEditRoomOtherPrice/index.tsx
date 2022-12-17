@@ -88,6 +88,7 @@ const PopupAddOrEditRoomOtherPrice = memo((props: Props) => {
     } else {
       reset();
     }
+    setDeleteItems([]);
   }, [isOpen, roomId]);
 
   const handleDeleteItem = (id: number, index: number) => {
@@ -137,7 +138,6 @@ const PopupAddOrEditRoomOtherPrice = memo((props: Props) => {
       })
       .finally(() => {
         dispatch(setLoading(false));
-        setDeleteItems([]);
         onClose();
       });
   };
