@@ -170,14 +170,17 @@ const PopupAddOrEditRoomOtherPrice = memo((props: Props) => {
                       errorMessage={errors.otherPriceList && errors.otherPriceList[index]?.date?.message}
                       isValidDate={disablePastDt}
                     />
-                    <InputTextField
-                      className="mb-0"
-                      placeholder="Price"
-                      type="text"
-                      autoComplete="off"
-                      inputRef={register(`otherPriceList.${index}.price`)}
-                      errorMessage={errors.otherPriceList && errors.otherPriceList[index]?.price?.message}
-                    />
+                    <div className="d-flex align-items-center">
+                      <InputTextField
+                        className="mb-0 mr-1"
+                        placeholder="Price"
+                        type="text"
+                        autoComplete="off"
+                        inputRef={register(`otherPriceList.${index}.price`)}
+                        errorMessage={errors.otherPriceList && errors.otherPriceList[index]?.price?.message}
+                      />
+                      <span>VND</span>
+                    </div>
                     <InputTextField
                       className="d-none"
                       placeholder="id"
