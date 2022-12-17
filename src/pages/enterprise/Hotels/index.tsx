@@ -33,6 +33,7 @@ import SearchNotFound from "components/SearchNotFound";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import PopupAddOrEditRoomOtherPrice from "./PopupAddOrEditRoomOtherPrice";
 
 interface SearchData {
   name?: string;
@@ -60,6 +61,10 @@ const Hotel = memo(() => {
   const [roomStop, setRoomStop] = useState(null);
   const [openPopupConfirmStopRoom, setOpenPopupConfirmStopRoom] = useState(false);
   const [listHotels, setListHotels] = useState([]);
+  const [modalOthePrice, setModalOtherPrice]=useState({
+    isOpen: false,
+    roomId: null,
+  })
   
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -230,6 +235,19 @@ const Hotel = memo(() => {
   const onDeleteRoom = (e: any, item: any) => {
     setDeleteRoom(item);
     onTogglePopupDeleteRoom();
+  }
+
+  const onOpenModalOtherPrice = (e: any, item: any) => {
+    setModalOtherPrice({
+      isOpen: true,
+      roomId: item?.id
+    })
+  }
+  const onCloseModalOtherPrice = () => {
+    setModalOtherPrice({
+      isOpen: false,
+      roomId: null
+    })
   }
 
   const onYesDeleteRoom = () => {
@@ -489,6 +507,10 @@ const Hotel = memo(() => {
                                           <FontAwesomeIcon icon={faPen} />
                                           Edit price
                                         </DropdownItem>
+                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onOpenModalOtherPrice(e, itemSubtable)}>
+                                          <FontAwesomeIcon icon={faPen} />
+                                          Room other price
+                                        </DropdownItem>
                                         <DropdownItem className={classes.dropdownItem} onClick={(e) => onDeleteRoom(e, itemSubtable)}>
                                           <FontAwesomeIcon icon={faTrash} />
                                           Delete
@@ -563,6 +585,11 @@ const Hotel = memo(() => {
           onClose={onTogglePopupConfirmStopWorkingRoom}
           toggle={onTogglePopupConfirmStopWorkingRoom}
           onYes={onYesStopWorkingRoom}
+        />
+        <PopupAddOrEditRoomOtherPrice
+        isOpen={modalOthePrice?.isOpen} 
+        onClose={onCloseModalOtherPrice} 
+        roomId={modalOthePrice?.roomId}
         />
       </div>
     </>

@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { EditRoomInformation, EditRoomPrice, ICreateRoom } from "models/room";
+import { ECreateRoomOtherPrice, EditRoomInformation, EditRoomPrice, ICreateRoom } from "models/room";
 import api from "../configApi";
 
 export class RoomService {
@@ -72,5 +72,49 @@ export class RoomService {
       .catch((e) => {
         return Promise.reject(e?.response?.data);
       })
+  }
+  
+  static async getRoomOtherPrice(roomId: number): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.ROOM.GET_ROOM_OTHER_PRICE.replace(":id", `${roomId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  
+  static async createRoomOtherPrice(data: ECreateRoomOtherPrice): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.ROOM.CREATE_ROOM_OTHER_PRICE, data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  
+  static async updateRoomOtherPrice(id: number, data: ECreateRoomOtherPrice): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.ROOM.UPDATE_ROOM_OTHER_PRICE.replace(":id", `${id}`), data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  
+  static async deleteRoomOtherPrice(id: number): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.ROOM.DELETE_ROOM_OTHER_PRICE.replace(":id", `${id}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
   }
 }

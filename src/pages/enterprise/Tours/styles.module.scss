@@ -5,6 +5,7 @@
     height: 100%;
     [class~=table-responsive] {
         max-height: 650px !important;
+        min-height: 400px;
         padding-right: 60px;
         @media only screen and (max-width: 768px) {
             padding-right: 0;

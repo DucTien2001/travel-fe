@@ -122,7 +122,8 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
         for (i; i.getTime() < endDate.getTime(); i.setDate(i.getDate() + 1)) {
           let flag = false;
           room.specialDatePrice.map((item) => {
-            if (i.getTime() === item?.date.getTime()) {
+            const itemDate = new Date(item?.date)
+            if (i.getDate() === itemDate.getDate() && i.getMonth() === itemDate.getMonth() &&i.getFullYear() === itemDate.getFullYear()) {
               prices.push({
                 date: new Date(i),
                 price: item?.price,

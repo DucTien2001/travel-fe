@@ -72,3 +72,9 @@ export interface EGetPrice {
   date: Date;
   roomId: number;
 }
+
+export interface ECreateRoomOtherPrice {
+  date: Date;
+  price: number;
+  roomId: number;
+}

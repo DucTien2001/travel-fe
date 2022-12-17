@@ -118,6 +118,10 @@ export const API = {
       DELETE:"/v1.0/room/delete/:id",
       STOP_WORKING:"/v1.0/room/temporarily-stop-working/:id",
       WORK_AGAIN: "/v1.0/room/work-again/:id",
+      GET_ROOM_OTHER_PRICE:"/v1.0/room-other-price/get-all-prices/:id",
+      CREATE_ROOM_OTHER_PRICE:"/v1.0/room-other-price/create",
+      UPDATE_ROOM_OTHER_PRICE:"/v1.0/room-other-price/update/:id",
+      DELETE_ROOM_OTHER_PRICE:"/v1.0/room-other-price/delete/:id",
     },
     TOURBILL: {
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",

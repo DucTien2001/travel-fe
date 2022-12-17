@@ -16,11 +16,11 @@ const Stars = memo(({ className, numberOfStars}: Props) => {
 
     return (
         <div className={clsx(classes.root, className)}>
-            {[...Array(numberOfStars)].map((star, index) => {
+            {numberOfStars ? [...Array(numberOfStars)]?.map((star, index) => {
                 return (
                     <FontAwesomeIcon icon={faStar} key={index}></FontAwesomeIcon>
                 )
-            })}
+            }) : ""}
         </div>
     );
   }
