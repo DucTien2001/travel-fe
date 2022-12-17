@@ -86,7 +86,7 @@ const PopupAddOrEditRoomOtherPrice = memo((props: Props) => {
         }
       });
     } else {
-      reset();
+      remove();
     }
     setDeleteItems([]);
   }, [isOpen, roomId]);
