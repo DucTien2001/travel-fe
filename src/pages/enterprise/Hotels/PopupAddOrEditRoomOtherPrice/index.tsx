@@ -157,8 +157,8 @@ const PopupAddOrEditRoomOtherPrice = memo((props: Props) => {
           <ModalBody>
             {fields?.map((field: any, index) => {
               return (
-                <Row className={classes.row}>
-                  <div key={field?.fieldID} className={classes.itemWrapper}>
+                <Row key={field?.fieldID} className={classes.row}>
+                  <div className={classes.itemWrapper}>
                     <InputDatePicker
                       className={classes.datePicker}
                       name={`otherPriceList.${index}.date`}
