@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { RoomBillService } from "services/enterprise/roomBill";
 import moment from "moment";
 import { fCurrency2VND } from "utils/formatNumber";
+import SearchNotFound from "components/SearchNotFound";
 
 interface Props extends ModalProps {
   room: any;
@@ -63,6 +64,12 @@ const PopupShowBills = memo((props: Props) => {
                       <td>{item?.detailsOfRoomBill?.phoneNumber}</td>
                     </tr>
                   ))}
+                  {!listBills?.length &&
+                    <tr>
+                      <th scope="row" colSpan={9}>
+                        <SearchNotFound mess="No bill found" />
+                      </th>
+                    </tr>}
               </tbody>
             </Table>
           </ModalBody>
