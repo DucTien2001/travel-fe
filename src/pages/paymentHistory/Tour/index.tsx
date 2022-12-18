@@ -73,7 +73,7 @@ const Tour = memo(() => {
                 <tr key={index}>
                   <th scope="row">
                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                    <a href={`/listTour/:${item?.tourId}`} target="_blank" className={classes.tourName}>
+                    <a href={`/listTour/:${item?.id}`} target="_blank" className={classes.tourName}>
                       {item?.tourInfo?.title}
                     </a>
                   </th>

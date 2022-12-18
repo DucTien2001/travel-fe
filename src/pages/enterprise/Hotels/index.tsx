@@ -34,6 +34,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import PopupAddOrEditRoomOtherPrice from "./PopupAddOrEditRoomOtherPrice";
+import PopupShowBills from "./PopupShowBills";
 
 interface SearchData {
   name?: string;
@@ -64,6 +65,10 @@ const Hotel = memo(() => {
   const [modalOthePrice, setModalOtherPrice]=useState({
     isOpen: false,
     roomId: null,
+  })
+  const [modalShowBills, setModalShowBills]=useState({
+    isOpen: false,
+    room: null,
   })
   
   const schema = useMemo(() => {
@@ -250,6 +255,19 @@ const Hotel = memo(() => {
     })
   }
 
+  const onOpenModalShowBills = (e: any, item: any) => {
+    setModalShowBills({
+      isOpen: true,
+      room: item
+    })
+  }
+  const onCloseModalShowBills = () => {
+    setModalShowBills({
+      isOpen: false,
+      room: null
+    })
+  }
+
   const onYesDeleteRoom = () => {
     dispatch(setLoading(true));
     RoomService.deleteRoom(deleteRoom?.id)
@@ -369,8 +387,9 @@ const Hotel = memo(() => {
                 return (
                   <>
                     <tr key={item?.id}>
-                      <th scope="row">{item.id}</th>
-                      <td>{item.name}</td>
+                      <th scope="row">{index}</th>
+                      <td><a href={`/listHotel/:${item?.id}`} target="_blank" className={classes.hotelName}>
+                        {item.name}</a></td>
                       <td>{item.checkInTime}</td>
                       <td>{item.checkOutTime}</td>
                       <td>
@@ -515,6 +534,10 @@ const Hotel = memo(() => {
                                           <FontAwesomeIcon icon={faTrash} />
                                           Delete
                                         </DropdownItem>
+                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onOpenModalShowBills(e, itemSubtable)}>
+                                          <FontAwesomeIcon icon={faPen} />
+                                          All bills
+                                        </DropdownItem>
                                       </DropdownMenu>
                                     </UncontrolledDropdown>
                                   </td>
@@ -587,9 +610,14 @@ const Hotel = memo(() => {
           onYes={onYesStopWorkingRoom}
         />
         <PopupAddOrEditRoomOtherPrice
-        isOpen={modalOthePrice?.isOpen} 
-        onClose={onCloseModalOtherPrice} 
-        roomId={modalOthePrice?.roomId}
+          isOpen={modalOthePrice?.isOpen} 
+          onClose={onCloseModalOtherPrice} 
+          roomId={modalOthePrice?.roomId}
+        />
+        <PopupShowBills
+          isOpen={modalShowBills?.isOpen} 
+          onClose={onCloseModalShowBills} 
+          room={modalShowBills?.room}
         />
       </div>
     </>

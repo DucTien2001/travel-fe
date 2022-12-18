@@ -24,4 +24,15 @@ export class RoomBillService {
         return Promise.reject(e?.response?.data);
       });
   }
+  
+  static async getAllBillOfAnyRoom(roomId: number): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.ROOMBILL.GET_ALL_BILLS_OF_ANY_ROOM.replace(":id", `${roomId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 }
