@@ -155,14 +155,13 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
   }, [_return, hotel]);
 
     const isValid = () => {
+      let isOK = false
       for(var i =0; i < listRooms.length; i++) {
         if (watch(`amountList.${i}.amount`) !== 0){
-          return true;
+          isOK = true
         }
-        else {
-          return false;
-        }
-      }    
+      }  
+      return isOK  
     }
 
 
