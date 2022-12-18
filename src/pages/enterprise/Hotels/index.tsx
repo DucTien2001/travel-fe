@@ -388,7 +388,7 @@ const Hotel = memo(() => {
                   <>
                     <tr key={item?.id}>
                       <th scope="row">{index}</th>
-                      <td><a href={`/listHotel/:${item?.id}`} target="_blank" className={classes.hotelName}>
+                      <td><a href={`/listHotel/:${item?.id}`} target="_blank" rel="noreferrer" className={classes.hotelName}>
                         {item.name}</a></td>
                       <td>{item.checkInTime}</td>
                       <td>{item.checkOutTime}</td>

@@ -197,7 +197,7 @@ const Tour = memo(() => {
                 <tr key={index}>
                   <th scope="row">{index}</th>
                   <td>
-                    <a href={`/listTour/:${item?.tourId}`} target="_blank" className={classes.tourName}>
+                    <a href={`/listTour/:${item?.tourId}`} target="_blank" rel="noreferrer" className={classes.tourName}>
                       {item?.title}
                     </a>
                   </td>
