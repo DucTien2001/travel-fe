@@ -6,6 +6,7 @@ import { RoomBillService } from "services/enterprise/roomBill";
 import moment from "moment";
 import { fCurrency2VND } from "utils/formatNumber";
 import SearchNotFound from "components/SearchNotFound";
+import { setLoading } from "redux/reducers/Status/actionTypes";
 
 interface Props extends ModalProps {
   room: any;
@@ -21,11 +22,17 @@ const PopupShowBills = memo((props: Props) => {
 
   useEffect(() => {
     if (room) {
+      dispatch(setLoading(true))
       RoomBillService.getAllBillOfAnyRoom(room?.id).then((bills) => {
         setListBills(bills?.data);
+      }).catch((e)=>{})
+      .finally(() => {
+        dispatch(setLoading(false))
       });
     }
   }, [room]);
+
+  console.log(listBills)
 
   return (
     <>
@@ -44,6 +51,7 @@ const PopupShowBills = memo((props: Props) => {
                   <th>Discount</th>
                   <th>Date</th>
                   <th>Total price</th>
+                  <th>Deposit</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Phone number</th>
@@ -59,6 +67,7 @@ const PopupShowBills = memo((props: Props) => {
                       <td>{item?.discount}%</td>
                       <td>{moment(item?.createdAt).format("DD/MM/YYYY")}</td>
                       <td>{fCurrency2VND(item?.totalPrice)} VND</td>
+                      <td>{fCurrency2VND(item?.detailsOfRoomBill?.deposit)} VND</td>
                       <td>{item?.detailsOfRoomBill?.firstName} {item?.detailsOfRoomBill?.lastName}</td>
                       <td>{item?.detailsOfRoomBill?.email}</td>
                       <td>{item?.detailsOfRoomBill?.phoneNumber}</td>
