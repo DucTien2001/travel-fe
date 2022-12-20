@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import React, {memo, useEffect} from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import Box from "components/BoxSmallLeft";
@@ -26,7 +26,7 @@ const DetailTour = memo(({roomBillConfirm}:Props)=> {
       totalPrice.push(_price);
     })
   })
-  
+
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>

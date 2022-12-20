@@ -126,6 +126,7 @@ export const API = {
     TOURBILL: {
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",
       GET_TOURS_REVENUE_BY_YEAR: "/v1.0/tour-bill/get-tours-revenue-by-year",
+      GET_ALL_BILLS_OF_ANY_TOUR: "/v1.0/tour-bill/get-all-tour-bills/:id",
     },
     ROOMBILL: {
       GET_HOTELS_REVENUE_BY_MONTH: "/v1.0/room-bill/get-hotels-revenue-by-month",

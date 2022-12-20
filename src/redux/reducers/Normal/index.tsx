@@ -1,5 +1,6 @@
 import produce from "immer";
 import { Comment } from "models/comment";
+import { TourBill } from "models/tourBill";
 import * as types from "./actionTypes";
 
 export interface ITour {
@@ -54,6 +55,38 @@ export interface IRoomBillConfirm {
   endDate: string;
 
 }
+export interface IConfirmBookTour {
+  userId: number;
+  userMail: string;
+  tourId: number;
+  amount: number;
+  price: number;
+  discount: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+}
+export interface IConfirmBookRoom {
+  userId: number;
+  userMail: string;
+  rooms: {
+    roomId: string;
+    amount: string;
+    discount: number;
+    price: number;
+    bookedDates: Date;
+    totalPrice: number;
+  }[];
+  bookedDates: string[];
+  startDate: string;
+  endDate: string;
+  totalBill: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+}
 export interface ITourBill {
   userId: number;
   userMail: string;
@@ -97,6 +130,8 @@ export interface NormalState {
   roomBillConfirm: IRoomBillConfirm;
   allTourBills: ITourBill[];
   allRoomBills: ICreateRoomBill[];
+  confirmBookTour: IConfirmBookTour;
+  confirmBookRoom: IConfirmBookRoom;
 }
 
 const initial: NormalState = {
@@ -105,6 +140,8 @@ const initial: NormalState = {
   roomBillConfirm: null,
   allTourBills: [],
   allRoomBills: [],
+  confirmBookTour: null,
+  confirmBookRoom: null,
 };
 
 export const normalReducer = (state = initial, action: any) =>
@@ -124,6 +161,12 @@ export const normalReducer = (state = initial, action: any) =>
         break;
       case types.SET_ROOM_BILLS_REDUCER:
         draft.allRoomBills = action.data;
+        break;  
+      case types.SET_CONFIRM_BOOK_TOUR_REDUCER:
+        draft.confirmBookTour = action.data;
+         break;
+      case types.SET_CONFIRM_BOOK_ROOM_REDUCER:
+        draft.confirmBookRoom = action.data;
         break;  
       default:
         return state;

@@ -66,7 +66,7 @@ const ListServices = memo(({className, linkView, linkBook, id, src, title, descr
                         ))} */}
                         <p>{businessHours}</p>
                         {checkInTime && <p>{checkInTime} - {checkOutTime}</p>}
-                        {price && <CardTitle tag="h3">{fCurrency2VND(price)} VND</CardTitle> }
+                        {price && <CardTitle tag="h3" className={classes.priceTitle}>{fCurrency2VND(price)} VND <span className={classes.textPer}>/ person</span></CardTitle> }
                             <div>
                                 <p>{contact}</p>
                             </div>

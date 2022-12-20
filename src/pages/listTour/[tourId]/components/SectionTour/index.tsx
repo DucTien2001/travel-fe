@@ -85,7 +85,7 @@ const SectionTour = memo(({tour, listRates} : Props)=> {
                       ))}
                 </div>}
                 {tour?.rate && <Stars numberOfStars={Math.floor(tour?.rate)}/>}
-                <h2 className={`main-price ${classes.price}`}> {fCurrency2(tour?.price)} VND</h2>
+                <h2 className={`main-price ${classes.price}`}> {fCurrency2(tour?.price)} VND <span> / person</span></h2>
                 <h2 className={`main-price ${classes.businessHours}`}>Time business: {tour?.businessHours}</h2>
                 <Row className="justify-content-end">
                   {user ? <Link href={`/book/tour/:${tour?.id}`}>

@@ -3,7 +3,7 @@ import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faDownload, faCircleMinus } from "@fortawesome/free-solid-svg-icons";
-import { Row, Col, Table } from "reactstrap";
+import { Row, Col, Table, Button } from "reactstrap";
 import SearchNotFound from "components/SearchNotFound";
 import { useDispatch } from "react-redux";
 import useAuth from "hooks/useAuth";
@@ -64,6 +64,7 @@ const Tour = memo(() => {
               <th>Date</th>
               <th>Total bill</th>
               <th>Status</th>
+              <th>Cancel order</th>
               <th>Download invoice</th>
             </tr>
           </thead>
@@ -87,6 +88,16 @@ const Tour = memo(() => {
                       <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus} />
                     )}
                   </td>
+                  <th>
+                    <Button
+                    className="btn-icon"
+                    color="danger"
+                    size="sm"
+                    type="button"
+                    >
+                    <i className="now-ui-icons ui-1_simple-remove"></i>
+                    </Button>
+                  </th>
                   <td className={classes.colIconDownload}>
                     <div
                       className={classes.iconDownload}

@@ -60,6 +60,7 @@
     "redux-saga": "^1.1.3",
     "sass": "^1.54.8",
     "uuid": "^9.0.0",
+    "vietqr": "^1.1.9",
     "yup": "^0.32.11"
   },
   "devDependencies": {

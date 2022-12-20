@@ -20,7 +20,12 @@ export const SET_ROOM_BILLS_REDUCER = "SET_ROOM_BILLS_REDUCER";
 export const GET_TOUR_COMMENT_REQUEST = "GET_TOUR_COMMENT_REQUEST";
 export const SET_TOUR_COMMENT_REDUCER = "SET_TOUR_COMMENT_REDUCER";
 
-
+//CONFIRM BOOK TOUR 
+export const GET_CONFIRM_BOOK_TOUR_REQUEST = "GET_CONFIRM_BOOK_TOUR_REQUEST";
+export const SET_CONFIRM_BOOK_TOUR_REDUCER = "SET_CONFIRM_BOOK_TOUR_REDUCER";
+//CONFIRM BOOK ROOM
+export const GET_CONFIRM_BOOK_ROOM_REQUEST = "GET_CONFIRM_BOOK_ROOM_REQUEST";
+export const SET_CONFIRM_BOOK_ROOM_REDUCER = "SET_CONFIRM_BOOK_ROOM_REDUCER";
 // ********** tour **********
 export const getAllTours = () => {
   return {
@@ -89,6 +94,32 @@ export const getAllRoomBills = (userId: number) => {
 export const setAllRoomBillsReducer = (data: any) => {
   return {
     type: SET_ROOM_BILLS_REDUCER,
+    data: data,
+  };
+};
+// ********** confirm book tour  **********
+export const getConfirmBookTour= () => {
+  return {
+    type: GET_CONFIRM_BOOK_TOUR_REQUEST,
+  };
+};
+
+export const setConfirmBookTourReducer = (data: any) => {
+  return {
+    type: SET_CONFIRM_BOOK_TOUR_REDUCER,
+    data: data,
+  };
+};
+// ********** confirm book room **********
+export const getConfirmBookRoom= () => {
+  return {
+    type: GET_CONFIRM_BOOK_ROOM_REQUEST,
+  };
+};
+
+export const setConfirmBookRoomReducer = (data: any) => {
+  return {
+    type: SET_CONFIRM_BOOK_ROOM_REDUCER,
     data: data,
   };
 };

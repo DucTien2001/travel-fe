@@ -21,6 +21,9 @@ import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/
 import { useDispatch } from "react-redux";
 import InputCounter from "components/common/inputs/InputCounter";
 import { TourBillService } from "services/normal/tourBill";
+import Link from "next/link";
+import { setConfirmBookTourReducer } from "redux/reducers/Normal/actionTypes";
+import { useRouter } from "next/router";
 
 interface Props {
   tour: Tour;
@@ -39,6 +42,7 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
   const { user } = UseAuth();
   const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
+  const router = useRouter();
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -76,32 +80,46 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_amount])
 
-  const _onSubmit = (data: BookForm) => {
-      dispatch(setLoading(true));  
-        if(user) {
-          TourBillService.create({
-            userId: user?.id,
-            userMail: data?.email,
-            tourId: tour?.id,
-            amount: data.amount,
-            price: tour?.price,
-            discount: tour?.discount,
-            email: data?.email,
-            phoneNumber: data?.phoneNumber,
-            firstName: data?.firstName,
-            lastName: data?.lastName,
-          })
-          .then(() => {
-            dispatch(setSuccessMess("Book tour successfully"));
-          })
-          .catch((e) => {
-            dispatch(setErrorMess(e));
-          })
-          .finally(() => {
-            toggle();
-            dispatch(setLoading(false));
-          });
-        }
+
+  const _onSubmit = (data) => {
+      // dispatch(setLoading(true));  
+      //   if(user) {
+      //     TourBillService.create({
+      //       userId: user?.id,
+      //       userMail: data?.email,
+      //       tourId: tour?.id,
+      //       amount: data.amount,
+      //       price: tour?.price,
+      //       discount: tour?.discount,
+      //       email: data?.email,
+      //       phoneNumber: data?.phoneNumber,
+      //       firstName: data?.firstName,
+      //       lastName: data?.lastName,
+      //     })
+      //     .then(() => {
+      //       dispatch(setSuccessMess("Book tour successfully"));
+      //     })
+      //     .catch((e) => {
+      //       dispatch(setErrorMess(e));
+      //     })
+      //     .finally(() => {
+      //       toggle();
+      //       dispatch(setLoading(false));
+      //     });
+      //   }
+      dispatch(setConfirmBookTourReducer({
+          userId: user?.id,
+          userMail: data?.email,
+          tourId: tour?.id,
+          amount: data.amount,
+          price: tour?.price * data.amount * ((100 - tour?.discount) / 100),
+          discount: tour?.discount,
+          email: data?.email,
+          phoneNumber: data?.phoneNumber,
+          firstName: data?.firstName,
+          lastName: data?.lastName,
+      }))
+      router.push(`/book/tour/:${tour?.id}/payment`)
   }
  
   const toggle = () => setModal(!modal);
@@ -155,8 +173,8 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
                         </div>
                         <div className={classes.noteGreen}><p>Nearly done! Just fill in the <span>*</span> required information</p></div>
                       </div>  
-                      <Row className="mt-4">
-                            <Col xs={6}>
+                      <Row className={clsx("mt-4", classes.row)}>
+                            <Col xs={6} className={classes.colInfor}>
                                 <InputTextFieldBorder
                                 label="First name"
                                 placeholder="Enter your fist name"
@@ -165,7 +183,7 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
                                 errorMessage={errors.firstName?.message}
                                 />
                             </Col>
-                            <Col xs={6}>
+                            <Col xs={6} className={classes.colInfor}>
                                 <InputTextFieldBorder
                                 label="Last Name"
                                 placeholder="Enter your last name"
@@ -186,25 +204,25 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
                       inputRef={register("phoneNumber")}
                       errorMessage={errors.phoneNumber?.message}
                       />
-                      <Row>
-                      <Col xs={3}>
-                      <Controller
-                        name="amount"
-                        control={control}
-                        render={({field}) => 
-                        <>
-                            <InputCounter
-                            label="Amount"
-                            max = {9999}
-                            min = {1}
-                            onChange = {field.onChange}
-                            value = {field.value}
-                            />                                       
-                        </>
-                        }
-                        /> 
-                        </Col>
-                      </Row>
+                      <Row className={classes.rowDeposit}>
+                        <Col xs={3}>
+                          <Controller
+                            name="amount"
+                            control={control}
+                            render={({field}) => 
+                            <>
+                                <InputCounter
+                                label="Amount"
+                                max = {9999}
+                                min = {1}
+                                onChange = {field.onChange}
+                                value = {field.value}
+                                />                                       
+                            </>
+                            }
+                          /> 
+                        </Col>                   
+                      </Row> 
                         <Button type="submit" className={classes.btnBook} btnType={BtnType.Primary} isDot={true} >Confirm book</Button>
                   </div>
                 </Box>

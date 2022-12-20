@@ -9,6 +9,7 @@
     padding: 8px;
 }
 .noteEnterLanguage {
+    margin-bottom: 16px;
     svg {
         margin-right: 8px;
     }
@@ -66,4 +67,30 @@
 
 .btnBook {
     margin-left: auto;
+}
+.deposit {
+    margin: 0 !important;
+    padding-top: 16px;
+    display: block;
+}
+.row {
+    @media only screen and (max-width: 768px) {
+        margin: 0 !important;
+        padding-top: 16px;
+        display: block;
+      }
+}
+
+.colInfor {
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+      }
+}
+.noteTipDeposit {
+    margin-left: 16px;
+    @media only screen and (max-width: 768px) {
+        margin-left: 0;
+      }
 }

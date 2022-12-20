@@ -104,3 +104,9 @@
     color: var(--gray-40);
     font-size: 16px;
 }
+.itemDelete {
+    color: var(--danger-color);
+}
+.itemDelete:hover {
+    color: var(--danger-color);
+}

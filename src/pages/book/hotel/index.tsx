@@ -23,7 +23,7 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 const Room : NextPage = () => {
   const {roomBillConfirm} = useSelector((state: ReducerType) => state.normal);
     return (
-        <div className={clsx("wrapper", classes.root)}>
+        <div className={clsx("wrapper", classes.root)}> 
         <SectionHeader
         className={classes.sectionHeader}
         title="BOOK ROOM"

@@ -11,6 +11,9 @@ import {
   faCircleCheck,
   faCircleMinus,
   faHourglass,
+  faFileInvoice,
+  faCircleInfo,
+  faMoneyCheckDollar
 } from "@fortawesome/free-solid-svg-icons";
 import { Row, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Collapse } from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
@@ -447,7 +450,7 @@ const Hotel = memo(() => {
                               <FontAwesomeIcon icon={faPlus} />
                               Add room
                             </DropdownItem>
-                            <DropdownItem className={classes.dropdownItem} onClick={onShowConfirm}>
+                            <DropdownItem className={clsx(classes.dropdownItem, classes.itemDelete)} onClick={onShowConfirm}>
                               <FontAwesomeIcon icon={faTrash} />
                               Delete
                             </DropdownItem>
@@ -519,24 +522,24 @@ const Hotel = memo(() => {
                                       </DropdownToggle>
                                       <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
                                         <DropdownItem className={classes.dropdownItem} onClick={(e) => onEditRoomInformation(e, itemSubtable)}>
-                                          <FontAwesomeIcon icon={faPen}/>
+                                          <FontAwesomeIcon icon={faCircleInfo}/>
                                           Edit information
                                         </DropdownItem>
                                         <DropdownItem className={classes.dropdownItem} onClick={(e) => onEditRoomPrice(e, itemSubtable)}>
-                                          <FontAwesomeIcon icon={faPen} />
+                                          <FontAwesomeIcon icon={faMoneyCheckDollar} />
                                           Edit price
                                         </DropdownItem>
                                         <DropdownItem className={classes.dropdownItem} onClick={(e) => onOpenModalOtherPrice(e, itemSubtable)}>
-                                          <FontAwesomeIcon icon={faPen} />
+                                          <FontAwesomeIcon icon={faMoneyCheckDollar} />
                                           Room other price
                                         </DropdownItem>
-                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onDeleteRoom(e, itemSubtable)}>
+                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onOpenModalShowBills(e, itemSubtable)}>
+                                          <FontAwesomeIcon icon={faFileInvoice} />
+                                          All bills
+                                        </DropdownItem>
+                                        <DropdownItem className={clsx(classes.dropdownItem, classes.itemDelete)} onClick={(e) => onDeleteRoom(e, itemSubtable)}>
                                           <FontAwesomeIcon icon={faTrash} />
                                           Delete
-                                        </DropdownItem>
-                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onOpenModalShowBills(e, itemSubtable)}>
-                                          <FontAwesomeIcon icon={faPen} />
-                                          All bills
                                         </DropdownItem>
                                       </DropdownMenu>
                                     </UncontrolledDropdown>

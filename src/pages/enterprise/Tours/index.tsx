@@ -11,6 +11,7 @@ import {
   faCircleCheck,
   faCircleMinus,
   faHourglass,
+  faFileInvoice,
 } from "@fortawesome/free-solid-svg-icons";
 import { Row, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
@@ -31,6 +32,7 @@ import { getAllTours as getAllToursOfNormal } from "redux/reducers/Normal/action
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import PopupShowBills from "./PopupShowBills";
 
 interface SearchData {
   name?: string;
@@ -48,7 +50,11 @@ const Tour = memo(() => {
   const [tourStop, setTourStop] = useState<ETour>(null);
   const [openPopupConfirmStop, setOpenPopupConfirmStop] = useState(false);
   const [listTours, setListTours] = useState([]);
-
+  const [modalShowBills, setModalShowBills]=useState({
+    isOpen: false,
+    tour: null,
+  })
+  
   const schema = useMemo(() => {
     return yup.object().shape({
       name: yup.string().notRequired(),
@@ -155,6 +161,20 @@ const Tour = memo(() => {
         dispatch(setLoading(false));
       });
   };
+
+  const onOpenModalShowBills = (e: any, item: any) => {
+    setModalShowBills({
+      isOpen: true,
+      tour: item
+    })
+  }
+  const onCloseModalShowBills = () => {
+    setModalShowBills({
+      isOpen: false,
+      tour: null
+    })
+  }
+
   useEffect(() => {
     setListTours(allTours);
   }, [dispatch, allTours]);
@@ -245,7 +265,11 @@ const Tour = memo(() => {
                           <FontAwesomeIcon icon={faPen} />
                           Edit
                         </DropdownItem>
-                        <DropdownItem className={classes.dropdownItem} onClick={onShowConfirm}>
+                        <DropdownItem  className={classes.dropdownItem} onClick={(e) => onOpenModalShowBills(e, item)}>
+                          <FontAwesomeIcon icon={faFileInvoice} />
+                          All bills
+                        </DropdownItem>
+                        <DropdownItem className={clsx(classes.dropdownItem, classes.itemDelete)} onClick={onShowConfirm}>
                           <FontAwesomeIcon icon={faTrash} />
                           Delete
                         </DropdownItem>
@@ -283,6 +307,11 @@ const Tour = memo(() => {
           onClose={onToggleConfirmStop}
           toggle={onToggleConfirmStop}
           onYes={onYesStopWorking}
+        />
+        <PopupShowBills
+          isOpen={modalShowBills?.isOpen} 
+          onClose={onCloseModalShowBills} 
+          tour={modalShowBills?.tour}
         />
       </div>
     </>

@@ -21,6 +21,9 @@ import { ReducerType } from "redux/reducers";
 import { RoomBillService } from "services/normal/roomBill";
 import { IRoomBillConfirm } from "models/roomBill";
 import useFormattedDate from "hooks/useFormatDate";
+import { sumPrice } from "utils/totalPrice";
+import { setConfirmBookRoomReducer } from "redux/reducers/Normal/actionTypes";
+import { useRouter } from "next/router";
 
 export interface HotelForm {
   firstName: string;
@@ -35,12 +38,20 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const dayBook = useFormattedDate(new Date());
   const { user } = useSelector((state: ReducerType) => state.user);
   // const { room } = useSelector((state: ReducerType) => state.normal);
 
   const [modal, setModal] = useState(false);
+  const totalPrice = [];
 
+  roomBillConfirm?.rooms.forEach(room => {
+    room?.priceDetail.map((price) => {
+      const _price = price?.price * room?.amount * (100 - room?.discount) / 100;
+      totalPrice.push(_price);     
+    })
+  })
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -102,18 +113,33 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
       firstName: data?.firstName,
       lastName: data?.lastName,
     }
-      dispatch(setLoading(true));
-      RoomBillService?.create(roomBill)
-      .then(() => {
-        dispatch(setSuccessMess("Book room successfully"))
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-        toggle();
-      })
+      // dispatch(setLoading(true));
+      // RoomBillService?.create(roomBill)
+      // .then(() => {
+      //   dispatch(setSuccessMess("Book room successfully"))
+      // })
+      // .catch((e) => {
+      //   dispatch(setErrorMess(e));
+      // })
+      // .finally(() => {
+      //   dispatch(setLoading(false));
+      //   toggle();
+      // })
+    dispatch(setConfirmBookRoomReducer({
+      userId: user?.id,
+      hotelId: roomBillConfirm?.hotel?.id,
+      userMail: user?.username,
+      rooms: roomBillDetails,
+      bookedDates: bookedDates,
+      startDate: roomBillConfirm?.startDate,
+      endDate: roomBillConfirm?.endDate,
+      totalBill: totalBill,
+      email: data?.email,
+      phoneNumber: data?.phoneNumber,
+      firstName: data?.firstName,
+      lastName: data?.lastName,
+    }))
+    router.push("/book/hotel/payment")
   };
 
   const toggle = () => setModal(!modal);
@@ -135,6 +161,8 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, dispatch]);
+
+  
 
   return (
     <>
@@ -171,8 +199,8 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
                     </p>
                   </div>
                 </div>
-                <Row className="mt-4">
-                  <Col xs={6}>
+                <Row className={clsx("mt-4", classes.row)}>
+                  <Col xs={6} className={classes.colInfor}>
                     <InputTextFieldBorder
                       label="First name"
                       placeholder="Enter your fist name"
@@ -181,7 +209,7 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
                       errorMessage={errors.firstName?.message}
                     />
                   </Col>
-                  <Col xs={6}>
+                  <Col xs={6} className={classes.colInfor}>
                     <InputTextFieldBorder
                       label="Last Name"
                       placeholder="Enter your last name"
