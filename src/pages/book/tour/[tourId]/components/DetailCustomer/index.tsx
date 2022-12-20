@@ -112,7 +112,7 @@ const DetailCustomer = memo(({tour, onAmount}: Props)=> {
           userMail: data?.email,
           tourId: tour?.id,
           amount: data.amount,
-          price: tour?.price * data.amount * ((100 - tour?.discount) / 100),
+          price: tour?.price,
           discount: tour?.discount,
           email: data?.email,
           phoneNumber: data?.phoneNumber,

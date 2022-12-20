@@ -57,12 +57,14 @@ export const API = {
       CREATE: "/v1.0/room-bill/create",
       GET_ALL_ROOMBILL: "/v1.0/room-bill/get-all-user-room-bills/:id",
       VERIFY_BOOKROOM: "/v1.0/room-bill/verify-book-room",
+      CANCEL_BOOK_ROOM:"/v1.0/tour-bill/cancel-room-bill/:id",
     },
     TOURBILL: {
       CREATE: "/v1.0/tour-bill/create",
       GET_ALL_TOURBILL: "/v1.0/tour-bill/get-all-user-tour-bills/:id",
       GET_TOURBILL: "/v1.0/tour-bill/get-tour-bill/:id",
       VERIFY_BOOKTOUR: "/v1.0/tour-bill/verify-book-tour",
+      CANCEL_BOOK_TOUR:"/v1.0/tour-bill/cancel-tour-bill/:id",
     },
     HOTEL: {
       ALL_HOTELS: "/v1.0/hotel/get-all-hotels",

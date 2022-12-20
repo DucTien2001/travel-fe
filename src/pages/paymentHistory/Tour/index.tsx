@@ -8,10 +8,12 @@ import SearchNotFound from "components/SearchNotFound";
 import { useDispatch } from "react-redux";
 import useAuth from "hooks/useAuth";
 import { TourBillService } from "services/normal/tourBill";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
 import { fCurrency2VND } from "utils/formatNumber";
 import DownloadTourBill from "./DownloadTourBill";
+import { Tooltip } from "@mui/material";
+import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 
 // eslint-disable-next-line react/display-name
 const Tour = memo(() => {
@@ -22,6 +24,27 @@ const Tour = memo(() => {
     isOpenModal: false,
     tourBill: null,
   });
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const toggle = () => setTooltipOpen(!tooltipOpen)
+  const [openConfirmCancelBookTour, setOpenConfirmCancelBookTour] = useState(false);
+  const [tourBillId, setTourBillId] = useState();
+
+  const onTogglePopupConfirmCancel = () => {
+    setOpenConfirmCancelBookTour(!openConfirmCancelBookTour)
+  }
+
+  const getTAllTourBill = () => {
+      TourBillService.getAllTourBills(user?.id)
+        .then((res) => {
+          setListHistory(res.data);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+  }
 
   useEffect(() => {
     if (user) {
@@ -53,6 +76,43 @@ const Tour = memo(() => {
     });
   };
 
+  var currentDate = new Date();
+  const isExpire = () => {
+    let isOK = false
+    listHistory?.forEach(item => {
+      var date = new Date(item?.createdAt)
+      if(currentDate.setDate(currentDate.getDate()) > date.setDate(date.getDate() + 2)){
+        console.log("qua han")
+        isOK = true
+      }
+      else {
+        isOK = false
+      }
+    })
+    return isOK;
+  }
+
+  const onCancelBookTour = (e, id) => {
+    setTourBillId(id)
+    onTogglePopupConfirmCancel()
+  }
+
+  const onYesCancel = () => {
+    dispatch(setLoading(true))
+    TourBillService.cancelBookTour(tourBillId)
+    .then(() => {
+      dispatch(setSuccessMess("Cancel book tour successfully"))
+      getTAllTourBill();
+      onTogglePopupConfirmCancel()
+    })
+    .catch((e) => {
+      dispatch(setErrorMess(e))
+    })
+    .finally(()=>{
+      dispatch(setLoading(false))
+    })
+  }
+
   return (
     <>
       <div className={classes.root}>
@@ -63,6 +123,7 @@ const Tour = memo(() => {
               <th>Invoice</th>
               <th>Date</th>
               <th>Total bill</th>
+              <th>Deposit</th>
               <th>Status</th>
               <th>Cancel order</th>
               <th>Download invoice</th>
@@ -74,13 +135,14 @@ const Tour = memo(() => {
                 <tr key={index}>
                   <th scope="row">
                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                    <a href={`/listTour/:${item?.id}`} target="_blank" className={classes.tourName}>
+                    <a href={`/listTour/:${item?.tourInfo?.id}`} target="_blank" className={classes.tourName}>
                       {item?.tourInfo?.title}
                     </a>
                   </th>
                   <td>TV{item?.id}</td>
-                  <td>{moment(item?.createdAt).format("DD/MM/YYYY")}</td>
+                  <td>{moment(item?.createdAt).format("DD/MM/YYYY")}</td>          
                   <td>{fCurrency2VND(item?.totalBill)} VND</td>
+                  <td>{fCurrency2VND(item?.deposit)} VND</td>
                   <td>
                     {item.verifyCode === null ? (
                       <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck} />
@@ -88,15 +150,19 @@ const Tour = memo(() => {
                       <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus} />
                     )}
                   </td>
-                  <th>
-                    <Button
-                    className="btn-icon"
-                    color="danger"
-                    size="sm"
-                    type="button"
-                    >
-                    <i className="now-ui-icons ui-1_simple-remove"></i>
-                    </Button>
+                  <th >
+                    <Tooltip title={isExpire ? "This tour is expired" : ""}>
+                      <span>
+                        <Button
+                        className="btn-icon"
+                        color="danger"
+                        size="sm"                
+                        onClick={(e) => onCancelBookTour(e, item?.id)}
+                        >
+                        <i className="now-ui-icons ui-1_simple-remove"></i>        
+                        </Button>
+                      </span>
+                    </Tooltip>
                   </th>
                   <td className={classes.colIconDownload}>
                     <div
@@ -161,6 +227,13 @@ const Tour = memo(() => {
         onClose={onCloseModalDownloadTourBill}
         isOpen={modalDownloadTourBill.isOpenModal}
         tourBill={modalDownloadTourBill.tourBill}
+      />
+      <PopupConfirmDelete
+          title="Are you sure cancel this tour ?"
+          isOpen={openConfirmCancelBookTour}
+          onClose={onTogglePopupConfirmCancel}
+          toggle={onTogglePopupConfirmCancel}
+          onYes={onYesCancel}
       />
     </>
   );

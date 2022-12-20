@@ -31,6 +31,16 @@ export class RoomBillService {
              return Promise.reject(e?.response?.data);
           });
       }
+    static async cancelBookTour(roomId: number): Promise<any> {
+        return await api
+          .put(API.NORMAL.ROOMBILL.CANCEL_BOOK_ROOM.replace(":id", `${roomId}`) )
+          .then((res) => {
+            return Promise.resolve(res.data.data);
+          })
+          .catch((e) => {
+            return Promise.reject(e?.response?.data);
+          });
+    }
 }
 
 

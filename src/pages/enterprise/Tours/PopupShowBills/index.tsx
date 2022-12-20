@@ -2,10 +2,11 @@ import React, { memo, useState, useEffect } from "react";
 import { Form, Modal, ModalProps, ModalHeader, ModalBody, Table } from "reactstrap";
 import classes from "./styles.module.scss";
 import { useDispatch } from "react-redux";
-import { RoomBillService } from "services/enterprise/roomBill";
+import { TourBillService } from "services/enterprise/tourBill";
 import moment from "moment";
 import { fCurrency2VND } from "utils/formatNumber";
 import SearchNotFound from "components/SearchNotFound";
+import { setLoading } from "redux/reducers/Status/actionTypes";
 
 interface Props extends ModalProps {
   tour: any;
@@ -21,11 +22,17 @@ const PopupShowBills = memo((props: Props) => {
 
   useEffect(() => {
     if (tour) {
-      RoomBillService.getAllBillOfAnyRoom(tour?.id).then((bills) => {
+      dispatch(setLoading(true));
+      TourBillService.getAllBillOfAnyTour(tour?.id).then((bills) => {
         setListBills(bills?.data);
+      }).catch((e) =>{})
+      .finally(() => {
+        dispatch(setLoading(false));
       });
     }
   }, [tour]);
+
+  console.log(listBills)
 
   return (
     <>
@@ -46,6 +53,7 @@ const PopupShowBills = memo((props: Props) => {
                   <th>Total price</th>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Deposit</th>
                   <th>Phone number</th>
                 </tr>
               </thead>
@@ -58,10 +66,11 @@ const PopupShowBills = memo((props: Props) => {
                       <td>{item?.amount}</td>
                       <td>{item?.discount}%</td>
                       <td>{moment(item?.createdAt).format("DD/MM/YYYY")}</td>
-                      <td>{fCurrency2VND(item?.totalPrice)} VND</td>
-                      <td>{item?.detailsOfRoomBill?.firstName} {item?.detailsOfRoomBill?.lastName}</td>
-                      <td>{item?.detailsOfRoomBill?.email}</td>
-                      <td>{item?.detailsOfRoomBill?.phoneNumber}</td>
+                      <td>{fCurrency2VND(item?.totalBill)} VND</td>
+                      <td>{item?.firstName} {item?.lastName}</td>
+                      <td>{item?.email}</td>
+                      <td>{fCurrency2VND(item?.deposit)} VND</td>
+                      <td>{item?.phoneNumber}</td>
                     </tr>
                   ))}
                   {!listBills?.length &&

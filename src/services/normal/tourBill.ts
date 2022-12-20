@@ -40,4 +40,14 @@ export class TourBillService {
           return Promise.reject(e?.response?.data);
         });
     }
+    static async cancelBookTour(billId: number): Promise<any> {
+      return await api
+        .put(API.NORMAL.TOURBILL.CANCEL_BOOK_TOUR.replace(":id", `${billId}`) )
+        .then((res) => {
+          return Promise.resolve(res.data.data);
+        })
+        .catch((e) => {
+          return Promise.reject(e?.response?.data);
+        });
+    }
 }

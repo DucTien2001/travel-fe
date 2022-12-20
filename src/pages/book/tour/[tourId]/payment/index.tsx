@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
@@ -26,6 +26,9 @@ import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
+import UseAuth from "hooks/useAuth";
+import { TourBillService } from "services/normal/tourBill";
+import PopupDefault from "components/Popup/PopupDefault";
 
 export interface BookForm {
   banks: any;
@@ -37,14 +40,16 @@ export interface BookForm {
 // eslint-disable-next-line react/display-name
 const BookTour = memo(()=> {
   const dispatch = useDispatch();
+  const { user } = UseAuth();
   const {confirmBookTour} = useSelector((state: ReducerType) => state.normal);
-  const [banks, setBanks] = useState([]);
+  const [listBanks, setListBanks] = useState([]);
   const router = useRouter()
   const [tour, setTour] = useState<any>();
+  const [modal, setModal] = useState(false);
 
   const schema = useMemo(() => {
     return yup.object().shape({
-        banks: yup.object().required("This field is required"),
+        banks: yup.object().required("Bank is required"),
         cardName: yup.string().required("Card name is required"),
         cardNumber: yup.string().required("Card number is required"),
         issueDate: yup.date().required("Issue date is required"),
@@ -67,7 +72,7 @@ const BookTour = memo(()=> {
       resolver: yupResolver(schema),
       mode: "onChange",
       defaultValues: { 
-        banks: banks[0],
+        banks: listBanks[0]?.name,
       }
   });
   
@@ -75,15 +80,19 @@ const BookTour = memo(()=> {
     clientID: 'client_id_here',
     apiKey: 'api_key_here',
     });
-    vietQR.getBanks().then((banks)=>{
-       const newBanks = banks?.data.map((item, index) => {return {
-            id: item?.id,
-            name: `${item?.name} (${item?.code})`,
-            value: item?.name,
-          }
-        })     
-        setBanks(newBanks);
-    }).catch((err)=>{});
+    useEffect(() => {
+      vietQR.getBanks().then((banks)=>{
+        const newBanks = banks?.data.map((item, index) => {return {
+             id: item?.id,
+             name: `${item?.name} (${item?.code})`,
+             value: item?.name,
+           }
+         })     
+         setListBanks(newBanks);
+     }).catch((err)=>{});
+    }, [])
+
+
 
     useEffect(() => {
       if(router){
@@ -101,13 +110,48 @@ const BookTour = memo(()=> {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router]);
 
-    const _onSubmit = (data) => {
+    console.log(confirmBookTour)
+
+    const _onSubmit = (data: BookForm) => {
       console.log(data);
+      dispatch(setLoading(true));  
+        if(user) {
+          TourBillService.create({
+            userId: confirmBookTour?.userId,
+            userMail: confirmBookTour?.email,
+            tourId: confirmBookTour?.tourId,
+            amount: confirmBookTour?.amount,
+            price: confirmBookTour?.price,
+            discount: confirmBookTour?.discount,
+            email: confirmBookTour?.email,
+            phoneNumber: confirmBookTour?.phoneNumber,
+            firstName: confirmBookTour?.firstName,
+            lastName: confirmBookTour?.lastName,
+            bankName: data?.banks?.name,
+            bankAccountName: data?.cardName,
+            bankNumber: data?.cardNumber,
+            accountExpirationDate: data?.issueDate,
+            deposit: data?.deposit,
+          })
+          .then(() => {
+            dispatch(setSuccessMess("Book tour successfully"));
+          })
+          .catch((e) => {
+            dispatch(setErrorMess(e));
+          })
+          .finally(() => {
+            toggle();
+            dispatch(setLoading(false));
+          });
+        }
     }
+
+    const toggle = () => setModal(!modal);
 
     useEffect(() => {
       setValue("deposit", Math.ceil(confirmBookTour?.price * 20 / 100))
     }, [confirmBookTour])
+
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>
@@ -125,9 +169,9 @@ const BookTour = memo(()=> {
                   <span className={classes.titleBanks}>Banks:</span>
                     <CustomSelect
                     placeholder="Please choose the bank"
-                    name="revenueType"
+                    name="banks"
                     control={control}
-                    options={banks}
+                    options={listBanks}
                     errorMessage={errors.banks?.message}
                     />
                       <Row className={clsx("mt-4", classes.row)}>
@@ -154,7 +198,7 @@ const BookTour = memo(()=> {
                       label="Issue date"
                       placeholder="Issue date"
                       control={control}
-                      name="departure"
+                      name="issueDate"
                       dateFormat="DD/MM/YYYY"
                       timeFormat={false}
                       labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
@@ -184,7 +228,7 @@ const BookTour = memo(()=> {
                   <p>Discount: {confirmBookTour?.discount} %</p>
                   <Divider/>
                   <div className={classes.boxTotalPrice}>
-                      <p>Total price: <span>{fCurrency2VND(confirmBookTour?.price)} VND</span></p>
+                      <p>Total price: <span>{fCurrency2VND(confirmBookTour?.price * confirmBookTour?.amount * ((100 - tour?.discount) / 100))} VND</span></p>
                     </div>
                     <span>(Taxes and fees are included)</span>
                   </div>
@@ -193,7 +237,14 @@ const BookTour = memo(()=> {
                 </Col>
             </Row>
           </form>
-        </Container>    
+        </Container>
+        <PopupDefault
+            isOpen={modal}
+            onClose={toggle}
+            toggle={toggle}
+            title={"Confirm"}
+            description={"You have successfully placed your order. Thank you for choosing our service"}
+            />    
       </div>
     </>
   );

@@ -3,17 +3,19 @@ import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faCircleMinus, faDownload } from "@fortawesome/free-solid-svg-icons";
-import { Row, Col, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
+import { Row, Col, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Button } from "reactstrap";
 import SearchNotFound from "components/SearchNotFound";
 import { useDispatch } from "react-redux";
 import useAuth from "hooks/useAuth";
 import { useRouter } from "next/router";
 import { RoomBillService } from "services/normal/roomBill";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
 import { fCurrency2VND } from "utils/formatNumber";
 import DownloadRoomBill from "./DownloadRoomBill";
 import { RoomService } from "services/normal/room";
+import { Tooltip } from "@mui/material";
+import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 
 // eslint-disable-next-line react/display-name
 const Hotel = memo(() => {
@@ -24,6 +26,25 @@ const Hotel = memo(() => {
     isOpenModal: false,
     roomBill: null,
   });
+  const [roomBillId, setRoomBillId] = useState();
+  const [openConfirmCancelBookRoom, setOpenConfirmCancelBookRoom] = useState(false);
+
+  const onTogglePopupConfirmCancel = () => {
+    setOpenConfirmCancelBookRoom(!openConfirmCancelBookRoom)
+  }
+
+  const getAllRoomBill = () => {
+    RoomBillService.getAllRoomBills(user?.id)
+    .then((res) => {
+      setListHistory(res.data);
+    })
+    .catch((e) => {
+      dispatch(setErrorMess(e));
+    })
+    .finally(() => {
+      dispatch(setLoading(false));
+    });
+  }
 
   useEffect(() => {
     if (user) {
@@ -73,6 +94,41 @@ const Hotel = memo(() => {
     });
   };
 
+  var currentDate = new Date();
+  const isExpire = () => {
+    let isOK = false
+    listHistory?.forEach(item => {
+      var date = new Date(item?.createdAt)
+      if(currentDate.setDate(currentDate.getDate()) > date.setDate(date.getDate() + 2)){
+        console.log("qua han")
+        isOK = true
+      }
+      else {
+        isOK = false
+      }
+    })
+    return isOK;
+  }
+
+  const onCancelBookRoom = (e, id) => {
+    setRoomBillId(id)
+    onTogglePopupConfirmCancel()
+  }
+  const onYesCancel = () => {
+    dispatch(setLoading(true))
+    RoomBillService.cancelBookTour(roomBillId)
+    .then(() => {
+      dispatch(setSuccessMess("Cancel book room successfully"))
+      getAllRoomBill();
+      onTogglePopupConfirmCancel()
+    })
+    .catch((e) => {
+      dispatch(setErrorMess(e))
+    })
+    .finally(()=>{
+      dispatch(setLoading(false))
+    })
+  }
   return (
     <>
       <div className={classes.root}>
@@ -83,7 +139,9 @@ const Hotel = memo(() => {
               <th>Invoice</th>
               <th>Date</th>
               <th>Total bill</th>
+              <th>Deposit</th>
               <th>Status</th>
+              <th>Cancel order</th>
               <th>Download invoice</th>
             </tr>
           </thead>
@@ -100,6 +158,7 @@ const Hotel = memo(() => {
                   <td>TV{item?.id}</td>
                   <td>{moment(item?.createdAt).format("DD/MM/YYYY")}</td>
                   <td>{fCurrency2VND(item?.totalBill)} VND</td>
+                  <td>{fCurrency2VND(item?.deposit)} VND</td>
                   <td>
                     {item.verifyCode === null ? (
                       <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck} />
@@ -107,6 +166,20 @@ const Hotel = memo(() => {
                       <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus} />
                     )}
                   </td>
+                  <th >
+                    <Tooltip title={isExpire ? "This tour is expired" : ""}>
+                      <span>
+                        <Button
+                        className="btn-icon"
+                        color="danger"
+                        size="sm"                
+                        onClick={(e) => onCancelBookRoom(e, item?.id)}
+                        >
+                        <i className="now-ui-icons ui-1_simple-remove"></i>        
+                        </Button>
+                      </span>
+                    </Tooltip>
+                  </th>
                   <td className={classes.colIconDownload}>
                     <div className={classes.iconDownload} onClick={() => onDownloadBill(item)}>
                       <FontAwesomeIcon icon={faDownload} />
@@ -166,6 +239,13 @@ const Hotel = memo(() => {
           isOpen={modalDownloadRoomBill.isOpenModal}
           roomBill={modalDownloadRoomBill.roomBill}
         />
+        <PopupConfirmDelete
+          title="Are you sure cancel this room ?"
+          isOpen={openConfirmCancelBookRoom}
+          onClose={onTogglePopupConfirmCancel}
+          toggle={onTogglePopupConfirmCancel}
+          onYes={onYesCancel}
+      />
       </div>
     </>
   );
