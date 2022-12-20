@@ -124,6 +124,7 @@ export const API = {
       CREATE_ROOM_OTHER_PRICE:"/v1.0/room-other-price/create",
       UPDATE_ROOM_OTHER_PRICE:"/v1.0/room-other-price/update/:id",
       DELETE_ROOM_OTHER_PRICE:"/v1.0/room-other-price/delete/:id",
+      GET_ROOMS_AVAILABLE: "/v1.0/room/get-rooms-available",
     },
     TOURBILL: {
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",
