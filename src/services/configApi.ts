@@ -2,8 +2,8 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { EKey } from 'models/general';
 
 const api = axios.create({
-  baseURL: `http://localhost:8080/`,
-  // baseURL: `https://be-travel-service.herokuapp.com/`,
+  // baseURL: `http://localhost:8080/`,
+  baseURL: `https://be-travel-service.herokuapp.com/`,
 });
 
 api.interceptors.request.use(
