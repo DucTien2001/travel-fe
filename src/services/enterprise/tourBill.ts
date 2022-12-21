@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { IToursRevenueByMonth, IToursRevenueByYear, IVerifyBookTour, TourBill } from "models/tourBill";
+import { EGetAllTourBillsAnyDate, IToursRevenueByMonth, IToursRevenueByYear, IVerifyBookTour, TourBill } from "models/tourBill";
 import api from "services/configApi";
 
 export class TourBillService {
@@ -27,6 +27,17 @@ export class TourBillService {
   static async getAllBillOfAnyTour(tourId: number): Promise<any> {
     return await api
       .get(API.ENTERPRISE.TOURBILL.GET_ALL_BILLS_OF_ANY_TOUR.replace(":id", `${tourId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  
+  static async getAllTourBillsAnyDate(data: EGetAllTourBillsAnyDate): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.TOURBILL.GET_BILLS_ANY_DATE, data)
       .then((res) => {
         return Promise.resolve(res.data);
       })

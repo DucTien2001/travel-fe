@@ -95,7 +95,6 @@ const BookTour = memo(()=> {
     },[])
 
     const _onSubmit = (data) => {
-      console.log(data);
       dispatch(setLoading(true));
       RoomBillService?.create({
         userId: user?.id,
@@ -116,15 +115,22 @@ const BookTour = memo(()=> {
         accountExpirationDate: data?.issueDate,
         deposit: data?.deposit,
       })
-      .then(() => {
-        dispatch(setSuccessMess("Book room successfully"))
+      .then((bill) => {
+        RoomBillService.verifyBookRoom({
+          code: bill?.data?.verifyCode,
+          billId: bill?.data?.id
+        }).then(()=>{
+          toggle();
+          dispatch(setLoading(false));
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+          dispatch(setLoading(false));
+        })
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
-      })
-      .finally(() => {
         dispatch(setLoading(false));
-        toggle();
       })
     }
     const toggle = () => setModal(!modal);

@@ -30,6 +30,8 @@ import HotelsRevenue from "./HotelsRevenue";
 import TourComments from "./TourComments";
 import HotelComments from "./HotelComments";
 import CheckRoom from "./CheckRoom";
+import HotelStatistic from "./HotelStatistic";
+import TourStatistic from "./TourStatistic";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -41,6 +43,8 @@ export enum EActiveNav {
   Check_Room_Active = 7,
   Email_Active = 8,
   Feedback_Active = 9,
+  Tour_Statistic_Active = 10,
+  Hotel_Statistic_Active = 11,
 }
 
 const Enterprise: NextPage = () => {
@@ -60,12 +64,12 @@ const Enterprise: NextPage = () => {
       case EActiveNav.Hotel_Sales_Active:
         setVerticalTabs(EActiveNav.Hotel_Sales_Active);
         break;
-        case EActiveNav.Tour_Feedbacks_Active:
-          setVerticalTabs(EActiveNav.Tour_Feedbacks_Active);
-          break;
-        case EActiveNav.Hotel_Feedbacks_Active:
-          setVerticalTabs(EActiveNav.Hotel_Feedbacks_Active);
-          break;
+      case EActiveNav.Tour_Feedbacks_Active:
+        setVerticalTabs(EActiveNav.Tour_Feedbacks_Active);
+        break;
+      case EActiveNav.Hotel_Feedbacks_Active:
+        setVerticalTabs(EActiveNav.Hotel_Feedbacks_Active);
+        break;
       case EActiveNav.Check_Room_Active:
         setVerticalTabs(EActiveNav.Check_Room_Active);
         break;
@@ -74,6 +78,12 @@ const Enterprise: NextPage = () => {
         break;
       case EActiveNav.Feedback_Active:
         setVerticalTabs(EActiveNav.Feedback_Active);
+        break;
+      case EActiveNav.Tour_Statistic_Active:
+        setVerticalTabs(EActiveNav.Tour_Statistic_Active);
+        break;
+      case EActiveNav.Hotel_Statistic_Active:
+        setVerticalTabs(EActiveNav.Hotel_Statistic_Active);
         break;
       default:
         break;
@@ -168,6 +178,27 @@ const Enterprise: NextPage = () => {
                 Hotels
               </NavLink>
             </NavItem>
+            <span>Statistics</span>
+            <NavItem>
+              <NavLink
+                href="#"
+                className={verticalTabs === EActiveNav.Tour_Statistic_Active ? classes.active : classes.navLink}
+                onClick={() => onChangeTab(EActiveNav.Tour_Statistic_Active)}
+              >
+                <FontAwesomeIcon icon={faPlaneDeparture} />
+                Tours
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                href="#"
+                className={verticalTabs === EActiveNav.Hotel_Statistic_Active ? classes.active : classes.navLink}
+                onClick={() => onChangeTab(EActiveNav.Hotel_Statistic_Active)}
+              >
+                <FontAwesomeIcon icon={faBuilding} />
+                Hotels
+              </NavLink>
+            </NavItem>
             {/* <span>Notifications</span>
             <NavItem>
               <NavLink
@@ -194,28 +225,34 @@ const Enterprise: NextPage = () => {
         <Col xs={10} className={classes.content}>
           <TabContent activeTab={"verticalTabs" + verticalTabs} className={classes.tabContent}>
             <TabPane tabId="verticalTabs1" className={classes.tabPane}>
-              <Tours/>
+              <Tours />
             </TabPane>
             <TabPane tabId="verticalTabs2" className={classes.tabPane}>
-              <Hotels/>
+              <Hotels />
             </TabPane>
             <TabPane tabId="verticalTabs3" className={classes.tabPane}>
-              <ToursRevenue/>
+              <ToursRevenue />
             </TabPane>
             <TabPane tabId="verticalTabs4" className={classes.tabPane}>
-              <HotelsRevenue/>
+              <HotelsRevenue />
             </TabPane>
             <TabPane tabId="verticalTabs5" className={classes.tabPane}>
-              <TourComments/>
+              <TourComments />
             </TabPane>
             <TabPane tabId="verticalTabs6" className={classes.tabPane}>
-              <HotelComments/>
+              <HotelComments />
             </TabPane>
             <TabPane tabId="verticalTabs7" className={classes.tabPane}>
               <CheckRoom />
             </TabPane>
             <TabPane tabId="verticalTabs8" className={classes.tabPane}>
-              <EmailTemplate/>
+              <EmailTemplate />
+            </TabPane>
+            <TabPane tabId="verticalTabs10" className={classes.tabPane}>
+              <TourStatistic />
+            </TabPane>
+            <TabPane tabId="verticalTabs11" className={classes.tabPane}>
+              <HotelStatistic />
             </TabPane>
           </TabContent>
         </Col>
