@@ -3,7 +3,7 @@ import { ICreateRoomBill, IVerifyBookRoom } from "models/roomBill";
 import api from "services/configApi";
 
 export class RoomBillService {
-    static async create(data: ICreateRoomBill): Promise<any> {
+    static async create(data: any): Promise<any> {
         return await api.post(API.NORMAL.ROOMBILL.CREATE, data)
           .then((res) => {
             return Promise.resolve(res.data)

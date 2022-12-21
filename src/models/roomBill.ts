@@ -11,6 +11,7 @@ export interface IRoomBillConfirm {
 export interface ICreateRoomBill {
   userId: number;
   userMail: string;
+  hotelId: number;
   rooms: {
     roomId: string;
     amount: string;
@@ -26,7 +27,12 @@ export interface ICreateRoomBill {
   email: string;
   phoneNumber: string;
   firstName: string;
-  lastName: string;
+  lastName: string;  
+  bankName: string;
+  bankAccountName: string;
+  bankNumber: string;
+  accountExpirationDate: Date;
+  deposit: number;
 }
 
 export interface IVerifyBookRoom {

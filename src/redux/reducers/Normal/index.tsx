@@ -70,6 +70,7 @@ export interface IConfirmBookTour {
 export interface IConfirmBookRoom {
   userId: number;
   userMail: string;
+  hotelId: number;
   rooms: {
     roomId: string;
     amount: string;

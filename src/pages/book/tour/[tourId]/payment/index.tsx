@@ -110,8 +110,6 @@ const BookTour = memo(()=> {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router]);
 
-    console.log(confirmBookTour)
-
     const _onSubmit = (data: BookForm) => {
       console.log(data);
       dispatch(setLoading(true));  

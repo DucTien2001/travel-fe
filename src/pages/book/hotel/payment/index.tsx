@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
@@ -26,6 +26,8 @@ import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
+import { RoomBillService } from "services/normal/roomBill";
+import PopupDefault from "components/Popup/PopupDefault";
 
 export interface BookForm {
   banks: any;
@@ -39,10 +41,12 @@ const BookTour = memo(()=> {
   const dispatch = useDispatch();
   const {confirmBookRoom} = useSelector((state: ReducerType) => state.normal);
   const {roomBillConfirm} = useSelector((state: ReducerType) => state.normal);
+  const { user } = useSelector((state: ReducerType) => state.user);
 
   const [banks, setBanks] = useState([]);
   const router = useRouter()
-  const [tour, setTour] = useState<any>();
+  const [modal, setModal] = useState(false);
+
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -78,19 +82,52 @@ const BookTour = memo(()=> {
     clientID: 'client_id_here',
     apiKey: 'api_key_here',
     });
-    vietQR.getBanks().then((banks)=>{
-       const newBanks = banks?.data.map((item, index) => {return {
-            id: item?.id,
-            name: `${item?.name} (${item?.code})`,
-            value: item?.name,
-          }
-        })     
-        setBanks(newBanks);
-    }).catch((err)=>{});
+    useEffect(() => {
+      vietQR.getBanks().then((banks)=>{
+         const newBanks = banks?.data.map((item, index) => {return {
+              id: item?.id,
+              name: `${item?.name} (${item?.code})`,
+              value: item?.name,
+            }
+          })     
+          setBanks(newBanks);
+      }).catch((err)=>{});
+    },[])
 
     const _onSubmit = (data) => {
       console.log(data);
+      dispatch(setLoading(true));
+      RoomBillService?.create({
+        userId: user?.id,
+        hotelId: confirmBookRoom?.hotelId,
+        userMail: user?.username,
+        rooms: confirmBookRoom?.rooms,
+        bookedDates: confirmBookRoom?.bookedDates,
+        startDate: confirmBookRoom?.startDate,
+        endDate: confirmBookRoom?.endDate,
+        totalBill: confirmBookRoom?.totalBill,
+        email: confirmBookRoom?.email,
+        phoneNumber: confirmBookRoom?.phoneNumber,
+        firstName: confirmBookRoom?.firstName,
+        lastName: confirmBookRoom?.lastName,
+        bankName: data?.banks?.name,
+        bankAccountName: data?.cardName,
+        bankNumber: data?.cardNumber,
+        accountExpirationDate: data?.issueDate,
+        deposit: data?.deposit,
+      })
+      .then(() => {
+        dispatch(setSuccessMess("Book room successfully"))
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+        toggle();
+      })
     }
+    const toggle = () => setModal(!modal);
 
     useEffect(() => {
       setValue("deposit",  Math.ceil(confirmBookRoom?.totalBill * 20 / 100))
@@ -112,7 +149,7 @@ const BookTour = memo(()=> {
                   <span className={classes.titleBanks}>Banks:</span>
                     <CustomSelect
                     placeholder="Please choose the bank"
-                    name="revenueType"
+                    name="banks"
                     control={control}
                     options={banks}
                     errorMessage={errors.banks?.message}
@@ -141,7 +178,7 @@ const BookTour = memo(()=> {
                       label="Issue date"
                       placeholder="Issue date"
                       control={control}
-                      name="departure"
+                      name="issueDate"
                       dateFormat="DD/MM/YYYY"
                       timeFormat={false}
                       labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
@@ -192,7 +229,14 @@ const BookTour = memo(()=> {
                 </Col>
             </Row>
           </form>
-        </Container>    
+        </Container> 
+        <PopupDefault
+            isOpen={modal}
+            onClose={toggle}
+            toggle={toggle}
+            title={"Confirm"}
+            description={"You have successfully placed your order. Thank you for choosing our service"}
+            />     
       </div>
     </>
   );
