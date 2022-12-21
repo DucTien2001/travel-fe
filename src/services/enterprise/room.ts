@@ -1,4 +1,5 @@
 import { API } from "configs/constants";
+import { EGetRoomsAvailable } from "models/enterprise";
 import { ECreateRoomOtherPrice, EditRoomInformation, EditRoomPrice, ICreateRoom } from "models/room";
 import api from "../configApi";
 
@@ -16,6 +17,16 @@ export class RoomService {
   static async getAllRooms(hotelId: number): Promise<any> {
     return await api
       .get(API.ENTERPRISE.ROOM.GET_ALL_ROOM.replace(":id", `${hotelId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  static async getAllRoomsAvailable(data: EGetRoomsAvailable): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.ROOM.GET_ROOMS_AVAILABLE, data)
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -65,15 +76,16 @@ export class RoomService {
   }
 
   static async workAgain(roomId: number): Promise<any> {
-    return await api.put(API.ENTERPRISE.ROOM.WORK_AGAIN.replace(":id", `${roomId}`))
+    return await api
+      .put(API.ENTERPRISE.ROOM.WORK_AGAIN.replace(":id", `${roomId}`))
       .then((res) => {
-        return Promise.resolve(res.data)
+        return Promise.resolve(res.data);
       })
       .catch((e) => {
         return Promise.reject(e?.response?.data);
-      })
+      });
   }
-  
+
   static async getRoomOtherPrice(roomId: number): Promise<any> {
     return await api
       .get(API.ENTERPRISE.ROOM.GET_ROOM_OTHER_PRICE.replace(":id", `${roomId}`))
@@ -84,7 +96,7 @@ export class RoomService {
         return Promise.reject(e?.response?.data);
       });
   }
-  
+
   static async createRoomOtherPrice(data: ECreateRoomOtherPrice): Promise<any> {
     return await api
       .post(API.ENTERPRISE.ROOM.CREATE_ROOM_OTHER_PRICE, data)
@@ -95,7 +107,7 @@ export class RoomService {
         return Promise.reject(e?.response?.data);
       });
   }
-  
+
   static async updateRoomOtherPrice(id: number, data: ECreateRoomOtherPrice): Promise<any> {
     return await api
       .put(API.ENTERPRISE.ROOM.UPDATE_ROOM_OTHER_PRICE.replace(":id", `${id}`), data)
@@ -106,7 +118,7 @@ export class RoomService {
         return Promise.reject(e?.response?.data);
       });
   }
-  
+
   static async deleteRoomOtherPrice(id: number): Promise<any> {
     return await api
       .put(API.ENTERPRISE.ROOM.DELETE_ROOM_OTHER_PRICE.replace(":id", `${id}`))

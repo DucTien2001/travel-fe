@@ -29,6 +29,7 @@ import ToursRevenue from "./ToursRevenue";
 import HotelsRevenue from "./HotelsRevenue";
 import TourComments from "./TourComments";
 import HotelComments from "./HotelComments";
+import CheckRoom from "./CheckRoom";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -37,7 +38,7 @@ export enum EActiveNav {
   Hotel_Sales_Active = 4,
   Tour_Feedbacks_Active = 5,
   Hotel_Feedbacks_Active = 6,
-  Sales_Active = 7,
+  Check_Room_Active = 7,
   Email_Active = 8,
   Feedback_Active = 9,
 }
@@ -65,8 +66,8 @@ const Enterprise: NextPage = () => {
         case EActiveNav.Hotel_Feedbacks_Active:
           setVerticalTabs(EActiveNav.Hotel_Feedbacks_Active);
           break;
-      case EActiveNav.Sales_Active:
-        setVerticalTabs(EActiveNav.Sales_Active);
+      case EActiveNav.Check_Room_Active:
+        setVerticalTabs(EActiveNav.Check_Room_Active);
         break;
       case EActiveNav.Email_Active:
         setVerticalTabs(EActiveNav.Email_Active);
@@ -115,16 +116,16 @@ const Enterprise: NextPage = () => {
                 Hotels
               </NavLink>
             </NavItem>
-            {/* <NavItem>
+            <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Sales_Active ? classes.active : classes.navLink}
-                onClick={() => onChangeTab(EActiveNav.Sales_Active)}
+                className={verticalTabs === EActiveNav.Check_Room_Active ? classes.active : classes.navLink}
+                onClick={() => onChangeTab(EActiveNav.Check_Room_Active)}
               >
                 <FontAwesomeIcon icon={faChartSimple} />
-                Sales
+                Check room
               </NavLink>
-            </NavItem> */}
+            </NavItem>
             <span>Sales</span>
             <NavItem>
               <NavLink
@@ -211,7 +212,7 @@ const Enterprise: NextPage = () => {
               <HotelComments/>
             </TabPane>
             <TabPane tabId="verticalTabs7" className={classes.tabPane}>
-              <Sales />
+              <CheckRoom />
             </TabPane>
             <TabPane tabId="verticalTabs8" className={classes.tabPane}>
               <EmailTemplate/>
