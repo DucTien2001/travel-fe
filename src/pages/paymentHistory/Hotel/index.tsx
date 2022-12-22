@@ -187,7 +187,7 @@ const Hotel = memo(() => {
               ))}
             {!listHistory?.length && (
               <tr>
-                <th scope="row" colSpan={6}>
+                <th scope="row" colSpan={8}>
                   <SearchNotFound mess="No hotel bill found" />
                 </th>
               </tr>
