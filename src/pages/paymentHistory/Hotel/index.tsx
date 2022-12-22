@@ -32,11 +32,21 @@ const Hotel = memo(() => {
   const onTogglePopupConfirmCancel = () => {
     setOpenConfirmCancelBookRoom(!openConfirmCancelBookRoom)
   }
-
+  const sortDate = (a, b) => {
+    if (moment(a?.createdAt).toDate() > moment(b?.createdAt).toDate()) {
+      return 1;
+    } else if (
+      moment(a?.createdAt).toDate() < moment(b?.createdAt).toDate()
+    ) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
   const getAllRoomBill = () => {
     RoomBillService.getAllRoomBills(user?.id)
     .then((res) => {
-      setListHistory(res.data);
+      setListHistory(res.data.sort(sortDate));
     })
     .catch((e) => {
       dispatch(setErrorMess(e));
@@ -51,7 +61,7 @@ const Hotel = memo(() => {
       dispatch(setLoading(true));
       RoomBillService.getAllRoomBills(user?.id)
         .then((res) => {
-          setListHistory(res.data);
+          setListHistory(res.data.sort(sortDate));
         })
         .catch((e) => {
           dispatch(setErrorMess(e));

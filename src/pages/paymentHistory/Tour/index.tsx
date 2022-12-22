@@ -34,10 +34,22 @@ const Tour = memo(() => {
     setOpenConfirmCancelBookTour(!openConfirmCancelBookTour)
   }
 
+  const sortDate = (a, b) => {
+    if (moment(a?.createdAt).toDate() > moment(b?.createdAt).toDate()) {
+      return 1;
+    } else if (
+      moment(a?.createdAt).toDate() < moment(b?.createdAt).toDate()
+    ) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
   const getTAllTourBill = () => {
       TourBillService.getAllTourBills(user?.id)
         .then((res) => {
-          setListHistory(res.data);
+          setListHistory(res.data.sort(sortDate));
         })
         .catch((e) => {
           dispatch(setErrorMess(e));
@@ -52,7 +64,7 @@ const Tour = memo(() => {
       dispatch(setLoading(true));
       TourBillService.getAllTourBills(user?.id)
         .then((res) => {
-          setListHistory(res.data);
+          setListHistory(res.data.sort(sortDate));
         })
         .catch((e) => {
           dispatch(setErrorMess(e));
