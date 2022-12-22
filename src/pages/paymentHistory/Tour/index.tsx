@@ -28,6 +28,7 @@ const Tour = memo(() => {
   const toggle = () => setTooltipOpen(!tooltipOpen)
   const [openConfirmCancelBookTour, setOpenConfirmCancelBookTour] = useState(false);
   const [tourBillId, setTourBillId] = useState();
+  const [isExpireMess, setIsExpireMess] = useState('')
 
   const onTogglePopupConfirmCancel = () => {
     setOpenConfirmCancelBookTour(!openConfirmCancelBookTour)
@@ -76,21 +77,19 @@ const Tour = memo(() => {
     });
   };
 
-  var currentDate = new Date();
-  const isExpire = () => {
-    let isOK = false
-    listHistory?.forEach(item => {
+  const isExpire = (item) => {
+    var currentDate = new Date();
+    let isExpired = false
       var date = new Date(item?.createdAt)
       if(currentDate.setDate(currentDate.getDate()) > date.setDate(date.getDate() + 2)){
-        console.log("qua han")
-        isOK = true
+        isExpired= true;
       }
       else {
-        isOK = false
+        isExpired= false;
       }
-    })
-    return isOK;
+      return isExpired;
   }
+
 
   const onCancelBookTour = (e, id) => {
     setTourBillId(id)
@@ -151,12 +150,13 @@ const Tour = memo(() => {
                     )}
                   </td>
                   <th >
-                    <Tooltip title={isExpire ? "This tour is expired" : ""}>
+                    <Tooltip title={isExpire(item) ? "This tour is expired" : ""}>
                       <span>
                         <Button
                         className="btn-icon"
                         color="danger"
-                        size="sm"                
+                        size="sm" 
+                        disabled={isExpire(item)}              
                         onClick={(e) => onCancelBookTour(e, item?.id)}
                         >
                         <i className="now-ui-icons ui-1_simple-remove"></i>        
@@ -178,7 +178,7 @@ const Tour = memo(() => {
               ))}
             {!listHistory?.length && (
               <tr>
-                <th scope="row" colSpan={6}>
+                <th scope="row" colSpan={8}>
                   <SearchNotFound mess="No tour bill found" />
                 </th>
               </tr>
@@ -189,6 +189,7 @@ const Tour = memo(() => {
         <div className={classes.containerMobile}>
           {listHistory &&
             listHistory?.map((item, index) => (
+              <>
               <Row key={index} className={clsx(classes.row, classes.boxInvoiceMobile)}>
                 <Col className={classes.colInformation}>
                   <div className={classes.boxInformation}>
@@ -214,7 +215,23 @@ const Tour = memo(() => {
                     <FontAwesomeIcon icon={faDownload} />
                   </div>
                 </Col>
+                <Col className={classes.boxDownload}>
+                    <Tooltip title={isExpire(item) ? "This tour is expired" : ""}>
+                      <span>
+                        <Button
+                        className="btn-icon"
+                        color="danger"
+                        size="sm" 
+                        disabled={isExpire(item)}              
+                        onClick={(e) => onCancelBookTour(e, item?.id)}
+                        >
+                        <i className="now-ui-icons ui-1_simple-remove"></i>        
+                        </Button>
+                      </span>
+                    </Tooltip>
+              </Col>
               </Row>
+              </>
             ))}
           {!listHistory?.length && (
             <Row className={classes.row}>

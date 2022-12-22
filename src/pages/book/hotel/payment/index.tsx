@@ -47,7 +47,6 @@ const BookTour = memo(()=> {
   const router = useRouter()
   const [modal, setModal] = useState(false);
 
-
   const schema = useMemo(() => {
     return yup.object().shape({
         banks: yup.object().required("This field is required"),
