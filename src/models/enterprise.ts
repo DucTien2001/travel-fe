@@ -32,6 +32,10 @@ export interface EGetRoomsAvailable {
   startDate: Date;
   endDate: Date;
 }
+export interface EGetAllRoomBillsAnyDate {
+  hotelId: number;
+  date: Date;
+}
 
 export interface IHotel {
   id?: number;

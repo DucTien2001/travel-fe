@@ -1,4 +1,5 @@
 import { API } from "configs/constants";
+import { EGetAllRoomBillsAnyDate } from "models/enterprise";
 import { IHotelsRevenueByMonth, IHotelsRevenueByYear } from "models/roomBill";
 import api from "services/configApi";
 
@@ -28,6 +29,17 @@ export class RoomBillService {
   static async getAllBillOfAnyRoom(roomId: number): Promise<any> {
     return await api
       .get(API.ENTERPRISE.ROOMBILL.GET_ALL_BILLS_OF_ANY_ROOM.replace(":id", `${roomId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  
+  static async getAllRoomBillsAnyDate(data: EGetAllRoomBillsAnyDate): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.ROOMBILL.GET_BILLS_ANY_DATE, data)
       .then((res) => {
         return Promise.resolve(res.data);
       })

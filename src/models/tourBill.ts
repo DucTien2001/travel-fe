@@ -31,3 +31,8 @@ export interface IToursRevenueByYear {
   tourIds: number[];
   year: number;
 }
+
+export interface EGetAllTourBillsAnyDate {
+  tourIds: number[];
+  date: Date;
+}
