@@ -96,7 +96,7 @@ const HotelStatistic = memo(() => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Check rooms</h3>
+          <h3>Hotel booking statistics</h3>
         </Row>
         <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
           <Row className={classes.formWrapper}>
