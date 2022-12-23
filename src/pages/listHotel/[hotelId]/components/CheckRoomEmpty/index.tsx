@@ -245,6 +245,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
                     Room Type
                   </th>
                   {/* <th className={clsx(classes.colImgMobile, classes.title)}>Images</th> */}
+                  <th className={classes.title}>Number of bed</th>
                   <th className={classes.title}>Number of rooms left</th>
                   <th className={classes.title}>Price</th>
                   <th className={classes.title}>Amount</th>
@@ -259,6 +260,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
                     {/* <td className={classes.colImg}>
                       <Carousel images={room?.images} className={classes.imgCarousel}/>
                     </td> */}
+                    <td className={classes.col}>{room?.numberOfBed}</td>
                     <td className={classes.col}>{room?.numberOfRoom}</td>
                     <td className={classes.col}>
                       {room?.priceDetail?.map((priceInfo, index) => (
