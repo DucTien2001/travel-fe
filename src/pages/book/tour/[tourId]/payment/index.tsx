@@ -147,7 +147,11 @@ const BookTour = memo(()=> {
     const toggle = () => setModal(!modal);
 
     useEffect(() => {
-      setValue("deposit", Math.ceil(confirmBookTour?.price * 20 / 100))
+      let tempDeposit = confirmBookTour?.price * confirmBookTour?.amount  * 20 / 100
+      if(confirmBookTour?.discount) {
+        tempDeposit = tempDeposit * ((100 - confirmBookTour?.discount) / 100)
+      }
+      setValue("deposit", Math.ceil(tempDeposit))
     }, [confirmBookTour])
 
   return (
