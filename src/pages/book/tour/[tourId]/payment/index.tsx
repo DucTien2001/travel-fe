@@ -53,7 +53,7 @@ const BookTour = memo(()=> {
         cardName: yup.string().required("Card name is required"),
         cardNumber: yup.string().required("Card number is required"),
         issueDate: yup.date().required("Issue date is required"),
-        deposit: yup.number().typeError("Deposit must be is number").min(confirmBookTour?.price * 20 / 100, "Please enter deposit rather than 20% tour's price")
+        deposit: yup.number().typeError("Deposit must be is number").min(confirmBookTour?.price * confirmBookTour?.amount  * 0.2 * ((100 - confirmBookTour?.discount) / 100), "Please enter deposit rather than 20% tour's price")
         .max(confirmBookTour?.price,"Deposit must be less than or equal to tour's price")
         .required("Deposit is required"),
       });
