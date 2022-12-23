@@ -161,7 +161,7 @@ const TourComments = memo(() => {
         <Row className={classes.rowSelect}>
             <p className="mr-2">Hotel:</p>
             <CustomSelect
-              className={classes.input}
+              className={clsx(classes.input, "d-none")}
               placeholder="Please choose hotel"
               name="hotels"
               control={control}
