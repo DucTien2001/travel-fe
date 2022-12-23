@@ -154,7 +154,7 @@ const TourFeedbacks = memo(() => {
           <h3>comment of tours</h3>
         </Row>
         <Row className={classes.rowSelect}>
-          <p className="mr-2">Tour:</p>
+          {/* <p className="mr-2">Tour:</p> */}
           <CustomSelect
               className={clsx(classes.input, "d-none")}
             placeholder="Please choose tour"
