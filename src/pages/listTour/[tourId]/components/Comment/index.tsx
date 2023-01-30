@@ -1,6 +1,10 @@
 import React, {memo, useEffect, useState} from "react";
 // reactstrap components
 import {
+    Carousel,
+    CarouselControl,
+    CarouselIndicators,
+    CarouselItem,
     Col,
   Container,
   Row,
@@ -11,7 +15,6 @@ import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import {Comment} from "models/comment";
-import Pagination from "components/Pagination";
 import CardComment from "../CardComments";
 import PopupAddTourComment from "../PopupAddTourComment";
 import { ReducerType } from "redux/reducers";
@@ -23,7 +26,12 @@ import { CommentService } from "services/normal/comment";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { getAllTourBills } from "redux/reducers/Normal/actionTypes";
 import { Tour } from "models/tour";
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import clsx from "clsx";
 interface Props { 
     comments: Comment[],
     tour: Tour;
@@ -89,15 +97,29 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
         })
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allTourBills])
+
   return (
     <>  
     <Container className={classes.root}>
         {/* eslint-disable-next-line react/no-unescaped-entities */}
         <h3 className="text-center">CUSTOMER'S FEEDBACKS</h3>
-        <Row className={classes.rowComment}>  
+        <Swiper
+          slidesPerView={3}
+          spaceBetween={30}
+          slidesPerGroup={3}
+          loop={true}
+          loopFillGroupWithBlank={true}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          className={clsx("mySwiper",classes.swiper)}
+        >
             {comments?.map((cmt) => (
-                <Col xs={4} key={cmt.id} className={classes.cardComment}>
-                <CardComment             
+                <SwiperSlide key={cmt.id}>
+                <CardComment   
+                key={cmt.id}          
                 comment={cmt}
                 onAction={onAction}
                 onEdit={onEdit}
@@ -105,12 +127,12 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
                 tour={tour}
                 onGetTourComments={onGetTourComments}
                 />
-                </Col> 
+                </SwiperSlide> 
             ))} 
             {!comments?.length && (
                 <p className={classes.noComment}>There are no comments yet !</p>
-            )}             
-        </Row>
+            )}
+        </Swiper>
         <Row className={classes.rowControl}>
             <div className={classes.btnContainer}>
                 <div>
@@ -120,9 +142,6 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
                 </Button>
                 {!isAddComment && <Warning content="You don't book this tour"/>} 
                 </div>
-                {/* <Pagination className={classes.pagination} postPerPage={0} totalPosts={0} paginate={function (number: number): void {
-                          throw new Error("Function not implemented.");
-                }}/> */}
             </div>
         </Row>
         <PopupAddTourComment

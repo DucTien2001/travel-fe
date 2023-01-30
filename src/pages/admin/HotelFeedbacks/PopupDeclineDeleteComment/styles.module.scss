@@ -10,34 +10,10 @@
     }
     
 }
-.inputSelect {
-    div {
-        font-size: 14px;
-    }
-}
+
 .labelText {
     font-size: 14px;
 } 
-
-.starContainer {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    @media only screen and (max-width: 500px) {
-        margin-right: 32px !important;
-     }
-    .inputCounter {
-        width: 100px;
-        margin-right: 16px;
-    }
-    .starWrapper {
-        margin-left: 16px;
-        margin-top: 30px !important;
-        svg {
-            font-size: 20px;
-        }
-    }
-}
 
 .footer {
     display: flex;

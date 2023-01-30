@@ -46,7 +46,7 @@
     .itemFollow {
         padding: 8px 0;
         cursor: pointer;
-        color: var(--white-color);
+        color: var(--white-color) !important;
         padding-left: 100px;
         margin: auto;
         svg {
@@ -55,9 +55,12 @@
         @media only screen and (max-width: 1024px) {
             padding-left: 20px;
           }
+        a {
+            color: var(--white-color) !important;
+        }
     }
-    .itemFollow:hover {
-        color: var(--orange-color);
+    .itemFollow a:hover {
+        color: var(--orange-color) !important;
     }
 }
 

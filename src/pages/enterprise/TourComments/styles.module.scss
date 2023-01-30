@@ -64,58 +64,6 @@
   }
 }
 
-.colAction {
-  width: 5% !important;
-}
-
-.iconAction {
-  color: var(--violet-color);
-}
-
-.dropdownMenu {
-  min-width: 7rem;
-  .dropdownItem {
-    svg {
-      margin-right: 8px;
-    }
-  }
-}
-
-.iconActiveTour {
-  color: var(--green-color);
-  font-size: 16px;
-}
-
-.iconStopTour {
-  color: var(--gray-40);
-  font-size: 16px;
-}
-
-.inputContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-left: 14px;
-  @media only screen and (max-width: 767px) {
-    flex-direction: column;
-    gap: 5px;
-    align-items: unset;
-  }
-}
-.inputTitle {
-  margin: 0;
-  width: 140px;
-  font-size: 16px;
-  font-weight: 500;
-  text-align: left;
-  word-wrap: break-word;
-  @media only screen and (max-width: 767px) {
-    margin-left: 7px;
-  }
-}
-
 .rowSelectTour {
   margin: 0;
   padding-bottom: 24px;

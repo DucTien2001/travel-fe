@@ -61,20 +61,3 @@
         color: #ffff;
     }
 }
-
-.colAction {
-    width: 5% !important;
-} 
-
-.iconAction {
-    color: var(--violet-color);
-}
-
-.dropdownMenu {
-    min-width: 7rem;
-    .dropdownItem {
-        svg {
-            margin-right: 8px;
-        }
-    }
-}

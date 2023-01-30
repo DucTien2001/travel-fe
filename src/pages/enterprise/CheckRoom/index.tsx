@@ -188,6 +188,3 @@ const CheckRoom = memo(() => {
 });
 
 export default CheckRoom;
-function setMessSuccess(arg0: string): any {
-  throw new Error("Function not implemented.");
-}

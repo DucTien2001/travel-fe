@@ -42,19 +42,6 @@ const User = memo(() => {
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
           <h3>Users</h3>
         </Row>
-        {/* <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
-          <div className={classes.boxInputSearch}>
-            <InputTextFieldBorder
-              placeholder="Search user"
-              startIcon={<FontAwesomeIcon icon={faSearch} />}
-              className={classes.inputSearch}
-            />
-          </div>
-          <Button btnType={BtnType.Primary} onClick={onTogglePopupCreateUser}>
-            <FontAwesomeIcon icon={faPlus} />
-            Create
-          </Button>
-        </Row> */}
         <Table bordered className={classes.table} responsive>
           <thead>
             <tr>
@@ -67,9 +54,6 @@ const User = memo(() => {
               <th>Role</th>
               <th>Phone Number</th>
               <th>Email</th>
-              {/* <th className={classes.colAction}>
-                           Actions
-                        </th> */}
             </tr>
           </thead>
           <tbody>
@@ -81,30 +65,6 @@ const User = memo(() => {
                 <td>{user?.role === 1 ? "Admin" : user?.role === 2 ? "Enterprise" : "Normal"}</td>
                 <td>{user?.phoneNumber}</td>
                 <td>{user?.email}</td>
-                {/* <td className="text-center">
-                    <UncontrolledDropdown>
-                        <DropdownToggle
-                        color="default"
-                        data-toggle="dropdown"
-                        href="#pablo"
-                        id="navbarDropdownMenuLink1"
-                        nav
-                        onClick={(e) => e.preventDefault()}
-                        >
-                        <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction}/>
-                        </DropdownToggle>
-                        <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                        <DropdownItem className={classes.dropdownItem}>
-                            <FontAwesomeIcon icon={faPen}/>
-                            Edit
-                        </DropdownItem>
-                        <DropdownItem className={classes.dropdownItem} onClick={onTogglePopupConfirmDelete}>
-                            <FontAwesomeIcon icon={faTrash}/>
-                            Delete
-                        </DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledDropdown>
-                    </td> */}
               </tr>
             ))}
           </tbody>

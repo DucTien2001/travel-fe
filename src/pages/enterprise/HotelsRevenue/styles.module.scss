@@ -63,33 +63,6 @@
   }
 }
 
-.colAction {
-  width: 5% !important;
-}
-
-.iconAction {
-  color: var(--violet-color);
-}
-
-.dropdownMenu {
-  min-width: 7rem;
-  .dropdownItem {
-    svg {
-      margin-right: 8px;
-    }
-  }
-}
-
-.iconActiveTour {
-  color: var(--green-color);
-  font-size: 16px;
-}
-
-.iconStopTour {
-  color: var(--gray-40);
-  font-size: 16px;
-}
-
 .inputContainer {
   display: flex;
   flex-direction: row;

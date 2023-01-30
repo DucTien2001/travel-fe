@@ -51,10 +51,6 @@
     text-transform: uppercase;
 }
 
-.navItem {
-    // background-color: var(--violet-color);
-}
-
 .active {
     background: var(--violet-color) !important;
     color: #ffff !important;
@@ -63,11 +59,6 @@
     svg {
         margin-right: 8px;
     }
-}
-
-
-.dropdownMenu {
-    min-width: 7rem!important;
 }
 
 .tabContent {

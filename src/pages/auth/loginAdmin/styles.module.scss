@@ -37,12 +37,6 @@
    }
 }
 
-.checkboxContainer {
-    text-align: left;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
 .btnLoginContainer {
     display: flex;
     justify-content: center;
@@ -54,61 +48,6 @@
     }
 }
 
-.separator {
-    padding: 24px 0px;
-    line-height: 24px;
-    display: flex;
-    align-items: center;
-    &:before {
-      content: " ";
-      flex: 1;
-      border-bottom: 1px solid rgba(28, 28, 28, 0.2);
-    }
-    &:after {
-      content: " ";
-      flex: 1;
-      border-bottom: 1px solid rgba(28, 28, 28, 0.2);
-    }
-    .childrenSeparator {
-      margin: 0px 21px;
-      margin-top: -2px;
-      @media only screen and (max-width: 767px) {
-        font-size: 12px;
-      }
-    }
-    @media only screen and (max-width: 767px) {
-      line-height: 16px;
-    }
-}
-
-.boxTextRole {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  .boxCheckRole {
-    display: flex;
-    gap: 24px;
-  }
-}
-.textYouAre {
-  font-size: 14px; 
-  font-weight: 500;
-  margin: 0;
-}
-
-
 .boxError {
   margin-top: 8px;
-}
-
-.linkResend {
-  color: var(--blue-color);
-  text-decoration: underline;
-}
-
-.popupResend {
-  button {
-    margin-left: auto;
-  }
 }

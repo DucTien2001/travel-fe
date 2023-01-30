@@ -23,16 +23,7 @@
         display: none;
     }
 }
-.noteTipRecipient {
-    padding: 0 16px 8px 16px;
-    svg {
-        margin-right: 8px;
-    }
-    span {
-        font-size: 12px;
-        font-weight: 600;
-    }
-}
+
 .informationContainer {
     @media only screen and (max-width: 768px) {
         margin-top: 16px;
@@ -53,21 +44,6 @@
         }
     }
 }
-.containerToggle {
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-}
-.boxToggle {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    p {
-        font-size: 14px;
-        margin-right: 16px;
-        font-weight: 600;
-    }
-}
 
 .btnBook {
     margin-left: auto;
@@ -78,11 +54,6 @@
         padding-top: 16px;
         display: block;
       }
-}
-.deposit {
-    margin: 0 !important;
-    padding-top: 16px;
-    display: block;
 }
 
 .colInfor {

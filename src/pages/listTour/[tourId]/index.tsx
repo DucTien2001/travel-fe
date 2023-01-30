@@ -14,6 +14,7 @@ import { Container } from "reactstrap";
 import { faFaceFrown } from '@fortawesome/free-regular-svg-icons';
 import { CommentService } from "services/normal/comment";
 import { formatStar } from "utils/formatStar";
+import GoogleMapBody from "./components/GoogleMapBody";
 
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(()=> {
@@ -97,7 +98,8 @@ const ProductPage = memo(()=> {
           <div className={classes.containerComment}>
             <Comment comments={listComment} onGetTourComments={getTourComments} tour={tour}/>
           </div>
-          {/* <GoogleMapBody/>
+          <GoogleMapBody/>
+          {/* 
           <RelatedTour/>  */}
           </>
         )}
