@@ -88,6 +88,7 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
         totalBill+=totalPrice
         roomBillDetails.push({
           roomId: room.id,
+          title: room.title,
           amount: room.amount,
           discount: room.discount,
           price: priceInfo.price,

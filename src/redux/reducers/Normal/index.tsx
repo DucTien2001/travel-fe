@@ -73,6 +73,7 @@ export interface IConfirmBookRoom {
   hotelId: number;
   rooms: {
     roomId: string;
+    title: string;
     amount: string;
     discount: number;
     price: number;
