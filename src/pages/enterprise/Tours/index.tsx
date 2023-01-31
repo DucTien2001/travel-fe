@@ -291,6 +291,3 @@ const Tour = memo(() => {
 });
 
 export default Tour;
-function setMessSuccess(arg0: string): any {
-  throw new Error("Function not implemented.");
-}
