@@ -1,22 +1,17 @@
 import type { NextPage } from "next";
-import {
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import ListServices from "./components/Listservices";
-import Feature from "./components/Feature";
-import Section from "./components/Section";
+import About from "./components/About";
+import Offer from "./components/Offer";
 import Testimonials from "./components/Testimonial";
 import Contact from "./components/Contact";
 import Social from "../../components/Social";
 import Footer from "components/Footer";
-import {images} from "configs/images";
+import { images } from "configs/images";
 import Link from "next/link";
-import Button, {BtnType}from "components/common/buttons/Button";
-
+import Button, { BtnType } from "components/common/buttons/Button";
 
 const LandingPage: NextPage = () => {
   return (
@@ -32,37 +27,36 @@ const LandingPage: NextPage = () => {
                 <Col className="ml-auto mr-auto text-center" md="8">
                   <h1 className={clsx("title", classes.titleHome)}>Discover</h1>
                   <h1 className={classes.titleHero}>Viet Nam</h1>
-                </Col>  
+                </Col>
               </Row>
-              <Row className={classes.btnContainerWrapper} >
+              <Row className={classes.btnContainerWrapper}>
                 <Link href="/listTour" passHref>
                   <a>
                     <Button
                       btnType={BtnType.Linear}
-                      isDot = {true}
-                      className={classes.btnExplore}  
+                      isDot={true}
+                      className={classes.btnExplore}
                     >
                       Explore now
                     </Button>
                   </a>
                 </Link>
               </Row>
-              <Row>
-              </Row>
+              <Row></Row>
             </Container>
           </div>
         </div>
       </div>
-      <ListServices/>
-      <Feature/>
+      <ListServices />
+      <About />
       <Row>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img alt="section" src={images.section.src}></img>
       </Row>
-      <Section/>
+      <Offer />
       {/* <Testimonials/> */}
-      <Contact/>
-      <Social/>
+      <Contact />
+      <Social />
     </>
   );
 };

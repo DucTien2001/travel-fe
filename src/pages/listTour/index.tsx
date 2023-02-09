@@ -11,7 +11,14 @@ import {
 } from "reactstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGrip, faList, faXmark, faSearch, faChevronLeft, faChevronRight, } from "@fortawesome/free-solid-svg-icons";
+import {
+  faGrip,
+  faList,
+  faXmark,
+  faSearch,
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
 import clsx from "clsx";
@@ -35,6 +42,7 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/normal/tour";
 import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "../../components/FilterPanel";
+import ReactPaginate from "react-paginate";
 
 interface SearchData {
   location?: string;
@@ -49,14 +57,14 @@ const ListTours: NextPage = () => {
   const [selectedPrice, setSelectedPrice] = useState([10000, 3000000]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [tags, setTags] = useState([
-    { id: 1, checked: false, label: 'Shopping' },
-    { id: 2, checked: false, label: 'Sea' },
-    { id: 3, checked: false, label: 'Family' },
-    { id: 4, checked: false, label: 'Mountain' },
-    { id: 5, checked: false, label: 'Trekking' },
-    { id: 6, checked: false, label: 'Music' },
-    { id: 7, checked: false, label: 'Chill' },
-    { id: 8, checked: false, label: 'Eat' },
+    { id: 1, checked: false, label: "Shopping" },
+    { id: 2, checked: false, label: "Sea" },
+    { id: 3, checked: false, label: "Family" },
+    { id: 4, checked: false, label: "Mountain" },
+    { id: 5, checked: false, label: "Trekking" },
+    { id: 6, checked: false, label: "Music" },
+    { id: 7, checked: false, label: "Chill" },
+    { id: 8, checked: false, label: "Eat" },
   ]);
 
   const schema = useMemo(() => {
@@ -83,14 +91,14 @@ const ListTours: NextPage = () => {
     clearForm();
     getAllToursDefault();
     setTags([
-      { id: 1, checked: false, label: 'Shopping' },
-      { id: 2, checked: false, label: 'Sea' },
-      { id: 3, checked: false, label: 'Family' },
-      { id: 4, checked: false, label: 'Mountain' },
-      { id: 5, checked: false, label: 'Trekking' },
-      { id: 6, checked: false, label: 'Music' },
-      { id: 7, checked: false, label: 'Chill' },
-      { id: 8, checked: false, label: 'Eat' },
+      { id: 1, checked: false, label: "Shopping" },
+      { id: 2, checked: false, label: "Sea" },
+      { id: 3, checked: false, label: "Family" },
+      { id: 4, checked: false, label: "Mountain" },
+      { id: 5, checked: false, label: "Trekking" },
+      { id: 6, checked: false, label: "Music" },
+      { id: 7, checked: false, label: "Chill" },
+      { id: 8, checked: false, label: "Eat" },
     ]);
     setSelectedRating(null);
     setSelectedPrice([10000, 3000000]);
@@ -104,7 +112,7 @@ const ListTours: NextPage = () => {
     dispatch(setLoading(true));
     TourService.searchLocationTours(getValues("location"))
       .then((res) => {
-        setListTours(res?.data);
+        setCurrentItems(res?.data);
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
@@ -114,21 +122,19 @@ const ListTours: NextPage = () => {
       });
   };
 
-  
-  
   const getAllToursDefault = () => {
     dispatch(setLoading(true));
     TourService.getAllToursByPage(1)
-    .then((res) => {
-      setListTours(res?.data)
-    })
-    .catch((err) => {
-      dispatch(setErrorMess(err))
-    })
-    .finally(() => {
-      dispatch(setLoading(false));
-    })
-  }
+      .then((res) => {
+        setCurrentItems(res?.data);
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
 
   const handleKeyPress = (e) => {
     var code = e.keyCode || e.which;
@@ -154,7 +160,7 @@ const ListTours: NextPage = () => {
 
   const applyFilters = () => {
     let updatedList = allTours;
-        // Rating Filter
+    // Rating Filter
     if (selectedRating) {
       updatedList = updatedList.filter(
         (item) => Math.floor(item?.rate) === parseInt(selectedRating)
@@ -165,10 +171,10 @@ const ListTours: NextPage = () => {
       .filter((item) => item.checked)
       .map((item) => item.label.toLowerCase());
     if (tagsChecked.length) {
-        updatedList = updatedList.filter((item) =>
+      updatedList = updatedList.filter((item) =>
         tagsChecked.every((filterTag) =>
-        item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
-         )
+          item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
+        )
       );
     }
 
@@ -179,40 +185,39 @@ const ListTours: NextPage = () => {
     updatedList = updatedList.filter(
       (item) => item.price >= minPrice && item.price <= maxPrice
     );
-    setListTours(updatedList);
+    setCurrentItems(updatedList);
   };
 
   // pagination
-  const handleChangePage = (e, page: number) =>{
-    dispatch(setLoading(true));
-    TourService.getAllToursByPage(page + 1)
-    .then((res) => {
-      setListTours(res?.data)
-    })
-    .catch((err) => {
-      dispatch(setErrorMess(err))
-    })
-    .finally(() => {
-      dispatch(setLoading(false));
-    })
-  }
+  // const handleChangePage = (e, page: number) =>{
+  //   dispatch(setLoading(true));
+  //   TourService.getAllToursByPage(page + 1)
+  //   .then((res) => {
+  //     setListTours(res?.data)
+  //   })
+  //   .catch((err) => {
+  //     dispatch(setErrorMess(err))
+  //   })
+  //   .finally(() => {
+  //     dispatch(setLoading(false));
+  //   })
+  // }
 
   useEffect(() => {
     applyFilters();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tags, selectedPrice, selectedRating]);
 
   useEffect(() => {
     TourService.getAllToursByPage(1)
-    .then((res) => {
-      setListTours(res?.data)
-    })
-    .catch((err) => {
-      dispatch(setErrorMess(err))
-    })
-    .finally(() => {
-    })
-  }, [dispatch])
+      .then((res) => {
+        setCurrentItems(res?.data);
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      })
+      .finally(() => {});
+  }, [dispatch]);
 
   useEffect(() => {
     Aos.init({ duration: 500 });
@@ -220,10 +225,37 @@ const ListTours: NextPage = () => {
 
   const numberOfPage = Math.ceil(allTours.length / 9);
 
+  //handle pagination
+  const [currentItems, setCurrentItems] = useState(null);
+  const [pageCount, setPageCount] = useState(0);
+  // Here we use item offsets; we could also use page offsets
+  // following the API or data you're working with.
+  const [itemOffset, setItemOffset] = useState(0);
+
+  useEffect(() => {
+    // Fetch items from another resources.
+    const endOffset = itemOffset + 9;
+    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    setCurrentItems(allTours.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(allTours.length / 9));
+  }, [itemOffset]);
+
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * 9) % allTours.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
 
   return (
     <>
-      <SectionHeader title="MULTI-TOURS" src={images.imagesListTour.src} className={classes.imgHeader} />
+      <SectionHeader
+        title="MULTI-TOURS"
+        src={images.imagesListTour.src}
+        className={classes.imgHeader}
+      />
       <Row className={classes.containerBody}>
         <Container>
           <Row className={classes.titleBody}>
@@ -234,15 +266,19 @@ const ListTours: NextPage = () => {
             <h1>BROWSE OUR MULTI-COUNTRY TOURS</h1>
             <div className={classes.divider}></div>
             <p data-aos="fade-up">
-              Choose from our portfolio of unforgettable multi-country tours of Asia and embark on the journey of a lifetime. Each private
-              tour is tailor-made to show the very best that Asia has to offer.
+              Choose from our portfolio of unforgettable multi-country tours of
+              Asia and embark on the journey of a lifetime. Each private tour is
+              tailor-made to show the very best that Asia has to offer.
             </p>
           </Row>
           {/* ======================= RESULT DESKTOP ===================== */}
           <Row className={classes.resultDesktop}>
             <Col xs={2} className={clsx("mb-3", classes.colBtnLayout)}>
               <Button
-                className={clsx(!changeViewLayout ? "active" : null, classes.layoutBtn)}
+                className={clsx(
+                  !changeViewLayout ? "active" : null,
+                  classes.layoutBtn
+                )}
                 btnType={BtnType.Outlined}
                 onClick={onChangeViewLayout}
               >
@@ -250,9 +286,12 @@ const ListTours: NextPage = () => {
                 GRID VIEW
               </Button>
             </Col>
-            <Col xs={2} className={clsx("pl-3",classes.colBtnLayout)}>
+            <Col xs={2} className={clsx("pl-3", classes.colBtnLayout)}>
               <Button
-                className={clsx(changeViewLayout ? "active" : null, classes.layoutBtn)}
+                className={clsx(
+                  changeViewLayout ? "active" : null,
+                  classes.layoutBtn
+                )}
                 btnType={BtnType.Outlined}
                 onClick={onChangeViewLayout}
               >
@@ -261,43 +300,18 @@ const ListTours: NextPage = () => {
               </Button>
             </Col>
             <Col xs={8} className={classes.rowResult}>
-              {/* <UncontrolledDropdown className={classes.perPageContainer}>
-                            <DropdownToggle
-                            caret
-                            color="default"
-                            data-toggle="dropdown"
-                            href="#pablo"
-                            id="navbarDropdownMenuLink1"
-                            nav
-                            onClick={(e) => e.preventDefault()}
-                            >
-                            <p>Services</p>
-                            </DropdownToggle>
-                            <DropdownMenu aria-labelledby="navbarDropdownMenuLink1">
-                            <DropdownItem className={classes.dropdownItem}>
-                                9
-                            </DropdownItem>
-                            <DropdownItem className={classes.dropdownItem}>
-                                12
-                            </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown> */}
-              {/* <select className={classes.selectPerPage} value={limit} onChange={(e) => handlePerPage(e.target.value)}>
-                <option value="9" className={classes.option}>
-                  9
-                </option>
-                <option value="12" className={classes.option}>
-                  12
-                </option>
-              </select> */}
               <h5>
-                RESULTS-FOUND: <span>{listTours?.length}</span>
+                RESULTS-FOUND: <span>{currentItems?.length}</span>
               </h5>
             </Col>
           </Row>
           <Row className={classes.rowResultBody}>
             <Col xs={2} className={classes.btnResetWrapper}>
-              <Button btnType={BtnType.Outlined} className={classes.btnResetOption} onClick={onClearOption}>
+              <Button
+                btnType={BtnType.Outlined}
+                className={classes.btnResetOption}
+                onClick={onClearOption}
+              >
                 <FontAwesomeIcon icon={faXmark} /> reset option
               </Button>
               <BoxSmallLeft title="Search tours">
@@ -306,92 +320,98 @@ const ListTours: NextPage = () => {
                   className={classes.inputSearch}
                   placeholder="Search"
                   name="location"
-                  // value={search}
-                  // onChange={e => setSearch(e.target.value)}
                   onKeyPress={handleKeyPress}
                   startIcon={<FontAwesomeIcon icon={faSearch} />}
                   inputRef={register("location")}
                 />
-                <Button btnType={BtnType.Primary} className={classes.btnSearch} onClick={() => handleSearch()}>
+                <Button
+                  btnType={BtnType.Primary}
+                  className={classes.btnSearch}
+                  onClick={() => handleSearch()}
+                >
                   Search
                 </Button>
               </BoxSmallLeft>
-                {/* <InputCheckbox id="sea"  content="Sea" value="sea" onChange={filterHandler} inputRef={register("checkOptions")}/>
-                <InputCheckbox id="shopping" content="Shopping" value="shopping" onChange={filterHandler} inputRef={register("checkOptions")}/>
-                <InputCheckbox id="family" content="Family" value="family" onChange={filterHandler} inputRef={register("checkOptions")}/>
-                <InputCheckbox id="mountain" content="Mountain" value="mountain" onChange={filterHandler} inputRef={register("checkOptions")}/> */}
-                <FilterPanel
-                // selectedCategory={selectedCategory}
-                // selectCategory={handleSelectCategory}
+              <FilterPanel
                 selectedRating={selectedRating}
                 selectedPrice={selectedPrice}
                 selectRating={handleSelectRating}
                 tags={tags}
                 changeChecked={handleChangeChecked}
                 changePrice={handleChangePrice}
-                />
+              />
             </Col>
             <Col xs={10} className={classes.listTours}>
               <div className={classes.containerListTour}>
-              {/* ==================== Grid view ===================== */}
-              {!changeViewLayout && (
-                <Row className={classes.rowGridView}>
-                  {listTours?.map((tour, index) => (
-                    <CardItemGrid
-                      linkView="listTour"
-                      linkBook="book/tour"
-                      key={index}
-                      id={tour.id}
-                      src={tour?.images[0]}
-                      title={tour.title}
-                      description={tour.description}
-                      businessHours={tour.businessHours}
-                      location={tour.location}
-                      contact={tour.contact}
-                      price={tour.price}
-                      discount={tour.discount}
-                      tags={tour.tags}
-                      rate={Math.floor(tour?.rate)}
-                      creator={tour.creator}
-                      isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
-                      isDelete={tour.isDelete}
-                      className={tour.isTemporarilyStopWorking ? classes.stopWorking : ""}
-                    />
-                  ))}
-                </Row>
-              )}
-              {/* ==================== List view ===================== */}
-              {changeViewLayout && (
-                <div>
-                  {listTours?.map((tour, index) => (
-                    <CardItemList
-                      linkView="listTour"
-                      linkBook="book/tour"
-                      key={index}
-                      id={index}
-                      src={tour?.images[0]}
-                      title={tour.title}
-                      description={tour.description}
-                      businessHours={tour.businessHours}
-                      location={tour.location}
-                      contact={tour.contact}
-                      price={tour.price}
-                      discount={tour.discount}
-                      tags={tour.tags}
-                      rate={Math.floor(tour?.rate)}
-                      creator={tour.creator}
-                      isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
-                      className={tour.isTemporarilyStopWorking ? classes.stopWorking : ""}
-                    />
-                  ))}
-                </div>
-              )}
-              {!listTours.length && (<div>
-                <SearchNotFound mess="No tour found"/>
-              </div>)}
+                {/* ==================== Grid view ===================== */}
+                {!changeViewLayout && (
+                  <Row className={classes.rowGridView}>
+                    {currentItems?.map((tour, index) => (
+                      <CardItemGrid
+                        linkView="listTour"
+                        linkBook="book/tour"
+                        key={index}
+                        id={tour.id}
+                        src={tour?.images[0]}
+                        title={tour.title}
+                        description={tour.description}
+                        businessHours={tour.businessHours}
+                        location={tour.location}
+                        contact={tour.contact}
+                        price={tour.price}
+                        discount={tour.discount}
+                        tags={tour.tags}
+                        rate={Math.floor(tour?.rate)}
+                        creator={tour.creator}
+                        isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
+                        isDelete={tour.isDelete}
+                        className={
+                          tour.isTemporarilyStopWorking
+                            ? classes.stopWorking
+                            : ""
+                        }
+                      />
+                    ))}
+                  </Row>
+                )}
+                {/* ==================== List view ===================== */}
+                {changeViewLayout && (
+                  <div>
+                    {currentItems?.map((tour, index) => (
+                      <CardItemList
+                        linkView="listTour"
+                        linkBook="book/tour"
+                        key={index}
+                        id={index}
+                        src={tour?.images[0]}
+                        title={tour.title}
+                        description={tour.description}
+                        businessHours={tour.businessHours}
+                        location={tour.location}
+                        contact={tour.contact}
+                        price={tour.price}
+                        discount={tour.discount}
+                        tags={tour.tags}
+                        rate={Math.floor(tour?.rate)}
+                        creator={tour.creator}
+                        isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
+                        className={
+                          tour.isTemporarilyStopWorking
+                            ? classes.stopWorking
+                            : ""
+                        }
+                      />
+                    ))}
+                  </div>
+                )}
+                {!currentItems?.length && (
+                  <div>
+                    <SearchNotFound mess="No tour found" />
+                  </div>
+                )}
               </div>
               <Row className={classes.pigination}>
-                <Pagination>
+                {/* <Pagination>
                   <PaginationItem>
                     <PaginationLink>
                       <span aria-hidden={true}>
@@ -415,7 +435,27 @@ const ListTours: NextPage = () => {
                       </span>
                     </PaginationLink>
                   </PaginationItem>
-                </Pagination>
+                </Pagination> */}
+                <ReactPaginate
+                  nextLabel="next >"
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={3}
+                  marginPagesDisplayed={2}
+                  pageCount={pageCount}
+                  previousLabel="< previous"
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  breakLabel="..."
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                  containerClassName="pagination"
+                  activeClassName="active"
+                  renderOnZeroPageCount={null}
+                />
               </Row>
             </Col>
           </Row>

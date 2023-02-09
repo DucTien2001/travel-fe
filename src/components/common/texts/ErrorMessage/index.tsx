@@ -1,16 +1,13 @@
-
-import styled from 'styled-components';
-
+import styled from "styled-components";
 
 const ErrorMessage = styled.p`
-  font-weight: 500;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 140%;
   letter-spacing: 0.015em;
-  color: #af1c10 !important;
+  color: #ff3636 !important;
   padding-top: 5px;
   white-space: initial;
   margin: 0 !important;
-`
+`;
 
-export default ErrorMessage
+export default ErrorMessage;

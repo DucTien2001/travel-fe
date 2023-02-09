@@ -31,13 +31,18 @@ import { getAllTours as getAllToursOfNormal } from "redux/reducers/Normal/action
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { EActiveNav } from "..";
+
 
 interface SearchData {
   name?: string;
 }
-
+interface Props {
+  onChangeTabCreate: (type: EActiveNav) => void;
+  handleTourEdit?: (currentTarget: any, item: ETour, type: EActiveNav) => void;
+}
 // eslint-disable-next-line react/display-name
-const Tour = memo(() => {
+const Tour = memo(({onChangeTabCreate, handleTourEdit} : Props) => {
   const dispatch = useDispatch();
   const { allTours } = useSelector((state: ReducerType) => state.enterprise);
   const { user } = useSelector((state: ReducerType) => state.user);
@@ -83,10 +88,10 @@ const Tour = memo(() => {
       .finally(() => dispatch(setLoading(false)));
   };
 
-  const onAction = (currentTarget: any, item: ETour) => {
-    onTogglePopupCreateTour();
-    setTourEdit(item);
-  };
+  // const onAction = (currentTarget: any, item: ETour) => {
+  //   onTogglePopupCreateTour();
+  //   setTourEdit(item);
+  // };
 
   const onShowConfirm = () => {
     if (!tourAction) return;
@@ -176,7 +181,7 @@ const Tour = memo(() => {
               inputRef={register("name")}
             />
           </div>
-          <Button btnType={BtnType.Primary} onClick={onTogglePopupCreateTour}>
+          <Button btnType={BtnType.Primary} onClick={() => onChangeTabCreate(EActiveNav.Create_Tour_Active)}>
             <FontAwesomeIcon icon={faPlus} />
             Create
           </Button>
@@ -242,7 +247,11 @@ const Tour = memo(() => {
                         <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
                       </DropdownToggle>
                       <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onAction(e, item)}>
+                        {/* <DropdownItem className={classes.dropdownItem} onClick={(e) => onAction(e, item)}>
+                          <FontAwesomeIcon icon={faPen} />
+                          Edit
+                        </DropdownItem> */}
+                        <DropdownItem className={classes.dropdownItem} onClick={(e) => handleTourEdit(e, item, EActiveNav.Create_Tour_Active)}>
                           <FontAwesomeIcon icon={faPen} />
                           Edit
                         </DropdownItem>

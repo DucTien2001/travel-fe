@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,28 +9,40 @@ import {
   Col,
   Badge,
 } from "reactstrap";
-import {images} from "configs/images";
+import { images } from "configs/images";
 // import Carousel from "components/Carousel";
 import classes from "./styles.module.scss";
-import Button, {BtnType} from "components/common/buttons/Button";
+import Button, { BtnType } from "components/common/buttons/Button";
 import Carousel from "components/Carousel";
-import { ICreateHotel } from "models/hotel";
-import { fCurrency2VND } from "utils/formatNumber";
+import { HOTEL_SECTION, ICreateHotel } from "models/hotel";
+import { fCurrency2, fCurrency2VND } from "utils/formatNumber";
 import useAuth from "hooks/useAuth";
 import Link from "next/link";
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBellConcierge, faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBellConcierge,
+  faBusinessTime,
+  faCalendar,
+  faCircleCheck,
+  faCircleInfo,
+  faClock,
+  faFaceSmile,
+  faLocationDot,
+  faPhone,
+  faWallet,
+} from "@fortawesome/free-solid-svg-icons";
 import Stars from "components/Stars";
+import { Box, Stepper, Step, StepLabel } from "@mui/material";
+import PopupModalImages from "components/Popup/PopupModalImages";
 
 interface Props {
   hotel: ICreateHotel;
 }
 
-
 // eslint-disable-next-line react/display-name
-const SectionTour = memo(({hotel} : Props)=> {
-  const {user} = useAuth();
+const SectionTour = memo(({ hotel }: Props) => {
+  const { user } = useAuth();
   const [images, setImages] = useState([]);
   const [collapses, setCollapses] = React.useState([1]);
   const changeCollapse = (collapse: number) => {
@@ -54,96 +66,179 @@ const SectionTour = memo(({hotel} : Props)=> {
   }, []);
 
   useEffect(() => {
-    const newImages = hotel?.images?.map((item, index) => {return {
-      altText: 'Slide',
-      caption: 'Slide',
-      key: index + 1,
-      src: item,
-    }})
+    const newImages = hotel?.images?.map((item, index) => {
+      return {
+        altText: "Slide",
+        caption: "Slide",
+        key: index + 1,
+        src: item,
+      };
+    });
     setImages(newImages);
-  }, [hotel])
+  }, [hotel]);
+  const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
 
+  const onOpenPopupModalImages = () =>
+    setOpenPopupModalImages(!openPopupModalImages);
+
+  const scrollToElement = (id: string) => {
+    var scrollDiv = document.getElementById(id).offsetTop;
+    window.scrollTo({ top: scrollDiv, behavior: "smooth" });
+  };
   return (
     <>
-        <div className="section">
-          <Container>
-            <Row>
-              <Col md="5">
-              {images && (<Carousel
-                  images={images}
-                />)}
-                <p className={`blockquote blockquote-info ${classes.blockquote}`}>
-                  <small>{hotel?.name}&nbsp;&nbsp;{hotel?.checkInTime} - {hotel?.checkOutTime}</small>
-                  <br></br>
-                  {hotel?.contact}    
-                </p>
-              </Col>
-              <Col className="ml-auto mr-auto" md="6">
-                <h2 className={`title ${classes.nameTour}`}>{hotel?.name} - {hotel?.location}</h2>
-                <Stars numberOfStars={Math.floor(hotel?.rate)}/>
-                {<div className={clsx("mt-2",classes.tags)}>
-                    {hotel?.tags?.map((item, index) => (
-                        <Badge pill className={classes.badgeTags} key={index}>{item}</Badge>
-                        
-                      ))}
-                </div>}
-                <h2 className={`main-price ${classes.businessHours}`}>Time business: {hotel?.checkInTime} - {hotel?.checkOutTime}</h2>
-                <h2 className={`main-price ${classes.businessHours}`}>Contact: {hotel?.contact}</h2>
-                <div className={classes.boxTip}>
-                <div className={classes.tip}>
-                   <FontAwesomeIcon icon={faCircleCheck}/>
-                  <p>You can go experience it anytime while the ticket price is still available</p>
+      <div className={clsx("section", classes.root)}>
+        <Container className={classes.container}>
+          <Row>
+            <Col>
+              <h2 className={`title ${classes.nameHotel}`}>
+                {hotel?.name} - {hotel?.location}
+              </h2>
+              <div className={classes.subProduct}>
+                <div className={classes.tags}>
+                  {hotel?.tags?.map((item, index) => (
+                    <Badge pill className={classes.badgeTags} key={index}>
+                      {item}
+                    </Badge>
+                  ))}
                 </div>
-                <div className={classes.tip}>
-                  <FontAwesomeIcon icon={faBellConcierge}/>
-                  <p>24-hour front desk - Help is always there when you need it!</p>
+                <div className={classes.locationRate}>
+                  <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
+                  <p>{hotel?.location}</p>
+                  {hotel?.rate && (
+                    <Stars
+                      numberOfStars={Math.floor(hotel?.rate)}
+                      className={classes.starRating}
+                    />
+                  )}
                 </div>
-                <div className={classes.tip}>
-                  <FontAwesomeIcon icon={faCircleInfo}/>
-                  <p>Please check the information to be filled in before pressing the confirm button</p>
-                </div>
-            </div>
-              </Col>             
-            </Row>
-            <Row>
-            <div
-                aria-multiselectable={true}
-                id="accordion"
-                role="tablist"
-                className={clsx("card-collapse", classes.description)}
+              </div>
+              <Row
+                className={classes.containerImg}
+                onClick={onOpenPopupModalImages}
+              >
+                <Col
+                  className={clsx(classes.wrapperImg, classes.mobileImg)}
+                  md="8"
                 >
-                  <Card className="card-plain">
-                    <CardHeader id="headingOne" role="tab">
-                      <a
-                        aria-expanded={collapses.includes(1)}
-                        data-parent="#accordion"
-                        data-toggle="collapse"
-                        href="#pablo"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          changeCollapse(1);
-                        }}
-                      >
-                        Description{" "}
-                        <i className="now-ui-icons arrows-1_minimal-down"></i>
-                      </a>
-                    </CardHeader>
-                    <Collapse isOpen={collapses.includes(1)}>
-                      <CardBody>
-                        <p>
-                          {/* eslint-disable-next-line react/no-unescaped-entities */}
-                          {hotel?.description}
-                        </p>
-                      </CardBody>
-                    </Collapse>
-                  </Card>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={hotel?.images[0]} alt="anh" />
+                </Col>
+                <Col
+                  className={clsx(classes.wrapperImg, classes.wrapperImg1)}
+                  md="4"
+                >
+                  <div className={clsx(classes.rowImg, classes.mobileImg)}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={hotel?.images[1]} alt="anh" />
+                  </div>
+                  <div className={clsx(classes.rowImg, classes.moreImg)}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={hotel?.images[1]} alt="anh" />
+                    <div className={classes.modalImg}>
+                      <p>See All</p>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row className={classes.content}>
+            <Col xs={8} className={classes.leftContent}>
+              <h2 className={classes.leftTextTitle}>Product Details</h2>
+              <h5 className={classes.leftTextPanel}>Highlight</h5>
+              <ul className={classes.highlightContent}>
+                <li>oak in the idyllic sunset of Phu Quoc island</li>
+                <li>oak in the idyllic sunset of Phu Quoc island</li>
+                <li>oak in the idyllic sunset of Phu Quoc island</li>
+                <li>oak in the idyllic sunset of Phu Quoc island</li>
+                <li>oak in the idyllic sunset of Phu Quoc island</li>
+              </ul>
+              <div className={classes.goodWrapper}>
+                <FontAwesomeIcon icon={faFaceSmile}></FontAwesomeIcon>
+                <p>
+                  <span>Good for:</span> Tasty Dinners, Adventure Junkies,
+                  Relaxation, Nature Enthusiasts, Sightseeing, Asian Cuisine
+                </p>
+              </div>
+              <div className="ml-2">
+                <h5 className={classes.leftTextPanel}>
+                  What You’ll Experience
+                </h5>
+                <p className={classes.textDescription}>{hotel?.description}</p>
+              </div>
+              <div className={classes.mapBox}>
+                <h5 className={classes.leftTextPanel}> Location Detail</h5>
+                <div>
+                  <p className={classes.locationDetail}>
+                    143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh
+                    Kiên Giang, Vietnam
+                  </p>
+                  <div className={classes.map}></div>
+                  <div className={classes.contactBox}>
+                    <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
+                    <p>Contact Partner: </p>
+                    <a href={`tel: ${hotel?.contact}`}>{hotel?.contact}</a>
+                  </div>
                 </div>
-            </Row>
-          </Container>
-                      
-        </div>
+              </div>
+              <div className="mt-4">
+                <h5 className={classes.leftTextPanel}>
+                  {" "}
+                  Additional Information
+                </h5>
+                <p className={classes.textDescription}>{hotel?.description}</p>
+              </div>
+            </Col>
+            <Col xs={4} className={classes.rightContent}>
+              <div></div>
+              <Button
+                btnType={BtnType.Primary}
+                isDot={true}
+                className={classes.btnBookNow}
+                onClick={() =>
+                  scrollToElement(HOTEL_SECTION.section_check_room)
+                }
+              >
+                Select Room
+              </Button>
+              <div className={classes.tipWrapper}>
+                <div className={classes.serviceTip}>
+                  <FontAwesomeIcon icon={faClock}></FontAwesomeIcon>
+                  <p>
+                    Tour duration:{" "}
+                    <span>
+                      {hotel?.checkInTime} - {hotel?.checkOutTime}
+                    </span>
+                  </p>
+                </div>
+                <div className={classes.serviceTip}>
+                  <FontAwesomeIcon icon={faCalendar}></FontAwesomeIcon>
+                  <p>Available today</p>
+                </div>
+                <div className={classes.serviceTip}>
+                  <FontAwesomeIcon icon={faBusinessTime}></FontAwesomeIcon>
+                  <p>Service Available in: Vietnamese</p>
+                </div>
+              </div>
+              <div className={classes.featureWrapper}>
+                <p className={classes.featureTitle}>Features</p>
+                <div>
+                  <FontAwesomeIcon icon={faWallet}></FontAwesomeIcon>
+                  <p>Free cancellation</p>
+                </div>
+              </div>
+            </Col>
+          </Row>
+          <PopupModalImages
+            isOpen={openPopupModalImages}
+            toggle={onOpenPopupModalImages}
+            images={hotel?.images}
+          />
+        </Container>
+      </div>
     </>
   );
-})
+});
 
 export default SectionTour;

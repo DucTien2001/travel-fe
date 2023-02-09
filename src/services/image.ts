@@ -6,7 +6,7 @@ import api from "./configApi";
 export class ImageService {
   static async uploadImage(data: any): Promise<any> {
     return await axios
-      .post("https://api.cloudinary.com/v1_1/dpvvffyul/image/upload", data, {
+      .post(`https://api.cloudinary.com/v1_1/ds8v45vob/image/upload`, data, {
         headers: { "X-Requested-With": "XMLHttpRequest" },
       })
       .then((res) => {

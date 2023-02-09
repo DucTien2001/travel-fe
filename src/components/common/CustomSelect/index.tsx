@@ -67,6 +67,8 @@ const customStyles = (
 });
 
 interface Props extends StateManagerProps {
+  label?: string;
+  labelIcon?: string;
   className?: string;
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrors<any>>;
   name?: string;
@@ -78,6 +80,8 @@ interface Props extends StateManagerProps {
 // eslint-disable-next-line react/display-name
 const CustomSelect = memo(
   ({
+    label,
+    labelIcon,
     className,
     errorMessage,
     name,
@@ -94,6 +98,7 @@ const CustomSelect = memo(
           className
         )}
       >
+        {label && <label className={classes.label}>{labelIcon} {label}</label>}
         {control ? (
           <>
             <Controller

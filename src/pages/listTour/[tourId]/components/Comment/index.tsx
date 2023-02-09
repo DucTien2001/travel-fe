@@ -1,20 +1,20 @@
-import React, {memo, useEffect, useState} from "react";
+import React, { memo, useEffect, useState } from "react";
 // reactstrap components
 import {
-    Carousel,
-    CarouselControl,
-    CarouselIndicators,
-    CarouselItem,
-    Col,
+  Carousel,
+  CarouselControl,
+  CarouselIndicators,
+  CarouselItem,
+  Col,
   Container,
   Row,
 } from "reactstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import classes from "./styles.module.scss";
-import 'aos/dist/aos.css';
-import Button, {BtnType} from "components/common/buttons/Button";
-import {Comment} from "models/comment";
+import "aos/dist/aos.css";
+import Button, { BtnType } from "components/common/buttons/Button";
+import { Comment } from "models/comment";
 import CardComment from "../CardComments";
 import PopupAddTourComment from "../PopupAddTourComment";
 import { ReducerType } from "redux/reducers";
@@ -32,81 +32,85 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import clsx from "clsx";
-interface Props { 
-    comments: Comment[],
-    tour: Tour;
-    onGetTourComments: () => void;
+import { useMediaQuery, useTheme } from "@mui/material";
+interface Props {
+  comments: Comment[];
+  tour: Tour;
+  onGetTourComments: () => void;
 }
 
 // eslint-disable-next-line react/display-name
-const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
-    const router = useRouter();
-    const dispatch = useDispatch();
-    const tourId = Number(router.query.tourId.slice(1))
-    const {allTourBills} = useSelector((state: ReducerType) => state.normal);
+const Comments = memo(({ comments, tour, onGetTourComments }: Props) => {
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-    const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
-    const [isAddComment, setIsAddComment] = useState(false);
-    const [commentAction, setCommentAction] = useState<Comment>(null);
-    const [commentDelete, setCommentDelete] = useState<Comment>(null);
-    const [commentEdit, setCommentEdit] = useState(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-    const onOpenPopupAddComment = () => setOpenPopupAddComment(true);
+  const tourId = Number(router.query.tourId.slice(1));
+  const { allTourBills } = useSelector((state: ReducerType) => state.normal);
 
-    const onAction = (e, comment: Comment) => {
-        setCommentAction(comment);
-    }
+  const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
+  const [isAddComment, setIsAddComment] = useState(false);
+  const [commentAction, setCommentAction] = useState<Comment>(null);
+  const [commentDelete, setCommentDelete] = useState<Comment>(null);
+  const [commentEdit, setCommentEdit] = useState(null);
 
-    const onEdit = () => {
-        if(!commentAction) return;
-        setCommentEdit(commentAction);
-        onOpenPopupAddComment();
-    }
-    const onDelete = () => {
-        if(!commentAction) return;
-        setCommentDelete(commentAction);
-    }
+  const onOpenPopupAddComment = () => setOpenPopupAddComment(true);
 
-    const onClosePopupConfirmDelete = () => {
-        if(!commentDelete) return
-        setCommentDelete(null);
-    }
+  const onAction = (e, comment: Comment) => {
+    setCommentAction(comment);
+  };
 
-    const onClosePopupAddComment = () => {
-        setOpenPopupAddComment(false);
-        setCommentEdit(null);
-    }
+  const onEdit = () => {
+    if (!commentAction) return;
+    setCommentEdit(commentAction);
+    onOpenPopupAddComment();
+  };
+  const onDelete = () => {
+    if (!commentAction) return;
+    setCommentDelete(commentAction);
+  };
 
-    const onYesDelete = () => {
-        if (!commentDelete) return
-        onClosePopupConfirmDelete();
-        dispatch(setLoading(true));
-        CommentService.deleteCommentTour(commentDelete?.id)
-        .then(()=> {        
-            onGetTourComments();
-        })
-        .catch(e => dispatch(setErrorMess(e)))
-        .finally(() => dispatch(setLoading(false)))
-    }
+  const onClosePopupConfirmDelete = () => {
+    if (!commentDelete) return;
+    setCommentDelete(null);
+  };
 
-    useEffect(() => {
-        allTourBills.forEach(item => {
-            if (item.tourId === tourId && item.verifyCode === null) {     
-                setIsAddComment(!isAddComment);
-            }
-        })
+  const onClosePopupAddComment = () => {
+    setOpenPopupAddComment(false);
+    setCommentEdit(null);
+  };
+
+  const onYesDelete = () => {
+    if (!commentDelete) return;
+    onClosePopupConfirmDelete();
+    dispatch(setLoading(true));
+    CommentService.deleteCommentTour(commentDelete?.id)
+      .then(() => {
+        onGetTourComments();
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  useEffect(() => {
+    allTourBills.forEach((item) => {
+      if (item.tourId === tourId && item.verifyCode === null) {
+        setIsAddComment(!isAddComment);
+      }
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [allTourBills])
-
+  }, [allTourBills]);
   return (
-    <>  
-    <Container className={classes.root}>
+    <>
+      <Container className={classes.root}>
         {/* eslint-disable-next-line react/no-unescaped-entities */}
         <h3 className="text-center">CUSTOMER'S FEEDBACKS</h3>
         <Swiper
-          slidesPerView={3}
+          slidesPerView={isMobile ? 1 : 3}
           spaceBetween={30}
-          slidesPerGroup={3}
+          slidesPerGroup={isMobile ? 1 : 3}
           loop={true}
           loopFillGroupWithBlank={true}
           pagination={{
@@ -114,51 +118,57 @@ const Comments = memo(({comments, tour, onGetTourComments}: Props) => {
           }}
           navigation={true}
           modules={[Pagination, Navigation]}
-          className={clsx("mySwiper",classes.swiper)}
+          className={clsx("mySwiper", classes.swiper)}
         >
-            {comments?.map((cmt) => (
-                <SwiperSlide key={cmt.id}>
-                <CardComment   
-                key={cmt.id}          
+          {comments?.map((cmt) => (
+            <SwiperSlide key={cmt.id}>
+              <CardComment
+                key={cmt.id}
                 comment={cmt}
                 onAction={onAction}
                 onEdit={onEdit}
                 onDelete={onDelete}
                 tour={tour}
                 onGetTourComments={onGetTourComments}
-                />
-                </SwiperSlide> 
-            ))} 
-            {!comments?.length && (
-                <p className={classes.noComment}>There are no comments yet !</p>
-            )}
+              />
+            </SwiperSlide>
+          ))}
         </Swiper>
+        <Row xs={3} className={classes.rowComment}>
+          {!comments?.length && (
+            <p className={classes.noComment}>There are no comments yet !</p>
+          )}
+        </Row>
         <Row className={classes.rowControl}>
-            <div className={classes.btnContainer}>
-                <div>
-                <Button btnType={BtnType.Primary} onClick={onOpenPopupAddComment} disabled={!isAddComment}>
-                    <FontAwesomeIcon icon={faPlus} className="mr-1"/>
-                    Add comments
-                </Button>
-                {!isAddComment && <Warning content="You don't book this tour"/>} 
-                </div>
+          <div className={classes.btnContainer}>
+            <div>
+              <Button
+                btnType={BtnType.Primary}
+                onClick={onOpenPopupAddComment}
+                disabled={!isAddComment}
+              >
+                <FontAwesomeIcon icon={faPlus} className="mr-1" />
+                Add comments
+              </Button>
+              {!isAddComment && <Warning content="You don't book this tour" />}
             </div>
+          </div>
         </Row>
         <PopupAddTourComment
-        isOpen={openPopupAddComment}
-        commentEdit={commentEdit}
-        onClose={onClosePopupAddComment}
-        toggle={onClosePopupAddComment}
-        onGetTourComments={onGetTourComments}
+          isOpen={openPopupAddComment}
+          commentEdit={commentEdit}
+          onClose={onClosePopupAddComment}
+          toggle={onClosePopupAddComment}
+          onGetTourComments={onGetTourComments}
         />
         <PopupConfirmDelete
-        title="Are you sure delete this comment?"
-        isOpen={!!commentDelete}
-        onClose={onClosePopupConfirmDelete}
-        toggle={onClosePopupConfirmDelete}
-        onYes={onYesDelete}
+          title="Are you sure delete this comment?"
+          isOpen={!!commentDelete}
+          onClose={onClosePopupConfirmDelete}
+          toggle={onClosePopupConfirmDelete}
+          onYes={onYesDelete}
         />
-    </Container>
+      </Container>
     </>
   );
 });

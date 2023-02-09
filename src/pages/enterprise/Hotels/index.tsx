@@ -36,13 +36,17 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import PopupAddOrEditRoomOtherPrice from "./PopupAddOrEditRoomOtherPrice";
+import { EActiveNav } from "..";
 
 interface SearchData {
   name?: string;
 }
-
+interface Props {
+  onChangeTabCreate: (type: EActiveNav) => void;
+  handleHotelEdit?: (currentTarget: any, item: IHotel, type: EActiveNav) => void;
+}
 // eslint-disable-next-line react/display-name
-const Hotel = memo(() => {
+const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: ReducerType) => state.user);
   const { allHotels } = useSelector((state: ReducerType) => state.enterprise);
@@ -347,7 +351,7 @@ const Hotel = memo(() => {
               inputRef={register("name")}
             />
           </div>
-          <Button btnType={BtnType.Primary} onClick={onTogglePopupCreateHotel}>
+          <Button btnType={BtnType.Primary} onClick={() => onChangeTabCreate(EActiveNav.Create_Hotel_Active)}>
             <FontAwesomeIcon icon={faPlus} />
             Create
           </Button>
@@ -423,7 +427,7 @@ const Hotel = memo(() => {
                             <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
                           </DropdownToggle>
                           <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                            <DropdownItem className={classes.dropdownItem} onClick={(e) => onAction(e, item)}>
+                            <DropdownItem className={classes.dropdownItem} onClick={(e) => handleHotelEdit(e, item, EActiveNav.Create_Tour_Active)}>
                               <FontAwesomeIcon icon={faPen} />
                               Edit
                             </DropdownItem>

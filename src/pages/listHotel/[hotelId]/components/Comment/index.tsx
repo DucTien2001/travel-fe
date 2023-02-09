@@ -14,8 +14,6 @@ import classes from "./styles.module.scss";
 import 'aos/dist/aos.css';
 import Button, {BtnType} from "components/common/buttons/Button";
 import {Comment} from "models/comment";
-import clsx from "clsx";
-import Pagination from "components/Pagination";
 import CardComment from "../CardComments";
 import PopupAddComment from "components/Popup/PopupAddComment";
 import { IHotel } from "models/hotel";
@@ -27,7 +25,16 @@ import { useRouter } from "next/router";
 import { ReducerType } from "redux/reducers";
 import PopupAddHotelComment from "../PopupAddHotelComment";
 import Warning from "components/common/warning";
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import clsx from "clsx";
+import {
+    useMediaQuery,
+    useTheme,
+  } from '@mui/material';
 interface Props { 
     comments: Comment[],
     hotel: IHotel;
@@ -38,6 +45,8 @@ interface Props {
 const Comments = memo(({comments, hotel, onGetHotelComments}: Props) => {
     const dispatch = useDispatch();
     const router = useRouter()
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const hotelId = Number(router.query.hotelId.slice(1))
     const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
     const [commentAction, setCommentAction] = useState<Comment>(null);
@@ -99,19 +108,33 @@ const Comments = memo(({comments, hotel, onGetHotelComments}: Props) => {
     <Container className={classes.root}>
         {/* eslint-disable-next-line react/no-unescaped-entities */}
         <h3 className="text-center">CUSTOMER'S FEEDBACKS</h3>
-        <Row xs={3} className={classes.rowComment}>
+        <Swiper
+          slidesPerView={isMobile ? 1 : 3}
+          spaceBetween={30}
+          slidesPerGroup={3}
+          loop={true}
+          loopFillGroupWithBlank={true}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          className={clsx("mySwiper",classes.swiper)}
+        >
             {comments?.map((cmt) => (
-                    <Col xs={4} key={cmt.id} className={classes.cardComment}>
-                    <CardComment             
-                    comment={cmt}
-                    onAction={onAction}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    hotel={hotel}
-                    onGetHotelComments={onGetHotelComments}
-                    />
-                    </Col> 
-                ))} 
+                <SwiperSlide key={cmt.id}>
+                <CardComment             
+                comment={cmt}
+                onAction={onAction}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                hotel={hotel}
+                onGetHotelComments={onGetHotelComments}
+                />
+                </SwiperSlide> 
+            ))} 
+        </Swiper>
+        <Row xs={3} className={classes.rowComment}>
             {!comments?.length && (
                 <p className={classes.noComment}>There are no comments yet !</p>
             )}      
@@ -125,9 +148,6 @@ const Comments = memo(({comments, hotel, onGetHotelComments}: Props) => {
                 </Button>
                 {!isAddComment && <Warning content="You don't book this hotel"/>} 
                 </div>
-                {/* <Pagination className={classes.pagination} postPerPage={0} totalPosts={0} paginate={function (number: number): void {
-                          throw new Error("Function not implemented.");
-                      } }/> */}
             </div>
         </Row>
         <PopupAddHotelComment

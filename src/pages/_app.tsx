@@ -24,6 +24,7 @@ import Router, { useRouter } from "next/router";
 import LoadingScreen from "components/LoadingSrceen";
 import { EUserType } from "models/user";
 import { ReducerType } from "redux/reducers";
+import '../styles/globals.css'
 import {
   getAllHotels as getAllHotelsOfEnterprise,
   getAllTours as getAllToursOfEnterprise,

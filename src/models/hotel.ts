@@ -35,3 +35,8 @@ export interface IUpdateHotel {
   tags: string[];
   images: string[];
 }
+
+export enum HOTEL_SECTION {
+  section_information = 'section_information',
+  section_check_room = 'section_check_room',
+}

@@ -16,7 +16,7 @@ import bg19 from "assets/img/bg19.jpg";
 import michael from "assets/img/michael.jpg";
 import man from "assets/img/man.png";
 import footer from "assets/img/footer.png";
-import offer_1 from "assets/img/offer_1.jpg"; 
+import offer_1 from "assets/img/offer_1.jpg";
 import bgUser from "assets/img/bg-user.jpg";
 import login from "assets/img/login.jpg";
 import iconSearch from "assets/img/icon-search.jpg";
@@ -27,6 +27,7 @@ import imagesItinerary from "assets/img/icon-itinerary.jpg";
 import defaultUser from "assets/img/defaultUser.png";
 import google from "assets/img/icon/ic-google.svg";
 import manage from "assets/img/manage.png";
+import user from "assets/img/user.png";
 // import pricing1 from 'assets/img/pricing1.jpg'
 
 export const images = {
@@ -37,7 +38,7 @@ export const images = {
   avatar,
   hotel,
   fly,
-  car, 
+  car,
   cruises,
   trip,
   activities,
@@ -55,7 +56,9 @@ export const images = {
   iconSearch,
   imagesListTour,
   imagesListHotel,
-  phuQuoc,imagesItinerary,
+  phuQuoc,
+  imagesItinerary,
   defaultUser,
   manage,
+  user,
 };

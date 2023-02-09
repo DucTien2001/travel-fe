@@ -32,6 +32,9 @@ import HotelComments from "./HotelComments";
 import CheckRoom from "./CheckRoom";
 import HotelStatistic from "./HotelStatistic";
 import TourStatistic from "./TourStatistic";
+import AddOrEditTour from "./Tours/AddOrEditTour";
+import { ETour, IHotel } from "models/enterprise";
+import AddOrEditHotel from "./Hotels/AddOrEditHotel";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -45,9 +48,13 @@ export enum EActiveNav {
   Feedback_Active = 9,
   Tour_Statistic_Active = 10,
   Hotel_Statistic_Active = 11,
+  Create_Tour_Active = 12,
+  Create_Hotel_Active = 13,
 }
 
 const Enterprise: NextPage = () => {
+  const [tourEdit, setTourEdit] = useState<ETour>(null);
+  const [hotelEdit, setHotelEdit] = useState<IHotel>(null);
   const [verticalTabs, setVerticalTabs] = React.useState(EActiveNav.Tour_Active);
   const [activeSideBarMobile, setActiveSideBarMobile] = useState(false);
   const onChangeTab = (type: EActiveNav) => {
@@ -85,6 +92,14 @@ const Enterprise: NextPage = () => {
       case EActiveNav.Hotel_Statistic_Active:
         setVerticalTabs(EActiveNav.Hotel_Statistic_Active);
         break;
+      case EActiveNav.Create_Tour_Active:
+        setVerticalTabs(EActiveNav.Create_Tour_Active);
+        setTourEdit(null)
+        break;
+      case EActiveNav.Create_Hotel_Active:
+        setVerticalTabs(EActiveNav.Create_Hotel_Active);
+        setHotelEdit(null)
+        break;
       default:
         break;
     }
@@ -92,6 +107,18 @@ const Enterprise: NextPage = () => {
   const handleSideBarMobile = () => {
     setActiveSideBarMobile(!activeSideBarMobile);
   };
+
+  const handleTourEdit = (e, item) => {
+    setTourEdit(item)
+    setVerticalTabs(EActiveNav.Create_Tour_Active);
+  }
+
+  const handleHotelEdit = (e, item) => {
+    setHotelEdit(item)
+    setVerticalTabs(EActiveNav.Create_Hotel_Active);
+  }
+
+
   return (
     <>
       <div className={classes.root}>
@@ -119,7 +146,7 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Hotel_Active ? classes.active : classes.navLink}
+                className={verticalTabs === EActiveNav.Hotel_Active  ? classes.active : classes.navLink}
                 onClick={() => onChangeTab(EActiveNav.Hotel_Active)}
               >
                 <FontAwesomeIcon icon={faBuilding} />
@@ -225,10 +252,10 @@ const Enterprise: NextPage = () => {
         <Col xs={10} className={classes.content}>
           <TabContent activeTab={"verticalTabs" + verticalTabs} className={classes.tabContent}>
             <TabPane tabId="verticalTabs1" className={classes.tabPane}>
-              <Tours />
+              <Tours onChangeTabCreate={onChangeTab} handleTourEdit={handleTourEdit}/>
             </TabPane>
             <TabPane tabId="verticalTabs2" className={classes.tabPane}>
-              <Hotels />
+              <Hotels onChangeTabCreate={onChangeTab} handleHotelEdit={handleHotelEdit}/>
             </TabPane>
             <TabPane tabId="verticalTabs3" className={classes.tabPane}>
               <ToursRevenue />
@@ -253,6 +280,12 @@ const Enterprise: NextPage = () => {
             </TabPane>
             <TabPane tabId="verticalTabs11" className={classes.tabPane}>
               <HotelStatistic />
+            </TabPane>
+            <TabPane tabId="verticalTabs12" className={classes.tabPane}>
+              <AddOrEditTour itemEdit={tourEdit}/>
+            </TabPane>
+            <TabPane tabId="verticalTabs13" className={classes.tabPane}>
+              <AddOrEditHotel itemEdit={hotelEdit}/>
             </TabPane>
           </TabContent>
         </Col>

@@ -18,12 +18,14 @@ import useAuth from "hooks/useAuth";
 import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { ETour } from "models/enterprise";
 import axios from "axios";
-import { ImageService } from "services/image";
+import {ImageService } from "services/image";
 import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
 import { getAllTours as getAllToursNormal } from "redux/reducers/Normal/actionTypes";
 import { tagsOption, VALIDATION } from "configs/constants";
 import InputSelect from "components/common/inputs/InputSelect";
 import { OptionItem } from "models/general";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";
 export interface TourForm {
   name: string;
   description: string;
@@ -74,7 +76,7 @@ const PopupCreateTour = memo((props: Props) => {
       // images: yup.mixed().test("required", "Please select images", (value) => {
       //   return value && value.length;
       // }),
-      imagesRoom: yup.array().notRequired(),
+      // imagesRoom: yup.array().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -107,72 +109,107 @@ const PopupCreateTour = memo((props: Props) => {
     });
   };
 
-  const _onSubmit = async (data: TourForm) => {
+  const _onSubmit = (data: TourForm) => {
+    // dispatch(setLoading(true));
+    // const uploader = [];
+    // data?.images?.map((file) => {
+    //   const formData: any = new FormData();
+    //   formData.append("file", file);
+    //   formData.append("tags", "codeinfuse, medium, gist");
+    //   formData.append("upload_preset", "my-uploads");
+    //   formData.append("api_key", "859398113752799");
+    //   formData.append("timestamp", Date.now() / 1000 / 0);
+    //   uploader.push(ImageService.uploadImage(formData));
+    // });
+    // await Promise.all(uploader)
+    //   .then((res) => {
+    //     if (itemEdit) {
+    //       TourService.updateTour(itemEdit?.id, {
+    //         title: data.name,
+    //         description: data.description,
+    //         businessHours: data.businessHours,
+    //         location: data.location,
+    //         price: data.price,
+    //         discount: data.discount,
+    //         tags: data.tags.map((it) => it.name),
+    //         contact: data.contact,
+    //         images: res,
+    //       })
+    //       .then(() => {
+    //         dispatch(getAllTours(user?.id));
+    //         dispatch(getAllToursNormal());
+    //         dispatch(setSuccessMess("Update tour successfully"));
+    //       })
+    //       .catch((e) => {
+    //         dispatch(setErrorMess(e));
+    //       });
+    //     } else {
+    //       if (user) {
+    //         TourService.createTour({
+    //           title: data.name,
+    //           description: data.description,
+    //           businessHours: data.businessHours,
+    //           location: data.location,
+    //           price: data.price,
+    //           discount: data.discount,
+    //           tags: data.tags.map((it) => it.name),
+    //           contact: data.contact,
+    //           images: res,
+    //           creator: user?.id,
+    //         })
+    //           .then(() => {
+    //             dispatch(getAllTours(user?.id));
+    //             dispatch(getAllToursNormal());
+    //             dispatch(setSuccessMess("Create tour successfully"));
+    //           })
+    //           .catch((e) => {
+    //             dispatch(setErrorMess(e));
+    //           });
+    //       }
+    //     }
+    //   })
+    //   .catch((e) => {
+    //     dispatch(setErrorMess(e));
+    //   })
+    //   .finally(() => {
+    //     onClose();
+    //     dispatch(setLoading(false));
+    //   });
+
+
     dispatch(setLoading(true));
-    const uploader = [];
-    data?.images?.map((file) => {
-      const formData: any = new FormData();
-      formData.append("file", file);
-      formData.append("tags", "codeinfuse, medium, gist");
-      formData.append("upload_preset", "my-uploads");
-      formData.append("api_key", "859398113752799");
-      formData.append("timestamp", Date.now() / 1000 / 0);
-      uploader.push(ImageService.uploadImage(formData));
-    });
-    await Promise.all(uploader)
-      .then((res) => {
-        if (itemEdit) {
-          TourService.updateTour(itemEdit?.id, {
-            title: data.name,
-            description: data.description,
-            businessHours: data.businessHours,
-            location: data.location,
-            price: data.price,
-            discount: data.discount,
-            tags: data.tags.map((it) => it.name),
-            contact: data.contact,
-            images: res,
-          })
-          .then(() => {
-            dispatch(getAllTours(user?.id));
-            dispatch(getAllToursNormal());
-            dispatch(setSuccessMess("Update tour successfully"));
-          })
-          .catch((e) => {
-            dispatch(setErrorMess(e));
-          });
-        } else {
-          if (user) {
-            TourService.createTour({
-              title: data.name,
-              description: data.description,
-              businessHours: data.businessHours,
-              location: data.location,
-              price: data.price,
-              discount: data.discount,
-              tags: data.tags.map((it) => it.name),
-              contact: data.contact,
-              images: res,
-              creator: user?.id,
-            })
-              .then(() => {
-                dispatch(getAllTours(user?.id));
-                dispatch(getAllToursNormal());
-                dispatch(setSuccessMess("Create tour successfully"));
-              })
-              .catch((e) => {
-                dispatch(setErrorMess(e));
-              });
-          }
-        }
+    if (user) {
+    TourService.createTour({
+      title: data.name,
+      description: data.description,
+      businessHours: data.businessHours,
+      location: data.location,
+      price: data.price,
+      discount: data.discount,
+      tags: data.tags.map((it) => it.name),
+      contact: data.contact,
+      images: imagesPreview,
+      creator: user?.id,
+      })
+     .then(() => {
+      dispatch(getAllTours(user?.id));
+      dispatch(getAllToursNormal());
+      dispatch(setSuccessMess("Create tour successfully"));
       })
       .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        onClose();
-        dispatch(setLoading(false));
+      dispatch(setErrorMess(e));
       });
+    }
+    // console.log({title: data.name,
+    //   description: data.description,
+    //   businessHours: data.businessHours,
+    //   location: data.location,
+    //   price: data.price,
+    //   discount: data.discount,
+    //   tags: data.tags.map((it) => it.name),
+    //   contact: data.contact,
+    //   images: imagesPreview,
+    //   creator: user?.id})
   };
 
   useEffect(() => {
@@ -197,6 +234,29 @@ const PopupCreateTour = memo((props: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, itemEdit]);
+  const [imagesPreview, setImagesPreview] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const handleFile = async(e) => {
+    e.stopPropagation();
+    setIsLoading(true);
+    let images =[] ;
+    let files = e.target.files;
+    let formData = new FormData();
+    for(let i of files) {
+      formData.append('file',i)
+      formData.append('upload_preset', 'abez7vqo')
+      images.push( await ImageService.uploadImage(formData))
+    }
+    setIsLoading(false);
+    setImagesPreview(prev => [...prev,...images])
+  }
+
+  console.log(imagesPreview);
+
+  const handleDeleteImage = (image) => {
+    setImagesPreview(prev => prev?.filter(item => item!== image))
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
@@ -299,7 +359,7 @@ const PopupCreateTour = memo((props: Props) => {
                 />
               )}
             /> */}
-            <Controller
+            {/* <Controller
               name="images"
               control={control}
               render={({ field }) => (
@@ -310,7 +370,34 @@ const PopupCreateTour = memo((props: Props) => {
                   errorMessage={errors.images?.message}
                 />
               )}
-            />
+            /> */}
+            <Col>
+            <p className={classes.titleUpload}>Upload images</p>
+            <div className={classes.containerUploadImg}>
+              <label htmlFor="file" className={classes.boxUpload}>
+                <div>
+                  <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon>
+                  {isLoading ? <h4>Uploading...</h4>:<h4>Upload images</h4>}
+                </div>
+              </label>
+              <input onChange={handleFile} hidden type="file" id="file" multiple/>
+            </div>
+            </Col>
+            <Col>
+            <p className={classes.titleUpload}>Images preview</p>
+            <Row >        
+              {imagesPreview?.map((item, index) => {
+                return <Col  key={index} xs={4} className={classes.imgPreview}>
+                  <img src={item} alt="preview"/>
+                  <div onClick={() => handleDeleteImage(item)}
+                  title="Delete" 
+                  className={classes.iconDelete}>
+                    <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                    </div>
+                </Col>
+              })}            
+            </Row>
+            </Col>
           </ModalBody>
           <ModalFooter className={classes.footer}>
             <Button btnType={BtnType.Primary} type="submit">

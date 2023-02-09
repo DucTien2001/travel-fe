@@ -7,7 +7,10 @@ import Carousel from "components/Carousel";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDays, faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarDays,
+  faArrowsRotate,
+} from "@fortawesome/free-solid-svg-icons";
 import * as yup from "yup";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,12 +21,12 @@ import { RoomService } from "services/normal/room";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { setRoomBillConfirmReducer } from "redux/reducers/Normal/actionTypes";
-import { IHotel } from "models/hotel";
+import { HOTEL_SECTION, IHotel } from "models/hotel";
 import { useRouter } from "next/router";
 import { fCurrency2 } from "utils/formatNumber";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import PopupDefault from "components/Popup/PopupDefault";
-import { format, formatDistance, formatRelative, subDays } from 'date-fns'
+import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import useAuth from "hooks/useAuth";
 export interface CheckRoomForm {
   departure: Date;
@@ -40,17 +43,19 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const CheckRoomEmpty = memo(({ hotel }: Props) => {
   const dispatch = useDispatch();
-  const {user} = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const [listRooms, setListRoom] = useState([]);
   const schema = useMemo(() => {
     return yup.object().shape({
-      departure: yup.date().max(yup.ref("return"), 'Departure date can\'t be after return date')
-      .required('Start datetime is required'),
-      return: yup.date().min(
-        yup.ref('departure'),
-        "Return date can't be before departure date"
-      ).required('End datetime is required'),
+      departure: yup
+        .date()
+        .max(yup.ref("return"), "Departure date can't be after return date")
+        .required("Start datetime is required"),
+      return: yup
+        .date()
+        .min(yup.ref("departure"), "Return date can't be before departure date")
+        .required("End datetime is required"),
       amountList: yup.array().of(
         yup.object().shape({
           amount: yup.number(),
@@ -122,8 +127,12 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
         for (i; i.getTime() < endDate.getTime(); i.setDate(i.getDate() + 1)) {
           let flag = false;
           room.specialDatePrice.map((item) => {
-            const itemDate = new Date(item?.date)
-            if (i.getDate() === itemDate.getDate() && i.getMonth() === itemDate.getMonth() &&i.getFullYear() === itemDate.getFullYear()) {
+            const itemDate = new Date(item?.date);
+            if (
+              i.getDate() === itemDate.getDate() &&
+              i.getMonth() === itemDate.getMonth() &&
+              i.getFullYear() === itemDate.getFullYear()
+            ) {
               prices.push({
                 date: new Date(i),
                 price: item?.price,
@@ -140,9 +149,12 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
         }
         _listRooms.push({ ...room, priceDetail: [...prices] });
       });
-      setValue("amountList", _listRooms.map(() => ({
-        amount: 0,
-      })))
+      setValue(
+        "amountList",
+        _listRooms.map(() => ({
+          amount: 0,
+        }))
+      );
       setListRoom(_listRooms);
     });
   };
@@ -151,59 +163,63 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
     if (_departure && _return && hotel?.id) {
       getRoomsAvailable();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_return, hotel]);
 
-    const isValid = () => {
-      let isOK = false
-      for(var i =0; i < listRooms.length; i++) {
-        if (watch(`amountList.${i}.amount`) !== 0){
-          isOK = true
-        }
-      }  
-      return isOK  
+  const isValid = () => {
+    let isOK = false;
+    for (var i = 0; i < listRooms.length; i++) {
+      if (watch(`amountList.${i}.amount`) !== 0) {
+        isOK = true;
+      }
     }
-
+    return isOK;
+  };
 
   const _onSubmit = (data) => {
     const roomBillConfirm = [];
-    data?.amountList?.map((item, index)=>{
-      if(item?.amount > 0){
+    data?.amountList?.map((item, index) => {
+      if (item?.amount > 0) {
         roomBillConfirm.push({
           ...listRooms[index],
-          amount: item.amount
-        })
+          amount: item.amount,
+        });
       }
-    })
-    dispatch(setRoomBillConfirmReducer({
-      hotel: hotel,
-      rooms: roomBillConfirm,
-      startDate: new Date(data?.departure),
-      endDate: new Date(data?.return)
-    }))
-    if(!user) {
+    });
+    dispatch(
+      setRoomBillConfirmReducer({
+        hotel: hotel,
+        rooms: roomBillConfirm,
+        startDate: new Date(data?.departure),
+        endDate: new Date(data?.return),
+      })
+    );
+    if (!user) {
       router.push(`/auth/login`);
-    }
-    else {
+    } else {
       router.push(`/book/hotel`);
     }
   };
 
-  const yesterday = moment().subtract(1, 'day');
-  const disablePastDt = current => {
+  const yesterday = moment().subtract(1, "day");
+  const disablePastDt = (current) => {
     return current.isAfter(yesterday);
   };
 
   const watchStartDate = watch("departure");
-  const disableEndDt = current => {
+  const disableEndDt = (current) => {
     return current.isAfter(watchStartDate);
   };
 
   return (
     <>
-      <Container className={classes.root}>
+      <Container className={classes.root} id={HOTEL_SECTION.section_check_room}>
         <h4 className={classes.titleCheckEmpty}>List room empty</h4>
-        <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
+        <Form
+          role="form"
+          onSubmit={handleSubmit(_onSubmit)}
+          className={classes.form}
+        >
           <Row xs={4} className={classes.inputDateContainer}>
             <InputDatePicker
               className={classes.inputSearchDate}
@@ -282,8 +298,8 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
                             max={room?.numberOfRoom}
                             min={0}
                             onChange={field.onChange}
-                            value={field.value}                       
-                          />                       
+                            value={field.value}
+                          />
                         )}
                       />
                     </td>
@@ -291,7 +307,11 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
                 ))}
               </tbody>
             </Table>
-            <Table bordered className={clsx(classes.table, classes.tableConfirm)} xs={3}>
+            <Table
+              bordered
+              className={clsx(classes.table, classes.tableConfirm)}
+              xs={3}
+            >
               <thead>
                 <tr>
                   <th className={classes.colConfirm}>Confirm</th>
@@ -300,64 +320,77 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
               <tbody>
                 <tr>
                   <td className={clsx(classes.colConfirm, classes.col)}>
-                      <Button btnType={BtnType.Secondary} type="submit" disabled={!isValid()}>
-                        Book
-                      </Button>
+                    <Button
+                      btnType={BtnType.Secondary}
+                      type="submit"
+                      disabled={!isValid()}
+                    >
+                      Book
+                    </Button>
                   </td>
                 </tr>
               </tbody>
             </Table>
           </div>
           {/*=============== Mobile ============  */}
-          <BoxSmallLeft className={classes.tableMobile} title="Choose the right one for you">
+          <BoxSmallLeft
+            className={classes.tableMobile}
+            title="Choose the right one for you"
+          >
             {listRooms?.map((room, index) => (
               <div key={room?.id} className="mb-4 ml-3">
-              <Row className={classes.row}>
-                <div className={classes.boxInformation}>
-                  <p className="mr-2">Room number: <span>{room?.title}</span></p>
-                </div>
-                <div className={classes.boxInformation}>
-                  <p className="mr-2">Number of rooms left: <span>{room?.numberOfRoom}</span></p>
-                </div>
-              </Row>
-              <Row className={classes.row}>
-                <div className={classes.boxPriceMobile}>
-                  <p>Price: </p>
-                  {room?.priceDetail?.map((priceInfo, index) => (
+                <Row className={classes.row}>
+                  <div className={classes.boxInformation}>
+                    <p className="mr-2">
+                      Room number: <span>{room?.title}</span>
+                    </p>
+                  </div>
+                  <div className={classes.boxInformation}>
+                    <p className="mr-2">
+                      Number of rooms left: <span>{room?.numberOfRoom}</span>
+                    </p>
+                  </div>
+                </Row>
+                <Row className={classes.row}>
+                  <div className={classes.boxPriceMobile}>
+                    <p>Price: </p>
+                    {room?.priceDetail?.map((priceInfo, index) => (
                       <p key={index} className={classes.colPrice}>
-                        <span>{moment(priceInfo?.date).format("DD/MM/YYYY")} {":"}</span>             
+                        <span>
+                          {moment(priceInfo?.date).format("DD/MM/YYYY")} {":"}
+                        </span>
                         <br></br>
                         <span>{fCurrency2(priceInfo?.price)} VND</span>
                       </p>
-                  ))}
-                </div>
-              </Row>
-              {/* <Row className={classes.boxImgMobile}>
+                    ))}
+                  </div>
+                </Row>
+                {/* <Row className={classes.boxImgMobile}>
                 <Carousel images={[images.phuQuoc, images.bg19]} className={classes.imgCarouselMobile} />
               </Row> */}
-              <Row className={classes.row}>
-                <div className={classes.boxInformation}>
-                  <p className="mr-2">Amount</p>
-                  <Controller
-                        name={`amountList.${index}.amount`}
-                        control={control}
-                        render={({ field }) => (
-                          <InputCounter
-                            className={classes.inputCounter}
-                            max={room?.numberOfRoom}
-                            min={1}
-                            onChange={field.onChange}
-                            value={field.value}
-                          />
-                        )}
-                  />
-                </div>
-              </Row>
+                <Row className={classes.row}>
+                  <div className={classes.boxInformation}>
+                    <p className="mr-2">Amount</p>
+                    <Controller
+                      name={`amountList.${index}.amount`}
+                      control={control}
+                      render={({ field }) => (
+                        <InputCounter
+                          className={classes.inputCounter}
+                          max={room?.numberOfRoom}
+                          min={1}
+                          onChange={field.onChange}
+                          value={field.value}
+                        />
+                      )}
+                    />
+                  </div>
+                </Row>
               </div>
             ))}
             <Row className={classes.boxBtnMobile}>
               <Button btnType={BtnType.Secondary} type="submit">
-                  Book
+                Book
               </Button>
             </Row>
           </BoxSmallLeft>

@@ -1,13 +1,11 @@
 .root {
     width: 100%;
-    height: 968px;
     margin: 0;
     padding-top: 62px;
     display: flex;
 }
 
 .sideBar {
-    height: 100%;
     z-index: 10;
     background: #ffff;
     box-shadow: 0 10px 30px -12px rgb(0 0 0 / 42%), 0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
