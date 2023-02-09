@@ -1,19 +1,21 @@
 import type { NextPage } from "next";
-import { Row, Col, Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
+import {
+  Row,
+  Col,
+  Nav,
+  NavItem,
+  NavLink,
+  TabContent,
+  TabPane,
+} from "reactstrap";
 import { useState } from "react";
-import clsx from "clsx";
 import classes from "./styles.module.scss";
-import Button, { BtnType } from "components/common/buttons/Button";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBuilding,
   faPlaneDeparture,
   faChartSimple,
-  faEnvelope,
-  faComments,
-  faBars,
-  faClose,
   faCircleArrowLeft,
   faCircleArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
@@ -22,9 +24,6 @@ import Tours from "./Tours";
 import Hotels from "./Hotels";
 import Sales from "./Sales";
 import EmailTemplate from "./EmailTemplate";
-import Sidebar from "components/Sidebar";
-import { enterpriseRoutes } from "routes/routers";
-import SectionHeader from "components/Header/SectionHeader";
 import ToursRevenue from "./ToursRevenue";
 import HotelsRevenue from "./HotelsRevenue";
 import TourComments from "./TourComments";
@@ -55,7 +54,9 @@ export enum EActiveNav {
 const Enterprise: NextPage = () => {
   const [tourEdit, setTourEdit] = useState<ETour>(null);
   const [hotelEdit, setHotelEdit] = useState<IHotel>(null);
-  const [verticalTabs, setVerticalTabs] = React.useState(EActiveNav.Tour_Active);
+  const [verticalTabs, setVerticalTabs] = React.useState(
+    EActiveNav.Tour_Active
+  );
   const [activeSideBarMobile, setActiveSideBarMobile] = useState(false);
   const onChangeTab = (type: EActiveNav) => {
     switch (type) {
@@ -94,11 +95,11 @@ const Enterprise: NextPage = () => {
         break;
       case EActiveNav.Create_Tour_Active:
         setVerticalTabs(EActiveNav.Create_Tour_Active);
-        setTourEdit(null)
+        setTourEdit(null);
         break;
       case EActiveNav.Create_Hotel_Active:
         setVerticalTabs(EActiveNav.Create_Hotel_Active);
-        setHotelEdit(null)
+        setHotelEdit(null);
         break;
       default:
         break;
@@ -109,22 +110,30 @@ const Enterprise: NextPage = () => {
   };
 
   const handleTourEdit = (e, item) => {
-    setTourEdit(item)
+    setTourEdit(item);
     setVerticalTabs(EActiveNav.Create_Tour_Active);
-  }
+  };
 
   const handleHotelEdit = (e, item) => {
-    setHotelEdit(item)
+    setHotelEdit(item);
     setVerticalTabs(EActiveNav.Create_Hotel_Active);
-  }
-
+  };
 
   return (
     <>
       <div className={classes.root}>
-        <Col xs={2} className={activeSideBarMobile ? classes.sideBarActive : classes.sideBar}>
+        <Col
+          xs={2}
+          className={
+            activeSideBarMobile ? classes.sideBarActive : classes.sideBar
+          }
+        >
           <div className={classes.menuBarsMobile} onClick={handleSideBarMobile}>
-            <FontAwesomeIcon icon={activeSideBarMobile ? faCircleArrowLeft : faCircleArrowRight} />
+            <FontAwesomeIcon
+              icon={
+                activeSideBarMobile ? faCircleArrowLeft : faCircleArrowRight
+              }
+            />
           </div>
           <div className={classes.headerSidebar}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -136,7 +145,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Tour_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.Tour_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.Tour_Active)}
               >
                 <FontAwesomeIcon icon={faPlaneDeparture} />
@@ -146,7 +159,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Hotel_Active  ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.Hotel_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.Hotel_Active)}
               >
                 <FontAwesomeIcon icon={faBuilding} />
@@ -156,7 +173,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Check_Room_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.Check_Room_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.Check_Room_Active)}
               >
                 <FontAwesomeIcon icon={faChartSimple} />
@@ -167,7 +188,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Tour_Sales_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.Tour_Sales_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.Tour_Sales_Active)}
               >
                 <FontAwesomeIcon icon={faPlaneDeparture} />
@@ -177,7 +202,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Hotel_Sales_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.Hotel_Sales_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.Hotel_Sales_Active)}
               >
                 <FontAwesomeIcon icon={faBuilding} />
@@ -188,7 +217,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Tour_Feedbacks_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.Tour_Feedbacks_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.Tour_Feedbacks_Active)}
               >
                 <FontAwesomeIcon icon={faPlaneDeparture} />
@@ -198,7 +231,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Hotel_Feedbacks_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.Hotel_Feedbacks_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.Hotel_Feedbacks_Active)}
               >
                 <FontAwesomeIcon icon={faBuilding} />
@@ -209,7 +246,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Tour_Statistic_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.Tour_Statistic_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.Tour_Statistic_Active)}
               >
                 <FontAwesomeIcon icon={faPlaneDeparture} />
@@ -219,7 +260,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.Hotel_Statistic_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.Hotel_Statistic_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.Hotel_Statistic_Active)}
               >
                 <FontAwesomeIcon icon={faBuilding} />
@@ -250,12 +295,21 @@ const Enterprise: NextPage = () => {
           </Nav>
         </Col>
         <Col xs={10} className={classes.content}>
-          <TabContent activeTab={"verticalTabs" + verticalTabs} className={classes.tabContent}>
+          <TabContent
+            activeTab={"verticalTabs" + verticalTabs}
+            className={classes.tabContent}
+          >
             <TabPane tabId="verticalTabs1" className={classes.tabPane}>
-              <Tours onChangeTabCreate={onChangeTab} handleTourEdit={handleTourEdit}/>
+              <Tours
+                onChangeTabCreate={onChangeTab}
+                handleTourEdit={handleTourEdit}
+              />
             </TabPane>
             <TabPane tabId="verticalTabs2" className={classes.tabPane}>
-              <Hotels onChangeTabCreate={onChangeTab} handleHotelEdit={handleHotelEdit}/>
+              <Hotels
+                onChangeTabCreate={onChangeTab}
+                handleHotelEdit={handleHotelEdit}
+              />
             </TabPane>
             <TabPane tabId="verticalTabs3" className={classes.tabPane}>
               <ToursRevenue />
@@ -282,10 +336,10 @@ const Enterprise: NextPage = () => {
               <HotelStatistic />
             </TabPane>
             <TabPane tabId="verticalTabs12" className={classes.tabPane}>
-              <AddOrEditTour itemEdit={tourEdit}/>
+              <AddOrEditTour itemEdit={tourEdit} />
             </TabPane>
             <TabPane tabId="verticalTabs13" className={classes.tabPane}>
-              <AddOrEditHotel itemEdit={hotelEdit}/>
+              <AddOrEditHotel itemEdit={hotelEdit} />
             </TabPane>
           </TabContent>
         </Col>
