@@ -74,7 +74,7 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                 <div className={classes.locationRate}>
                   <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
                   <p>{tour?.location}</p>
-                  {tour?.rate && (
+                  {tour?.rate !== 0 && (
                     <Stars
                       numberOfStars={Math.floor(tour?.rate)}
                       className={classes.starRating}
