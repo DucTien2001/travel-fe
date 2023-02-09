@@ -1,14 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
-import Link from "next/link";
 // reactstrap components
-import {
-  Container,
-  Row,
-  Col,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-} from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,8 +8,6 @@ import {
   faList,
   faXmark,
   faSearch,
-  faChevronLeft,
-  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
@@ -26,7 +16,6 @@ import classes from "./styles.module.scss";
 import Social from "components/Social";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import InputCheckbox from "components/common/inputs/InputCheckbox";
 import InputTextField from "components/common/inputs/InputTextField";
 import Button, { BtnType } from "components/common/buttons/Button";
 import SectionHeader from "components/Header/SectionHeader";

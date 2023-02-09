@@ -2,20 +2,14 @@ import React, { memo, useEffect, useMemo, useState } from "react";
 import { Container, Form, Row, Table } from "reactstrap";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import InputCounter from "components/common/inputs/InputCounter";
-import { images } from "configs/images";
-import Carousel from "components/Carousel";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendarDays,
-  faArrowsRotate,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import * as yup from "yup";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import clsx from "clsx";
-import Link from "next/link";
 import BoxSmallLeft from "components/BoxSmallLeft";
 import { RoomService } from "services/normal/room";
 import moment from "moment";
@@ -24,9 +18,6 @@ import { setRoomBillConfirmReducer } from "redux/reducers/Normal/actionTypes";
 import { HOTEL_SECTION, IHotel } from "models/hotel";
 import { useRouter } from "next/router";
 import { fCurrency2 } from "utils/formatNumber";
-import ErrorMessage from "components/common/texts/ErrorMessage";
-import PopupDefault from "components/Popup/PopupDefault";
-import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import useAuth from "hooks/useAuth";
 export interface CheckRoomForm {
   departure: Date;

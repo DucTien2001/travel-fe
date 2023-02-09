@@ -1,18 +1,8 @@
-import React, { memo, useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Collapse,
-  Container,
-  Row,
-  Col,
-  Badge,
-} from "reactstrap";
+import React, { memo, useState } from "react";
+import { Container, Row, Col, Badge } from "reactstrap";
 // import { Carousel } from 'react-responsive-carousel'
 // import {images} from "configs/images";
 import classes from "./styles.module.scss";
-import Carousel from "components/Carousel";
 import Button, { BtnType } from "components/common/buttons/Button";
 import Link from "next/link";
 import { Tour } from "models/tour";
@@ -20,7 +10,6 @@ import { fCurrency2 } from "utils/formatNumber";
 import clsx from "clsx";
 import useAuth from "hooks/useAuth";
 import Stars from "components/Stars";
-import { formatStar } from "utils/formatStar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBusinessTime,

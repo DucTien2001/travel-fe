@@ -1,31 +1,14 @@
 import React, { memo, useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Collapse,
-  Container,
-  Row,
-  Col,
-  Badge,
-} from "reactstrap";
-import { images } from "configs/images";
-// import Carousel from "components/Carousel";
+import { Container, Row, Col, Badge } from "reactstrap";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
-import Carousel from "components/Carousel";
 import { HOTEL_SECTION, ICreateHotel } from "models/hotel";
-import { fCurrency2, fCurrency2VND } from "utils/formatNumber";
 import useAuth from "hooks/useAuth";
-import Link from "next/link";
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBellConcierge,
   faBusinessTime,
   faCalendar,
-  faCircleCheck,
-  faCircleInfo,
   faClock,
   faFaceSmile,
   faLocationDot,
@@ -33,7 +16,6 @@ import {
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
 import Stars from "components/Stars";
-import { Box, Stepper, Step, StepLabel } from "@mui/material";
 import PopupModalImages from "components/Popup/PopupModalImages";
 
 interface Props {
