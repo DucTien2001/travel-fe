@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import {
   Container,
   Row,
@@ -14,15 +14,29 @@ import Button, { BtnType } from "components/common/buttons/Button";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faLocation,
+  faLocationDot,
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
-import { fCurrency2VND } from "utils/formatNumber";
+import { fCurrency2, fCurrency2VND } from "utils/formatNumber";
 import Link from "next/link";
-
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Pagination, Navigation } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import Stars from "components/Stars";
 // eslint-disable-next-line react/display-name
 const OfferComponent = memo(() => {
   const { allTours } = useSelector((state: ReducerType) => state.normal);
+
+  const listBestSeller = allTours.filter((item) => {
+    return item.discount;
+  });
+
   return (
     <>
       <div className="team-4">
@@ -39,253 +53,158 @@ const OfferComponent = memo(() => {
               </h4>
             </Col>
           </Row>
-          <Row>
-            <Col md="6">
-              <Card className="card-profile card-plain">
-                <Row>
-                  <Col md="5" className={classes.col}>
-                    <div className={clsx("card-image", classes.imgWrapper)}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        alt="..."
-                        className="img img-raised rounded"
-                        src={allTours[2]?.images[0]}
-                      ></img>
+          <h3 className={classes.titleSwiper}>Best seller</h3>
+          <Swiper
+            slidesPerView={4}
+            spaceBetween={30}
+            slidesPerGroup={4}
+            loop={true}
+            onSlideChange={(e) => console.log(e.realIndex)}
+            loopFillGroupWithBlank={true}
+            pagination={{
+              clickable: true,
+            }}
+            navigation={true}
+            modules={[Pagination, Navigation]}
+            className={clsx("mySwiper", classes.swiperBestSeller)}
+          >
+            {listBestSeller?.map((item, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <Card className={clsx("card-blog", classes.card)}>
+                    <div className="card-image">
+                      <a href={`/listTour/:${item?.id}`}>
+                        <img
+                          alt="..."
+                          className="img rounded"
+                          src={item?.images[0]}
+                        ></img>
+                      </a>
                     </div>
-                  </Col>
-                  <Col md="7" className={classes.col}>
-                    <CardBody className={classes.cardBody}>
-                      <CardTitle tag="h4" className={classes.title}>
-                        <p className={classes.titleDesktop}>
-                          {allTours[2]?.title}
-                        </p>
-                        <p className={classes.tagMobile}>
-                          {allTours[2]?.title}
-                        </p>
-                        {fCurrency2VND(allTours[2]?.price)} VND
-                      </CardTitle>
-                      <div className={classes.offerContentLike}>
-                        {[...Array(allTours[2]?.rate)].map((star, index) => {
-                          return (
-                            <FontAwesomeIcon
-                              icon={faStar}
-                              key={index}
-                            ></FontAwesomeIcon>
-                          );
-                        })}
+                    <CardBody>
+                      <div className={classes.locationBox}>
+                        <FontAwesomeIcon icon={faLocationDot} />
+                        <h6 className={clsx("category", classes.location)}>
+                          {item?.location}
+                        </h6>
                       </div>
-                      {allTours[2]?.tags.map((item, index) => (
-                        <Badge
-                          pill
-                          color="var(--violet-color)"
-                          className={classes.badge}
-                          key={index}
-                        >
-                          {item}
-                        </Badge>
-                      ))}
-                      <p className={clsx("card-description", classes.textDesc)}>
-                        {allTours[2]?.description}
-                      </p>
-                      <CardFooter>
-                        <Link href={`/listTour/:${allTours[2]?.id}`}>
-                          <a>
-                            <Button btnType={BtnType.Raised}>Read more</Button>
-                          </a>
-                        </Link>
-                      </CardFooter>
-                    </CardBody>
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
-            <Col md="6">
-              <Card className="card-profile card-plain">
-                <Row>
-                  <Col md="5" className={classes.col}>
-                    <div className={clsx("card-image", classes.imgWrapper)}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        alt="..."
-                        className="img img-raised rounded"
-                        src={allTours[3]?.images[0]}
-                      ></img>
-                    </div>
-                  </Col>
-                  <Col md="7" className={classes.col}>
-                    <CardBody className={classes.cardBody}>
-                      <CardTitle tag="h4" className={classes.title}>
-                        <p className={classes.titleDesktop}>
-                          {allTours[3]?.title}
-                        </p>
-                        <p className={classes.tagMobile}>
-                          {allTours[3]?.title}
-                        </p>
-                        {fCurrency2VND(allTours[3]?.price)} VND
+
+                      <CardTitle tag="h5" className={classes.titleCard}>
+                        {item?.title}
                       </CardTitle>
-                      <div className={classes.offerContentLike}>
-                        {[...Array(allTours[3]?.rate)].map((star, index) => {
-                          return (
-                            <FontAwesomeIcon
-                              icon={faStar}
-                              key={index}
-                            ></FontAwesomeIcon>
-                          );
-                        })}
-                      </div>
-                      {allTours[3]?.tags.map((item, index) => (
-                        <Badge
-                          pill
-                          color="var(--violet-color)"
-                          className={classes.badge}
-                          key={index}
+                      <Stars numberOfStars={item?.rate} />
+                      <div className={classes.priceWrapper}>
+                        <h6
+                          className={
+                            item?.discount
+                              ? classes.price
+                              : classes.priceDiscount
+                          }
                         >
-                          {item}
-                        </Badge>
-                      ))}
-                      <p className={clsx("card-description", classes.textDesc)}>
-                        {allTours[3]?.description}
-                      </p>
-                      <CardFooter>
-                        <Link href={`/listTour/:${allTours[3]?.id}`}>
-                          <a>
-                            <Button btnType={BtnType.Raised}>Read more</Button>
-                          </a>
-                        </Link>
-                      </CardFooter>
-                    </CardBody>
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
-            <Col md="6">
-              <Card className="card-profile card-plain">
-                <Row>
-                  <Col md="5" className={classes.col}>
-                    <div className={clsx("card-image", classes.imgWrapper)}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        alt="..."
-                        className="img img-raised rounded"
-                        src={allTours[4]?.images[0]}
-                      ></img>
-                    </div>
-                  </Col>
-                  <Col md="7" className={classes.col}>
-                    <CardBody className={classes.cardBody}>
-                      <CardTitle tag="h4" className={classes.title}>
-                        <p className={classes.titleDesktop}>
-                          {allTours[4]?.title}
-                        </p>
-                        <p className={classes.tagMobile}>
-                          {allTours[4]?.title}
-                        </p>
-                        {fCurrency2VND(allTours[4]?.price)} VND
-                      </CardTitle>
-                      <div className={classes.offerContentLike}>
-                        {[...Array(allTours[4]?.rate)].map((star, index) => {
-                          return (
-                            <FontAwesomeIcon
-                              icon={faStar}
-                              key={index}
-                            ></FontAwesomeIcon>
-                          );
-                        })}
+                          {fCurrency2(item?.price)} VND{" "}
+                          {!item?.discount && <span>/ person</span>}
+                        </h6>
+                        {item?.discount !== 0 && (
+                          <h6 className={classes.priceDiscount}>
+                            {fCurrency2(
+                              (item?.price * (100 - item?.discount)) / 100
+                            )}{" "}
+                            VND<span>/ person</span>
+                          </h6>
+                        )}
                       </div>
-                      {allTours[4]?.tags.map((item, index) => (
-                        <Badge
-                          pill
-                          color="var(--violet-color)"
-                          className={classes.badge}
-                          key={index}
-                        >
-                          {item}
-                        </Badge>
-                      ))}
                       <p className={clsx("card-description", classes.textDesc)}>
-                        {allTours[4]?.description}
+                        {item?.description}
                       </p>
-                      <CardFooter>
-                        <Link href={`/listTour/:${allTours[4]?.id}`}>
-                          <a>
-                            <Button btnType={BtnType.Raised}>Read more</Button>
-                          </a>
-                        </Link>
-                      </CardFooter>
                     </CardBody>
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
-            <Col md="6">
-              <Card className="card-profile card-plain">
-                <Row>
-                  <Col md="5" className={classes.col}>
-                    <div className={clsx("card-image", classes.imgWrapper)}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        alt="..."
-                        className="img img-raised rounded"
-                        src={allTours[5]?.images[0]}
-                      ></img>
-                    </div>
-                  </Col>
-                  <Col md="7" className={classes.col}>
-                    <CardBody className={classes.cardBody}>
-                      <CardTitle tag="h4" className={classes.title}>
-                        <p className={classes.titleDesktop}>
-                          {allTours[5]?.title}
-                        </p>
-                        <p className={classes.tagMobile}>
-                          {allTours[5]?.title}
-                        </p>
-                        {fCurrency2VND(allTours[5]?.price)} VND
-                      </CardTitle>
-                      <div className={classes.offerContentLike}>
-                        {[...Array(allTours[5]?.rate)].map((star, index) => {
-                          return (
-                            <FontAwesomeIcon
-                              icon={faStar}
-                              key={index}
-                            ></FontAwesomeIcon>
-                          );
-                        })}
-                      </div>
-                      {allTours[5]?.tags.map((item, index) => (
-                        <Badge
-                          pill
-                          color="var(--violet-color)"
-                          className={classes.badge}
-                          key={index}
-                        >
-                          {item}
-                        </Badge>
-                      ))}
-                      <p className={clsx("card-description", classes.textDesc)}>
-                        {allTours[5]?.description}
-                      </p>
-                      <CardFooter>
-                        <Link href={`/listTour/:${allTours[5]?.id}`}>
-                          <a>
-                            <Button btnType={BtnType.Raised}>Read more</Button>
-                          </a>
-                        </Link>
-                      </CardFooter>
-                    </CardBody>
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
-          </Row>
-          <Row className={classes.btnViewMore}>
-            <Link href="/listTour">
-              <a>
-                <Button btnType={BtnType.Linear} isDot={true}>
-                  VIEW MORE
-                </Button>
-              </a>
-            </Link>
-          </Row>
+                  </Card>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+          <h3 className={classes.titleSwiper}>Browse by property type</h3>
+          <Swiper
+            slidesPerView={4}
+            spaceBetween={30}
+            slidesPerGroup={4}
+            loop={true}
+            loopFillGroupWithBlank={true}
+            pagination={{
+              clickable: true,
+            }}
+            navigation={true}
+            modules={[Pagination, Navigation]}
+            className={clsx("mySwiper", classes.swiper)}
+          >
+            <SwiperSlide>
+              <Col className={classes.card}>
+                <Card>
+                  <div className="card-image">
+                    <img
+                      alt="..."
+                      className="rounded"
+                      src={allTours[5]?.images[0]}
+                    ></img>
+                  </div>
+                  <div className="text-center">
+                    <h4 className="info-title">Reply detection</h4>
+                    <p className="description">1000 rooms</p>
+                  </div>
+                </Card>
+              </Col>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Col>
+                <Card>
+                  <div className="card-image">
+                    <img
+                      alt="..."
+                      className="rounded"
+                      src={allTours[5]?.images[0]}
+                    ></img>
+                  </div>
+                  <div className="text-center">
+                    <h4 className="info-title">Reply detection</h4>
+                    <p className="description">1000 rooms</p>
+                  </div>
+                </Card>
+              </Col>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Col>
+                <Card>
+                  <div className="card-image">
+                    <img
+                      alt="..."
+                      className="rounded"
+                      src={allTours[5]?.images[0]}
+                    ></img>
+                  </div>
+                  <div className="text-center">
+                    <h4 className="info-title">Reply detection</h4>
+                    <p className="description">1000 rooms</p>
+                  </div>
+                </Card>
+              </Col>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Col>
+                <Card>
+                  <div className="card-image">
+                    <img
+                      alt="..."
+                      className="rounded"
+                      src={allTours[5]?.images[0]}
+                    ></img>
+                  </div>
+                  <div className="text-center">
+                    <h4 className="info-title">Reply detection</h4>
+                    <p className="description">1000 rooms</p>
+                  </div>
+                </Card>
+              </Col>
+            </SwiperSlide>
+          </Swiper>
         </Container>
       </div>
     </>

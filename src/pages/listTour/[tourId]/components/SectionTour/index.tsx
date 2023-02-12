@@ -176,9 +176,20 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
             <Col xs={4} className={classes.rightContent}>
               <div className={classes.priceWrapper}>
                 <h5>Starting from</h5>
-                <h2>
-                  {fCurrency2(tour?.price)} VND <span>/ person</span>
+                <h2
+                  className={
+                    tour?.discount ? classes.price : classes.priceDiscount
+                  }
+                >
+                  {fCurrency2(tour?.price)} VND{" "}
+                  {!tour?.discount && <span>/ person</span>}
                 </h2>
+                {tour?.discount !== 0 && (
+                  <h2 className={classes.priceDiscount}>
+                    {fCurrency2((tour?.price * (100 - tour?.discount)) / 100)}{" "}
+                    VND<span>/ person</span>
+                  </h2>
+                )}
               </div>
               {user ? (
                 <Link href={`/book/tour/:${tour?.id}`}>

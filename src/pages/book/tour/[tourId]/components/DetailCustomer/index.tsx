@@ -172,7 +172,7 @@ const DetailCustomer = memo(({ tour, onAmount }: Props) => {
               price={tour?.price}
               discount={tour?.discount}
               tags={tour?.tags}
-              // rate={tour.rate}
+              rate={tour?.rate}
               creator={tour?.creator}
               isTemporarilyStopWorking={tour?.isTemporarilyStopWorking}
             />
@@ -198,6 +198,7 @@ const DetailCustomer = memo(({ tour, onAmount }: Props) => {
                       label="First name"
                       placeholder="Enter your fist name"
                       type="text"
+                      required
                       inputRef={register("firstName")}
                       errorMessage={errors.firstName?.message}
                     />
@@ -206,6 +207,7 @@ const DetailCustomer = memo(({ tour, onAmount }: Props) => {
                     <InputTextFieldBorder
                       label="Last Name"
                       placeholder="Enter your last name"
+                      required
                       inputRef={register("lastName")}
                       errorMessage={errors.lastName?.message}
                     />
@@ -213,6 +215,7 @@ const DetailCustomer = memo(({ tour, onAmount }: Props) => {
                 </Row>
                 <InputTextFieldBorder
                   label="Email"
+                  required
                   placeholder="Enter your email"
                   inputRef={register("email")}
                   errorMessage={errors.email?.message}
@@ -220,6 +223,7 @@ const DetailCustomer = memo(({ tour, onAmount }: Props) => {
                 <InputTextFieldBorder
                   label="Phone"
                   placeholder="Enter your phone"
+                  required
                   inputRef={register("phoneNumber")}
                   errorMessage={errors.phoneNumber?.message}
                 />

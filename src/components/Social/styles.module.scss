@@ -35,14 +35,11 @@
             justify-content: center;
             border: 1px solid var(--orange-color); 
             cursor: pointer; 
-
+            color: var(--white-color) !important;   
         }
-        .linkSocial {  
-            color: var(--white-color);   
-        }
-        .itemSocial:hover, .linkSocial:hover{
-            color: var(--orange-color);
-            background-color: var(--white-color);
+        .itemSocial:hover, .linkSocial :hover{
+            color: var(--orange-color) !important;
+            background-color: var(--white-color) !important;
         }
     }
 }

@@ -24,13 +24,18 @@ import Router, { useRouter } from "next/router";
 import LoadingScreen from "components/LoadingSrceen";
 import { EUserType } from "models/user";
 import { ReducerType } from "redux/reducers";
-import '../styles/globals.css'
+import "../styles/globals.css";
 import {
   getAllHotels as getAllHotelsOfEnterprise,
   getAllTours as getAllToursOfEnterprise,
 } from "redux/reducers/Enterprise/actionTypes";
 
-import { getAllTours as getAllToursOfNormal, getAllHotels as getAllHotelsOfNormal, getAllTourBills, getAllRoomBills } from "redux/reducers/Normal/actionTypes";
+import {
+  getAllTours as getAllToursOfNormal,
+  getAllHotels as getAllHotelsOfNormal,
+  getAllTourBills,
+  getAllRoomBills,
+} from "redux/reducers/Normal/actionTypes";
 import Home from "pages";
 // import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 
@@ -75,7 +80,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     allowed = false;
   }
 
-  const ComponentToRender = allowed ? Component : Home; 
+  const ComponentToRender = allowed ? Component : Home;
   return (
     <LayoutAuth>
       {loading && <LoadingScreen />}

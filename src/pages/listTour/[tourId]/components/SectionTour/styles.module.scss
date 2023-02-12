@@ -54,7 +54,7 @@
             font-size: 18px;
             color: var(--white-color);
             font-weight: 700;
-
+            z-index: 10;
         }
     }
     @media only screen and (max-width: 600px) {
@@ -192,7 +192,14 @@
             font-weight:500;
             margin-bottom: 0;
         }
-        h2 {
+        .price {
+            color: #d3d1d1;
+            font-weight: 300;
+            margin-bottom: 0;
+            font-size: 32px;
+            text-decoration: line-through;
+        }
+        .priceDiscount {
             color: var(--orange-color);
             font-weight: 700;
             margin-bottom: 0;

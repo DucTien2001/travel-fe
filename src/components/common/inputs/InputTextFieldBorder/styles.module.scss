@@ -37,7 +37,9 @@
 .optional {
     color: var(--green-dark) !important;
 }
-
+.required {
+  color : var(--danger-color) !important;
+}
 .errorMessage {
   font-size: 14px;
 }

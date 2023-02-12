@@ -15,7 +15,11 @@ import * as yup from "yup";
 import { VALIDATION } from "configs/constants";
 import { Form } from "reactstrap";
 import { UserService } from "services/user";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
 import { RoomBillService } from "services/normal/roomBill";
@@ -46,22 +50,29 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
   const [modal, setModal] = useState(false);
   const totalPrice = [];
 
-  roomBillConfirm?.rooms.forEach(room => {
+  roomBillConfirm?.rooms.forEach((room) => {
     room?.priceDetail.map((price) => {
-      const _price = price?.price * room?.amount * (100 - room?.discount) / 100;
-      totalPrice.push(_price);     
-    })
-  })
+      const _price =
+        (price?.price * room?.amount * (100 - room?.discount)) / 100;
+      totalPrice.push(_price);
+    });
+  });
 
   const schema = useMemo(() => {
     return yup.object().shape({
       firstName: yup.string().required("First name is required"),
       lastName: yup.string().required("Last name is required"),
-      email: yup.string().email("Please enter a valid email address").required("Email is required"),
-      phoneNumber: yup.string().required("Phone is required").matches(VALIDATION.phone, {
-        message: "Please enter a valid phone number.",
-        excludeEmptyString: true,
-      }),
+      email: yup
+        .string()
+        .email("Please enter a valid email address")
+        .required("Email is required"),
+      phoneNumber: yup
+        .string()
+        .required("Phone is required")
+        .matches(VALIDATION.phone, {
+          message: "Please enter a valid phone number.",
+          excludeEmptyString: true,
+        }),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -78,14 +89,15 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
     defaultValues: {},
   });
 
-  const _onSubmit = (data: HotelForm) => { 
-    const roomBillDetails = []
-    const bookedDates = []
-    let totalBill = 0
-    roomBillConfirm?.rooms?.forEach ((room, index)=>{
-      room.priceDetail.forEach ((priceInfo)=>{
-        const totalPrice = room.amount * priceInfo.price * (100 - room.discount) / 100
-        totalBill+=totalPrice
+  const _onSubmit = (data: HotelForm) => {
+    const roomBillDetails = [];
+    const bookedDates = [];
+    let totalBill = 0;
+    roomBillConfirm?.rooms?.forEach((room, index) => {
+      room.priceDetail.forEach((priceInfo) => {
+        const totalPrice =
+          (room.amount * priceInfo.price * (100 - room.discount)) / 100;
+        totalBill += totalPrice;
         roomBillDetails.push({
           roomId: room.id,
           title: room.title,
@@ -94,12 +106,12 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
           price: priceInfo.price,
           bookedDate: priceInfo.date,
           totalPrice: totalPrice,
-        })
-        if(index === 0){
-          bookedDates.push(priceInfo.date)
+        });
+        if (index === 0) {
+          bookedDates.push(priceInfo.date);
         }
-      })
-    })
+      });
+    });
     const roomBill = {
       userId: user?.id,
       hotelId: roomBillConfirm?.hotel?.id,
@@ -113,34 +125,36 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
       phoneNumber: data?.phoneNumber,
       firstName: data?.firstName,
       lastName: data?.lastName,
-    }
-      // dispatch(setLoading(true));
-      // RoomBillService?.create(roomBill)
-      // .then(() => {
-      //   dispatch(setSuccessMess("Book room successfully"))
-      // })
-      // .catch((e) => {
-      //   dispatch(setErrorMess(e));
-      // })
-      // .finally(() => {
-      //   dispatch(setLoading(false));
-      //   toggle();
-      // })
-    dispatch(setConfirmBookRoomReducer({
-      userId: user?.id,
-      hotelId: roomBillConfirm?.hotel?.id,
-      userMail: user?.username,
-      rooms: roomBillDetails,
-      bookedDates: bookedDates,
-      startDate: roomBillConfirm?.startDate,
-      endDate: roomBillConfirm?.endDate,
-      totalBill: totalBill,
-      email: data?.email,
-      phoneNumber: data?.phoneNumber,
-      firstName: data?.firstName,
-      lastName: data?.lastName,
-    }))
-    router.push("/book/hotel/payment")
+    };
+    // dispatch(setLoading(true));
+    // RoomBillService?.create(roomBill)
+    // .then(() => {
+    //   dispatch(setSuccessMess("Book room successfully"))
+    // })
+    // .catch((e) => {
+    //   dispatch(setErrorMess(e));
+    // })
+    // .finally(() => {
+    //   dispatch(setLoading(false));
+    //   toggle();
+    // })
+    dispatch(
+      setConfirmBookRoomReducer({
+        userId: user?.id,
+        hotelId: roomBillConfirm?.hotel?.id,
+        userMail: user?.username,
+        rooms: roomBillDetails,
+        bookedDates: bookedDates,
+        startDate: roomBillConfirm?.startDate,
+        endDate: roomBillConfirm?.endDate,
+        totalBill: totalBill,
+        email: data?.email,
+        phoneNumber: data?.phoneNumber,
+        firstName: data?.firstName,
+        lastName: data?.lastName,
+      })
+    );
+    router.push("/book/hotel/payment");
   };
 
   const toggle = () => setModal(!modal);
@@ -162,8 +176,6 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, dispatch]);
-
-  
 
   return (
     <>
@@ -192,11 +204,14 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
                 <div className={classes.noteTip}>
                   <div className={classes.noteEnterLanguage}>
                     <FontAwesomeIcon icon={faCircleInfo} />
-                    <span>Please fill in the information in Vietnamese or English</span>
+                    <span>
+                      Please fill in the information in Vietnamese or English
+                    </span>
                   </div>
                   <div className={classes.noteGreen}>
                     <p>
-                      Nearly done! Just fill in the <span>*</span> required information
+                      Nearly done! Just fill in the <span>*</span> required
+                      information
                     </p>
                   </div>
                 </div>
@@ -204,6 +219,7 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
                   <Col xs={6} className={classes.colInfor}>
                     <InputTextFieldBorder
                       label="First name"
+                      required
                       placeholder="Enter your fist name"
                       type="text"
                       inputRef={register("firstName")}
@@ -213,6 +229,7 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
                   <Col xs={6} className={classes.colInfor}>
                     <InputTextFieldBorder
                       label="Last Name"
+                      required
                       placeholder="Enter your last name"
                       inputRef={register("lastName")}
                       errorMessage={errors.lastName?.message}
@@ -221,17 +238,24 @@ const DetailCustomer = memo(({ roomBillConfirm }: Props) => {
                 </Row>
                 <InputTextFieldBorder
                   label="Email"
+                  required
                   placeholder="Enter your email"
                   inputRef={register("email")}
                   errorMessage={errors.email?.message}
                 />
                 <InputTextFieldBorder
                   label="Phone"
+                  required
                   placeholder="Enter your phone"
                   inputRef={register("phoneNumber")}
                   errorMessage={errors.phoneNumber?.message}
                 />
-                <Button type="submit" className={classes.btnBook} btnType={BtnType.Primary} isDot={true}>
+                <Button
+                  type="submit"
+                  className={classes.btnBook}
+                  btnType={BtnType.Primary}
+                  isDot={true}
+                >
                   Confirm book
                 </Button>
               </div>

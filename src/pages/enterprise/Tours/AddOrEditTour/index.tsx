@@ -41,9 +41,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";
 import CustomSelect from "components/common/CustomSelect";
 import clsx from "clsx";
-import ReactQuill from "react-quill";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import "react-quill/dist/quill.snow.css";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const modules = {
   toolbar: [
     [{ size: ["small", false, "large", "huge"] }],

@@ -18,6 +18,13 @@ import {
   faChartSimple,
   faCircleArrowLeft,
   faCircleArrowRight,
+  faTicket,
+  faDollarSign,
+  faCommenting,
+  faCommentAlt,
+  faScaleUnbalanced,
+  faScaleUnbalancedFlip,
+  faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 import { images } from "configs/images";
 import Tours from "./Tours";
@@ -34,6 +41,7 @@ import TourStatistic from "./TourStatistic";
 import AddOrEditTour from "./Tours/AddOrEditTour";
 import { ETour, IHotel } from "models/enterprise";
 import AddOrEditHotel from "./Hotels/AddOrEditHotel";
+import { faSellsy } from "@fortawesome/free-brands-svg-icons";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -195,7 +203,7 @@ const Enterprise: NextPage = () => {
                 }
                 onClick={() => onChangeTab(EActiveNav.Tour_Sales_Active)}
               >
-                <FontAwesomeIcon icon={faPlaneDeparture} />
+                <FontAwesomeIcon icon={faTicket} />
                 Tours
               </NavLink>
             </NavItem>
@@ -209,7 +217,7 @@ const Enterprise: NextPage = () => {
                 }
                 onClick={() => onChangeTab(EActiveNav.Hotel_Sales_Active)}
               >
-                <FontAwesomeIcon icon={faBuilding} />
+                <FontAwesomeIcon icon={faDollarSign} />
                 Hotels
               </NavLink>
             </NavItem>
@@ -224,7 +232,7 @@ const Enterprise: NextPage = () => {
                 }
                 onClick={() => onChangeTab(EActiveNav.Tour_Feedbacks_Active)}
               >
-                <FontAwesomeIcon icon={faPlaneDeparture} />
+                <FontAwesomeIcon icon={faCommenting} />
                 Tours
               </NavLink>
             </NavItem>
@@ -238,7 +246,7 @@ const Enterprise: NextPage = () => {
                 }
                 onClick={() => onChangeTab(EActiveNav.Hotel_Feedbacks_Active)}
               >
-                <FontAwesomeIcon icon={faBuilding} />
+                <FontAwesomeIcon icon={faCommentAlt} />
                 Hotels
               </NavLink>
             </NavItem>
@@ -253,7 +261,7 @@ const Enterprise: NextPage = () => {
                 }
                 onClick={() => onChangeTab(EActiveNav.Tour_Statistic_Active)}
               >
-                <FontAwesomeIcon icon={faPlaneDeparture} />
+                <FontAwesomeIcon icon={faScaleUnbalancedFlip} />
                 Tours
               </NavLink>
             </NavItem>
@@ -267,7 +275,7 @@ const Enterprise: NextPage = () => {
                 }
                 onClick={() => onChangeTab(EActiveNav.Hotel_Statistic_Active)}
               >
-                <FontAwesomeIcon icon={faBuilding} />
+                <FontAwesomeIcon icon={faChartLine} />
                 Hotels
               </NavLink>
             </NavItem>
