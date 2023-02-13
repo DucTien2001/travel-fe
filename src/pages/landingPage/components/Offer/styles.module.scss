@@ -98,6 +98,9 @@
         justify-content: center;
         box-shadow: var(--bui-shadow-100);
     } 
+    [class~="swiper-pagination"] {
+        display: none;
+    }
 }
 .swiper {
     [class~="swiper-button-prev"] {
@@ -130,4 +133,20 @@
         justify-content: center;
         box-shadow: var(--bui-shadow-100);
     }
+}
+
+.rateBox {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    color: var(--white-color);
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    background-color: var(--violet-color);
+}
+.cardFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }

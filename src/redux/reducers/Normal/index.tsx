@@ -31,11 +31,12 @@ export interface IHotel {
   images: string[];
   creator: number;
   rate?: number;
+  numberOfReviewer?: number;
   isTemporarilyStopWorking?: boolean;
 }
 
 export interface IRoom {
-  id?:number;
+  id?: number;
   title: string;
   description: string;
   discount?: number;
@@ -53,7 +54,6 @@ export interface IRoomBillConfirm {
   rooms: IRoom[];
   startDate: string;
   endDate: string;
-
 }
 export interface IConfirmBookTour {
   userId: number;
@@ -103,7 +103,7 @@ export interface ITourBill {
   verifyCode: string;
 }
 export interface ICreateRoomBill {
-  id?:number;
+  id?: number;
   userId: number;
   userMail: string;
   hotelId: number;
@@ -124,7 +124,6 @@ export interface ICreateRoomBill {
   firstName: string;
   lastName: string;
   verifyCode: string;
-
 }
 export interface NormalState {
   allTours: ITour[];
@@ -163,13 +162,13 @@ export const normalReducer = (state = initial, action: any) =>
         break;
       case types.SET_ROOM_BILLS_REDUCER:
         draft.allRoomBills = action.data;
-        break;  
+        break;
       case types.SET_CONFIRM_BOOK_TOUR_REDUCER:
         draft.confirmBookTour = action.data;
-         break;
+        break;
       case types.SET_CONFIRM_BOOK_ROOM_REDUCER:
         draft.confirmBookRoom = action.data;
-        break;  
+        break;
       default:
         return state;
     }

@@ -224,7 +224,6 @@ const ListTours: NextPage = () => {
   useEffect(() => {
     // Fetch items from another resources.
     const endOffset = itemOffset + 9;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
     setCurrentItems(allTours.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(allTours.length / 9));
   }, [itemOffset]);

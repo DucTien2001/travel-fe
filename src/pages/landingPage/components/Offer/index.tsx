@@ -29,12 +29,19 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Stars from "components/Stars";
+import { iteratorSymbol } from "immer/dist/internal";
 // eslint-disable-next-line react/display-name
 const OfferComponent = memo(() => {
-  const { allTours } = useSelector((state: ReducerType) => state.normal);
+  const { allTours, allHotels } = useSelector(
+    (state: ReducerType) => state.normal
+  );
 
   const listBestSeller = allTours.filter((item) => {
     return item.discount;
+  });
+
+  const listHotelLove = allHotels.filter((item) => {
+    return item.rate > 4;
   });
 
   return (
@@ -58,9 +65,10 @@ const OfferComponent = memo(() => {
             slidesPerView={4}
             spaceBetween={30}
             slidesPerGroup={4}
+            initialSlide={0}
             loop={true}
-            onSlideChange={(e) => console.log(e.realIndex)}
-            loopFillGroupWithBlank={true}
+            // onSlideChange={(e) => console.log(e.realIndex)}
+            // loopFillGroupWithBlank={true}
             pagination={{
               clickable: true,
             }}
@@ -137,23 +145,6 @@ const OfferComponent = memo(() => {
             className={clsx("mySwiper", classes.swiper)}
           >
             <SwiperSlide>
-              <Col className={classes.card}>
-                <Card>
-                  <div className="card-image">
-                    <img
-                      alt="..."
-                      className="rounded"
-                      src={allTours[5]?.images[0]}
-                    ></img>
-                  </div>
-                  <div className="text-center">
-                    <h4 className="info-title">Reply detection</h4>
-                    <p className="description">1000 rooms</p>
-                  </div>
-                </Card>
-              </Col>
-            </SwiperSlide>
-            <SwiperSlide>
               <Col>
                 <Card>
                   <div className="card-image">
@@ -204,6 +195,73 @@ const OfferComponent = memo(() => {
                 </Card>
               </Col>
             </SwiperSlide>
+            <SwiperSlide>
+              <Col>
+                <Card>
+                  <div className="card-image">
+                    <img
+                      alt="..."
+                      className="rounded"
+                      src={allTours[5]?.images[0]}
+                    ></img>
+                  </div>
+                  <div className="text-center">
+                    <h4 className="info-title">Reply detection</h4>
+                    <p className="description">1000 rooms</p>
+                  </div>
+                </Card>
+              </Col>
+            </SwiperSlide>
+          </Swiper>
+          <h3 className={classes.titleSwiper}>Home guests love</h3>
+          <Swiper
+            slidesPerView={4}
+            spaceBetween={30}
+            slidesPerGroup={4}
+            initialSlide={0}
+            loop={true}
+            // onSlideChange={(e) => console.log(e.realIndex)}
+            // loopFillGroupWithBlank={true}
+            pagination={{
+              clickable: true,
+            }}
+            navigation={true}
+            modules={[Pagination, Navigation]}
+            className={clsx("mySwiper", classes.swiperBestSeller)}
+          >
+            {listHotelLove?.map((item, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <Card className="card-blog card-plain">
+                    <div className="card-image">
+                      <a href={`/listHotel/:${item?.id}`}>
+                        <img
+                          alt="..."
+                          className="img rounded img-raised"
+                          src={item?.images[0]}
+                        ></img>
+                      </a>
+                    </div>
+                    <CardBody>
+                      <CardTitle tag="h5" className={classes.titleCard}>
+                        <a href={`/listHotel/:${item?.id}`}>{item?.name}</a>
+                      </CardTitle>
+                      <p className={clsx("card-description", classes.textDesc)}>
+                        {item?.description}
+                      </p>
+                      <CardFooter className={classes.cardFooter}>
+                        <div className={classes.rateBox}>
+                          {item?.rate.toFixed(1)}
+                        </div>
+                        <div>
+                          <span>{item?.numberOfReviewer} reviews</span>
+                        </div>
+                      </CardFooter>
+                    </CardBody>
+                  </Card>
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
         </Container>
       </div>
