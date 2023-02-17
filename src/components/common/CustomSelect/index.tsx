@@ -30,7 +30,7 @@ const customStyles = (
     border: state.menuIsOpen ? "1px solid #f96332" : "1px solid #e3e3e3",
     borderRadius: "30px",
     boxShadow: "none",
-    backgroundColor: state.isDisabled ? "#e3e3e3" : "unset",
+    backgroundColor: state.isDisabled ? "#e3e3e3" : "var(--white-color)",
     transition: "all 0.3s ease-in-out",
     "&:hover": {
       borderColor: "#f96332",
@@ -45,7 +45,7 @@ const customStyles = (
     ...provided,
     color: "#888888",
     opacity: 0.8,
-    fontSize: "0.8571em",
+    fontSize: "14px",
     fontWeight: "400",
     margin: 0,
   }),
@@ -98,7 +98,11 @@ const CustomSelect = memo(
           className
         )}
       >
-        {label && <label className={classes.label}>{labelIcon} {label}</label>}
+        {label && (
+          <label className={classes.label}>
+            {labelIcon} {label}
+          </label>
+        )}
         {control ? (
           <>
             <Controller
@@ -112,7 +116,6 @@ const CustomSelect = memo(
                   getOptionValue={(option) => option[bindKey || "id"]}
                   getOptionLabel={(option) => option[bindLabel || "name"]}
                   noOptionsMessage={() => "..."}
-                  
                   {...rest}
                 />
               )}
@@ -131,7 +134,9 @@ const CustomSelect = memo(
           </>
         )}
         {errorMessage && (
-          <span className="text-danger ml-2 mt-1 d-block">{(errorMessage as any)}</span>
+          <span className="text-danger ml-2 mt-1 d-block">
+            {errorMessage as any}
+          </span>
         )}
       </FormGroup>
     );

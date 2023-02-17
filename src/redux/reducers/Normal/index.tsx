@@ -16,6 +16,8 @@ export interface ITour {
   creator: number;
   contact: string;
   rate?: number;
+  isDeleted?: boolean;
+  numberOfReviewer?: number;
   isTemporarilyStopWorking?: boolean;
 }
 

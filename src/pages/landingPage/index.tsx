@@ -12,8 +12,14 @@ import Footer from "components/Footer";
 import { images } from "configs/images";
 import Link from "next/link";
 import Button, { BtnType } from "components/common/buttons/Button";
+import Aos from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 const LandingPage: NextPage = () => {
+  useEffect(() => {
+    Aos.init({ duration: 900 });
+  }, []);
   return (
     <>
       <div className="cd-section" id="headers">
@@ -24,7 +30,11 @@ const LandingPage: NextPage = () => {
             ></div>
             <Container>
               <Row>
-                <Col className="ml-auto mr-auto text-center" md="8">
+                <Col
+                  className="ml-auto mr-auto text-center"
+                  md="8"
+                  data-aos="fade-up"
+                >
                   <h1 className={clsx("title", classes.titleHome)}>Discover</h1>
                   <h1 className={classes.titleHero}>Viet Nam</h1>
                 </Col>
@@ -33,6 +43,7 @@ const LandingPage: NextPage = () => {
                 <Link href="/listTour" passHref>
                   <a>
                     <Button
+                      data-aos="fade-up"
                       btnType={BtnType.Linear}
                       isDot={true}
                       className={classes.btnExplore}
@@ -54,7 +65,7 @@ const LandingPage: NextPage = () => {
         <img alt="section" src={images.section.src}></img>
       </Row>
       <Offer />
-      {/* <Testimonials/> */}
+      <Testimonials />
       <Contact />
       <Social />
     </>

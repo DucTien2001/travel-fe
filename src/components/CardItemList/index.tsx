@@ -9,6 +9,7 @@ import Stars from "components/Stars";
 import clsx from "clsx";
 import { fCurrency2VND } from "utils/formatNumber";
 import useAuth from "hooks/useAuth";
+import IconMain from "components/common/icons/IconMain";
 interface Props {
   className?: string;
   linkView: string;
@@ -32,6 +33,7 @@ interface Props {
   roomNumber?: string;
   bookDates?: string;
   isHotel?: boolean;
+  numberOfReviewers?: number;
 }
 
 // eslint-disable-next-line react/display-name
@@ -59,6 +61,7 @@ const ListServices = memo(
     roomNumber,
     bookDates,
     isHotel,
+    numberOfReviewers,
   }: Props) => {
     const { user } = useAuth();
     return (
@@ -123,7 +126,14 @@ const ListServices = memo(
               {price && <h3>{fCurrency2VND(price)} VND</h3>}
             </div>
             {rate !== 0 && <Stars numberOfStars={Math.floor(rate)} />}
-            <span className={classes.contact}>{contact}</span>
+            {rate !== 0 && (
+              <div className={classes.containerReview}>
+                <div className={classes.boxReview}>
+                  <IconMain /> <span>{rate.toFixed(1)}</span>
+                </div>
+                <span>({numberOfReviewers} reviews)</span>
+              </div>
+            )}
           </Col>
           <Col className={classes.btnControlCardList}>
             <Link href={`/${linkView}/[${id}]`}>

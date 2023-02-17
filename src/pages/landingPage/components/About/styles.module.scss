@@ -1,8 +1,17 @@
 .titleWrapper {
     display: flex;
-    justify-content: center;
+    margin: 0;
     h2 {
         text-transform: uppercase;
         color: var(--violet-color);
+        margin: 0;
     }
+}
+.title {
+    margin: 0;
+}
+.divider {
+    margin-left: 0;
+    border: 2px solid var(--violet-color);  
+    margin: 10px 0;
 }

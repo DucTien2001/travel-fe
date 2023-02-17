@@ -1,19 +1,34 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { images } from "configs/images";
 import classes from "./styles.module.scss";
+import Aos from "aos";
+import "aos/dist/aos.css";
+
+import clsx from "clsx";
+import { Divider } from "@mui/material";
 // eslint-disable-next-line react/display-name
 const About = memo(() => {
+  useEffect(() => {
+    Aos.init({ duration: 500 });
+  }, []);
   return (
     <>
       <div className="features-5">
         <Container>
           <Row className={classes.titleWrapper}>
-            <h2 className="title">About us</h2>
+            <h2 className={"title"} data-aos="fade-up">
+              About us
+            </h2>
           </Row>
+          <Divider
+            variant="inset"
+            data-aos="fade-right"
+            className={classes.divider}
+          />
           <Row>
             <Col md="5">
-              <div className="info info-horizontal">
+              <div className="info info-horizontal" data-aos="fade-right">
                 <div className="icon icon-info icon-circle">
                   <i className="now-ui-icons location_world"></i>
                 </div>
@@ -26,7 +41,7 @@ const About = memo(() => {
                   </p>
                 </div>
               </div>
-              <div className="info info-horizontal">
+              <div className="info info-horizontal" data-aos="fade-right">
                 <div className="icon icon-info icon-circle">
                   <i className="now-ui-icons sport_user-run"></i>
                 </div>
@@ -39,7 +54,7 @@ const About = memo(() => {
                   </p>
                 </div>
               </div>
-              <div className="info info-horizontal">
+              <div className="info info-horizontal" data-aos="fade-right">
                 <div className="icon icon-info icon-circle">
                   <i className="now-ui-icons ui-2_time-alarm"></i>
                 </div>
@@ -54,7 +69,7 @@ const About = memo(() => {
               </div>
             </Col>
             <Col md="7">
-              <div className="tablet-container">
+              <div className="tablet-container" data-aos="zoom-in">
                 <img alt="intro" src={images.intro.src}></img>
               </div>
             </Col>

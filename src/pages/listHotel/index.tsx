@@ -1,10 +1,26 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 // reactstrap components
-import { Container, Row, Col, PaginationItem, PaginationLink, Pagination } from "reactstrap";
+import {
+  Container,
+  Row,
+  Col,
+  PaginationItem,
+  PaginationLink,
+  Pagination,
+} from "reactstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGrip, faList, faXmark, faSearch, faCalendarDays, faBed, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faGrip,
+  faList,
+  faXmark,
+  faSearch,
+  faCalendarDays,
+  faBed,
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
 import clsx from "clsx";
@@ -26,10 +42,12 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
-import { HotelService} from "services/normal/hotel";
+import { HotelService } from "services/normal/hotel";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "components/FilterPanel";
+import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
+import CustomSelect from "components/common/CustomSelect";
 
 interface SearchData {
   location?: string;
@@ -37,6 +55,7 @@ interface SearchData {
   // return?: Date;
   // numberOfRoom: number;
   checkOptions?: boolean;
+  sortType?: any;
 }
 
 const ListHotels: NextPage = () => {
@@ -49,21 +68,26 @@ const ListHotels: NextPage = () => {
   const [changeViewLayout, setChangeViewLayout] = useState(false);
   const [listHotels, setListHotels] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
+  const sortType = [
+    { id: 1, name: "Lowest price", value: "Lowest price" },
+    { id: 2, name: "Highest price", value: "Highest price" },
+    { id: 3, name: "Highest rating", value: "Highest rating" },
+  ];
   const [tags, setTags] = useState([
-    { id: 1, checked: false, label: 'Shopping' },
-    { id: 2, checked: false, label: 'Sea' },
-    { id: 3, checked: false, label: 'Family' },
-    { id: 4, checked: false, label: 'Mountain' },
-    { id: 5, checked: false, label: 'Trekking' },
-    { id: 6, checked: false, label: 'Music' },
-    { id: 7, checked: false, label: 'Chill' },
-    { id: 8, checked: false, label: 'Eat' },
+    { id: 1, checked: false, label: "Shopping" },
+    { id: 2, checked: false, label: "Sea" },
+    { id: 3, checked: false, label: "Family" },
+    { id: 4, checked: false, label: "Mountain" },
+    { id: 5, checked: false, label: "Trekking" },
+    { id: 6, checked: false, label: "Music" },
+    { id: 7, checked: false, label: "Chill" },
+    { id: 8, checked: false, label: "Eat" },
   ]);
-
 
   const schema = useMemo(() => {
     return yup.object().shape({
       location: yup.string().notRequired(),
+      sortType: yup.object().required("This field is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -74,10 +98,14 @@ const ListHotels: NextPage = () => {
     getValues,
     reset,
     control,
+    watch,
     formState: { errors },
   } = useForm<SearchData>({
     resolver: yupResolver(schema),
     mode: "onChange",
+    defaultValues: {
+      sortType: sortType[0],
+    },
   });
 
   const clearForm = () => {
@@ -91,14 +119,14 @@ const ListHotels: NextPage = () => {
     clearForm();
     getAllHotelsDefault();
     setTags([
-      { id: 1, checked: false, label: 'Shopping' },
-      { id: 2, checked: false, label: 'Sea' },
-      { id: 3, checked: false, label: 'Family' },
-      { id: 4, checked: false, label: 'Mountain' },
-      { id: 5, checked: false, label: 'Trekking' },
-      { id: 6, checked: false, label: 'Music' },
-      { id: 7, checked: false, label: 'Chill' },
-      { id: 8, checked: false, label: 'Eat' },
+      { id: 1, checked: false, label: "Shopping" },
+      { id: 2, checked: false, label: "Sea" },
+      { id: 3, checked: false, label: "Family" },
+      { id: 4, checked: false, label: "Mountain" },
+      { id: 5, checked: false, label: "Trekking" },
+      { id: 6, checked: false, label: "Music" },
+      { id: 7, checked: false, label: "Chill" },
+      { id: 8, checked: false, label: "Eat" },
     ]);
     setSelectedRating(null);
   };
@@ -128,16 +156,16 @@ const ListHotels: NextPage = () => {
   const getAllHotelsDefault = () => {
     dispatch(setLoading(true));
     HotelService.getAllHotelsByPage(1)
-    .then((res) => {
-      setListHotels(res?.data);
-    })
-    .catch((e) => {
-      dispatch(setErrorMess(e));
-    })
-    .finally(() => {
-      dispatch(setLoading(false));
-    });
-  }
+      .then((res) => {
+        setListHotels(res?.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
 
   const handleKeyPress = (e) => {
     var code = e.keyCode || e.which;
@@ -158,7 +186,7 @@ const ListHotels: NextPage = () => {
 
   const applyFilters = () => {
     let updatedList = allHotels;
-     // Rating Filter
+    // Rating Filter
     if (selectedRating) {
       updatedList = updatedList.filter(
         (item) => Math.floor(item?.rate) === parseInt(selectedRating)
@@ -169,51 +197,55 @@ const ListHotels: NextPage = () => {
       .filter((item) => item.checked)
       .map((item) => item.label.toLowerCase());
     if (tagsChecked.length) {
-        updatedList = updatedList.filter((item) =>
+      updatedList = updatedList.filter((item) =>
         tagsChecked.every((filterTag) =>
-        item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
-         )
+          item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
+        )
       );
     }
 
     setListHotels(updatedList);
   };
 
-  const handleChangePage = (e, page: number) =>{
+  const handleChangePage = (e, page: number) => {
     dispatch(setLoading(true));
     HotelService.getAllHotelsByPage(page + 1)
-    .then((res) => {
-      setListHotels(res?.data)
-    })
-    .catch((err) => {
-      dispatch(setErrorMess(err))
-    })
-    .finally(() => {
-      dispatch(setLoading(false));
-    })
-  }
+      .then((res) => {
+        setListHotels(res?.data);
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
   useEffect(() => {
     HotelService.getAllHotelsByPage(1)
-    .then((res) => {
-      setListHotels(res?.data)
-    })
-    .catch((err) => {
-      dispatch(setErrorMess(err))
-    })
-    .finally(() => {
-    })
-  }, [dispatch])
+      .then((res) => {
+        setListHotels(res?.data);
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      })
+      .finally(() => {});
+  }, [dispatch]);
 
   useEffect(() => {
     applyFilters();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tags, selectedRating]);
 
   const numberOfPage = Math.ceil(allHotels.length / 9);
+  //sort by
 
   return (
     <>
-      <SectionHeader title="MULTI-HOTELS" src={images.imagesListHotel.src} className={classes.imgHeader} />
+      <SectionHeader
+        title="MULTI-HOTELS"
+        src={images.imagesListHotel.src}
+        className={classes.imgHeader}
+      />
       <Row className={classes.containerBody}>
         <Container>
           <Row className={classes.titleBody}>
@@ -224,41 +256,74 @@ const ListHotels: NextPage = () => {
             <h1>BROWSE OUR MULTI-HOTELS </h1>
             <div className={classes.divider}></div>
             <p data-aos="fade-up">
-              Choose from our portfolio of unforgettable multi-country tours of Asia and embark on the journey of a lifetime. Each private
-              tour is tailor-made to show the very best that Asia has to offer.
+              Choose from our portfolio of unforgettable multi-country tours of
+              Asia and embark on the journey of a lifetime. Each private tour is
+              tailor-made to show the very best that Asia has to offer.
             </p>
           </Row>
-          {/* ======================= RESULT DESKTOP ===================== */}
-          <Row className={classes.resultDesktop}>
-            <Col xs={2} className={clsx("mb-3", classes.colBtnLayout)}>
-              <Button
-                className={clsx(!changeViewLayout ? "active" : null, classes.layoutBtn)}
-                btnType={BtnType.Outlined}
-                onClick={onChangeViewLayout}
-              >
-                <FontAwesomeIcon icon={faGrip} />
-                GRID VIEW
-              </Button>
-            </Col>
-            <Col xs={2} className={clsx("pl-3", classes.colBtnLayout)}>
-              <Button
-                className={clsx(changeViewLayout ? "active" : null, classes.layoutBtn)}
-                btnType={BtnType.Outlined}
-                onClick={onChangeViewLayout}
-              >
-                <FontAwesomeIcon icon={faList} />
-                LIST VIEW
-              </Button>
-            </Col>
-            <Col xs={8} className={classes.rowResult}>
-              <h5>
-                RESULTS-FOUND: <span>{listHotels?.length}</span>
-              </h5>
-            </Col>
+          <Row className={classes.containerSearch}>
+            <div className={classes.boxControlSearch}>
+              <div className={classes.boxTitleSearch}>
+                <p>
+                  Hotels / <span>Search Results</span>
+                </p>
+              </div>
+              <div>
+                <InputTextFieldBorder
+                  className={classes.inputSearch}
+                  placeholder="Search destinations"
+                  startIcon={<FontAwesomeIcon icon={faSearch} />}
+                />
+              </div>
+            </div>
+            <div className={classes.boxResult}>
+              {/* ======================= RESULT DESKTOP ===================== */}
+              <Col xs={2} className={classes.boxControlLayout}>
+                <Button
+                  className={clsx(
+                    !changeViewLayout ? "active" : null,
+                    classes.layoutBtn
+                  )}
+                  btnType={BtnType.Outlined}
+                  onClick={onChangeViewLayout}
+                >
+                  <FontAwesomeIcon icon={faGrip} />
+                </Button>
+                <Button
+                  className={clsx(
+                    changeViewLayout ? "active" : null,
+                    classes.layoutBtn
+                  )}
+                  btnType={BtnType.Outlined}
+                  onClick={onChangeViewLayout}
+                >
+                  <FontAwesomeIcon icon={faList} />
+                </Button>
+              </Col>
+              <Col xs={10} className={classes.rowResult}>
+                <div className={classes.controlSelect}>
+                  <h5>SORT BY: </h5>
+                  <CustomSelect
+                    className={classes.inputSelect}
+                    options={sortType}
+                    control={control}
+                    name="sortType"
+                    errorMessage={errors.sortType?.message}
+                  />
+                </div>
+                <h5>
+                  RESULTS-FOUND: <span>{listHotels?.length}</span>
+                </h5>
+              </Col>
+            </div>
           </Row>
           <Row className={classes.rowResultBody}>
             <Col xs={2} className={classes.btnResetWrapper}>
-              <Button btnType={BtnType.Outlined} className={classes.btnResetOption} onClick={onClearOption}>
+              <Button
+                btnType={BtnType.Outlined}
+                className={classes.btnResetOption}
+                onClick={onClearOption}
+              >
                 <FontAwesomeIcon icon={faXmark} /> reset option
               </Button>
               <BoxSmallLeft title="Search hotels">
@@ -271,7 +336,11 @@ const ListHotels: NextPage = () => {
                   onKeyPress={handleKeyPress}
                   inputRef={register("location")}
                 />
-                <Button btnType={BtnType.Primary} className={classes.btnSearch} onClick={() => handleSearch()}>
+                <Button
+                  btnType={BtnType.Primary}
+                  className={classes.btnSearch}
+                  onClick={() => handleSearch()}
+                >
                   Search
                 </Button>
               </BoxSmallLeft>
@@ -283,63 +352,69 @@ const ListHotels: NextPage = () => {
                 tags={tags}
                 changeChecked={handleChangeChecked}
                 // changePrice={handleChangePrice}
-                />
+              />
             </Col>
             <Col xs={10} className={classes.listTours}>
               <div className={classes.containerListHotel}>
-              {/* ==================== Grid view ===================== */}
-              {!changeViewLayout && (
-                <Row className={classes.rowGridView}>
-                  {listHotels?.map((hotel, index) => (
-                    <CardItemGrid
-                      linkView="listHotel"
-                      linkBook="/book/hotel"
-                      key={index}
-                      id={hotel.id}
-                      src={hotel.images[0]}
-                      title={hotel.name}
-                      description={hotel.description}
-                      checkInTime={hotel.checkInTime}
-                      checkOutTime={hotel.checkOutTime}
-                      location={hotel.location}
-                      contact={hotel.contact}
-                      tags={hotel.tags}
-                      rate={Math.floor(hotel?.rate)}
-                      creator={hotel.creator}
-                      isTemporarilyStopWorking={hotel.isTemporarilyStopWorking}
-                      isHotel={true}
-                    />
-                  ))}
-                </Row>
-              )}
-              {/* ==================== List view ===================== */}
-              {changeViewLayout && (
-                <div>
-                  {listHotels.map((hotel, index) => (
-                    <CardItemList
-                      key={index}
-                      linkView="listHotel"
-                      linkBook="/book/hotel"
-                      id={hotel.id}
-                      src={hotel.images[0]}
-                      title={hotel.name}
-                      description={hotel.description}
-                      checkInTime={hotel.checkInTime}
-                      checkOutTime={hotel.checkOutTime}
-                      location={hotel.location}
-                      contact={hotel.contact}
-                      tags={hotel.tags}
-                      rate={Math.floor(hotel?.rate)}
-                      creator={hotel.creator}
-                      isTemporarilyStopWorking={hotel.isTemporarilyStopWorking}
-                      isHotel={true}
-                    />
-                  ))}
-                </div>
-              )}
-              {!listHotels?.length && (<div>
-                <SearchNotFound mess="No hotel found"/>
-              </div>)}
+                {/* ==================== Grid view ===================== */}
+                {!changeViewLayout && (
+                  <Row className={classes.rowGridView}>
+                    {listHotels?.map((hotel, index) => (
+                      <CardItemGrid
+                        linkView="listHotel"
+                        linkBook="/book/hotel"
+                        key={index}
+                        id={hotel.id}
+                        src={hotel.images[0]}
+                        title={hotel.name}
+                        description={hotel.description}
+                        checkInTime={hotel.checkInTime}
+                        checkOutTime={hotel.checkOutTime}
+                        location={hotel.location}
+                        contact={hotel.contact}
+                        tags={hotel.tags}
+                        rate={Math.floor(hotel?.rate)}
+                        creator={hotel.creator}
+                        isTemporarilyStopWorking={
+                          hotel.isTemporarilyStopWorking
+                        }
+                        isHotel={true}
+                      />
+                    ))}
+                  </Row>
+                )}
+                {/* ==================== List view ===================== */}
+                {changeViewLayout && (
+                  <div>
+                    {listHotels.map((hotel, index) => (
+                      <CardItemList
+                        key={index}
+                        linkView="listHotel"
+                        linkBook="/book/hotel"
+                        id={hotel.id}
+                        src={hotel.images[0]}
+                        title={hotel.name}
+                        description={hotel.description}
+                        checkInTime={hotel.checkInTime}
+                        checkOutTime={hotel.checkOutTime}
+                        location={hotel.location}
+                        contact={hotel.contact}
+                        tags={hotel.tags}
+                        rate={Math.floor(hotel?.rate)}
+                        creator={hotel.creator}
+                        isTemporarilyStopWorking={
+                          hotel.isTemporarilyStopWorking
+                        }
+                        isHotel={true}
+                      />
+                    ))}
+                  </div>
+                )}
+                {!listHotels?.length && (
+                  <div>
+                    <SearchNotFound mess="No hotel found" />
+                  </div>
+                )}
               </div>
               <Row className={classes.pigination}>
                 <Pagination>
@@ -350,16 +425,17 @@ const ListHotels: NextPage = () => {
                       </span>
                     </PaginationLink>
                   </PaginationItem>
-                    {[...Array(numberOfPage)].map((page, index) => {
-                        return (
-                          <PaginationItem key={index} onClick={(e) => handleChangePage(e, index)}>
-                            <PaginationLink>
-                                {index + 1}
-                            </PaginationLink>
-                          </PaginationItem>
-                        )
-                    })}
-                  <PaginationItem >
+                  {[...Array(numberOfPage)].map((page, index) => {
+                    return (
+                      <PaginationItem
+                        key={index}
+                        onClick={(e) => handleChangePage(e, index)}
+                      >
+                        <PaginationLink>{index + 1}</PaginationLink>
+                      </PaginationItem>
+                    );
+                  })}
+                  <PaginationItem>
                     <PaginationLink>
                       <span aria-hidden={true}>
                         <FontAwesomeIcon icon={faChevronRight} />

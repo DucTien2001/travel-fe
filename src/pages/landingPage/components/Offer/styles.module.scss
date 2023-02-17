@@ -1,8 +1,15 @@
-
-
+.containerBestSeller {
+    background-image: url("../../../../assets/img/backgroundseller.webp");
+}
 .titleSection {
     color: var(--violet-color);
     text-transform: uppercase;
+    margin: 0;
+}
+.divider {
+    margin-left: 0;
+    border: 2px solid var(--violet-color);
+    margin: 10px 0;
 }
 .card {
     min-height: 418px;
@@ -60,6 +67,7 @@
 .titleSwiper {
     font-weight: 600;
     color: var(--violet-color);
+    padding-top: 24px;
 }
 .swiperBestSeller {
     padding: 0px 12px !important;
