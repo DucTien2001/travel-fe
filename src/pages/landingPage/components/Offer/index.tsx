@@ -24,7 +24,6 @@ import "swiper/css/navigation";
 import Stars from "components/Stars";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { Divider } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 // eslint-disable-next-line react/display-name
@@ -57,11 +56,7 @@ const OfferComponent = memo(() => {
               </h2>
             </Col>
           </Row>
-          <Divider
-            variant="inset"
-            data-aos="fade-right"
-            className={classes.divider}
-          />
+          <div data-aos="fade-right" className={classes.divider}></div>
         </Container>
         <div className={classes.containerBestSeller}>
           <Container>

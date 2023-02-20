@@ -5,8 +5,6 @@ import classes from "./styles.module.scss";
 import Aos from "aos";
 import "aos/dist/aos.css";
 
-import clsx from "clsx";
-import { Divider } from "@mui/material";
 // eslint-disable-next-line react/display-name
 const About = memo(() => {
   useEffect(() => {
@@ -21,11 +19,7 @@ const About = memo(() => {
               About us
             </h2>
           </Row>
-          <Divider
-            variant="inset"
-            data-aos="fade-right"
-            className={classes.divider}
-          />
+          <div data-aos="fade-right" className={classes.divider}></div>
           <Row>
             <Col md="5">
               <div className="info info-horizontal" data-aos="fade-right">
