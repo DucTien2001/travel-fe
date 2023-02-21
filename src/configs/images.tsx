@@ -28,6 +28,8 @@ import defaultUser from "assets/img/defaultUser.png";
 import google from "assets/img/icon/ic-google.svg";
 import manage from "assets/img/manage.png";
 import user from "assets/img/user.png";
+import authen from "assets/img/authen.jpg";
+import seathen from "assets/img/seathen.jpg";
 // import pricing1 from 'assets/img/pricing1.jpg'
 
 export const images = {
@@ -61,4 +63,6 @@ export const images = {
   defaultUser,
   manage,
   user,
+  authen,
+  seathen,
 };
