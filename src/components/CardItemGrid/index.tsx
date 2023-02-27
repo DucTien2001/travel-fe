@@ -171,7 +171,7 @@ const ListServices = memo(
                   {rate !== 0 && !isHotel && (
                     <div className={classes.containerReview}>
                       <div className={classes.boxReview}>
-                        <IconMain /> <span>{rate.toFixed(1)}</span>
+                        <IconMain /> <span>{rate?.toFixed(1)}</span>
                       </div>
                       <span>({numberOfReviewers} reviews)</span>
                     </div>

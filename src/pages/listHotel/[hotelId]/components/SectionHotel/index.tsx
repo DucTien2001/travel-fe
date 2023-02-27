@@ -69,7 +69,10 @@ const SectionTour = memo(({ hotel }: Props) => {
   };
   return (
     <>
-      <div className={clsx("section", classes.root)}>
+      <div
+        className={clsx("section", classes.root)}
+        id={HOTEL_SECTION.section_overview}
+      >
         <Container className={classes.container}>
           <Row>
             <Col>
@@ -125,93 +128,7 @@ const SectionTour = memo(({ hotel }: Props) => {
               </Row>
             </Col>
           </Row>
-          <Row className={classes.content}>
-            <Col xs={8} className={classes.leftContent}>
-              <h2 className={classes.leftTextTitle}>Product Details</h2>
-              <h5 className={classes.leftTextPanel}>Highlight</h5>
-              <ul className={classes.highlightContent}>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-              </ul>
-              <div className={classes.goodWrapper}>
-                <FontAwesomeIcon icon={faFaceSmile}></FontAwesomeIcon>
-                <p>
-                  <span>Good for:</span> Tasty Dinners, Adventure Junkies,
-                  Relaxation, Nature Enthusiasts, Sightseeing, Asian Cuisine
-                </p>
-              </div>
-              <div className="ml-2">
-                <h5 className={classes.leftTextPanel}>
-                  What You’ll Experience
-                </h5>
-                <p className={classes.textDescription}>{hotel?.description}</p>
-              </div>
-              <div className={classes.mapBox}>
-                <h5 className={classes.leftTextPanel}> Location Detail</h5>
-                <div>
-                  <p className={classes.locationDetail}>
-                    143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh
-                    Kiên Giang, Vietnam
-                  </p>
-                  <div className={classes.map}></div>
-                  <div className={classes.contactBox}>
-                    <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
-                    <p>Contact Partner: </p>
-                    <a href={`tel: ${hotel?.contact}`}>{hotel?.contact}</a>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4">
-                <h5 className={classes.leftTextPanel}>
-                  {" "}
-                  Additional Information
-                </h5>
-                <p className={classes.textDescription}>{hotel?.description}</p>
-              </div>
-            </Col>
-            <Col xs={4} className={classes.rightContent}>
-              <div></div>
-              <Button
-                btnType={BtnType.Primary}
-                isDot={true}
-                className={classes.btnBookNow}
-                onClick={() =>
-                  scrollToElement(HOTEL_SECTION.section_check_room)
-                }
-              >
-                Select Room
-              </Button>
-              <div className={classes.tipWrapper}>
-                <div className={classes.serviceTip}>
-                  <FontAwesomeIcon icon={faClock}></FontAwesomeIcon>
-                  <p>
-                    Tour duration:{" "}
-                    <span>
-                      {hotel?.checkInTime} - {hotel?.checkOutTime}
-                    </span>
-                  </p>
-                </div>
-                <div className={classes.serviceTip}>
-                  <FontAwesomeIcon icon={faCalendar}></FontAwesomeIcon>
-                  <p>Available today</p>
-                </div>
-                <div className={classes.serviceTip}>
-                  <FontAwesomeIcon icon={faBusinessTime}></FontAwesomeIcon>
-                  <p>Service Available in: Vietnamese</p>
-                </div>
-              </div>
-              <div className={classes.featureWrapper}>
-                <p className={classes.featureTitle}>Features</p>
-                <div>
-                  <FontAwesomeIcon icon={faWallet}></FontAwesomeIcon>
-                  <p>Free cancellation</p>
-                </div>
-              </div>
-            </Col>
-          </Row>
+
           <PopupModalImages
             isOpen={openPopupModalImages}
             toggle={onOpenPopupModalImages}

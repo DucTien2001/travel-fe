@@ -56,6 +56,7 @@
     "react-reactstrap-pagination": "^2.0.3",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.3.0",
+    "react-scroll": "^1.8.9",
     "react-select": "^5.4.0",
     "react-slick": "^0.29.0",
     "react-tagsinput": "^3.20.0",

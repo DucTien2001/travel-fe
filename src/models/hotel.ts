@@ -37,6 +37,10 @@ export interface IUpdateHotel {
 }
 
 export enum HOTEL_SECTION {
-  section_information = 'section_information',
-  section_check_room = 'section_check_room',
+  section_overview = 'section_overview',
+  section_location = 'section_location',
+  section_rooms = 'section_check_room',
+  section_reviews = 'section_reviews',
+  section_facilities = 'section_facilities',
 }
+

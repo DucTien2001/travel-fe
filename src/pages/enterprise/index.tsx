@@ -66,6 +66,7 @@ const Enterprise: NextPage = () => {
     EActiveNav.Tour_Active
   );
   const [activeSideBarMobile, setActiveSideBarMobile] = useState(false);
+
   const onChangeTab = (type: EActiveNav) => {
     switch (type) {
       case EActiveNav.Tour_Active:

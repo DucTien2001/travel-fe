@@ -12,9 +12,12 @@
 }
 .navbarWrapper {
   background-color: var(--violet-transparent-color);
+  z-index: 1000;
 }
 .navbarWrapperViolet {
   background-color: var(--violet-color);
+  z-index: 1000;
+
 }
 .navWrapperMenu {
   display: flex;

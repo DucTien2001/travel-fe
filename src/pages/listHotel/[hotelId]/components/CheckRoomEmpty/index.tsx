@@ -204,7 +204,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
 
   return (
     <>
-      <Container className={classes.root} id={HOTEL_SECTION.section_check_room}>
+      <Container className={classes.root} id={HOTEL_SECTION.section_rooms}>
         <h4 className={classes.titleCheckEmpty}>List room empty</h4>
         <Form
           role="form"

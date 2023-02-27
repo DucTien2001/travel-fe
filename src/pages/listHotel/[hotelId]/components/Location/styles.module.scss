@@ -1,0 +1,76 @@
+.root {
+    background-color: #ffff;
+}
+.rowComment {
+    .cardComment { 
+        padding:0;
+    }
+    @media only screen and (max-width: 768px) {
+        display: block;
+        .cardComment {
+            max-width: 100%;
+        }
+    }
+    .noComment {
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 18px;
+        text-transform: uppercase;
+        color: var(--gray-40);
+        font-weight: 600;
+    }
+}
+.containerMedia {
+    border: 1px solid #cccc;
+    padding: 16px;
+    @media only screen and (max-width: 768px) {
+        margin-bottom: 16px;
+    }
+}
+
+.btnContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    @media only screen and (max-width: 600px) {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        button {
+            width: 100%;
+        }
+    }
+}
+
+.swiper {
+    display: flex;
+    margin:0 !important; 
+    flex-direction: row-reverse;
+    padding-bottom: 20px !important;
+    [class~="swiper-button-prev"]{
+        left: -9px;
+    }
+    [class~="swiper-button-prev"]:after {
+        font-size: 16px;
+        color: var(--violet-color);
+        font-weight: 600;
+    }
+    [class~="swiper-button-next"] {
+        right: -9px;
+    }
+    [class~="swiper-button-next"]:after {
+        font-size: 16px;
+        color: var(--violet-color);
+        font-weight: 600;
+    }
+    [class~="swiper-pagination"] {
+        bottom: 0px !important;
+    }
+    [class~="swiper-slide"] {
+       cursor: pointer;
+    }
+    [class~="swiper-pagination-bullet-active"] {
+        background: var(--violet-color);
+     }
+}
