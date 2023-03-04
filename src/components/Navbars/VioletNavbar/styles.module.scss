@@ -11,7 +11,7 @@
     margin-right:8px;
   }
   .navbarWrapper {
-    background-color: var(--violet-color);
+    background-color: var(--primary-color);
   }
   
   .navWrapperMenu {
@@ -22,7 +22,7 @@
   .dropdownItem {
     position: relative;
     a {
-      color: var(--violet-color) !important;
+      color: var(--primary-color) !important;
       text-decoration: none;
       text-transform: uppercase;
       font-weight:500;

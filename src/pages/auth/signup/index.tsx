@@ -15,7 +15,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
+import InputTextfield from "components/common/inputs/InputTextfield";
 import Google from "components/SocialButton/Google";
 import Link from "next/link";
 import { VALIDATION } from "configs/constants";
@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { UserService } from "services/user";
 import PopupConfirmSucess from "components/Popup/PopupConfirmSucess";
+import { Grid } from "@mui/material";
 
 interface SignUpForm {
   firstName: string;
@@ -115,7 +116,7 @@ const Login: NextPage = () => {
     <div className="main-content">
       <div className={clsx("header page-header-image", classes.headerWrapper)}>
         <Container className={classes.container}>
-          <div className="header-body text-center mb-7">
+          <div className="header-body mb-7">
             <Container className="mt--8 pb-5">
               <Row className="justify-content-center">
                 <Col lg="5" md="7" className={classes.containerCard}>
@@ -131,64 +132,83 @@ const Login: NextPage = () => {
                       </div>
                     </CardHeader>
                     <CardBody className="px-lg-5">
-                      <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
-                        <Row className={classes.row}>
-                          <Col xs={6} className={classes.colName}>
-                            <InputTextFieldBorder
-                              label="First name"
+                      <Grid
+                        component={"form"}
+                        onSubmit={handleSubmit(_onSubmit)}
+                        container
+                        spacing={{ xs: 2, md: 3 }}
+                      >
+                        <Grid
+                          item
+                          container
+                          xs={12}
+                          sx={{ display: "flex" }}
+                          spacing={3}
+                        >
+                          <Grid xs={6} className={classes.colName} item>
+                            <InputTextfield
+                              title="First name"
                               placeholder="Your first name"
                               type="text"
                               inputRef={register("firstName")}
                               autoComplete="off"
                               errorMessage={errors.firstName?.message}
                             />
-                          </Col>
-                          <Col xs={6} className={classes.colName}>
-                            <InputTextFieldBorder
-                              label="Last name"
+                          </Grid>
+                          <Grid xs={6} className={classes.colName} item>
+                            <InputTextfield
+                              title="Last name"
                               placeholder="Your last name"
                               type="text"
                               inputRef={register("lastName")}
                               autoComplete="off"
                               errorMessage={errors.lastName?.message}
                             />
-                          </Col>
-                        </Row>
-                        <InputTextFieldBorder
-                          label="Email"
-                          placeholder="Enter your email"
-                          type="email"
-                          inputRef={register("email")}
-                          autoComplete="off"
-                          errorMessage={errors.email?.message}
-                        />
-                        <InputTextFieldBorder
-                          label="Password"
-                          placeholder="Enter your password"
-                          type="password"
-                          showEyes={true}
-                          inputRef={register("password")}
-                          autoComplete="off"
-                          errorMessage={errors.password?.message}
-                        />
-                        <InputTextFieldBorder
-                          label="Confirm password"
-                          placeholder="Enter your confirm password"
-                          type="password"
-                          showEyes={true}
-                          inputRef={register("confirmPassword")}
-                          autoComplete="off"
-                          errorMessage={errors.confirmPassword?.message}
-                        />
-                        <InputTextFieldBorder
-                          label="Phone"
-                          placeholder="Enter your phone"
-                          type="text"
-                          inputRef={register("phoneNumber")}
-                          autoComplete="off"
-                          errorMessage={errors.phoneNumber?.message}
-                        />
-                        <div className={classes.boxTextRole}>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <InputTextfield
+                            title="Email"
+                            placeholder="Enter your email"
+                            type="email"
+                            inputRef={register("email")}
+                            autoComplete="off"
+                            errorMessage={errors.email?.message}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <InputTextfield
+                            title="Password"
+                            placeholder="Enter your password"
+                            type="password"
+                            showEyes={true}
+                            inputRef={register("password")}
+                            autoComplete="off"
+                            errorMessage={errors.password?.message}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <InputTextfield
+                            title="Confirm password"
+                            placeholder="Enter your confirm password"
+                            type="password"
+                            showEyes={true}
+                            inputRef={register("confirmPassword")}
+                            autoComplete="off"
+                            errorMessage={errors.confirmPassword?.message}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <InputTextfield
+                            title="Phone"
+                            placeholder="Enter your phone"
+                            type="text"
+                            inputRef={register("phoneNumber")}
+                            autoComplete="off"
+                            errorMessage={errors.phoneNumber?.message}
+                          />
+                        </Grid>
+                        <Grid className={classes.boxTextRole} item>
                           <p className={classes.textYouAre}>You are: </p>
                           <div className={classes.boxCheckRole}>
                             <Controller
@@ -216,19 +236,33 @@ const Login: NextPage = () => {
                               )}
                             />
                           </div>
-                        </div>
-                        <div className={classes.btnSignUpContainer}>
+                        </Grid>
+                        <Grid
+                          className={classes.btnSignUpContainer}
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            padding: "24px 0 0 24px",
+                          }}
+                        >
                           <Button btnType={BtnType.Linear} type="submit">
                             Create an account
                           </Button>
-                        </div>
-                      </Form>
+                        </Grid>
+                      </Grid>
                       <div className={classes.separator}>
                         <span className={classes.childrenSeparator}>
                           or sign up with
                         </span>
                       </div>
-                      <Google />
+                      <Grid
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Google />
+                      </Grid>
                       <Row className="mt-3">
                         <Col className="text-right" xs="12">
                           <Link href="/auth/login">

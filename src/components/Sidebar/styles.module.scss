@@ -24,7 +24,7 @@
         margin: 0;
         margin-left: 12px;
         font-weight: 700;
-        color: var(--violet-color);
+        color: var(--primary-color);
     }
 }
 .navLink {
@@ -58,12 +58,12 @@
         width: 100%;   
         padding: 16px 0 16px 24px;
         span {
-            color: var(--violet-color);
+            color: var(--primary-color);
             font-size: 16px;
             margin-left: 8px;
         }
         svg {
-            color: var(--violet-color);
+            color: var(--primary-color);
         }
         a {
             &:hover {

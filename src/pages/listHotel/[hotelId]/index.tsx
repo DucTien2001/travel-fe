@@ -34,7 +34,7 @@ export enum ENavBar {
 const NavLink = styled(Link)`
   color: blue;
   &.active {
-    border-bottom: 5px solid var(--violet-color);
+    border-bottom: 5px solid var(--primary-color);
   }
 `;
 interface Props {}

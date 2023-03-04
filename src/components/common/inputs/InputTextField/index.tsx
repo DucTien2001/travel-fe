@@ -1,87 +1,140 @@
-import React, { memo, useState } from "react";
-import clsx from "clsx";
-import classes from "./styles.module.scss";
+import { useState, memo } from "react";
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Input,
-  FormGroup,
-  InputProps,
-} from "reactstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEyeSlash, faEye, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+  OutlinedInput,
+  FormControl,
+  FormControlProps,
+  InputAdornment,
+  IconButton,
+  OutlinedInputProps,
+  SxProps,
+  Theme,
+} from "@mui/material";
+import classes from "./styles.module.scss";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import clsx from "clsx";
+import { useTranslation } from "react-i18next";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import ErrorMessage from "components/common/texts/ErrorMessage";
+import TextTitle from "components/common/texts/TextTitle";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-interface Props extends InputProps {
-  className?: string;
-  label?: string;
-  labelIcon?: React.ReactNode;
+interface InputsProps extends OutlinedInputProps {
+  title?: string;
+  titleRequired?: boolean;
+  placeholder?: string;
+  name?: string;
+  type?: string;
+  defaultValue?: string;
+  value?: string | number;
   showEyes?: boolean;
-  startIcon?: React.ReactNode;
-  endIcon?: React.ReactNode;
+  root?: string;
+  className?: any;
   inputRef?: any;
+  autoComplete?: string;
   errorMessage?: string | null;
+  optional?: boolean;
+  infor?: string;
+  isShowError?: boolean;
+  rootProps?: FormControlProps;
 }
+const InputTextfield = memo((props: InputsProps) => {
+  const { t } = useTranslation();
 
-// eslint-disable-next-line react/display-name
-const InputTextField = memo(({className, label, labelIcon, showEyes, startIcon, endIcon, inputRef, type, errorMessage, ...props}: Props) => {
-    const [faFocus, setFaFocus] = useState(false);
+  const [toggleEyes, setToggleEyes] = useState(false);
+  const {
+    title,
+    placeholder,
+    name,
+    defaultValue,
+    value,
+    type,
+    root,
+    className,
+    showEyes,
+    inputRef,
+    errorMessage,
+    autoComplete,
+    optional,
+    infor,
+    titleRequired,
+    isShowError,
+    rootProps,
+    ...rest
+  } = props;
 
-    const [toggleEyes, setToggleEyes] = useState(false);
+  const handleClick = () => {
+    setToggleEyes(!toggleEyes);
+  };
 
-    const handleClick = () => {
-      setToggleEyes(!toggleEyes);
-    }
-    const { ref: refInput, ...inputProps } = inputRef || { ref: null };
+  const { ref: refInput, ...inputProps } = inputRef || { ref: null };
 
-    const renderInput = () => {
-      return (
-        <Input
-          {...inputProps}
-          type={!toggleEyes ? type : 'text'}
-          onFocus={() => setFaFocus(true)}
-          onBlur={() => setFaFocus(false)}
-          className={clsx({ "form-control-danger": !!errorMessage }, classes.input)}
-          innerRef={refInput}
-          {...props}
-        />
-      );
-    };
-
-    return (
-      <FormGroup
-        className={clsx(
-          classes.root,
-          { "has-danger": !!errorMessage },
-          className
-        )}
-      >
-        {label && <label className={classes.label}>{labelIcon} {label}</label>}
-        {!!startIcon || !!showEyes ? (
-          <InputGroup className={faFocus ? "input-group-focus" : ""}>
-            {startIcon && (
-              <InputGroupAddon addonType="prepend">
-                <InputGroupText className={classes.inputGroupText}>{startIcon}</InputGroupText>
-              </InputGroupAddon>
-            )}
-            {renderInput()}
-            {showEyes && (
-              <InputGroupAddon addonType="append">
-                <InputGroupText onClick={handleClick} className={classes.iconEyes}>
-                  {toggleEyes  ? <FontAwesomeIcon icon={faEye}/> : <FontAwesomeIcon icon={faEyeSlash}/>}
-                </InputGroupText>
-              </InputGroupAddon>
-            )}
-          </InputGroup>
-        ) : (
-          renderInput()
-        )}
-        {errorMessage && (
-          <span className={clsx("text-danger ml-2 mt-1 d-block", classes.errorMessage)}>{errorMessage}</span>
-        )}
-      </FormGroup>
-    );
-  }
-);
-
-export default InputTextField;
+  return (
+    <FormControl className={clsx(classes.root, root)} {...rootProps}>
+      {title && (
+        <label className={classes.title}>
+          {title}
+          {optional ? (
+            <span className={classes.optional}> ({t("common_optional")})</span>
+          ) : (
+            ""
+          )}
+          {titleRequired ? (
+            <span className={classes.titleRequired}> *</span>
+          ) : (
+            ""
+          )}
+        </label>
+      )}
+      <OutlinedInput
+        type={!toggleEyes ? type : "text"}
+        placeholder={placeholder}
+        fullWidth
+        name={name}
+        defaultValue={defaultValue}
+        value={value}
+        variant="standard"
+        classes={{
+          root: clsx(classes.inputTextfield, {
+            [classes.inputInvalid]: !!errorMessage || isShowError,
+          }),
+        }}
+        className={className}
+        autoComplete={autoComplete}
+        onWheel={(e) =>
+          e.target instanceof HTMLElement &&
+          (e.target as any).type === "number" &&
+          e.target.blur()
+        }
+        endAdornment={
+          !errorMessage ? (
+            showEyes && (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClick}
+                  className={classes.iconEye}
+                  tabIndex={-1}
+                >
+                  {toggleEyes ? (
+                    <FontAwesomeIcon icon={faEye} />
+                  ) : (
+                    <VisibilityOffIcon />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            )
+          ) : (
+            <ErrorOutlineIcon className={classes.iconErrorOutline} />
+          )
+        }
+        {...inputProps}
+        inputRef={refInput}
+        {...rest}
+      />
+      {infor && <p className={classes.textInfor}>{infor}</p>}
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+    </FormControl>
+  );
+});
+export default InputTextfield;

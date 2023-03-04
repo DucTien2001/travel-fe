@@ -11,7 +11,8 @@ import {
 import { FormGroup } from "reactstrap";
 import classes from "./styles.module.scss";
 import ReactDatetime from "react-datetime";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
   label?: string;
@@ -22,18 +23,30 @@ interface Props {
   name?: string;
   control?: any;
   dateFormat?: string;
-  _onChange?: ()=>void;
+  _onChange?: () => void;
   [key: string]: any;
 }
 
 // eslint-disable-next-line react/display-name
 const CustomDatePicker = memo(
-  ({ label, labelIcon, className, placeholder, errorMessage, name, handleChange, _onChange, control, dateFormat, ...rest }: Props) => {
+  ({
+    label,
+    labelIcon,
+    className,
+    placeholder,
+    errorMessage,
+    name,
+    handleChange,
+    _onChange,
+    control,
+    dateFormat,
+    ...rest
+  }: Props) => {
     return (
       <FormGroup
         className={clsx(
           classes.root,
-          { "has-danger": !!errorMessage },
+          { [classes.danger]: !!errorMessage },
           className
         )}
       >
@@ -44,30 +57,36 @@ const CustomDatePicker = memo(
               control={control}
               render={({ field }) => {
                 return (
-                <>
-                  <label className={classes.label}>{labelIcon} {label}</label>
-                  <ReactDatetime
-                    {...field}
-                    className={classes.datePickerInput}
-                    onChange={(date)=>{
-                      _onChange && _onChange()
-                      return field?.onChange(date)
-                    }}
-                    dateFormat={dateFormat || "D/M/YYYY"}
-                    inputProps={{
+                  <div className={classes.form}>
+                    <label className={classes.label}>{label} </label>
+
+                    <ReactDatetime
+                      {...field}
+                      className={classes.datePickerInput}
+                      onChange={(date) => {
+                        _onChange && _onChange();
+                        return field?.onChange(date);
+                      }}
+                      dateFormat={dateFormat || "D/M/YYYY"}
+                      inputProps={{
                         className: "form-control",
                         placeholder: `${placeholder}`,
                       }}
-                    {...rest}
-                  />
-                </>
+                      {...rest}
+                    />
+                  </div>
                 );
               }}
             />
           </>
         ) : (
           <>
-            <label className={classes.label}>{labelIcon} {label}</label>
+            <label className={classes.label}>
+              {labelIcon} {label}
+            </label>
+            <div className={classes.icon}>
+              <FontAwesomeIcon icon={faCalendarDays}></FontAwesomeIcon>
+            </div>
             <ReactDatetime
               className={classes.datePickerInput}
               inputProps={{
@@ -75,15 +94,17 @@ const CustomDatePicker = memo(
                 placeholder: `${placeholder}`,
               }}
               dateFormat="YYYY-MM"
-              onChange={(date)=>{
-                _onChange && _onChange()
+              onChange={(date) => {
+                _onChange && _onChange();
               }}
               {...rest}
             />
           </>
         )}
         {errorMessage && (
-          <span className="text-danger ml-2 mt-1 d-block"><>{errorMessage}</></span>
+          <span className="text-danger mt-1 d-block">
+            <>{errorMessage}</>
+          </span>
         )}
       </FormGroup>
     );

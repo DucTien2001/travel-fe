@@ -26,13 +26,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import { fData } from "utils/formatNumber";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark, faListCheck, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleXmark,
+  faListCheck,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { useDropzone } from "react-dropzone";
 import { clsx } from "clsx";
-import InputTextField from "components/common/inputs/InputTextField";
+import InputTextField from "components/common/inputs/InputTextFields";
 import UploadImage from "components/UploadImage";
 import { useDispatch } from "react-redux";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { ImageService } from "services/image";
 import { RoomService } from "services/enterprise/room";
 import { EditRoomPrice } from "models/room";
@@ -42,14 +50,14 @@ const PHOTO_SIZE = 10000000000; // bytes
 const MAX_IMAGES = 9;
 const MIN_IMAGES = 3;
 export interface RoomForm {
-    discount?: number;
-    monday?: number;
-    tuesday?: number;
-    wednesday?: number;
-    thursday?: number;
-    friday?: number;
-    saturday?: number;
-    sunday?: number;
+  discount?: number;
+  monday?: number;
+  tuesday?: number;
+  wednesday?: number;
+  thursday?: number;
+  friday?: number;
+  saturday?: number;
+  sunday?: number;
 }
 
 interface Props extends ModalProps {
@@ -65,10 +73,11 @@ const PopupEditRoomPrice = memo((props: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      discount: yup.number()
-      .transform(value => (isNaN(value) ? undefined : value))
-      .typeError("Discount must be a number")
-      .notRequired(),
+      discount: yup
+        .number()
+        .transform((value) => (isNaN(value) ? undefined : value))
+        .typeError("Discount must be a number")
+        .notRequired(),
       monday: yup
         .number()
         .typeError("Price is must be number")
@@ -130,17 +139,16 @@ const PopupEditRoomPrice = memo((props: Props) => {
       saturdayPrice: itemEdit.saturdayPrice,
       sundayPrice: itemEdit.sundayPrice,
     })
-    .then((res) => {
-      dispatch(setSuccessMess("Update room price successfully"))
-    })
-    .catch((err) => {
-      dispatch(setErrorMess(err))
-    })
-    .finally(() => {
-      dispatch(setLoading(false))
-      onClose();
-    })
-
+      .then((res) => {
+        dispatch(setSuccessMess("Update room price successfully"));
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+        onClose();
+      });
   };
 
   useEffect(() => {
@@ -154,9 +162,9 @@ const PopupEditRoomPrice = memo((props: Props) => {
         friday: itemEdit.fridayPrice,
         saturday: itemEdit.saturdayPrice,
         sunday: itemEdit.sundayPrice,
-      })
+      });
     }
-  }, [reset, itemEdit])
+  }, [reset, itemEdit]);
 
   return (
     <>
@@ -164,103 +172,107 @@ const PopupEditRoomPrice = memo((props: Props) => {
         <ModalHeader toggle={onClose} className={classes.title}>
           Edit room
         </ModalHeader>
-        <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
+        <Form
+          role="form"
+          onSubmit={handleSubmit(_onSubmit)}
+          className={classes.form}
+        >
           <ModalBody>
-                  <Row className={classes.row}>
-                    <Col>
-                    <InputTextFieldBorder
-                        label="Discount"
-                        className="mr-3"
-                        placeholder="Enter discount"
-                        inputRef={register("discount")}
-                        errorMessage={errors.discount?.message}
-                      />                      
-                    </Col>
-                  </Row>
-                  <Row className={classes.row}>
-                    <Col>
-                    <Table bordered className={classes.table}>
-                              <thead>
-                                <tr>
-                                  <th scope="row">Days</th>
-                                  <th>Price (unit VND)</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <th scope="row">Monday</th>
-                                  <td className={classes.tdPriceInput}>
-                                    <InputTextField
-                                      inputRef={register("monday")}
-                                      errorMessage={errors.monday?.message}
-                                    />
-                                    &nbsp;VND
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">Tuesday</th>
-                                  <td className={classes.tdPriceInput}>
-                                    <InputTextField
-                                      inputRef={register("tuesday")}
-                                      errorMessage={errors.tuesday?.message}
-                                    />
-                                    &nbsp;VND
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">Wednesday</th>
-                                  <td className={classes.tdPriceInput}>
-                                    <InputTextField
-                                      inputRef={register("wednesday")}
-                                      errorMessage={errors.wednesday?.message}
-                                    />
-                                    &nbsp;VND
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">Thursday</th>
-                                  <td className={classes.tdPriceInput}>
-                                    <InputTextField
-                                      inputRef={register("thursday")}
-                                      errorMessage={errors.thursday?.message}
-                                    />
-                                    &nbsp;VND
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">Friday</th>
-                                  <td className={classes.tdPriceInput}>
-                                    <InputTextField
-                                      inputRef={register("friday")}
-                                      errorMessage={errors.friday?.message}
-                                    />
-                                    &nbsp;VND
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">Saturday</th>
-                                  <td className={classes.tdPriceInput}>
-                                    <InputTextField
-                                      inputRef={register("saturday")}
-                                      errorMessage={errors.saturday?.message}
-                                    />
-                                    &nbsp;VND
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">Sunday</th>
-                                  <td className={classes.tdPriceInput}>
-                                    <InputTextField
-                                      inputRef={register("sunday")}
-                                      errorMessage={errors.sunday?.message}
-                                    />
-                                    &nbsp;VND
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </Table>
-                    </Col>
-                  </Row>
+            <Row className={classes.row}>
+              <Col>
+                <InputTextFieldBorder
+                  label="Discount"
+                  className="mr-3"
+                  placeholder="Enter discount"
+                  inputRef={register("discount")}
+                  errorMessage={errors.discount?.message}
+                />
+              </Col>
+            </Row>
+            <Row className={classes.row}>
+              <Col>
+                <Table bordered className={classes.table}>
+                  <thead>
+                    <tr>
+                      <th scope="row">Days</th>
+                      <th>Price (unit VND)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Monday</th>
+                      <td className={classes.tdPriceInput}>
+                        <InputTextField
+                          inputRef={register("monday")}
+                          errorMessage={errors.monday?.message}
+                        />
+                        &nbsp;VND
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Tuesday</th>
+                      <td className={classes.tdPriceInput}>
+                        <InputTextField
+                          inputRef={register("tuesday")}
+                          errorMessage={errors.tuesday?.message}
+                        />
+                        &nbsp;VND
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Wednesday</th>
+                      <td className={classes.tdPriceInput}>
+                        <InputTextField
+                          inputRef={register("wednesday")}
+                          errorMessage={errors.wednesday?.message}
+                        />
+                        &nbsp;VND
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Thursday</th>
+                      <td className={classes.tdPriceInput}>
+                        <InputTextField
+                          inputRef={register("thursday")}
+                          errorMessage={errors.thursday?.message}
+                        />
+                        &nbsp;VND
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Friday</th>
+                      <td className={classes.tdPriceInput}>
+                        <InputTextField
+                          inputRef={register("friday")}
+                          errorMessage={errors.friday?.message}
+                        />
+                        &nbsp;VND
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Saturday</th>
+                      <td className={classes.tdPriceInput}>
+                        <InputTextField
+                          inputRef={register("saturday")}
+                          errorMessage={errors.saturday?.message}
+                        />
+                        &nbsp;VND
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Sunday</th>
+                      <td className={classes.tdPriceInput}>
+                        <InputTextField
+                          inputRef={register("sunday")}
+                          errorMessage={errors.sunday?.message}
+                        />
+                        &nbsp;VND
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </Col>
+            </Row>
           </ModalBody>
           <ModalFooter className={classes.footer}>
             <Button btnType={BtnType.Primary} type="submit">

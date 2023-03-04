@@ -1,5 +1,13 @@
 import React, { useMemo, memo, useState, useEffect } from "react";
-import { Row, Form, Modal, ModalProps, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {
+  Row,
+  Form,
+  Modal,
+  ModalProps,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import Button, { BtnType } from "components/common/buttons/Button";
@@ -9,9 +17,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { clsx } from "clsx";
-import InputTextField from "components/common/inputs/InputTextField";
+import InputTextField from "components/common/inputs/InputTextFields";
 import { useDispatch } from "react-redux";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { RoomService } from "services/enterprise/room";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import moment from "moment";
@@ -153,7 +165,11 @@ const PopupAddOrEditRoomOtherPrice = memo((props: Props) => {
         <ModalHeader toggle={onClose} className={classes.title}>
           Price of the special day
         </ModalHeader>
-        <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
+        <Form
+          role="form"
+          onSubmit={handleSubmit(_onSubmit)}
+          className={classes.form}
+        >
           <ModalBody>
             {fields?.map((field: any, index) => {
               return (
@@ -167,7 +183,10 @@ const PopupAddOrEditRoomOtherPrice = memo((props: Props) => {
                       dateFormat="DD/MM/YYYY"
                       minDate
                       timeFormat={false}
-                      errorMessage={errors.otherPriceList && errors.otherPriceList[index]?.date?.message}
+                      errorMessage={
+                        errors.otherPriceList &&
+                        errors.otherPriceList[index]?.date?.message
+                      }
                       isValidDate={disablePastDt}
                     />
                     <div className="d-flex align-items-center">
@@ -177,7 +196,10 @@ const PopupAddOrEditRoomOtherPrice = memo((props: Props) => {
                         type="text"
                         autoComplete="off"
                         inputRef={register(`otherPriceList.${index}.price`)}
-                        errorMessage={errors.otherPriceList && errors.otherPriceList[index]?.price?.message}
+                        errorMessage={
+                          errors.otherPriceList &&
+                          errors.otherPriceList[index]?.price?.message
+                        }
                       />
                       <span>VND</span>
                     </div>
@@ -187,11 +209,17 @@ const PopupAddOrEditRoomOtherPrice = memo((props: Props) => {
                       type="text"
                       autoComplete="off"
                       inputRef={register(`otherPriceList.${index}.id`)}
-                      errorMessage={errors.otherPriceList && errors.otherPriceList[index]?.id?.message}
+                      errorMessage={
+                        errors.otherPriceList &&
+                        errors.otherPriceList[index]?.id?.message
+                      }
                     />
                     {fields?.length > 1 && (
                       <div className={classes.btnDelete}>
-                        <Button onClick={() => handleDeleteItem(field?.id, index)} color="danger">
+                        <Button
+                          onClick={() => handleDeleteItem(field?.id, index)}
+                          color="danger"
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </Button>
                       </div>

@@ -25,7 +25,7 @@ import classes from "./styles.module.scss";
 import Social from "components/Social";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import InputTextField from "components/common/inputs/InputTextField";
+import InputTextField from "components/common/inputs/InputTextFields";
 import Button, { BtnType } from "components/common/buttons/Button";
 import SectionHeader from "components/Header/SectionHeader";
 import CardItemGrid from "components/CardItemGrid";

@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import {useState, useEffect, memo} from "react";
+import { useState, useEffect, memo } from "react";
 import {
   Collapse,
   DropdownToggle,
@@ -11,22 +11,34 @@ import {
   Nav,
   Container,
 } from "reactstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faBook, faLocationDot, faPlane, faHotel, 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faBook,
+  faLocationDot,
+  faPlane,
+  faHotel,
   faAddressCard,
-  faCalendarCheck, 
+  faCalendarCheck,
   faLandmarkDome,
   faBarsProgress,
-  faEarthAsia, faE, faV, faSquarePlus, faBagShopping, faKey } from '@fortawesome/free-solid-svg-icons';
+  faEarthAsia,
+  faE,
+  faV,
+  faSquarePlus,
+  faBagShopping,
+  faKey,
+  faSignsPost,
+} from "@fortawesome/free-solid-svg-icons";
 import clsx from "clsx";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import classes from "./styles.module.scss";
-import Button, {BtnType} from "components/common/buttons/Button";
+import Button, { BtnType } from "components/common/buttons/Button";
 import SignOutButton from "components/common/buttons/SignOutButton";
 import UseAuth from "hooks/useAuth";
 import { EUserType } from "models/user";
-
+import { images } from "configs/images";
 
 const WhiteNavbar = memo(() => {
   const { isLoggedIn, logout, user } = UseAuth();
@@ -57,14 +69,19 @@ const WhiteNavbar = memo(() => {
   }, []);
   return (
     <>
-      <Navbar className={user?.role === EUserType.USER || !user ? clsx("fixed-top", navbarColor, classes.navbarWrapper) : clsx("fixed-top", classes.navbarWrapperViolet)} expand="lg">
+      <Navbar
+        className={
+          user?.role === EUserType.USER || !user
+            ? clsx("fixed-top", navbarColor, classes.navbarWrapper)
+            : clsx("fixed-top", classes.navbarWrapperViolet)
+        }
+        expand="lg"
+      >
         <Container className={classes.container}>
           <div className={clsx("navbar-translate", classes.navLogoName)}>
             <Link href="/" passHref>
-              <a>
-                TRAVELIX
-              </a>
-              </Link>
+              <a>TRAVELIX</a>
+            </Link>
             <button
               onClick={handleCollapseNavbar}
               aria-expanded={collapseOpen}
@@ -75,9 +92,17 @@ const WhiteNavbar = memo(() => {
               <span className="navbar-toggler-bar bottom-bar"></span>
             </button>
           </div>
-          <Collapse isOpen={collapseOpen} navbar className={classes.collapseMobile}>
-            <Nav className={clsx("ml-auto", classes.navWrapperMenu)} id="ceva" navbar>
-              <UncontrolledDropdown nav>
+          <Collapse
+            isOpen={collapseOpen}
+            navbar
+            className={classes.collapseMobile}
+          >
+            <Nav
+              className={clsx("ml-auto", classes.navWrapperMenu)}
+              id="ceva"
+              navbar
+            >
+              {/* <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
                   color="default"
@@ -107,8 +132,30 @@ const WhiteNavbar = memo(() => {
                     </Link>
                   </DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
-              {/* <UncontrolledDropdown nav>
+              </UncontrolledDropdown> */}
+              <NavItem className={classes.navItem}>
+                <Link href="/listTour" passHref>
+                  <a>
+                    <FontAwesomeIcon
+                      icon={faSignsPost}
+                      className={classes.iconNav}
+                    />
+                    <p>TOURS</p>
+                  </a>
+                </Link>
+              </NavItem>
+              <NavItem className={classes.navItem}>
+                <Link href="/listHotel" passHref>
+                  <a>
+                    <FontAwesomeIcon
+                      icon={faHotel}
+                      className={classes.iconNav}
+                    />
+                    <p>STAYS</p>
+                  </a>
+                </Link>
+              </NavItem>
+              <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
                   color="default"
@@ -118,14 +165,17 @@ const WhiteNavbar = memo(() => {
                   nav
                   onClick={(e) => e.preventDefault()}
                 >
-                  <FontAwesomeIcon icon={faEarthAsia} className={classes.iconNav}/>
+                  <FontAwesomeIcon
+                    icon={faEarthAsia}
+                    className={classes.iconNav}
+                  />
                   <p>Languages</p>
                 </DropdownToggle>
                 <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
                   <DropdownItem className={classes.dropdownItem}>
                     <Link href="/" passHref>
                       <a>
-                        <FontAwesomeIcon icon={faE} className={classes.iconNav}/>
+                        <img src={images.anh.src} alt="anh" />
                         English
                       </a>
                     </Link>
@@ -133,104 +183,117 @@ const WhiteNavbar = memo(() => {
                   <DropdownItem className={classes.dropdownItem}>
                     <Link href="/" passHref>
                       <a>
-                        <FontAwesomeIcon icon={faV} className={classes.iconNav}/>
+                        <img src={images.vietnam.src} alt="anh" />
                         VietNamese
                       </a>
                     </Link>
                   </DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown> */}
-              {isLoggedIn ?
-              (
+              </UncontrolledDropdown>
+              {isLoggedIn ? (
                 <>
                   <UncontrolledDropdown nav>
-                  <DropdownToggle
-                    caret
-                    color="default"
-                    data-toggle="dropdown"
-                    href="#pablo"
-                    id="navbarDropdownMenuLink"
-                    nav
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <FontAwesomeIcon icon={faUser} className={classes.iconNav}/>
-                    <p>Profile</p>
-                  </DropdownToggle>
-                  <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
-                    <DropdownItem className="noti-title" header tag="div">
-                          <h6 className={classes.headerTitle}>Welcome!</h6>
-                    </DropdownItem>
-                    <DropdownItem className={classes.dropdownItem}>
-                      <Link href="/profile" passHref>
-                        <a>
-                          <FontAwesomeIcon icon={faAddressCard} className={classes.iconNav}/>
-                          My profile
-                        </a>
-                      </Link>
-                    </DropdownItem>
-                    <DropdownItem className={classes.dropdownItem}>
-                      <Link href="/paymentHistory" passHref>
-                        <a>
-                          <FontAwesomeIcon icon={faCalendarCheck} className={classes.iconNav}/>
-                          Payment history
-                        </a>
-                      </Link>
-                    </DropdownItem>
-                    {user?.role === EUserType.ENTERPRISE && (
-                    <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/enterprise" passHref>
-                      <a>
-                        <FontAwesomeIcon icon={faBarsProgress} className={classes.iconNav}/>
-                         Management 
-                      </a>
-                    </Link>
-                  </DropdownItem>
-                    )}
-                    {user?.role === EUserType.ADMIN && (
-                    <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/admin" passHref>
-                      <a>
-                        <FontAwesomeIcon icon={faBarsProgress} className={classes.iconNav}/>
-                         Management 
-                      </a>
-                    </Link>
-                  </DropdownItem>
-                    )}
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-                <NavItem onClick={logout}> 
-                  <Link href="/auth/login" passHref>             
+                    <DropdownToggle
+                      caret
+                      color="default"
+                      data-toggle="dropdown"
+                      href="#pablo"
+                      id="navbarDropdownMenuLink"
+                      nav
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className={classes.iconNav}
+                      />
+                      <p>Profile</p>
+                    </DropdownToggle>
+                    <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
+                      <DropdownItem className="noti-title" header tag="div">
+                        <h6 className={classes.headerTitle}>Welcome!</h6>
+                      </DropdownItem>
+                      <DropdownItem className={classes.dropdownItem}>
+                        <Link href="/profile" passHref>
+                          <a>
+                            <FontAwesomeIcon
+                              icon={faAddressCard}
+                              className={classes.iconNav}
+                            />
+                            My profile
+                          </a>
+                        </Link>
+                      </DropdownItem>
+                      <DropdownItem className={classes.dropdownItem}>
+                        <Link href="/paymentHistory" passHref>
+                          <a>
+                            <FontAwesomeIcon
+                              icon={faCalendarCheck}
+                              className={classes.iconNav}
+                            />
+                            Payment history
+                          </a>
+                        </Link>
+                      </DropdownItem>
+                      {user?.role === EUserType.ENTERPRISE && (
+                        <DropdownItem className={classes.dropdownItem}>
+                          <Link href="/enterprise" passHref>
+                            <a>
+                              <FontAwesomeIcon
+                                icon={faBarsProgress}
+                                className={classes.iconNav}
+                              />
+                              Management
+                            </a>
+                          </Link>
+                        </DropdownItem>
+                      )}
+                      {user?.role === EUserType.ADMIN && (
+                        <DropdownItem className={classes.dropdownItem}>
+                          <Link href="/admin" passHref>
+                            <a>
+                              <FontAwesomeIcon
+                                icon={faBarsProgress}
+                                className={classes.iconNav}
+                              />
+                              Management
+                            </a>
+                          </Link>
+                        </DropdownItem>
+                      )}
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                  <NavItem onClick={logout}>
+                    <Link href="/auth/login" passHref>
                       <a>
                         <Button btnType={BtnType.Secondary}>Sign out</Button>
-                      </a>      
-                  </Link>   
-                </NavItem> 
-              </>
-              )   
-              :     
-              (<>
-                <NavItem className={classes.navMobile}>
-                  <Link href="/auth/login" passHref>
-                    <a>
-                    <Button btnType={BtnType.Secondary}>Sign in</Button>
-                    </a>
-                  </Link>           
-                </NavItem>
-                <NavItem>
-                  <Link href="/auth/signup" passHref>
-                    <a>
-                    <Button btnType={BtnType.Secondary}>Register</Button>
-                    </a>
-                  </Link>       
-                </NavItem>              
-              </>)   
-              }
+                      </a>
+                    </Link>
+                  </NavItem>
+                </>
+              ) : (
+                <>
+                  <NavItem className={classes.navMobile}>
+                    <Link href="/auth/login" passHref>
+                      <a>
+                        <Button btnType={BtnType.Secondary}>Sign in</Button>
+                      </a>
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link href="/auth/signup" passHref>
+                      <a>
+                        <Button btnType={BtnType.Secondary}>Register</Button>
+                      </a>
+                    </Link>
+                  </NavItem>
+                </>
+              )}
             </Nav>
           </Collapse>
         </Container>
       </Navbar>
     </>
   );
-}) 
+});
 
 export default WhiteNavbar;

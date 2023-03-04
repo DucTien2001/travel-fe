@@ -53,7 +53,7 @@
     }
     [class~="swiper-button-prev"]:after {
         font-size: 16px;
-        color: var(--violet-color);
+        color: var(--primary-color);
         font-weight: 600;
     }
     [class~="swiper-button-next"] {
@@ -61,7 +61,7 @@
     }
     [class~="swiper-button-next"]:after {
         font-size: 16px;
-        color: var(--violet-color);
+        color: var(--primary-color);
         font-weight: 600;
     }
     [class~="swiper-pagination"] {
@@ -71,6 +71,6 @@
        cursor: pointer;
     }
     [class~="swiper-pagination-bullet-active"] {
-        background: var(--violet-color);
+        background: var(--primary-color);
      }
 }

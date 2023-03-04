@@ -2,14 +2,15 @@ html,
 :root {
   --white-color: #ffff;
   --violet-transparent-color:rgba(54,19,84,.85);
-  --violet-color: #350a4e;
+  --primary-color: #25316D;
+  --primary-light-color: #3b87db;
   --background-container-color: rgb(242 243 243);
   --warning-color: #f2bb2e;
   --warning-text-color: #9b6907;
   --purple-color: #b69cc4;
   --violet-light-color:#4a1a67;
   --violet-dark-color:#2c0a42;
-  --text-color: #9A9A9A;
+  --text-color: #000;
   --orange-color: #fa9e1b;
   --green-color: #7c9911;
   --green-dark: #bbe22d;
@@ -21,8 +22,17 @@ html,
   --eerie-black-40: #1c1c1c66;
   --eerie-black-20: #1c1c1c33;
   --eerie-black-65: #1c1c1ca6;
-  --gray-40: #A4A4A4;
-  --gray-90: #dad4d4;
+  --gray-02: #373d3f;
+  --gray-5: #f4f4f4;
+  --gray-6: #A7AFB2;
+  --gray-10: #e8e8e8;
+  --gray-20: #d2d2d2;
+  --gray-30: #bbbbbb;
+  --gray-40: #a4a4a4;
+  --gray-50: #8d8d8d;
+  --gray-60: #767676;
+  --gray-80: #494949;
+  --gray-90: #333333;
   --blue-color: #1f61a9;
   --bui-shadow-100: 0 2px 8px 0 rgba(0,0,0,0.16);
   --bui-shadow-200: 0 2px 16px 0 rgba(0,0,0,0.24);

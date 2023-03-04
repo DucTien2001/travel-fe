@@ -15,9 +15,9 @@ const About = memo(() => {
       <div className="features-5">
         <Container>
           <Row className={classes.titleWrapper}>
-            <h2 className={"title"} data-aos="fade-up">
+            <h3 className={"title"} data-aos="fade-up">
               About us
-            </h2>
+            </h3>
           </Row>
           <div data-aos="fade-right" className={classes.divider}></div>
           <Row>

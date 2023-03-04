@@ -1,21 +1,21 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import className from "./styles.module.scss";
 import clsx from "clsx";
-import Slider from '@material-ui/core/Slider';
+import Slider from "@material-ui/core/Slider";
 
 const useStyles = makeStyles({
   root: {
-    width: '100%'
+    width: "100%",
   },
   thumb: {
-    color: 'var(--violet-color) !important',
+    color: "var(--primary-color) !important",
   },
   rail: {
-    color: `var(--violet-color) !important`,
+    color: `var(--primary-color) !important`,
   },
   track: {
-    color: 'var(--violet-color) !important',
+    color: "var(--primary-color) !important",
   },
 });
 
@@ -27,7 +27,7 @@ const SliderProton = ({ value, changePrice }) => {
       <Slider
         value={value}
         onChange={changePrice}
-        valueLabelDisplay='on'
+        valueLabelDisplay="on"
         min={10000}
         max={3000000}
         classes={{

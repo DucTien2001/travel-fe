@@ -19,7 +19,7 @@
 .containerReview {
     display: flex;
     justify-content: flex-start;
-    color: var(--violet-color);
+    color: var(--primary-color);
     padding-right: 12px;
     padding-top: 12px;
     .boxReview {
@@ -54,7 +54,7 @@
     span {
         font-size: 12px;
         padding: 4px 8px;
-        background-color: var(--violet-color);
+        background-color: var(--primary-color);
         color: #ffff;
     }
     @media only screen and (max-width: 768px) {

@@ -110,7 +110,7 @@
     align-items: center;
     h5 {
         font-weight: 700;
-        color: var(--violet-color);
+        color: var(--primary-color);
         margin:0;
         span {
             margin-left: 8px;
@@ -145,8 +145,8 @@
     margin-right: 8px;
     .viewResult {
         background-color: #ffff !important;
-        border: 1px solid var(--violet-color);
-        color: var(--violet-color) !important;
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color) !important;
         margin: 0;
         border-radius: 15px;
         padding: 5px 15px;
@@ -259,7 +259,7 @@
 
 .selectPerPage {
     background-color: #ffff;
-    color: var(--violet-color);
+    color: var(--primary-color);
     padding: 8px 10px;
     border-radius: 8px;
     font-size: 16px;

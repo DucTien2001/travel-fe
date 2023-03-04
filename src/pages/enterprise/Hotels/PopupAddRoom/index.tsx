@@ -26,13 +26,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import { fData } from "utils/formatNumber";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark, faListCheck, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleXmark,
+  faListCheck,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { useDropzone } from "react-dropzone";
 import { clsx } from "clsx";
-import InputTextField from "components/common/inputs/InputTextField";
+import InputTextField from "components/common/inputs/InputTextFields";
 import UploadImage from "components/UploadImage";
 import { useDispatch } from "react-redux";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { ImageService } from "services/image";
 import { RoomService } from "services/enterprise/room";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
@@ -76,23 +84,40 @@ const PopupAddOrEditHotel = memo((props: Props) => {
   const dispatch = useDispatch();
   const { hotelId, isOpen, onClose } = props;
   const [isOpenToggleArr, setIsOpenToggleArr] = useState([true]);
-  const {user} = useAuth();
+  const { user } = useAuth();
   const schema = useMemo(() => {
     return yup.object().shape({
       room: yup.array(
         yup.object({
           title: yup.string().required("Name is required"),
           description: yup.string().required("Name is required"),
-          tags: yup.array(yup.object({
-            id: yup.string().required('Tags is required.'),
-            name: yup.string().required('Tags is required.')
-          })).required('Tags is required.').min(1, 'Tags is required.'),
-          discount: yup.number().transform(value => (isNaN(value) ? undefined : value)).typeError("Discount must be a number").notRequired(),
-          numberOfBed: yup.number().typeError("Number of room must be a number").required("Number of room is required"),
-          numberOfRoom: yup.number().typeError("Number of bed must be a number").required("Number of bed is required"),
-          imagesRoom: yup.mixed().test("required", "Please select images", (value) => {
-            return value && value.length;
-          }),
+          tags: yup
+            .array(
+              yup.object({
+                id: yup.string().required("Tags is required."),
+                name: yup.string().required("Tags is required."),
+              })
+            )
+            .required("Tags is required.")
+            .min(1, "Tags is required."),
+          discount: yup
+            .number()
+            .transform((value) => (isNaN(value) ? undefined : value))
+            .typeError("Discount must be a number")
+            .notRequired(),
+          numberOfBed: yup
+            .number()
+            .typeError("Number of room must be a number")
+            .required("Number of room is required"),
+          numberOfRoom: yup
+            .number()
+            .typeError("Number of bed must be a number")
+            .required("Number of bed is required"),
+          imagesRoom: yup
+            .mixed()
+            .test("required", "Please select images", (value) => {
+              return value && value.length;
+            }),
           monday: yup
             .number()
             .typeError("Price is required.")
@@ -251,13 +276,19 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         <ModalHeader toggle={onClose} className={classes.title}>
           Create room
         </ModalHeader>
-        <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
+        <Form
+          role="form"
+          onSubmit={handleSubmit(_onSubmit)}
+          className={classes.form}
+        >
           <ModalBody>
             {fieldsRoom?.map((field, index) => {
               return (
                 <>
                   {/* row title */}
-                  <Row className={clsx(classes.boxTitleRoomNumber, classes.row)}>
+                  <Row
+                    className={clsx(classes.boxTitleRoomNumber, classes.row)}
+                  >
                     <Col>
                       <p>Room {index + 1} :</p>
                     </Col>
@@ -277,7 +308,9 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         className="mr-3"
                         placeholder="Enter title"
                         inputRef={register(`room.${index}.title`)}
-                        errorMessage={errors.room && errors.room[index]?.title?.message}
+                        errorMessage={
+                          errors.room && errors.room[index]?.title?.message
+                        }
                       />
                     </Col>
                   </Row>
@@ -288,22 +321,27 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         className="mr-3"
                         placeholder="Enter description"
                         inputRef={register(`room.${index}.description`)}
-                        errorMessage={errors.room && errors.room[index]?.description?.message}
+                        errorMessage={
+                          errors.room &&
+                          errors.room[index]?.description?.message
+                        }
                       />
                     </Col>
                   </Row>
                   <Row className={classes.row}>
                     <Col>
-                    <InputSelect
-                    label="Tags"
-                    className={classes.input}
-                    placeholder="Please choose the tags your tour"
-                    name={`room.${index}.tags`}
-                    control={control}
-                    options={tagsOption}
-                    isMulti
-                    errorMessage={errors.room && errors.room[index]?.tags?.message}
-                    />
+                      <InputSelect
+                        label="Tags"
+                        className={classes.input}
+                        placeholder="Please choose the tags your tour"
+                        name={`room.${index}.tags`}
+                        control={control}
+                        options={tagsOption}
+                        isMulti
+                        errorMessage={
+                          errors.room && errors.room[index]?.tags?.message
+                        }
+                      />
                     </Col>
                   </Row>
                   <Row className={classes.row}>
@@ -313,7 +351,10 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         className="mr-3"
                         placeholder="Enter number of bed"
                         inputRef={register(`room.${index}.numberOfBed`)}
-                        errorMessage={errors.room && errors.room[index]?.numberOfBed?.message}
+                        errorMessage={
+                          errors.room &&
+                          errors.room[index]?.numberOfBed?.message
+                        }
                       />
                     </Col>
                   </Row>
@@ -324,7 +365,10 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         className="mr-3"
                         placeholder="Enter number of room"
                         inputRef={register(`room.${index}.numberOfRoom`)}
-                        errorMessage={errors.room && errors.room[index]?.numberOfRoom?.message}
+                        errorMessage={
+                          errors.room &&
+                          errors.room[index]?.numberOfRoom?.message
+                        }
                       />
                     </Col>
                   </Row>
@@ -335,7 +379,9 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         className="mr-3"
                         placeholder="Enter discount"
                         inputRef={register(`room.${index}.discount`)}
-                        errorMessage={errors.room && errors.room[index]?.discount?.message}
+                        errorMessage={
+                          errors.room && errors.room[index]?.discount?.message
+                        }
                       />
                     </Col>
                   </Row>
@@ -348,7 +394,9 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                         title="Upload your hotel images"
                         files={field.value as unknown as File[]}
                         onChange={(value) => field.onChange(value)}
-                        errorMessage={errors.room && errors.room[index]?.imagesRoom?.message}
+                        errorMessage={
+                          errors.room && errors.room[index]?.imagesRoom?.message
+                        }
                       />
                     )}
                   />
@@ -364,7 +412,8 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                             onClick={() => handleToggleCollapse(index)}
                             className={classes.titlePriceTable}
                           >
-                            Price table <i className="now-ui-icons arrows-1_minimal-down"></i>
+                            Price table{" "}
+                            <i className="now-ui-icons arrows-1_minimal-down"></i>
                           </a>
                         </CardHeader>
                         <Collapse isOpen={isOpenToggleArr[index]}>
@@ -381,8 +430,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   <th scope="row">Monday</th>
                                   <td className={classes.tdPriceInput}>
                                     <InputTextField
-                                      inputRef={register(`room.${index}.monday`)}
-                                      errorMessage={errors.room && errors.room[index]?.monday?.message}
+                                      inputRef={register(
+                                        `room.${index}.monday`
+                                      )}
+                                      errorMessage={
+                                        errors.room &&
+                                        errors.room[index]?.monday?.message
+                                      }
                                     />
                                     &nbsp;VND
                                   </td>
@@ -391,8 +445,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   <th scope="row">Tuesday</th>
                                   <td className={classes.tdPriceInput}>
                                     <InputTextField
-                                      inputRef={register(`room.${index}.tuesday`)}
-                                      errorMessage={errors.room && errors.room[index]?.tuesday?.message}
+                                      inputRef={register(
+                                        `room.${index}.tuesday`
+                                      )}
+                                      errorMessage={
+                                        errors.room &&
+                                        errors.room[index]?.tuesday?.message
+                                      }
                                     />
                                     &nbsp;VND
                                   </td>
@@ -401,8 +460,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   <th scope="row">Wednesday</th>
                                   <td className={classes.tdPriceInput}>
                                     <InputTextField
-                                      inputRef={register(`room.${index}.wednesday`)}
-                                      errorMessage={errors.room && errors.room[index]?.wednesday?.message}
+                                      inputRef={register(
+                                        `room.${index}.wednesday`
+                                      )}
+                                      errorMessage={
+                                        errors.room &&
+                                        errors.room[index]?.wednesday?.message
+                                      }
                                     />
                                     &nbsp;VND
                                   </td>
@@ -411,8 +475,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   <th scope="row">Thursday</th>
                                   <td className={classes.tdPriceInput}>
                                     <InputTextField
-                                      inputRef={register(`room.${index}.thursday`)}
-                                      errorMessage={errors.room && errors.room[index]?.thursday?.message}
+                                      inputRef={register(
+                                        `room.${index}.thursday`
+                                      )}
+                                      errorMessage={
+                                        errors.room &&
+                                        errors.room[index]?.thursday?.message
+                                      }
                                     />
                                     &nbsp;VND
                                   </td>
@@ -421,8 +490,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   <th scope="row">Friday</th>
                                   <td className={classes.tdPriceInput}>
                                     <InputTextField
-                                      inputRef={register(`room.${index}.friday`)}
-                                      errorMessage={errors.room && errors.room[index]?.friday?.message}
+                                      inputRef={register(
+                                        `room.${index}.friday`
+                                      )}
+                                      errorMessage={
+                                        errors.room &&
+                                        errors.room[index]?.friday?.message
+                                      }
                                     />
                                     &nbsp;VND
                                   </td>
@@ -431,8 +505,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   <th scope="row">Saturday</th>
                                   <td className={classes.tdPriceInput}>
                                     <InputTextField
-                                      inputRef={register(`room.${index}.saturday`)}
-                                      errorMessage={errors.room && errors.room[index]?.saturday?.message}
+                                      inputRef={register(
+                                        `room.${index}.saturday`
+                                      )}
+                                      errorMessage={
+                                        errors.room &&
+                                        errors.room[index]?.saturday?.message
+                                      }
                                     />
                                     &nbsp;VND
                                   </td>
@@ -441,8 +520,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                                   <th scope="row">Sunday</th>
                                   <td className={classes.tdPriceInput}>
                                     <InputTextField
-                                      inputRef={register(`room.${index}.sunday`)}
-                                      errorMessage={errors.room && errors.room[index]?.sunday?.message}
+                                      inputRef={register(
+                                        `room.${index}.sunday`
+                                      )}
+                                      errorMessage={
+                                        errors.room &&
+                                        errors.room[index]?.sunday?.message
+                                      }
                                     />
                                     &nbsp;VND
                                   </td>

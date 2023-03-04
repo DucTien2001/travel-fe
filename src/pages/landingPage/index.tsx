@@ -4,6 +4,7 @@ import clsx from "clsx";
 import classes from "./styles.module.scss";
 import ListServices from "./components/Listservices";
 import About from "./components/About";
+import Search from "./components/Search";
 import Offer from "./components/Offer";
 import Testimonials from "./components/Testimonial";
 import Contact from "./components/Contact";
@@ -15,6 +16,7 @@ import Button, { BtnType } from "components/common/buttons/Button";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
+import Events from "./components/Events";
 
 const LandingPage: NextPage = () => {
   useEffect(() => {
@@ -24,7 +26,9 @@ const LandingPage: NextPage = () => {
     <>
       <div className="cd-section" id="headers">
         <div className="header-2">
-          <div className="page-header header-filter">
+          <div
+            className={clsx("page-header header-filter", classes.pageHeadBox)}
+          >
             <div
               className={clsx("page-header-image", classes.pageHeader)}
             ></div>
@@ -39,32 +43,15 @@ const LandingPage: NextPage = () => {
                   <h1 className={classes.titleHero}>Viet Nam</h1>
                 </Col>
               </Row>
-              <Row className={classes.btnContainerWrapper}>
-                <Link href="/listTour" passHref>
-                  <a>
-                    <Button
-                      data-aos="fade-up"
-                      btnType={BtnType.Linear}
-                      isDot={true}
-                      className={classes.btnExplore}
-                    >
-                      Explore now
-                    </Button>
-                  </a>
-                </Link>
-              </Row>
               <Row></Row>
             </Container>
           </div>
         </div>
       </div>
-      <ListServices />
-      <About />
-      <Row>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img alt="section" src={images.section.src}></img>
-      </Row>
+      <Search />
+      <Events />
       <Offer />
+      <About />
       <Testimonials />
       <Contact />
       <Social />

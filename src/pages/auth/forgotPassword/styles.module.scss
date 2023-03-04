@@ -31,7 +31,7 @@
     font-size: 24px;
     font-weight:700;
     margin-bottom: 12px;
-    color: var(--violet-color);
+    color: var(--primary-color);
    }
 }
 
@@ -39,6 +39,7 @@
     display: flex;
     justify-content: center;
     width: 100%;
+    margin-top: 16px;
     button {
         width: 100%;
         font-size: 16px;

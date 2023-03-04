@@ -51,9 +51,9 @@ const OfferComponent = memo(() => {
         <Container>
           <Row>
             <Col md="8" data-aos="fade-up">
-              <h2 className={clsx("title", classes.titleSection)}>
+              <h3 className={clsx("title", classes.titleSection)}>
                 THE BEST OFFERS WITH YOU
-              </h2>
+              </h3>
             </Col>
           </Row>
           <div data-aos="fade-right" className={classes.divider}></div>

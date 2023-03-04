@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
+import InputTextfield from "components/common/inputs/InputTextfield";
 import Link from "next/link";
 import { UserService } from "services/user";
 import { useDispatch } from "react-redux";
@@ -66,7 +66,7 @@ const Login: NextPage = () => {
     <div className="main-content">
       <div className={clsx("header page-header-image", classes.headerWrapper)}>
         <Container className={classes.container}>
-          <div className="header-body text-center mb-7">
+          <div className="header-body mb-7">
             <Container className="mt--8 pb-5">
               <Row className="justify-content-center">
                 <Col lg="5" md="7">
@@ -87,8 +87,8 @@ const Login: NextPage = () => {
                     </CardHeader>
                     <CardBody className="px-lg-5">
                       <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
-                        <InputTextFieldBorder
-                          label="Email address"
+                        <InputTextfield
+                          title="Email address"
                           placeholder="Enter your email"
                           type="text"
                           inputRef={register("email")}

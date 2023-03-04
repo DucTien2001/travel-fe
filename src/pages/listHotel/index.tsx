@@ -29,7 +29,7 @@ import Social from "components/Social";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
-import InputTextField from "components/common/inputs/InputTextField";
+import InputTextField from "components/common/inputs/InputTextFields";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import InputCounter from "components/common/inputs/InputCounter";
 import Button, { BtnType } from "components/common/buttons/Button";

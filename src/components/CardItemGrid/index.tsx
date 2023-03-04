@@ -101,7 +101,7 @@ const ListServices = memo(
                   {!!tags?.length && (
                     <div className={classes.tags}>
                       {tags?.map((item, index) => (
-                        <Badge pill color="var(--violet-color)" key={index}>
+                        <Badge pill color="var(--primary-color)" key={index}>
                           {item}
                         </Badge>
                       ))}

@@ -1,0 +1,28 @@
+.boxSearch {
+    display: flex;
+    width: 1024px;  
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    background-color: var(--white-color);
+    .boxTabControl {
+        width: 230px;
+        border-right: 1px solid var(--gray-6);
+        display: flex;
+        flex-direction: column;
+        .navItem {
+            cursor: pointer;
+            svg {
+                color: var(--primary-color);
+                margin-right: 4px;
+            }
+        }
+        .active {
+            border-right: 5px solid var(--orange-color);
+            background-color: var(--gray-10);
+        }
+    }
+    .boxTabContent {
+        padding: 14px;
+        width: calc(100% - 230px);
+    }
+}

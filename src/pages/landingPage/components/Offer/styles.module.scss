@@ -2,13 +2,14 @@
     background-image: url("../../../../assets/img/backgroundseller.webp");
 }
 .titleSection {
-    color: var(--violet-color);
+    color: var(--text-color);
     text-transform: uppercase;
+    font-weight: 600;
     margin: 0;
 }
 .divider {
     margin-left: 0;
-    border: 2px solid var(--violet-color);
+    border: 2px solid var(--text-color);
     margin: 10px 0;
 }
 .card {
@@ -19,10 +20,10 @@
     align-items: center;
     svg {
         margin-right: 4px;
-        color: var(--violet-color);
+        color: var(--primary-color);
     }
     .location {
-        color: var(--violet-color);
+        color: var(--primary-color);
         margin-bottom: 0;
     }
 }
@@ -66,7 +67,7 @@
 
 .titleSwiper {
     font-weight: 600;
-    color: var(--violet-color);
+    color: var(--text-color);
     padding-top: 24px;
 }
 .swiperBestSeller {
@@ -80,7 +81,7 @@
     }
     [class~="swiper-button-prev"]:after {
         font-size: 12px;
-        color: var(--violet-color);
+        color: var(--primary-color);
         font-weight: 700;
         background-color: var(--white-color);
         padding: 8px 10px;
@@ -96,7 +97,7 @@
     }
     [class~="swiper-button-next"]:after {
         font-size: 12px;
-        color: var(--violet-color);
+        color: var(--primary-color);
         font-weight: 700;
         background-color: var(--white-color);
         padding: 8px 10px;
@@ -116,7 +117,7 @@
     }
     [class~="swiper-button-prev"]:after {
         font-size: 12px;
-        color: var(--violet-color);
+        color: var(--primary-color);
         font-weight: 700;
         background-color: var(--white-color);
         padding: 8px 10px;
@@ -131,7 +132,7 @@
     }
     [class~="swiper-button-next"]:after {
         font-size: 12px;
-        color: var(--violet-color);
+        color: var(--primary-color);
         font-weight: 700;
         background-color: var(--white-color);
         padding: 8px 10px;
@@ -151,7 +152,7 @@
     width: 30px;
     height: 30px;
     border-radius: 4px;
-    background-color: var(--violet-color);
+    background-color: var(--primary-color);
 }
 .cardFooter {
     display: flex;

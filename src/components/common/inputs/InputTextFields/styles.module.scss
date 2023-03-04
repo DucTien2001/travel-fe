@@ -1,0 +1,48 @@
+.root {
+    text-align: left;
+    font-size:16px;
+    width: 100%;
+    & [class~="input-group"] {
+      margin: 0;
+    }
+    &::after {
+      content: "" !important;
+    }
+  }
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  svg {
+    margin-left: 8px;
+  }
+}
+.input {
+  font-size: 16px;
+  border-radius: 0px !important;
+  background: #ffff;
+  &::placeholder{
+  font-size: 14px;
+  }
+}
+.iconEyes {
+  cursor: pointer;
+  padding-left: 4px;
+  svg {
+    color: rgba(121, 119, 119, 0.8);
+  }
+}
+
+.iconError {
+  svg {
+    color: var(--danger-color);
+  }
+}
+
+.inputGroupText {
+  border-radius: 0 !important;
+}
+
+.errorMessage {
+  font-size: 14px !important;
+}

@@ -2,6 +2,14 @@
   display: flex;
   align-items: center;
 }
+.navItem {
+  padding: 0 14px 6px 14px;
+  margin-right: 0;
+  p {
+    font-size: 10px;
+    margin: 0;
+  }
+}
 .navLogoName {
   font-size:18px;
   font-weight:700;
@@ -15,7 +23,7 @@
   z-index: 1000;
 }
 .navbarWrapperViolet {
-  background-color: var(--violet-color);
+  background-color: var(--primary-color);
   z-index: 1000;
 
 }
@@ -26,8 +34,17 @@
 
 .dropdownItem {
   position: relative;
+  display: flex;
+  align-items: center;
+  img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 4px;
+    margin-bottom: 2px;
+  }
   a {
-    color: var(--violet-color) !important;
+    color: var(--text-color) !important;
     text-decoration: none;
     text-transform: uppercase;
     font-weight:500;

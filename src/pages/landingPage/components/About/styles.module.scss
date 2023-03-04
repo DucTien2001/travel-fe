@@ -1,9 +1,9 @@
 .titleWrapper {
     display: flex;
     margin: 0;
-    h2 {
+    h3 {
         text-transform: uppercase;
-        color: var(--violet-color);
+        color: var(--text-color);
         margin: 0;
     }
 }
@@ -12,6 +12,6 @@
 }
 .divider {
     margin-left: 0;
-    border: 2px solid var(--violet-color);  
+    border: 2px solid var(--text-color);  
     margin: 10px 0;
 }

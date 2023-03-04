@@ -30,6 +30,12 @@ import manage from "assets/img/manage.png";
 import user from "assets/img/user.png";
 import authen from "assets/img/authen.jpg";
 import seathen from "assets/img/seathen.jpg";
+import vietnam from "assets/img/vietnam.png";
+import anh from "assets/img/anh.jpg";
+import deal1 from "assets/img/deal1.webp";
+import deal2 from "assets/img/deal2.webp";
+import deal3 from "assets/img/deal3.webp";
+
 // import pricing1 from 'assets/img/pricing1.jpg'
 
 export const images = {
@@ -65,4 +71,9 @@ export const images = {
   user,
   authen,
   seathen,
+  vietnam,
+  anh,
+  deal1,
+  deal2,
+  deal3,
 };

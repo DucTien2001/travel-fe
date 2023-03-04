@@ -41,6 +41,8 @@ import {
   getAllRoomBills,
   getAllTourBills,
 } from "redux/reducers/Normal/actionTypes";
+import InputTextfield from "components/common/inputs/InputTextfield";
+import { Grid } from "@mui/material";
 
 interface LoginForm {
   email: string;
@@ -149,7 +151,7 @@ const Login: NextPage = () => {
     <div className="main-content">
       <div className={clsx("header page-header-image", classes.headerWrapper)}>
         <Container className={classes.container}>
-          <div className="header-body text-center mb-7">
+          <div className="header-body mb-7">
             <Container className="mt--8 pb-5">
               <Row className="justify-content-center">
                 <Col lg="5" md="7">
@@ -157,7 +159,7 @@ const Login: NextPage = () => {
                     <CardHeader>
                       <div
                         className={clsx(
-                          "text-center mt-4",
+                          "mt-4 text-center",
                           classes.headerLoginContainer
                         )}
                       >
@@ -166,22 +168,29 @@ const Login: NextPage = () => {
                     </CardHeader>
                     <CardBody className="px-lg-5">
                       <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
-                        <InputTextFieldBorder
-                          label="Email"
-                          placeholder="Enter your email"
-                          type="email"
-                          inputRef={register("email")}
-                          errorMessage={errors.email?.message}
-                        />
-                        <InputTextFieldBorder
-                          label="Password"
-                          placeholder="Enter your password"
-                          type="password"
-                          showEyes={true}
-                          inputRef={register("password")}
-                          errorMessage={errors.password?.message}
-                        />
-                        <div className={classes.boxTextRole}>
+                        <Grid>
+                          <InputTextfield
+                            title="Email"
+                            placeholder="Enter your email"
+                            type="email"
+                            inputRef={register("email")}
+                            errorMessage={errors.email?.message}
+                          />
+                        </Grid>
+                        <Grid sx={{ marginTop: "16px" }}>
+                          <InputTextfield
+                            title="Password"
+                            placeholder="Enter your password"
+                            type="password"
+                            showEyes={true}
+                            inputRef={register("password")}
+                            errorMessage={errors.password?.message}
+                          />
+                        </Grid>
+                        <Grid
+                          className={classes.boxTextRole}
+                          sx={{ marginTop: "16px" }}
+                        >
                           <p className={classes.textYouAre}>You are: </p>
                           <div className={classes.boxCheckRole}>
                             <Controller
@@ -209,7 +218,7 @@ const Login: NextPage = () => {
                               )}
                             />
                           </div>
-                        </div>
+                        </Grid>
                         {errorSubmit && (
                           <div className={classes.boxError}>
                             <ErrorMessage>
@@ -228,7 +237,9 @@ const Login: NextPage = () => {
                           or login with
                         </span>
                       </div>
-                      <Google />
+                      <Grid sx={{ display: "flex", justifyContent: "center" }}>
+                        <Google />
+                      </Grid>
                       <Row className="mt-3">
                         <Col xs="6">
                           <Link href="/auth/forgotPassword">

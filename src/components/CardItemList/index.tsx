@@ -96,7 +96,7 @@ const ListServices = memo(
             <h5 className={classes.title}>
               {" "}
               {tags?.map((tag, index) => (
-                <Badge pill color="var(--violet-color)" key={index}>
+                <Badge pill color="var(--primary-color)" key={index}>
                   {tag}
                 </Badge>
               ))}{" "}
