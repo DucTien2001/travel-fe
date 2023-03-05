@@ -81,6 +81,7 @@ const ListServices = memo(
             minHeight: "200px",
             minWidth: "640px",
             paddingBottom: "24px",
+            cursor: "pointer",
           }}
           className={clsx(
             { [classes.stopWorking]: isTemporarilyStopWorking || isDelete },
@@ -93,7 +94,7 @@ const ListServices = memo(
           </Grid>
           <Grid
             sx={{
-              padding: "14px",
+              padding: "24px 14px 14px 14px",
               flexGrow: "1",
               justifyContent: "space-between",
               flexShrink: "1",
@@ -115,7 +116,7 @@ const ListServices = memo(
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  paddingTop: "16px",
+                  paddingTop: "8px",
                 }}
               >
                 <Grid
@@ -132,7 +133,7 @@ const ListServices = memo(
                 <Stars numberOfStars={rate} />
               </Grid>
             )}
-            <Grid className={classes.boxReview} sx={{ paddingTop: "24px" }}>
+            <Grid className={classes.boxReview} sx={{ paddingTop: "8px" }}>
               {rate !== 0 && (
                 <Grid className={classes.boxReview}>
                   <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
@@ -145,7 +146,13 @@ const ListServices = memo(
                 </Grid>
               )}
             </Grid>
-            <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Grid
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexDirection: "column",
+              }}
+            >
               <Grid className={classes.boxPrice}>
                 {discount !== 0 && (
                   <span>

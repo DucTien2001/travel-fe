@@ -15,7 +15,7 @@
 .boxLocation {
     display: flex;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 4px;
     svg {
         margin-right: 8px;
         color: #5E5B5B;
@@ -56,10 +56,10 @@
     }
 }
 .boxPrice {
-    padding-top: 20px;
+    padding-top: 12px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
     span {
         font-weight: 500;
         font-size: 14px;
@@ -70,6 +70,7 @@
         font-weight: 500;
         font-size: 18px;
         color: var(--orange-color);
+        margin: 0;
     }
 }
 .boxViewMore {
