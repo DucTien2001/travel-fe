@@ -1,127 +1,204 @@
 import { memo } from "react";
-import { Controller, FieldError, FieldErrors, Merge } from "react-hook-form";
-import Select, { GroupBase, StylesConfig } from "react-select";
-import clsx from "clsx";
+import { FormControl } from "@mui/material";
+import Select, {
+  components,
+  DropdownIndicatorProps,
+  GroupBase,
+  OptionProps,
+  SingleValueProps,
+  StylesConfig,
+} from "react-select";
 import classes from "./styles.module.scss";
-import { FormGroup } from "reactstrap";
+import { Controller } from "react-hook-form";
 import { StateManagerProps } from "react-select/dist/declarations/src/stateManager";
+import TextTitle from "components/common/texts/TextTitle";
+import ErrorMessage from "components/common/texts/ErrorMessage";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { useTranslation } from "react-i18next";
 
 const customStyles = (
-  _?: boolean
+  error?: boolean
 ): StylesConfig<any, boolean, GroupBase<unknown>> => ({
   indicatorSeparator: () => ({
     display: "none",
   }),
-  container: (provided) => ({
+  indicatorsContainer: (provided) => ({
     ...provided,
-    margin: 0,
+    div: {
+      padding: "6px 8px",
+    },
   }),
   option: (provided, state) => ({
     ...provided,
+    display: "flex",
+    alignItems: "center",
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: "24px",
+    letterSpacing: "0.015em",
+    color: "var(--eerie-black)",
+    padding: "14px 15px",
     cursor: state.isDisabled ? "not-allowed" : "pointer",
-    background: state.isSelected ? "#e8f1fb" : "#ffffff",
-    color: "#2c2c2c",
-    "&:hover": {
-      background: "#e8f1fb",
-    },
+    background:
+      state.isSelected || state.isFocused ? "var(--gray-10)" : "#FFFFFF",
   }),
-  control: (provided, state) => ({
+  placeholder: (provided, state) => ({
     ...provided,
-    border: state.menuIsOpen ? "1px solid #f96332" : "1px solid #e3e3e3",
-    borderRadius: "30px",
-    boxShadow: "none",
-    transition: "all 0.3s ease-in-out",
-    "&:hover": {
-      borderColor: "#f96332",
-      transition: "all 0.3s ease-in-out",
-    },
+    fontSize: 14,
+    fontWeight: 400,
+    color: state.isFocused ? "var(--text-color)" : "var(--gray-50)",
+    whiteSpace: "nowrap",
   }),
   valueContainer: (provided) => ({
     ...provided,
-    padding: "5px 18px",
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    color: "#888888",
-    opacity: 0.8,
-    fontSize: "14px",
-    fontWeight: "400",
-    margin: 0,
+    padding: "6px 0 6px 16px",
+    minWidth: "50px",
+    color: "var(--text-color)",
+    div: {
+      paddingBottom: 0,
+    },
   }),
   singleValue: (provided) => ({
     ...provided,
-    color: "#2c2c2c",
-    fontSize: "0.8571em",
+    display: "flex",
+    fontSize: 14,
     fontWeight: 400,
-    margin: 0,
+    alignItems: "center",
+    color: "var(--text-color)",
   }),
-  input: (provided) => ({
+  control: (provided, state) => ({
     ...provided,
-    margin: 0,
-  }),
-  menuPortal: (provided) => ({
-    ...provided,
-    zIndex: 9999,
+    cursor: state.isDisabled ? "not-allowed" : "pointer",
+    background: state.isDisabled ? "var(--gray-5)" : "#FFFFFF",
+    border: state.isFocused
+      ? "1px solid var(--primary-light-color)"
+      : "1px solid var(--gray-40)",
+    // borderColor:"var(--gray-40)",
+    svg: {
+      color: state.isFocused ? "" : "var(--gray-60)",
+    },
+    div: {
+      color: state.isFocused ? "var(--text-color)" : "var(--gray-90)",
+    },
+    boxShadow: "0",
+    "&:hover": {
+      border: "1px solid var(--text-color)",
+    },
+    "&:hover svg, &:hover div": {
+      color: "var(--text-color)",
+    },
   }),
 });
 
-interface Props extends StateManagerProps {
-  label?: string;
-  labelIcon?: string;
-  className?: string;
-  errorMessage?: string | FieldError | Merge<FieldError, FieldErrors<any>>;
-  name: string;
-  control?: any;
-  bindKey?: any;
-  bindLabel?: any;
-}
+const DropdownIndicator = (props: DropdownIndicatorProps) => {
+  return (
+    <components.DropdownIndicator {...props}>
+      {props.selectProps.menuIsOpen ? (
+        <KeyboardArrowUpIcon />
+      ) : (
+        <KeyboardArrowDownIcon />
+      )}
+    </components.DropdownIndicator>
+  );
+};
 
-// eslint-disable-next-line react/display-name
-const CustomSelect = memo(({label, labelIcon, className, errorMessage, name, control, bindKey, bindLabel, ...rest}: Props) => {
-
-    return (
-      <FormGroup
-        className={clsx(
-          classes.root,
-          { "has-danger": !!errorMessage },
-          className
-        )}
-      >
-        {label && <label className={classes.label}>{labelIcon} {label}</label>}
-        {control ? (
-          <>
-            <Controller
-              name={name}
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  styles={customStyles(!!errorMessage)}
-                  menuPortalTarget={document.querySelector("body")}
-                  getOptionValue={(option) => option[bindKey || "id"]}
-                  getOptionLabel={(option) => option[bindLabel || "name"]}
-                  {...rest}
-                />
-              )}
-            />
-          </>
-        ) : (
-          <>
-            <Select
-              styles={customStyles(!!errorMessage)}
-              menuPortalTarget={document.querySelector("body")}
-              getOptionValue={(option: any) => option[bindKey || "id"]}
-              getOptionLabel={(option: any) => option[bindLabel || "name"]}
-              {...rest}
-            />
-          </>
-        )}
-        {errorMessage && (
-          <span className="text-danger ml-2 mt-1 d-block"><>{errorMessage}</></span>
-        )}
-      </FormGroup>
-    );
-  }
+const Option = ({ children, ...props }: OptionProps<any>) => (
+  <components.Option {...props}>
+    {props.data?.img && (
+      <img src={props.data.img} alt="" className={classes.iconOption} />
+    )}
+    {children}
+  </components.Option>
 );
 
-export default CustomSelect;
+const SingleValue = ({ children, ...props }: SingleValueProps<any>) => (
+  <components.SingleValue {...props}>
+    {props.data?.img && (
+      <img src={props.data.img} alt="" className={classes.iconValue} />
+    )}
+    {children}
+  </components.SingleValue>
+);
+
+interface InputSelectProps {
+  className?: string;
+  title?: string;
+  name?: string;
+  errorMessage?: string | null;
+  control?: any;
+  bindKey?: string;
+  bindLabel?: string;
+  selectProps?: StateManagerProps;
+  fullWidth?: boolean;
+  optional?: boolean;
+}
+
+const InputSelect = memo((props: InputSelectProps) => {
+  const {
+    className,
+    title,
+    errorMessage,
+    name,
+    control,
+    bindKey,
+    bindLabel,
+    selectProps,
+    fullWidth,
+    optional,
+  } = props;
+  const { t } = useTranslation();
+
+  const getOptionLabel = (option: any) => {
+    switch (bindLabel || "name") {
+      case "translation":
+        return t(option["translation"]);
+      default:
+        return option[bindLabel || "name"];
+    }
+  };
+
+  return (
+    <FormControl
+      className={className}
+      sx={{ width: fullWidth ? "100%" : "auto" }}
+    >
+      {title && (
+        <TextTitle invalid={errorMessage}>
+          {title} {optional && <span>({t("common_optional")})</span>}
+        </TextTitle>
+      )}
+      {control ? (
+        <>
+          <Controller
+            name={name}
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                styles={customStyles(!!errorMessage)}
+                getOptionValue={(option) => option[bindKey || "id"]}
+                getOptionLabel={(option) => getOptionLabel(option)}
+                components={{ DropdownIndicator, Option, SingleValue }}
+                {...selectProps}
+              />
+            )}
+          />
+        </>
+      ) : (
+        <>
+          <Select
+            styles={customStyles(!!errorMessage)}
+            getOptionValue={(option) => option[bindKey || "id"]}
+            getOptionLabel={(option) => getOptionLabel(option)}
+            components={{ DropdownIndicator, Option, SingleValue }}
+            {...selectProps}
+          />
+        </>
+      )}
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+    </FormControl>
+  );
+});
+export default InputSelect;

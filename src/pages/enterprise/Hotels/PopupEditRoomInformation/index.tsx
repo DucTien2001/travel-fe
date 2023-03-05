@@ -33,7 +33,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDropzone } from "react-dropzone";
 import { clsx } from "clsx";
-import InputTextField from "components/common/inputs/InputTextFields";
+import InputTextField from "components/common/inputs/InputTextfield";
 import UploadImage from "components/UploadImage";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -45,7 +45,7 @@ import { ImageService } from "services/image";
 import { RoomService } from "services/enterprise/room";
 import { EditRoomInformation } from "models/room";
 import { OptionItem } from "models/general";
-import InputSelect from "components/common/inputs/InputSelect";
+import InputSelect from "components/common/inputs/InputSelects";
 import { tagsOption } from "configs/constants";
 import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";

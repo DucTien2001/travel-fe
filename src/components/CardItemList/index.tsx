@@ -7,9 +7,16 @@ import "aos/dist/aos.css";
 import Button, { BtnType } from "components/common/buttons/Button";
 import Stars from "components/Stars";
 import clsx from "clsx";
-import { fCurrency2VND } from "utils/formatNumber";
+import { fCurrency2, fCurrency2VND } from "utils/formatNumber";
 import useAuth from "hooks/useAuth";
+import { Grid } from "@mui/material";
 import IconMain from "components/common/icons/IconMain";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAnglesRight,
+  faLocationDot,
+  faSignsPost,
+} from "@fortawesome/free-solid-svg-icons";
 interface Props {
   className?: string;
   linkView: string;
@@ -66,122 +73,94 @@ const ListServices = memo(
     const { user } = useAuth();
     return (
       <>
-        <Row
+        <Grid
           xs={3}
           key={id}
+          sx={{
+            display: "flex",
+            minHeight: "200px",
+            minWidth: "640px",
+            paddingBottom: "24px",
+          }}
           className={clsx(
             { [classes.stopWorking]: isTemporarilyStopWorking || isDelete },
-            classes.rowTour,
+            classes.row,
             className
           )}
         >
-          <Col className={classes.imgTour}>
-            <Link href={`/${linkView}/:${id}`}>
-              <a>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt="anh" src={src}></img>
-              </a>
-            </Link>
-            <div
-              className={
-                discount ? classes.discountWrapper : classes.noDiscount
-              }
-            >
-              <span className={classes.percent}>{discount}%</span>
-              <span className={classes.discount}>DISCOUNT</span>
-            </div>
-          </Col>
-          <Col className={classes.information}>
-            <h5 className={classes.title}>{title}</h5>
-            <h5 className={classes.title}>
-              {" "}
-              {tags?.map((tag, index) => (
-                <Badge pill color="var(--primary-color)" key={index}>
-                  {tag}
-                </Badge>
-              ))}{" "}
-            </h5>
-            <span className={classes.location}>
-              {location} {businessHours && <span> - {businessHours}</span>}
-              {bookDates}
-            </span>
-            {checkInTime && (
-              <>
-                <br></br>
-                <span className={classes.checkTime}>
-                  Check in time: {checkInTime}
-                </span>
-              </>
-            )}
-
-            {checkOutTime && (
-              <>
-                <br></br>
-                <span className={classes.checkTime}>
-                  Check out time: {checkOutTime}
-                </span>
-              </>
-            )}
-            <div className={classes.priceContainer}>
-              {price && <h3>{fCurrency2VND(price)} VND</h3>}
-            </div>
-            {rate !== 0 && <Stars numberOfStars={Math.floor(rate)} />}
-            {rate !== 0 && (
-              <div className={classes.containerReview}>
-                <div className={classes.boxReview}>
-                  <IconMain /> <span>{rate?.toFixed(1)}</span>
-                </div>
-                <span>({numberOfReviewers} reviews)</span>
-              </div>
-            )}
-          </Col>
-          <Col className={classes.btnControlCardList}>
-            <Link href={`/${linkView}/[${id}]`}>
-              <a>
-                <Button
-                  className="btn-round"
-                  btnType={isHotel ? BtnType.Secondary : BtnType.Primary}
-                  disabled={isTemporarilyStopWorking}
+          <Grid className={classes.boxImg}>
+            <img src={src} alt="anh"></img>
+          </Grid>
+          <Grid
+            sx={{
+              padding: "14px",
+              flexGrow: "1",
+              justifyContent: "space-between",
+              flexShrink: "1",
+              borderTopRightRadius: "10px",
+              borderBottomRightRadius: "10px",
+              backgroundColor: "var(--white-color)",
+              boxShadow: "var(--bui-shadow-100)",
+            }}
+          >
+            <Grid className={classes.boxLocation}>
+              <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
+              <div>Ganh Day Commue Phu Quoc Vinwonder</div>
+            </Grid>
+            <Grid className={classes.boxTitle}>
+              <p>{title}</p>
+            </Grid>
+            {isHotel && (
+              <Grid
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  paddingTop: "16px",
+                }}
+              >
+                <Grid
+                  sx={{
+                    padding: "6px 14px",
+                    backgroundColor: "var(--primary-light-color)",
+                    color: "var(--white-color)",
+                    borderRadius: "10px",
+                    marginRight: "16px",
+                  }}
                 >
-                  View more
-                </Button>
-              </a>
-            </Link>
-            {user ? (
-              <Link href={`/${linkBook}/:${id}`}>
-                <a>
-                  <Button
-                    className={
-                      isHotel
-                        ? clsx("btn-round", classes.isHotel)
-                        : clsx("btn-round")
-                    }
-                    btnType={BtnType.Secondary}
-                    disabled={isTemporarilyStopWorking}
-                  >
-                    Book now
-                  </Button>
-                </a>
-              </Link>
-            ) : (
-              <Link href={`/auth/login`}>
-                <a>
-                  <Button
-                    className={
-                      isHotel
-                        ? clsx("btn-round", classes.isHotel)
-                        : clsx("btn-round")
-                    }
-                    btnType={BtnType.Secondary}
-                    disabled={isTemporarilyStopWorking}
-                  >
-                    Book now
-                  </Button>
-                </a>
-              </Link>
+                  Hotel
+                </Grid>
+                <Stars numberOfStars={rate} />
+              </Grid>
             )}
-          </Col>
-        </Row>
+            <Grid className={classes.boxReview} sx={{ paddingTop: "24px" }}>
+              {rate !== 0 && (
+                <Grid className={classes.boxReview}>
+                  <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
+                  <span>
+                    {rate}{" "}
+                    <span className={classes.numberOfReviews}>
+                      ( {numberOfReviewers} reviews)
+                    </span>
+                  </span>
+                </Grid>
+              )}
+            </Grid>
+            <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Grid className={classes.boxPrice}>
+                {discount !== 0 && (
+                  <span>
+                    {fCurrency2((price * (100 - discount)) / 100)} VND
+                  </span>
+                )}
+                <p>{fCurrency2(price)} VND</p>
+              </Grid>
+              <Grid className={classes.boxViewMore}>
+                <p>View more</p>
+                <FontAwesomeIcon icon={faAnglesRight}></FontAwesomeIcon>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </>
     );
   }

@@ -33,7 +33,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDropzone } from "react-dropzone";
 import { clsx } from "clsx";
-import InputTextField from "components/common/inputs/InputTextFields";
+import InputTextField from "components/common/inputs/InputTextfield";
 import UploadImage from "components/UploadImage";
 import { useDispatch } from "react-redux";
 import {
@@ -48,7 +48,7 @@ import useAuth from "hooks/useAuth";
 import InputTags from "components/common/inputs/InputTags";
 import { OptionItem } from "models/general";
 import { tagsOption } from "configs/constants";
-import InputSelect from "components/common/inputs/InputSelect";
+import InputSelect from "components/common/inputs/InputSelects";
 
 const FILE_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const PHOTO_SIZE = 10000000000; // bytes

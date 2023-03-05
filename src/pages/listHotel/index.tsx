@@ -20,6 +20,7 @@ import {
   faBed,
   faChevronLeft,
   faChevronRight,
+  faArrowsRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
@@ -29,7 +30,7 @@ import Social from "components/Social";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
-import InputTextField from "components/common/inputs/InputTextFields";
+import InputTextfield from "components/common/inputs/InputTextfield";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import InputCounter from "components/common/inputs/InputCounter";
 import Button, { BtnType } from "components/common/buttons/Button";
@@ -46,8 +47,7 @@ import { HotelService } from "services/normal/hotel";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "components/FilterPanel";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import CustomSelect from "components/common/CustomSelect";
+import InputSelect from "components/common/inputs/InputSelect";
 
 interface SearchData {
   location?: string;
@@ -269,10 +269,13 @@ const ListHotels: NextPage = () => {
                 </p>
               </div>
               <div>
-                <InputTextFieldBorder
+                <InputTextfield
                   className={classes.inputSearch}
-                  placeholder="Search destinations"
-                  startIcon={<FontAwesomeIcon icon={faSearch} />}
+                  startAdornment={<FontAwesomeIcon icon={faSearch} />}
+                  placeholder="Search city, hotel"
+                  name="location"
+                  onKeyPress={handleKeyPress}
+                  inputRef={register("location")}
                 />
               </div>
             </div>
@@ -280,35 +283,21 @@ const ListHotels: NextPage = () => {
               {/* ======================= RESULT DESKTOP ===================== */}
               <Col xs={2} className={classes.boxControlLayout}>
                 <Button
-                  className={clsx(
-                    !changeViewLayout ? "active" : null,
-                    classes.layoutBtn
-                  )}
-                  btnType={BtnType.Outlined}
-                  onClick={onChangeViewLayout}
+                  btnType={BtnType.Primary}
+                  className={classes.btnResetOption}
+                  onClick={onClearOption}
                 >
-                  <FontAwesomeIcon icon={faGrip} />
-                </Button>
-                <Button
-                  className={clsx(
-                    changeViewLayout ? "active" : null,
-                    classes.layoutBtn
-                  )}
-                  btnType={BtnType.Outlined}
-                  onClick={onChangeViewLayout}
-                >
-                  <FontAwesomeIcon icon={faList} />
+                  <FontAwesomeIcon icon={faArrowsRotate} /> reset filter
                 </Button>
               </Col>
               <Col xs={10} className={classes.rowResult}>
                 <div className={classes.controlSelect}>
                   <h5>SORT BY: </h5>
-                  <CustomSelect
+                  <InputSelect
                     className={classes.inputSelect}
-                    options={sortType}
-                    control={control}
-                    name="sortType"
-                    errorMessage={errors.sortType?.message}
+                    selectProps={{
+                      options: sortType,
+                    }}
                   />
                 </div>
                 <h5>
@@ -319,31 +308,6 @@ const ListHotels: NextPage = () => {
           </Row>
           <Row className={classes.rowResultBody}>
             <Col xs={2} className={classes.btnResetWrapper}>
-              <Button
-                btnType={BtnType.Outlined}
-                className={classes.btnResetOption}
-                onClick={onClearOption}
-              >
-                <FontAwesomeIcon icon={faXmark} /> reset option
-              </Button>
-              <BoxSmallLeft title="Search hotels">
-                <InputTextField
-                  className={classes.inputSearch}
-                  label="Search"
-                  labelIcon={<FontAwesomeIcon icon={faSearch} />}
-                  placeholder="Search"
-                  name="location"
-                  onKeyPress={handleKeyPress}
-                  inputRef={register("location")}
-                />
-                <Button
-                  btnType={BtnType.Primary}
-                  className={classes.btnSearch}
-                  onClick={() => handleSearch()}
-                >
-                  Search
-                </Button>
-              </BoxSmallLeft>
               <FilterPanel
                 // selectedCategory={selectedCategory}
                 // selectCategory={handleSelectCategory}
@@ -356,60 +320,29 @@ const ListHotels: NextPage = () => {
             </Col>
             <Col xs={10} className={classes.listTours}>
               <div className={classes.containerListHotel}>
-                {/* ==================== Grid view ===================== */}
-                {!changeViewLayout && (
-                  <Row className={classes.rowGridView}>
-                    {listHotels?.map((hotel, index) => (
-                      <CardItemGrid
-                        linkView="listHotel"
-                        linkBook="/book/hotel"
-                        key={index}
-                        id={hotel.id}
-                        src={hotel.images[0]}
-                        title={hotel.name}
-                        description={hotel.description}
-                        checkInTime={hotel.checkInTime}
-                        checkOutTime={hotel.checkOutTime}
-                        location={hotel.location}
-                        contact={hotel.contact}
-                        tags={hotel.tags}
-                        rate={Math.floor(hotel?.rate)}
-                        creator={hotel.creator}
-                        isTemporarilyStopWorking={
-                          hotel.isTemporarilyStopWorking
-                        }
-                        isHotel={true}
-                      />
-                    ))}
-                  </Row>
-                )}
                 {/* ==================== List view ===================== */}
-                {changeViewLayout && (
-                  <div>
-                    {listHotels.map((hotel, index) => (
-                      <CardItemList
-                        key={index}
-                        linkView="listHotel"
-                        linkBook="/book/hotel"
-                        id={hotel.id}
-                        src={hotel.images[0]}
-                        title={hotel.name}
-                        description={hotel.description}
-                        checkInTime={hotel.checkInTime}
-                        checkOutTime={hotel.checkOutTime}
-                        location={hotel.location}
-                        contact={hotel.contact}
-                        tags={hotel.tags}
-                        rate={Math.floor(hotel?.rate)}
-                        creator={hotel.creator}
-                        isTemporarilyStopWorking={
-                          hotel.isTemporarilyStopWorking
-                        }
-                        isHotel={true}
-                      />
-                    ))}
-                  </div>
-                )}
+                <div>
+                  {listHotels.map((hotel, index) => (
+                    <CardItemList
+                      key={index}
+                      linkView="listHotel"
+                      linkBook="/book/hotel"
+                      id={hotel.id}
+                      src={hotel.images[0]}
+                      title={hotel.name}
+                      description={hotel.description}
+                      checkInTime={hotel.checkInTime}
+                      checkOutTime={hotel.checkOutTime}
+                      location={hotel.location}
+                      contact={hotel.contact}
+                      tags={hotel.tags}
+                      rate={Math.floor(hotel?.rate)}
+                      creator={hotel.creator}
+                      isTemporarilyStopWorking={hotel.isTemporarilyStopWorking}
+                      isHotel={true}
+                    />
+                  ))}
+                </div>
                 {!listHotels?.length && (
                   <div>
                     <SearchNotFound mess="No hotel found" />

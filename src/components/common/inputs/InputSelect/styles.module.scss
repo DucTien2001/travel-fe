@@ -1,16 +1,13 @@
-.root {
-    text-align: left;
-    &[class~="has-danger"] {
-      &::after {
-        display: none;
-      }
-      [class~="react-select__control"] {
-        border-color: #ffcfcf;
-      }
-    }
-  }
-  .label {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 0;
-  }
+
+.iconOption {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    object-fit: contain;
+}
+.iconValue {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    object-fit: contain;
+}

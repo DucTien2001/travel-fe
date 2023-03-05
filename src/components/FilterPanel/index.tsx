@@ -1,16 +1,17 @@
-import React from 'react';
+import React from "react";
 // import { categoryList, ratingList } from '../../../constants';
 // import CheckboxProton from '../../common/CheckboxProton';
 // import FilterListToggle from '../../common/FilterListToggle';
 // import SliderProton from '../../common/SliderProton';
-import classes from './styles.module.scss';
+import classes from "./styles.module.scss";
 import CheckboxProton from "components/CheckboxProton";
 import SliderProton from "components/SliderProton";
 import FilterListToggle from "components/FilterListToggle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
-import { ratingList } from 'configs/constants';
-import BoxSmallLeft from 'components/BoxSmallLeft';
+import { ratingList } from "configs/constants";
+import BoxSmallLeft from "components/BoxSmallLeft";
+import clsx from "clsx";
 interface Props {
   selectedCategory?: any;
   selectCategory?: any;
@@ -30,7 +31,7 @@ const FilterPanel = ({
   tags,
   changeChecked,
   changePrice,
-}:Props) => (
+}: Props) => (
   <div>
     <div className={classes.inputGroup}>
       {/* <FilterListToggle
@@ -39,32 +40,34 @@ const FilterPanel = ({
         selectToggle={selectCategory}
       /> */}
     </div>
-    <BoxSmallLeft title="Options">
-    <div className={classes.inputGroup}>
-      {tags?.map((tag) => (
-        <CheckboxProton
-          key={tag.id}
-          tags={tag}
-          changeChecked={changeChecked}
-        />
-      ))}
-    </div>
-    </BoxSmallLeft>
-    {changePrice &&<BoxSmallLeft title="Price Range">
-     <div className={classes.inputGroup}>
-      <div className={classes.titlePrice}>
+    {changePrice && (
+      <BoxSmallLeft title="Price Range">
+        <div>
+          <div className={classes.titlePrice}></div>
+          <SliderProton value={selectedPrice} changePrice={changePrice} />
+        </div>
+      </BoxSmallLeft>
+    )}
+    <BoxSmallLeft title="Options" className={classes.inputGroup}>
+      <div>
+        {tags?.map((tag) => (
+          <CheckboxProton
+            key={tag.id}
+            tags={tag}
+            changeChecked={changeChecked}
+          />
+        ))}
       </div>
-      <SliderProton value={selectedPrice} changePrice={changePrice} />
-    </div>
-    </BoxSmallLeft>}
+    </BoxSmallLeft>
+
     <BoxSmallLeft title="Star Rating">
-    <div className={classes.inputGroup}>
-      <FilterListToggle
-        options={ratingList}
-        value={selectedRating}
-        selectToggle={selectRating}
-      />
-    </div>
+      <div>
+        <FilterListToggle
+          options={ratingList}
+          value={selectedRating}
+          selectToggle={selectRating}
+        />
+      </div>
     </BoxSmallLeft>
   </div>
 );

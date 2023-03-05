@@ -1,5 +1,14 @@
 import React, { useMemo, memo, useCallback, useState, useEffect } from "react";
-import { Row, Form, Modal, ModalProps, ModalHeader, ModalBody, ModalFooter, Col } from "reactstrap";
+import {
+  Row,
+  Form,
+  Modal,
+  ModalProps,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Col,
+} from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import Button, { BtnType } from "components/common/buttons/Button";
@@ -15,14 +24,18 @@ import UploadFile from "components/UploadFile";
 import { useDispatch } from "react-redux";
 import { TourService } from "services/enterprise/tour";
 import useAuth from "hooks/useAuth";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { ETour } from "models/enterprise";
 import axios from "axios";
-import {ImageService } from "services/image";
+import { ImageService } from "services/image";
 import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
 import { getAllTours as getAllToursNormal } from "redux/reducers/Normal/actionTypes";
 import { tagsOption, VALIDATION } from "configs/constants";
-import InputSelect from "components/common/inputs/InputSelect";
+import InputSelect from "components/common/inputs/InputSelects";
 import { OptionItem } from "models/general";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -56,23 +69,36 @@ const PopupCreateTour = memo((props: Props) => {
     return yup.object().shape({
       name: yup.string().required("Name is required"),
       description: yup.string().required("Description is required"),
-      businessHours: yup.mixed().test("required", "Hours is required", (value) => {
-        return value && value.length;
-      }),
+      businessHours: yup
+        .mixed()
+        .test("required", "Hours is required", (value) => {
+          return value && value.length;
+        }),
       location: yup.string().required("Location is required"),
-      price: yup.number().typeError("Price must be a number").required("Price is required"),
+      price: yup
+        .number()
+        .typeError("Price must be a number")
+        .required("Price is required"),
       discount: yup
         .number()
         .transform((value) => (isNaN(value) ? undefined : value))
         .typeError("Discount must be a number")
         .notRequired(),
-      tags: yup.array(yup.object({
-          name: yup.string().required('Tags is required.')
-      })).required('Tags is required.').min(1, 'Tags is required.'),
+      tags: yup
+        .array(
+          yup.object({
+            name: yup.string().required("Tags is required."),
+          })
+        )
+        .required("Tags is required.")
+        .min(1, "Tags is required."),
       contact: yup
         .string()
         .required("Contact is required")
-        .matches(VALIDATION.phone, { message: "Please enter a valid phone number.", excludeEmptyString: true }),
+        .matches(VALIDATION.phone, {
+          message: "Please enter a valid phone number.",
+          excludeEmptyString: true,
+        }),
       // images: yup.mixed().test("required", "Please select images", (value) => {
       //   return value && value.length;
       // }),
@@ -176,29 +202,28 @@ const PopupCreateTour = memo((props: Props) => {
     //     dispatch(setLoading(false));
     //   });
 
-
     dispatch(setLoading(true));
     if (user) {
-    TourService.createTour({
-      title: data.name,
-      description: data.description,
-      businessHours: data.businessHours,
-      location: data.location,
-      price: data.price,
-      discount: data.discount,
-      tags: data.tags.map((it) => it.name),
-      contact: data.contact,
-      images: imagesPreview,
-      creator: user?.id,
+      TourService.createTour({
+        title: data.name,
+        description: data.description,
+        businessHours: data.businessHours,
+        location: data.location,
+        price: data.price,
+        discount: data.discount,
+        tags: data.tags.map((it) => it.name),
+        contact: data.contact,
+        images: imagesPreview,
+        creator: user?.id,
       })
-     .then(() => {
-      dispatch(getAllTours(user?.id));
-      dispatch(getAllToursNormal());
-      dispatch(setSuccessMess("Create tour successfully"));
-      })
-      .catch((e) => {
-      dispatch(setErrorMess(e));
-      });
+        .then(() => {
+          dispatch(getAllTours(user?.id));
+          dispatch(getAllToursNormal());
+          dispatch(setSuccessMess("Create tour successfully"));
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        });
     }
     // console.log({title: data.name,
     //   description: data.description,
@@ -221,7 +246,7 @@ const PopupCreateTour = memo((props: Props) => {
         location: itemEdit.location,
         price: itemEdit.price,
         discount: itemEdit.discount || null,
-        tags: itemEdit.tags.map(it => ({ name: it})),
+        tags: itemEdit.tags.map((it) => ({ name: it })),
         contact: itemEdit.contact,
         images: itemEdit.images,
       });
@@ -236,31 +261,35 @@ const PopupCreateTour = memo((props: Props) => {
   }, [isOpen, itemEdit]);
   const [imagesPreview, setImagesPreview] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const handleFile = async(e) => {
+  const handleFile = async (e) => {
     e.stopPropagation();
     setIsLoading(true);
-    let images =[] ;
+    let images = [];
     let files = e.target.files;
     let formData = new FormData();
-    for(let i of files) {
-      formData.append('file',i)
-      formData.append('upload_preset', 'abez7vqo')
-      images.push( await ImageService.uploadImage(formData))
+    for (let i of files) {
+      formData.append("file", i);
+      formData.append("upload_preset", "abez7vqo");
+      images.push(await ImageService.uploadImage(formData));
     }
     setIsLoading(false);
-    setImagesPreview(prev => [...prev,...images])
-  }
+    setImagesPreview((prev) => [...prev, ...images]);
+  };
 
   console.log(imagesPreview);
 
   const handleDeleteImage = (image) => {
-    setImagesPreview(prev => prev?.filter(item => item!== image))
-  }
+    setImagesPreview((prev) => prev?.filter((item) => item !== image));
+  };
 
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
-        <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
+        <Form
+          role="form"
+          onSubmit={handleSubmit(_onSubmit)}
+          className={classes.form}
+        >
           <ModalHeader toggle={toggle} className={classes.title}>
             {!itemEdit ? <>Create tour</> : <>Edit tour</>}
           </ModalHeader>
@@ -326,14 +355,14 @@ const PopupCreateTour = memo((props: Props) => {
             <Row className={classes.row}>
               <Col>
                 <InputSelect
-                label="Tags"
-                className={classes.input}
-                placeholder="Please choose the tags your tour"
-                name="tags"
-                control={control}
-                options={tagsOption}
-                isMulti
-                errorMessage={errors.tags?.message}
+                  label="Tags"
+                  className={classes.input}
+                  placeholder="Please choose the tags your tour"
+                  name="tags"
+                  control={control}
+                  options={tagsOption}
+                  isMulti
+                  errorMessage={errors.tags?.message}
                 />
               </Col>
             </Row>
@@ -372,31 +401,41 @@ const PopupCreateTour = memo((props: Props) => {
               )}
             /> */}
             <Col>
-            <p className={classes.titleUpload}>Upload images</p>
-            <div className={classes.containerUploadImg}>
-              <label htmlFor="file" className={classes.boxUpload}>
-                <div>
-                  <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon>
-                  {isLoading ? <h4>Uploading...</h4>:<h4>Upload images</h4>}
-                </div>
-              </label>
-              <input onChange={handleFile} hidden type="file" id="file" multiple/>
-            </div>
+              <p className={classes.titleUpload}>Upload images</p>
+              <div className={classes.containerUploadImg}>
+                <label htmlFor="file" className={classes.boxUpload}>
+                  <div>
+                    <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon>
+                    {isLoading ? <h4>Uploading...</h4> : <h4>Upload images</h4>}
+                  </div>
+                </label>
+                <input
+                  onChange={handleFile}
+                  hidden
+                  type="file"
+                  id="file"
+                  multiple
+                />
+              </div>
             </Col>
             <Col>
-            <p className={classes.titleUpload}>Images preview</p>
-            <Row >        
-              {imagesPreview?.map((item, index) => {
-                return <Col  key={index} xs={4} className={classes.imgPreview}>
-                  <img src={item} alt="preview"/>
-                  <div onClick={() => handleDeleteImage(item)}
-                  title="Delete" 
-                  className={classes.iconDelete}>
-                    <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                    </div>
-                </Col>
-              })}            
-            </Row>
+              <p className={classes.titleUpload}>Images preview</p>
+              <Row>
+                {imagesPreview?.map((item, index) => {
+                  return (
+                    <Col key={index} xs={4} className={classes.imgPreview}>
+                      <img src={item} alt="preview" />
+                      <div
+                        onClick={() => handleDeleteImage(item)}
+                        title="Delete"
+                        className={classes.iconDelete}
+                      >
+                        <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                      </div>
+                    </Col>
+                  );
+                })}
+              </Row>
             </Col>
           </ModalBody>
           <ModalFooter className={classes.footer}>

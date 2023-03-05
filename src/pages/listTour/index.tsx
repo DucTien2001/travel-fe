@@ -17,6 +17,7 @@ import {
   faSearch,
   faChevronLeft,
   faChevronRight,
+  faArrowsRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
@@ -25,7 +26,7 @@ import classes from "./styles.module.scss";
 import Social from "components/Social";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import InputTextField from "components/common/inputs/InputTextFields";
+import InputRecentSearch from "components/common/inputs/InputRecentSearch";
 import Button, { BtnType } from "components/common/buttons/Button";
 import SectionHeader from "components/Header/SectionHeader";
 import CardItemGrid from "components/CardItemGrid";
@@ -41,8 +42,9 @@ import { TourService } from "services/normal/tour";
 import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "../../components/FilterPanel";
 import ReactPaginate from "react-paginate";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import CustomSelect from "components/common/CustomSelect";
+import InputSelect from "components/common/inputs/InputSelect";
+import { sortType } from "models/general";
 
 interface SearchData {
   location?: string;
@@ -58,11 +60,6 @@ const ListTours: NextPage = () => {
   const [selectedPrice, setSelectedPrice] = useState([10000, 3000000]);
   const [selectedRating, setSelectedRating] = useState(null);
 
-  const sortType = [
-    { id: 1, name: "Lowest price", value: "Lowest price" },
-    { id: 2, name: "Highest price", value: "Highest price" },
-    { id: 3, name: "Highest rating", value: "Highest rating" },
-  ];
   const [tags, setTags] = useState([
     { id: 1, checked: false, label: "Shopping" },
     { id: 2, checked: false, label: "Sea" },
@@ -295,10 +292,13 @@ const ListTours: NextPage = () => {
                 </p>
               </div>
               <div>
-                <InputTextFieldBorder
-                  className={classes.inputSearch}
-                  placeholder="Search destinations"
-                  startIcon={<FontAwesomeIcon icon={faSearch} />}
+                <InputRecentSearch
+                  placeholder="Search tour or destination"
+                  name="search"
+                  autoComplete="off"
+                  startAdornment={
+                    <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+                  }
                 />
               </div>
             </div>
@@ -329,12 +329,18 @@ const ListTours: NextPage = () => {
               <Col xs={10} className={classes.rowResult}>
                 <div className={classes.controlSelect}>
                   <h5>SORT BY: </h5>
-                  <CustomSelect
+                  {/* <CustomSelect
                     className={classes.inputSelect}
                     options={sortType}
                     control={control}
                     name="sortType"
                     errorMessage={errors.sortType?.message}
+                  /> */}
+                  <InputSelect
+                    className={classes.inputSelect}
+                    selectProps={{
+                      options: sortType,
+                    }}
                   />
                 </div>
                 <h5>
@@ -346,13 +352,13 @@ const ListTours: NextPage = () => {
           <Row className={classes.rowResultBody}>
             <Col xs={2} className={classes.btnResetWrapper}>
               <Button
-                btnType={BtnType.Outlined}
+                btnType={BtnType.Primary}
                 className={classes.btnResetOption}
                 onClick={onClearOption}
               >
-                <FontAwesomeIcon icon={faXmark} /> reset option
+                <FontAwesomeIcon icon={faArrowsRotate} /> reset filter
               </Button>
-              <BoxSmallLeft title="Search tours">
+              {/* <BoxSmallLeft title="Search tours">
                 <InputTextField
                   label="Search"
                   className={classes.inputSearch}
@@ -369,7 +375,7 @@ const ListTours: NextPage = () => {
                 >
                   Search
                 </Button>
-              </BoxSmallLeft>
+              </BoxSmallLeft> */}
               <FilterPanel
                 selectedRating={selectedRating}
                 selectedPrice={selectedPrice}

@@ -1,5 +1,14 @@
 import React, { useMemo, memo, useEffect } from "react";
-import { Row, Form, Modal, ModalProps, ModalHeader, ModalBody, ModalFooter, Col } from "reactstrap";
+import {
+  Row,
+  Form,
+  Modal,
+  ModalProps,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Col,
+} from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import Button, { BtnType } from "components/common/buttons/Button";
@@ -13,13 +22,17 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import UploadImage from "components/UploadImage";
 import { HotelService } from "services/enterprise/hotel";
 import { useDispatch, useSelector } from "react-redux";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { ImageService } from "services/image";
 import { ReducerType } from "redux/reducers";
 import { IHotel } from "models/enterprise";
-import { getAllHotels as getAllHotelsOfNormal} from "redux/reducers/Normal/actionTypes";
+import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
-import InputSelect from "components/common/inputs/InputSelect";
+import InputSelect from "components/common/inputs/InputSelects";
 import { tagsOption } from "configs/constants";
 import { OptionItem } from "models/general";
 
@@ -57,9 +70,14 @@ const PopupAddOrEditHotel = memo((props: Props) => {
       contact: yup.string().required("Contact is required"),
       checkInTime: yup.string().required("Check in time is required"),
       checkOutTime: yup.string().required("Check out time is required"),
-      tags: yup.array(yup.object({
-        name: yup.string().required('Tags is required.')
-      })).required('Tags is required.').min(1, 'Tags is required.'),
+      tags: yup
+        .array(
+          yup.object({
+            name: yup.string().required("Tags is required."),
+          })
+        )
+        .required("Tags is required.")
+        .min(1, "Tags is required."),
       // imagesHotel: yup.mixed().test("required", "Please select images", (value) => {
       //   return value && value.length;
       // }),
@@ -110,7 +128,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
     await Promise.all(uploader)
       .then((res) => {
         if (user) {
-          if(itemEdit) {
+          if (itemEdit) {
             HotelService.updateHotel(itemEdit?.id, {
               name: data.name,
               description: data.description,
@@ -121,16 +139,15 @@ const PopupAddOrEditHotel = memo((props: Props) => {
               tags: data.tags.map((it) => it.name),
               images: res,
             })
-            .then(() => {
-              dispatch(getAllHotelsOfNormal())
-              dispatch(getAllHotels(user?.id))
-              dispatch(setSuccessMess("Update hotel successfully"));
-            })
-            .catch((e) => {
-              dispatch(setErrorMess(e));
-            });
-          }
-          else { 
+              .then(() => {
+                dispatch(getAllHotelsOfNormal());
+                dispatch(getAllHotels(user?.id));
+                dispatch(setSuccessMess("Update hotel successfully"));
+              })
+              .catch((e) => {
+                dispatch(setErrorMess(e));
+              });
+          } else {
             HotelService.createHotel({
               name: data.name,
               description: data.description,
@@ -143,8 +160,8 @@ const PopupAddOrEditHotel = memo((props: Props) => {
               creator: user?.id,
             })
               .then(() => {
-                dispatch(getAllHotelsOfNormal())
-                dispatch(getAllHotels(user?.id))
+                dispatch(getAllHotelsOfNormal());
+                dispatch(getAllHotels(user?.id));
                 dispatch(setSuccessMess("Create hotel successfully"));
               })
               .catch((e) => {
@@ -170,25 +187,29 @@ const PopupAddOrEditHotel = memo((props: Props) => {
         checkOutTime: itemEdit.checkOutTime,
         location: itemEdit.location,
         contact: itemEdit.contact,
-        tags: itemEdit.tags.map(it => ({ name: it})),
+        tags: itemEdit.tags.map((it) => ({ name: it })),
         imagesHotel: itemEdit.images,
-      })
+      });
     }
-  }, [reset, itemEdit])
+  }, [reset, itemEdit]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!isOpen && !itemEdit) {
-      clearForm()
+      clearForm();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, itemEdit])
+  }, [isOpen, itemEdit]);
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} {...rest} className={classes.root}>
         <ModalHeader toggle={toggle} className={classes.title}>
           Create hotel
         </ModalHeader>
-        <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
+        <Form
+          role="form"
+          onSubmit={handleSubmit(_onSubmit)}
+          className={classes.form}
+        >
           <ModalBody>
             <Row xs={6} className={classes.row}>
               <Col>
@@ -239,14 +260,14 @@ const PopupAddOrEditHotel = memo((props: Props) => {
               </Col>
               <Col>
                 <InputSelect
-                label="Tags"
-                className={classes.input}
-                placeholder="Please choose the tags your tour"
-                name="tags"
-                control={control}
-                options={tagsOption}
-                isMulti
-                errorMessage={errors.tags?.message}
+                  label="Tags"
+                  className={classes.input}
+                  placeholder="Please choose the tags your tour"
+                  name="tags"
+                  control={control}
+                  options={tagsOption}
+                  isMulti
+                  errorMessage={errors.tags?.message}
                 />
               </Col>
             </Row>

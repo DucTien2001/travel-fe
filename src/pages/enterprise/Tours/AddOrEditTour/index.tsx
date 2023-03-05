@@ -35,7 +35,7 @@ import { ImageService } from "services/image";
 import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
 import { getAllTours as getAllToursNormal } from "redux/reducers/Normal/actionTypes";
 import { tagsOption, VALIDATION } from "configs/constants";
-import InputSelect from "components/common/inputs/InputSelect";
+import InputSelect from "components/common/inputs/InputSelects";
 import { OptionItem } from "models/general";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";

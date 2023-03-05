@@ -1,119 +1,97 @@
 
 .cardItem {
+    padding-bottom: 16px;
+    min-height: 0px;
+    a {
+        text-decoration: none;
+    }
     p {
         color: #ffff;
         margin: 0;
     }
-    
-    @media only screen and (max-width: 768px) {
-        max-width: 100%;
+    .boxImg {
+        img {
+            border-top-right-radius: 10px;
+            border-top-left-radius: 10px;
+        }
     }
-}
-.stopCard {
-    cursor: not-allowed !important;
-    padding: 48px 20px 20px 20px !important;
-}
-.cardImage{
-    img {
-        cursor: pointer;
-        transform: scale(1);
-        transition: all 0.3s ease-out;
+    .boxLocation {
+        display: flex;
+        svg {
+            margin-right: 8px;
+            color: #5E5B5B;
+        }
+        div {
+            color: #5E5B5B;
+            font-weight: 500;
+            font-size: 12px;
+            max-width: 100%;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: break-word;
+        }
     }
-    cursor: pointer;
-    transform: scale(1);
-    transition: all 0.3s ease-out;
-}
-
-.cardImage:hover {
-    img {
-    transform: scale(0.97) translateY(-4px);
+    .boxTitle {
+        padding-top: 10px;
+        display: flex;
+        justify-content: flex-start;
+        min-height: 60px;
+        -webkit-line-clamp: 3;
+        p {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-color);
+        }
     }
-    transform: scale(0.97) translateY(-4px);
-}
-
-.btnControlCard {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 32px;
-}
-
-.cardBody {
-    position: relative;
-    padding: 48px 20px 20px 20px !important;
-}
-.discountWrapper {
-    position: absolute;
-    top: 6px;
-    right: 0;
-    min-width: 40px;
-    height: 36px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(255, 216, 64, 0.9);
-    margin-bottom: 16px;
-    padding:0 16px;
-    border-radius: 2px;
-    .percent {
-        color: #ee4d2d;
-        font-size: 16px;
-        font-weight: 700;
-        margin-right: 8px;
-    }
-    .discount {
-        color: #ffff;
-        font-size: 16px;
-        font-weight: 700;
-    }
-}
-
-.stopWorking {
-    display: none;
-}
-
-.noDiscount {
-    display: none;
-}
-
-
-.tags {
-    margin-top: 8px;
-}
-.containerReview {
-    display: flex;
-    justify-content: flex-end;
-    color: var(--white-color);
-    padding-right: 12px;
-    padding-top: 12px;
     .boxReview {
         display: flex;
-        margin-right: 12px;
+        justify-content: flex-end;
+        align-items: center;
+        color: var(--primary-light-color);
+        font-weight: 500;
         svg {
             margin-right: 4px;
         }
+        .numberOfReviews {
+            color: var(--text-color);
+        }
     }
-}
-
-.btnView {
-    &[class~=disabled] {
-        color: #ffff !important;
+    .boxPrice {
+        padding-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        span {
+            font-weight: 500;
+            font-size: 14px;
+            text-decoration: line-through;
+            color: #C4C3C3;
+        } 
+        p {
+            font-weight: 500;
+            font-size: 18px;
+            color: var(--orange-color);
+        }
     }
-}
-
-.isHotel {
- display: none;
-}
-
-.textPer {
-    font-size: 12px;
-    margin-left: 4px;
-}
-
-.priceTitle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
+    .boxViewMore {
+        padding-top: 16px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;    
+        p {
+            margin: 0;
+            font-weight: 600;
+            font-size: 14px;    
+            color: var(--orange-color);
+        }
+        svg {
+            color: var(--orange-color);
+            margin-left: 4px;
+        }
+    }
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+    }
 }
