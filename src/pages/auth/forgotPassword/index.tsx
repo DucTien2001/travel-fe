@@ -15,7 +15,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
-import InputTextfield from "components/common/inputs/InputTextfield";
 import Link from "next/link";
 import { UserService } from "services/user";
 import { useDispatch } from "react-redux";
@@ -25,6 +24,7 @@ import {
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
 import Router from "next/router";
+import InputTextfield from "components/common/inputs/InputTextfield";
 
 interface ForgotPasswordForm {
   email: string;
