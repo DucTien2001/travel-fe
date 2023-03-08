@@ -41,7 +41,7 @@ import {
   getAllRoomBills,
   getAllTourBills,
 } from "redux/reducers/Normal/actionTypes";
-import InputTextfield from "components/common/inputs/InputTextfieldttt";
+import InputTextfield from "components/common/inputs/InputTextfield";
 import { Grid } from "@mui/material";
 
 interface LoginForm {

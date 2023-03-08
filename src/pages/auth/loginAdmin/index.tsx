@@ -15,7 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
-import InputTextfield from "components/common/inputs/InputTextfieldttt";
+import InputTextfield from "components/common/inputs/InputTextfield";
 import Google from "components/SocialButton/Google";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";

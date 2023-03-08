@@ -24,7 +24,7 @@ import {
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
 import Router from "next/router";
-import InputTextfield from "components/common/inputs/InputTextfieldttt";
+import InputTextfield from "components/common/inputs/InputTextfield";
 
 interface ForgotPasswordForm {
   email: string;
