@@ -24,7 +24,7 @@ import "swiper/css/navigation";
 import Stars from "components/Stars";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { useMediaQuery, useTheme } from "@mui/material";
+import { Grid, useMediaQuery, useTheme } from "@mui/material";
 
 // eslint-disable-next-line react/display-name
 const OfferComponent = memo(() => {
@@ -47,7 +47,7 @@ const OfferComponent = memo(() => {
   }, []);
   return (
     <>
-      <div className="team-4">
+      <Grid className={classes.root}>
         <Container>
           <Row>
             <Col md="8" data-aos="fade-up">
@@ -286,7 +286,7 @@ const OfferComponent = memo(() => {
             })}
           </Swiper>
         </Container>
-      </div>
+      </Grid>
     </>
   );
 });

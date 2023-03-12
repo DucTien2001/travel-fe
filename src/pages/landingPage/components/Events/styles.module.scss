@@ -7,13 +7,32 @@
     margin-bottom: 14px;
     font-weight: 600;
     padding-left: 32px;
+    @media only screen and (max-width: 768px) {
+        padding-left: 0;
+        text-align: center;
+    }
 }
 .boxEvents {
-
     img {
     object-fit: cover;
     object-position: 50% 50%;
     width: 296px;
     height: 150px;
+    }
+    @media only screen and (max-width: 768px) {
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+.boxSeeMore {
+    padding: 32px 0;
+    text-align: center;
+    a {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--primary-light-color-1);
+        text-decoration: underline;
     }
 }

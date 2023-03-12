@@ -33,6 +33,10 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        padding-left: 0;
+        @media only screen and (max-width: 600px) {
+            padding-left: 15px;
+         }
     }
     .moreImg {
         position: relative;
@@ -80,27 +84,32 @@
         border-right: none;
      }
     .leftTextTitle {
-        font-size: 32px;
-        font-weight: 600;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 24px;
     }
     .leftTextPanel {
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 18px;
+        font-weight: 700;
         margin-left: 12px;
+        margin-bottom: 10px;
 
     }
     .highlightContent {
         padding-left: 28px;
+        margin-bottom: 24px;
         li {
             font-size: 16px;
         }
     }
     .goodWrapper {
         display: flex;
-        padding: 14px;
+        padding: 10px;
         align-items: center;
         background-color: #f6f2f2;
-        border-radius: 4px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        margin-bottom: 24px;
         svg {
             font-size: 24px;
             color: var(--orange-color);
@@ -109,15 +118,25 @@
         p { 
             font-size: 14px;
             font-weight: 600;
+            margin: 0;
             span { 
                 font-weight: 700;
             }
         }
     }
     .itineraryBox {
-        padding: 12px 0px;
+        padding: 0px 0px 24px 0;
+        .navItem {
+            padding-left: 10px;
+            cursor: pointer;
+        }
         .boxStep {
             padding-left: 10px;
+        }
+        .stepper {
+            [class~="MuiStepConnector-root"] {
+                margin-left: 4px !important;
+            }
         }
         .step {
             [class~="MuiSvgIcon-root"] {
@@ -129,24 +148,26 @@
                 font-weight: 500;
                 color: rgba(0, 0, 0, 0.87);
             }
+            svg {
+                width: 10px;
+                height: 10px;
+            }
+            text {
+                display: none;
+            }
+
         }
     }
     .textDescription {
         font-size: 16px;
         text-align: justify;
-        margin: 0 12px;
+        margin: 0 24px;
     }
     .mapBox {
         margin-top: 14px;
-        div {
-            background-color: #f6f2f2;
-            padding: 14px;
-            border-radius: 8px;
-        }
         .locationDetail {
-            font-size: 16px;
-            font-weight: 600;
-            margin-left: 14px;
+            font-size: 14px;
+            font-weight: 500;
         }
         .map {
             height: 135px;
@@ -182,28 +203,65 @@
     @media only screen and (max-width: 600px) {
         max-width: 100%;
      }
+    .boxSelect {
+        p {
+            font-weight: 600;
+            font-size: 16px;
+            margin: 0;
+        }
+    }
+    .boxTime {
+        display: flex;
+        align-items: center;
+        padding: 10px 14px;
+        border: 1px solid #e3e3e3;
+        border-radius: 4px;
+        margin-bottom: 14px;
+        p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 400;
+        }   
+        svg {
+            margin-right: 13px;
+            color: var(--primary-color);
+        }
+    }
+    .inputSelect {
+        width: 100%;
+        margin-top: 14px;
+        margin-bottom: 14px;
+    }
+    .boxNumberTickets {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 14px;
+        p {
+            margin: 0;
+            font-weight: 500;
+        }
+    }
     .tipWrapper {
         border-bottom: 1px solid #ccc;
         padding-bottom: 12px;
     }
     .priceWrapper {
-        h5 {
-            font-size: 24px;
-            font-weight:500;
-            margin-bottom: 0;
+        margin-top: 14px;
+        .discount {
+            span {
+                color: var(--orange-color);
+            }
+        }
+        p {
+            font-weight: 600;
+            font-size: 16px;
+            margin: 0;
         }
         .price {
-            color: #d3d1d1;
-            font-weight: 300;
-            margin-bottom: 0;
-            font-size: 32px;
-            text-decoration: line-through;
-        }
-        .priceDiscount {
             color: var(--orange-color);
             font-weight: 700;
             margin-bottom: 0;
-            font-size: 32px;
+            font-size: 20px;
             span {
                 font-size: 14px;
             }
@@ -221,7 +279,7 @@
         display: flex;
         align-items: center;
         font-size: 16px;
-
+        margin-bottom: 10px;
         p {
             margin-bottom: 0;
             margin-left: 8px;
@@ -265,19 +323,22 @@
 }   
 .subProduct {
     display: flex;
+    margin-top: 16px;
     @media only screen and (max-width: 600px) {
-        flex-direction: column;
         margin-bottom: 12px;
      }
 .tags {
     margin-bottom: 12px;
+
     display: flex;
     @media only screen and (max-width: 600px) {
-        margin-top: 12px;
         margin-bottom: 0;
+        margin-right: 10px;
      }
     .badgeTags {
         color: var(--primary-color) !important;
+        border: 1px solid var(--primary-light-color-1);
+        background-color: var(--primary-light-color-1);
         margin-left: 8px;
     }
     .badgeTags:first-child {
@@ -288,7 +349,7 @@
 .locationRate {
         display: flex;
         margin-left: 16px;
-        color: var(--orange-color);
+        color: var(--primary-light-color);
         @media only screen and (max-width: 600px) {
             margin-left: 0;
          }

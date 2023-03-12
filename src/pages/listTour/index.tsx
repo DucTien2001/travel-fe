@@ -45,6 +45,7 @@ import ReactPaginate from "react-paginate";
 import CustomSelect from "components/common/CustomSelect";
 import InputSelect from "components/common/inputs/InputSelect";
 import { sortType } from "models/general";
+import { Grid } from "@mui/material";
 
 interface SearchData {
   location?: string;
@@ -304,7 +305,7 @@ const ListTours: NextPage = () => {
             </div>
             <div className={classes.boxResult}>
               {/* ======================= RESULT DESKTOP ===================== */}
-              <Col xs={2} className={classes.boxControlLayout}>
+              <Grid className={classes.boxControlLayout}>
                 <Button
                   className={clsx(
                     !changeViewLayout ? "active" : null,
@@ -325,10 +326,12 @@ const ListTours: NextPage = () => {
                 >
                   <FontAwesomeIcon icon={faList} />
                 </Button>
-              </Col>
-              <Col xs={10} className={classes.rowResult}>
-                <div className={classes.controlSelect}>
-                  <h5>SORT BY: </h5>
+              </Grid>
+              <Grid className={classes.rowResult}>
+                <Grid className={classes.controlSelect}>
+                  <Grid>
+                    <h5>SORT BY: </h5>
+                  </Grid>
                   {/* <CustomSelect
                     className={classes.inputSelect}
                     options={sortType}
@@ -336,17 +339,20 @@ const ListTours: NextPage = () => {
                     name="sortType"
                     errorMessage={errors.sortType?.message}
                   /> */}
-                  <InputSelect
-                    className={classes.inputSelect}
-                    selectProps={{
-                      options: sortType,
-                    }}
-                  />
-                </div>
-                <h5>
-                  RESULTS-FOUND: <span>{listTours?.length}</span>
-                </h5>
-              </Col>
+                  <Grid className={classes.inputSelect}>
+                    <InputSelect
+                      selectProps={{
+                        options: sortType,
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid>
+                  <h5>
+                    RESULTS-FOUND: <span>{listTours?.length}</span>
+                  </h5>
+                </Grid>
+              </Grid>
             </div>
           </Row>
           <Row className={classes.rowResultBody}>

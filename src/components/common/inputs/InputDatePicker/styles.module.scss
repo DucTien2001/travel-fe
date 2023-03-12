@@ -51,9 +51,19 @@
         }
     }
   }
-  .icon {
+  .iconLabel {
     position: absolute;
     top: 36px;
+    left: 14px;
+    z-index: 10;
+    svg {
+      color: var(--primary-color);
+      font-size: 16px;
+    }
+  }
+  .icon {
+    position: absolute;
+    top: 12px;
     left: 14px;
     z-index: 10;
     svg {

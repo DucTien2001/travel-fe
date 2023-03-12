@@ -29,6 +29,8 @@ interface FormSearch {
 
 // eslint-disable-next-line react/display-name
 const TourSearch = memo(() => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const schema = useMemo(() => {
     return yup.object().shape({
       tour: yup.string().required("Content search is required"),
@@ -124,9 +126,9 @@ const TourSearch = memo(() => {
           <h4>Local Destinations to Explore</h4>
           <p>Get ready to discover the best places on our radar</p>
           <Swiper
-            slidesPerView={4}
+            slidesPerView={isMobile ? 1 : 4}
             spaceBetween={10}
-            slidesPerGroup={4}
+            slidesPerGroup={isMobile ? 1 : 4}
             loop={true}
             loopFillGroupWithBlank={true}
             pagination={{

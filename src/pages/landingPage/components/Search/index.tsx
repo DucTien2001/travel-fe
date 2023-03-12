@@ -69,15 +69,7 @@ const Search = memo(() => {
   }, []);
   return (
     <>
-      <Grid
-        container
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          position: "relative",
-          marginTop: "-44px",
-        }}
-      >
+      <Grid container className={classes.root}>
         <Grid className={classes.boxSearch}>
           <Nav className={classes.boxTabControl} nav>
             <NavItem
@@ -85,12 +77,6 @@ const Search = memo(() => {
               className={classes.navItem}
             >
               <Grid
-                sx={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  padding: "10px 24px",
-                  borderTopLeftRadius: "10px",
-                }}
                 className={
                   verticalTabs === EActiveNav.Tour_Active ? classes.active : ""
                 }

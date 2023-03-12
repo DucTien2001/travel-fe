@@ -33,6 +33,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        padding-left: 0 !important;
     }
     .moreImg {
         position: relative;
@@ -64,174 +65,6 @@
      }
 
 }
-.content {
-    margin-top: 12px;
-    position: relative;
-    @media only screen and (max-width: 600px) {
-        flex-direction: column;
-     }
-}
-.leftContent {
-    padding-top: 24px;
-    padding-bottom: 24px;
-    border-right: 1px solid #ccc;
-    @media only screen and (max-width: 600px) {
-        max-width: 100%;
-        border-right: none;
-     }
-    .leftTextTitle {
-        font-size: 32px;
-        font-weight: 600;
-    }
-    .leftTextPanel {
-        font-size: 24px;
-        font-weight: 600;
-        margin-left: 12px;
-
-    }
-    .highlightContent {
-        padding-left: 28px;
-        li {
-            font-size: 16px;
-        }
-    }
-    .goodWrapper {
-        display: flex;
-        padding: 14px;
-        align-items: center;
-        background-color: #f6f2f2;
-        border-radius: 4px;
-        svg {
-            font-size: 24px;
-            color: var(--orange-color);
-            margin-right: 8px;
-        }
-        p { 
-            font-size: 14px;
-            font-weight: 600;
-            span { 
-                font-weight: 700;
-            }
-        }
-    }
-    .itineraryBox {
-        padding: 12px 0px;
-        .boxStep {
-            padding-left: 10px;
-        }
-        .step {
-            [class~="MuiSvgIcon-root"] {
-                color: var(--primary-color);
-            }
-            p {
-                font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
-                margin-bottom: 0;
-                font-weight: 500;
-                color: rgba(0, 0, 0, 0.87);
-            }
-        }
-    }
-    .textDescription {
-        font-size: 16px;
-        text-align: justify;
-        margin: 0 12px;
-    }
-    .mapBox {
-        margin-top: 14px;
-        div {
-            background-color: #f6f2f2;
-            padding: 14px;
-            border-radius: 8px;
-        }
-        .locationDetail {
-            font-size: 16px;
-            font-weight: 600;
-            margin-left: 14px;
-        }
-        .map {
-            height: 135px;
-        }
-        .contactBox {
-            display: flex;
-            font-size: 16px;
-            align-items: center;
-            font-weight:600;
-            p {
-                margin: 0;
-                margin-left:  8px;
-            }
-            svg {
-                font-size: 18px;
-                color: var(--orange-color);
-            }
-            a {
-                color: var(--primary-color) !important;
-                margin-left:  8px;
-            }
-        }
-    }
-
-}
-.rightContent {  
-    position: sticky;
-    top: 50px;
-    min-width: 0;
-    min-height: 0;
-    height: 100%;
-    padding: 24px;
-    @media only screen and (max-width: 600px) {
-        max-width: 100%;
-     }
-    .tipWrapper {
-        border-bottom: 1px solid #ccc;
-        padding-bottom: 12px;
-    }
-    .btnBookNow {
-        width: 100%;
-        font-size: 16px;
-        margin: 12px 0;
-    }
-    .serviceTip {
-        display: flex;
-        align-items: center;
-        font-size: 16px;
-
-        p {
-            margin-bottom: 0;
-            margin-left: 8px;
-            font-weight: 500;
-        }
-        svg {
-            font-size: 18px;    
-            color: var(--orange-color);
-        }
-        span {
-            font-weight: 700;
-        }
-    }
-    .featureWrapper {
-        padding-top: 12px;
-        .featureTitle {
-            font-size: 16px;
-            font-weight: 700;
-        }
-        div {
-            display: flex;
-            align-items: center;
-            p {
-                margin-bottom: 0;
-                margin-left: 8px;
-                font-weight: 500;
-                font-size: 16px;
-            }
-            svg {
-                font-size: 18px;    
-                color: var(--orange-color);
-            }
-        }
-    }
-}
-
 
 .nameHotel {
     color: var(--primary-color) !important;
@@ -239,26 +72,30 @@
 }   
 .subProduct {
     display: flex;
+    margin-top: 16px;
     @media only screen and (max-width: 600px) {
         flex-direction: column;
         margin-bottom: 12px;
      }
 .tags {
     margin-bottom: 12px;
+
     display: flex;
     @media only screen and (max-width: 600px) {
         margin-top: 12px;
         margin-bottom: 0;
      }
     .badgeTags {
-        color: var(--primary-color) !important;
+        color: var(--white-color) !important;
         margin-left: 8px;
+        background-color: var(--primary-light-color) !important;
     }
     .badgeTags:first-child {
         margin-left: 0;
     }
 
 }
+
 .locationRate {
         display: flex;
         margin-left: 16px;
@@ -279,4 +116,19 @@
             font-size: 20px;
         }
 }
+}
+.boxLocation {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    svg {
+        color: var(--primary-light-color);
+        margin-right: 8px;
+    }
+    p {
+        margin: 0;
+        color: var(--primary-light-color);
+        font-weight: 500;
+        font-size: 16px;
+    }
 }

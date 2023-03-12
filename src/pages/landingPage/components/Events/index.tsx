@@ -23,6 +23,7 @@ import "aos/dist/aos.css";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { clsx } from "clsx";
 import { Col, Container } from "reactstrap";
+import Link from "next/link";
 interface FormSearch {
   tour?: string;
 }
@@ -98,7 +99,11 @@ const TourSearch = memo(() => {
             xs={2}
             sm={4}
             md={4}
-            sx={{ display: "flex", justifyContent: "center" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
           >
             <img src={images.deal1.src} alt="anh"></img>
           </Grid>
@@ -107,7 +112,11 @@ const TourSearch = memo(() => {
             xs={2}
             sm={4}
             md={4}
-            sx={{ display: "flex", justifyContent: "center" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
           >
             <img src={images.deal1.src} alt="anh"></img>
           </Grid>
@@ -116,7 +125,11 @@ const TourSearch = memo(() => {
             xs={2}
             sm={4}
             md={4}
-            sx={{ display: "flex", justifyContent: "center" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
           >
             <img src={images.deal1.src} alt="anh"></img>
           </Grid>
@@ -125,7 +138,11 @@ const TourSearch = memo(() => {
             xs={2}
             sm={4}
             md={4}
-            sx={{ display: "flex", justifyContent: "center" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
           >
             <img src={images.deal1.src} alt="anh"></img>
           </Grid>
@@ -134,7 +151,11 @@ const TourSearch = memo(() => {
             xs={2}
             sm={4}
             md={4}
-            sx={{ display: "flex", justifyContent: "center" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
           >
             <img src={images.deal1.src} alt="anh"></img>
           </Grid>
@@ -143,10 +164,19 @@ const TourSearch = memo(() => {
             xs={2}
             sm={4}
             md={4}
-            sx={{ display: "flex", justifyContent: "center" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
           >
             <img src={images.deal1.src} alt="anh"></img>
           </Grid>
+        </Grid>
+        <Grid className={classes.boxSeeMore}>
+          <Link href="/listEvent">
+            <a>See More</a>
+          </Link>
         </Grid>
       </Container>
     </>

@@ -3,7 +3,10 @@ html,
   --white-color: #ffff;
   --violet-transparent-color:rgba(54,19,84,.85);
   --primary-color: #25316D;
-  --primary-light-color: #3b87db;
+  --primary-light-color: #4A8BB0;
+  --primary-light-color-1: #5BC0F8;
+  --primary-light-color-2: #bed7f3;
+  --primary-light-color-3: #e8f1fb;
   --background-container-color: rgb(242 243 243);
   --warning-color: #f2bb2e;
   --warning-text-color: #9b6907;
@@ -12,6 +15,8 @@ html,
   --violet-dark-color:#2c0a42;
   --text-color: #000;
   --orange-color: #fa9e1b;
+  --success-color: #2B7A0B;
+  --success-light-color: #7DCE13;
   --green-color: #7c9911;
   --green-dark: #bbe22d;
   --danger-color: #af1c10;

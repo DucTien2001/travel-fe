@@ -58,8 +58,10 @@ const CustomDatePicker = memo(
               render={({ field }) => {
                 return (
                   <div className={classes.form}>
-                    <label className={classes.label}>{label} </label>
-
+                    {label && <label className={classes.label}>{label} </label>}
+                    <div className={label ? classes.iconLabel : classes.icon}>
+                      <FontAwesomeIcon icon={faCalendarDays}></FontAwesomeIcon>
+                    </div>
                     <ReactDatetime
                       {...field}
                       className={classes.datePickerInput}
@@ -81,10 +83,12 @@ const CustomDatePicker = memo(
           </>
         ) : (
           <>
-            <label className={classes.label}>
-              {labelIcon} {label}
-            </label>
-            <div className={classes.icon}>
+            {label && (
+              <label className={classes.label}>
+                {labelIcon} {label}
+              </label>
+            )}
+            <div className={label ? classes.iconLabel : classes.icon}>
               <FontAwesomeIcon icon={faCalendarDays}></FontAwesomeIcon>
             </div>
             <ReactDatetime

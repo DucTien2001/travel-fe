@@ -74,7 +74,7 @@ const customStyles = (
     background: state.isDisabled ? "var(--gray-5)" : "#FFFFFF",
     border: state.isFocused
       ? "1px solid var(--primary-light-color)"
-      : "1px solid var(--gray-40)",
+      : "1px solid #e3e3e3",
     // borderColor:"var(--gray-40)",
     svg: {
       color: state.isFocused ? "" : "var(--gray-60)",

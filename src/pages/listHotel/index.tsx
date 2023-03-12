@@ -318,7 +318,7 @@ const ListHotels: NextPage = () => {
                 // changePrice={handleChangePrice}
               />
             </Col>
-            <Col xs={10} className={classes.listTours}>
+            <Col xs={10} className={classes.list}>
               <div className={classes.containerListHotel}>
                 {/* ==================== List view ===================== */}
                 <div>

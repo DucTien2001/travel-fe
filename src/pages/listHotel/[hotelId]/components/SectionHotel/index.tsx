@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Stars from "components/Stars";
 import PopupModalImages from "components/Popup/PopupModalImages";
+import { Grid } from "@mui/material";
 
 interface Props {
   hotel: ICreateHotel;
@@ -88,8 +89,6 @@ const SectionTour = memo(({ hotel }: Props) => {
                   ))}
                 </div>
                 <div className={classes.locationRate}>
-                  <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
-                  <p>{hotel?.location}</p>
                   {hotel?.rate !== 0 && (
                     <Stars
                       numberOfStars={Math.floor(hotel?.rate)}
@@ -98,6 +97,13 @@ const SectionTour = memo(({ hotel }: Props) => {
                   )}
                 </div>
               </div>
+              <Grid className={classes.boxLocation}>
+                <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
+                <p>
+                  962 Ngo Quyen, An Hai Tay Ward, Son Tra District, Da Nang,
+                  Vietnam
+                </p>
+              </Grid>
               <Row
                 className={classes.containerImg}
                 onClick={onOpenPopupModalImages}

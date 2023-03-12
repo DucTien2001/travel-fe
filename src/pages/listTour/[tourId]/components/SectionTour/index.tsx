@@ -1,5 +1,14 @@
-import React, { memo, useState } from "react";
-import { Container, Row, Col, Badge } from "reactstrap";
+import React, { memo, useEffect, useMemo, useState } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Badge,
+  Nav,
+  NavItem,
+  TabContent,
+  TabPane,
+} from "reactstrap";
 // import { Carousel } from 'react-responsive-carousel'
 // import {images} from "configs/images";
 import classes from "./styles.module.scss";
@@ -29,6 +38,13 @@ import StepContent from "@mui/material/StepContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PopupModalImages from "components/Popup/PopupModalImages";
+import { Grid } from "@mui/material";
+import InputDatePicker from "components/common/inputs/InputDatePicker";
+import * as yup from "yup";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import InputSelect from "components/common/inputs/InputSelect";
+import InputCounter from "components/common/inputs/InputCounter";
 
 const steps = [
   {
@@ -41,22 +57,89 @@ const steps = [
     label: "End of tour",
   },
 ];
+export interface FormData {
+  startDate: Date;
+  startTime: string;
+  language: any;
+  numberOfAdult?: number;
+  numberOfChild?: number;
+}
 interface Props {
   tour: Tour;
   listRates: number[];
 }
 
+const languageOptions = [
+  { id: 1, name: "English", value: "English" },
+  { id: 2, name: "VietNamese", value: "VietNamese" },
+];
+
 // eslint-disable-next-line react/display-name
 const SectionTour = memo(({ tour, listRates }: Props) => {
   const { user } = useAuth();
+  const schema = useMemo(() => {
+    return yup.object().shape({
+      startDate: yup.date().required("Start datetime is required"),
+      startTime: yup.string().required("Start time is required"),
+      language: yup.string().required("Start time is required"),
+      numberOfAdult: yup
+        .number()
+        .transform((value) => (isNaN(value) ? undefined : value))
+        .typeError("Number must be a number")
+        .notRequired(),
+      numberOfChild: yup
+        .number()
+        .transform((value) => (isNaN(value) ? undefined : value))
+        .typeError("Number must be a number")
+        .notRequired(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+    setValue,
+    control,
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+    defaultValues: {
+      startDate: new Date(),
+      numberOfAdult: 1,
+      numberOfChild: 0,
+      language: languageOptions[0],
+    },
+  });
+
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
+  const [verticalTabs, setVerticalTabs] = useState(1);
 
   const onOpenPopupModalImages = () =>
     setOpenPopupModalImages(!openPopupModalImages);
 
+  const onChangeTab = (numberOfDate: number) => {
+    switch (numberOfDate) {
+      case 1:
+        setVerticalTabs(numberOfDate);
+        break;
+      case 2:
+        setVerticalTabs(numberOfDate);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const _numberOfAdult = watch("numberOfAdult");
+  const _numberOfChild = watch("numberOfChild");
+
   return (
     <>
-      <div className={clsx("section", classes.root)}>
+      <Grid component="form" className={clsx("section", classes.root)}>
         <Container className={classes.container}>
           <Row>
             <Col>
@@ -65,11 +148,9 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
               </h2>
               <div className={classes.subProduct}>
                 <div className={classes.tags}>
-                  {tour?.tags?.map((item, index) => (
-                    <Badge pill className={classes.badgeTags} key={index}>
-                      {item}
-                    </Badge>
-                  ))}
+                  <Badge pill className={classes.badgeTags}>
+                    tour
+                  </Badge>
                 </div>
                 <div className={classes.locationRate}>
                   <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
@@ -132,27 +213,59 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
               </div>
               <div className={classes.itineraryBox}>
                 <h5 className={classes.leftTextPanel}>Tour Itinerary</h5>
-                <Box sx={{ maxWidth: 400 }} className={classes.boxStep}>
-                  <Stepper orientation="vertical">
-                    {steps.map((step, index) => (
-                      <Step key={step.label} className={classes.step}>
-                        <StepLabel>
-                          <p>{step.label}</p>
-                        </StepLabel>
-                      </Step>
-                    ))}
-                  </Stepper>
-                </Box>
+                <Nav className={classes.boxTabControl} nav>
+                  <NavItem
+                    className={classes.navItem}
+                    onClick={() => onChangeTab(1)}
+                  >
+                    <Grid
+                      sx={{
+                        padding: "10px 16px",
+                        backgroundColor: "var(--primary-color)",
+                        borderRadius: "8px",
+                        color: "var(--white-color)",
+                        fontWeight: "500",
+                      }}
+                    >
+                      Day 1
+                    </Grid>
+                  </NavItem>
+                </Nav>
+                <TabContent activeTab={"verticalTabs" + verticalTabs}>
+                  <TabPane tabId="verticalTabs1">
+                    <Box sx={{ maxWidth: 400 }} className={classes.boxStep}>
+                      <Stepper
+                        orientation="vertical"
+                        className={classes.stepper}
+                      >
+                        {steps.map((step, index) => (
+                          <Step key={step.label} className={classes.step}>
+                            <StepLabel>
+                              <p>{step.label}</p>
+                            </StepLabel>
+                          </Step>
+                        ))}
+                      </Stepper>
+                    </Box>
+                  </TabPane>
+                </TabContent>
               </div>
-              <div className="ml-2">
+              <Grid sx={{ marginBottom: "24px" }}>
                 <h5 className={classes.leftTextPanel}>
                   What You’ll Experience
                 </h5>
                 <p className={classes.textDescription}>{tour?.description}</p>
-              </div>
+              </Grid>
               <div className={classes.mapBox}>
                 <h5 className={classes.leftTextPanel}> Location Detail</h5>
-                <div>
+                <Grid
+                  sx={{
+                    padding: "18px",
+                    backgroundColor: "#F6F2F2",
+                    borderRadius: "10px",
+                    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                  }}
+                >
                   <p className={classes.locationDetail}>
                     143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh
                     Kiên Giang, Vietnam
@@ -163,7 +276,7 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                     <p>Contact Partner: </p>
                     <a href={`tel: ${tour?.contact}`}>{tour?.contact}</a>
                   </div>
-                </div>
+                </Grid>
               </div>
               <div className="mt-4">
                 <h5 className={classes.leftTextPanel}>
@@ -174,22 +287,97 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
               </div>
             </Col>
             <Col xs={4} className={classes.rightContent}>
+              <Grid className={classes.boxSelect}>
+                <p>When are you going?</p>
+                <Grid sx={{ paddingTop: "14px" }}>
+                  <InputDatePicker
+                    name="startDate"
+                    control={control}
+                    placeholder="Check-out"
+                    dateFormat="DD/MM/YYYY"
+                    timeFormat={false}
+                    inputRef={register("startDate")}
+                    errorMessage={errors.startDate?.message}
+                  />
+                </Grid>
+                <Grid className={classes.boxTime}>
+                  <FontAwesomeIcon icon={faClock}></FontAwesomeIcon>
+                  <p>7:30</p>
+                </Grid>
+              </Grid>
+              <Grid className={classes.boxSelect}>
+                <p>Language options?</p>
+                <InputSelect
+                  className={classes.inputSelect}
+                  control={control}
+                  name="language"
+                  selectProps={{
+                    options: languageOptions,
+                  }}
+                />
+              </Grid>
+              <Grid className={classes.boxSelect}>
+                <p>How many tickets?</p>
+                <Grid className={classes.boxNumberTickets}>
+                  <Grid>
+                    <p>Adult (age 10-99)</p>
+                    <span>220,000 VND</span>
+                  </Grid>
+                  <Grid>
+                    <Controller
+                      name="numberOfAdult"
+                      control={control}
+                      render={({ field }) => (
+                        <InputCounter
+                          className={classes.inputCounter}
+                          max={1000}
+                          min={1}
+                          onChange={field.onChange}
+                          value={field.value}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid className={classes.boxNumberTickets}>
+                  <Grid>
+                    <p>Child (age 3-9)</p>
+                    <span>220,000 VND</span>
+                  </Grid>
+                  <Grid>
+                    <Controller
+                      name="numberOfChild"
+                      control={control}
+                      render={({ field }) => (
+                        <InputCounter
+                          className={classes.inputCounter}
+                          max={1000}
+                          min={0}
+                          onChange={field.onChange}
+                          value={field.value}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
               <div className={classes.priceWrapper}>
-                <h5>Starting from</h5>
-                <h2
-                  className={
-                    tour?.discount ? classes.price : classes.priceDiscount
-                  }
-                >
-                  {fCurrency2(tour?.price)} VND{" "}
-                  {!tour?.discount && <span>/ person</span>}
-                </h2>
                 {tour?.discount !== 0 && (
-                  <h2 className={classes.priceDiscount}>
-                    {fCurrency2((tour?.price * (100 - tour?.discount)) / 100)}{" "}
-                    VND<span>/ person</span>
-                  </h2>
+                  <p className={classes.discount}>
+                    Discount: <span>{tour?.discount} %</span>
+                  </p>
                 )}
+
+                <p>Total Price</p>
+                <h2 className={classes.price}>
+                  {fCurrency2(
+                    (tour?.price * _numberOfAdult * (100 - tour?.discount)) /
+                      100 +
+                      (tour?.price * _numberOfChild * (100 - tour?.discount)) /
+                        100
+                  )}{" "}
+                  VND
+                </h2>
               </div>
               {user ? (
                 <Link href={`/book/tour/:${tour?.id}`}>
@@ -198,6 +386,7 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                       btnType={BtnType.Primary}
                       isDot={true}
                       className={classes.btnBookNow}
+                      type="submit"
                     >
                       Book Now
                     </Button>
@@ -210,6 +399,7 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                       btnType={BtnType.Primary}
                       isDot={true}
                       className={classes.btnBookNow}
+                      type="submit"
                     >
                       Book Now
                     </Button>
@@ -247,7 +437,7 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
           toggle={onOpenPopupModalImages}
           images={tour?.images}
         />
-      </div>
+      </Grid>
     </>
   );
 });
