@@ -47,20 +47,42 @@
   }
 
 .containerNav {
-    display: flex;
-    justify-content: space-between;
     padding: 0;
+    .rootTabs {
+        display: flex;
+        justify-content: space-between;
+        [class~="MuiTabs-flexContainer"] {
+            justify-content: space-between;
+        }
+        [class~="MuiTabs-indicator"] {
+            display: none;
+        }
+    }
     .listNav {
         display: flex;
         justify-content: space-between;
         min-width: 500px;
+        @media only screen and (max-width: 500px) {
+            padding: 0 16px;
+         }
     }
     .backToTop {
         display: flex;
         justify-content:center;
         align-items: center;
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
         svg {
             margin-left: 4px;
+        }
+        a {
+            border-bottom: 5px solid transparent;
+
+        }
+        @media only screen and (max-width: 600px) {
+           display: none;
         }
     }
 }

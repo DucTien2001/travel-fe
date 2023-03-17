@@ -127,6 +127,15 @@ export interface ICreateRoomBill {
   lastName: string;
   verifyCode: string;
 }
+
+export interface IUserInformationBookRoom {
+  userId: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+  specialRequest?: string;
+}
 export interface NormalState {
   allTours: ITour[];
   allHotels: IHotel[];
@@ -135,6 +144,7 @@ export interface NormalState {
   allRoomBills: ICreateRoomBill[];
   confirmBookTour: IConfirmBookTour;
   confirmBookRoom: IConfirmBookRoom;
+  getUserInformationBookRoom: IUserInformationBookRoom;
 }
 
 const initial: NormalState = {
@@ -145,6 +155,7 @@ const initial: NormalState = {
   allRoomBills: [],
   confirmBookTour: null,
   confirmBookRoom: null,
+  getUserInformationBookRoom: null,
 };
 
 export const normalReducer = (state = initial, action: any) =>
@@ -170,6 +181,9 @@ export const normalReducer = (state = initial, action: any) =>
         break;
       case types.SET_CONFIRM_BOOK_ROOM_REDUCER:
         draft.confirmBookRoom = action.data;
+        break;
+      case types.SET_USER_INFORMATION_BOOK_ROOM_REDUCER:
+        draft.getUserInformationBookRoom = action.data;
         break;
       default:
         return state;

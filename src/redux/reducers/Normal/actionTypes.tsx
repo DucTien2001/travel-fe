@@ -16,16 +16,20 @@ export const SET_TOUR_BILLS_REDUCER = "SET_TOUR_BILLS_REDUCER";
 //HOTEL BILL
 export const GET_ROOM_BILLS_REQUEST = "GET_ROOM_BILLS_REQUEST";
 export const SET_ROOM_BILLS_REDUCER = "SET_ROOM_BILLS_REDUCER";
-// comment tour 
+// comment tour
 export const GET_TOUR_COMMENT_REQUEST = "GET_TOUR_COMMENT_REQUEST";
 export const SET_TOUR_COMMENT_REDUCER = "SET_TOUR_COMMENT_REDUCER";
 
-//CONFIRM BOOK TOUR 
+//CONFIRM BOOK TOUR
 export const GET_CONFIRM_BOOK_TOUR_REQUEST = "GET_CONFIRM_BOOK_TOUR_REQUEST";
 export const SET_CONFIRM_BOOK_TOUR_REDUCER = "SET_CONFIRM_BOOK_TOUR_REDUCER";
 //CONFIRM BOOK ROOM
 export const GET_CONFIRM_BOOK_ROOM_REQUEST = "GET_CONFIRM_BOOK_ROOM_REQUEST";
 export const SET_CONFIRM_BOOK_ROOM_REDUCER = "SET_CONFIRM_BOOK_ROOM_REDUCER";
+//GET USER INFORMATION
+export const GET_USER_INFORMATION_BOOK_ROOM = "GET_USER_INFORMATION_BOOK_ROOM";
+export const SET_USER_INFORMATION_BOOK_ROOM_REDUCER =
+  "SET_USER_INFORMATION_BOOK_ROOM_REDUCER";
 // ********** tour **********
 export const getAllTours = () => {
   return {
@@ -98,7 +102,7 @@ export const setAllRoomBillsReducer = (data: any) => {
   };
 };
 // ********** confirm book tour  **********
-export const getConfirmBookTour= () => {
+export const getConfirmBookTour = () => {
   return {
     type: GET_CONFIRM_BOOK_TOUR_REQUEST,
   };
@@ -111,7 +115,7 @@ export const setConfirmBookTourReducer = (data: any) => {
   };
 };
 // ********** confirm book room **********
-export const getConfirmBookRoom= () => {
+export const getConfirmBookRoom = () => {
   return {
     type: GET_CONFIRM_BOOK_ROOM_REQUEST,
   };
@@ -120,6 +124,19 @@ export const getConfirmBookRoom= () => {
 export const setConfirmBookRoomReducer = (data: any) => {
   return {
     type: SET_CONFIRM_BOOK_ROOM_REDUCER,
+    data: data,
+  };
+};
+//****** get information user */
+export const getUserInformationBookRoom = () => {
+  return {
+    type: GET_USER_INFORMATION_BOOK_ROOM,
+  };
+};
+
+export const setUserInformationBookRoomReducer = (data: any) => {
+  return {
+    type: SET_USER_INFORMATION_BOOK_ROOM_REDUCER,
     data: data,
   };
 };

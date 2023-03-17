@@ -13,8 +13,8 @@ import Step from "@mui/material/Step";
 import { Grid, StepConnector, StepLabel } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import QontoStepIcon from "components/QontoStepIcon";
-import Booking from "./components/Booking";
-import PopupCheckReview from "./components/PopupCheckReview";
+import Booking from "./Booking";
+import PopupCheckReview from "../../../../components/Popup/PopupCheckReview";
 
 export enum EStep {
   BOOKING,

@@ -9,7 +9,6 @@ import { TourService } from "services/normal/tour";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { Grid, Link, useMediaQuery, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import PopupCheckReview from "../PopupCheckReview";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,6 +27,7 @@ import UseAuth from "hooks/useAuth";
 import { setConfirmBookTourReducer } from "redux/reducers/Normal/actionTypes";
 import { UserService } from "services/user";
 import * as yup from "yup";
+import { ITour } from "redux/reducers/Normal";
 
 export enum EStep {
   BOOKING,
@@ -52,8 +52,7 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
   const router = useRouter();
   const { t, i18n } = useTranslation();
 
-  const [tour, setTour] = useState<any>();
-  const [activeStep, setActiveStep] = useState<EStep>(EStep.BOOKING);
+  const [tour, setTour] = useState<ITour>();
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -324,13 +323,10 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                 </Grid>
                 <Grid className={classes.boxProduct}>
                   <Grid>
-                    <p>
-                      Phu Quoc Sunset Viewing and Night Squid Fishing - Half-Day
-                      Tour
-                    </p>
+                    <p>{tour?.title}</p>
                   </Grid>
                   <Grid className={classes.product}>
-                    <img src={images.bgUser.src} alt="anh"></img>
+                    <img src={tour?.images[0]} alt="anh"></img>
                     <Link href={`/listTour/:${tour?.id}`}>View detail</Link>
                   </Grid>
                 </Grid>

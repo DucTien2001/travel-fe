@@ -1,11 +1,11 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
-import { Container, Form, Row, Table } from "reactstrap";
+import { Badge, Container, Form, Row, Table } from "reactstrap";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import InputCounter from "components/common/inputs/InputCounter";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDays, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,6 +19,21 @@ import { HOTEL_SECTION, IHotel } from "models/hotel";
 import { useRouter } from "next/router";
 import { fCurrency2 } from "utils/formatNumber";
 import useAuth from "hooks/useAuth";
+import { Grid, Collapse } from "@mui/material";
+import { images } from "configs/images";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import WifiIcon from "@mui/icons-material/Wifi";
+import SmokeFreeIcon from "@mui/icons-material/SmokeFree";
+import NoMealsIcon from "@mui/icons-material/NoMeals";
+import WifiOffIcon from "@mui/icons-material/WifiOff";
+import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
+import BedIcon from "@mui/icons-material/Bed";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import InfoIcon from "@mui/icons-material/Info";
+import { sumPrice } from "utils/totalPrice";
+
 export interface CheckRoomForm {
   departure: Date;
   return: Date;
@@ -37,6 +52,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
   const { user } = useAuth();
   const router = useRouter();
   const [listRooms, setListRoom] = useState([]);
+  const [open, setOpen] = useState(0);
   const schema = useMemo(() => {
     return yup.object().shape({
       departure: yup
@@ -157,6 +173,26 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_return, hotel]);
 
+  const _newListPriceDay = listRooms.map((item) => {
+    return [
+      item.mondayPrice,
+      item.tuesdayPrice,
+      item.wednesdayPrice,
+      item.thursdayPrice,
+      item.fridayPrice,
+      item.saturdayPrice,
+      item.sundayPrice,
+    ];
+  });
+
+  const listMinPrice = [];
+  for (var i = 0; i < _newListPriceDay.length; i++) {
+    let minPrice = _newListPriceDay[i].reduce(function (accumulator, element) {
+      return accumulator < element ? accumulator : element;
+    });
+    listMinPrice.push(minPrice);
+  }
+
   const isValid = () => {
     let isOK = false;
     for (var i = 0; i < listRooms.length; i++) {
@@ -166,6 +202,23 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
     }
     return isOK;
   };
+
+  console.log(listRooms);
+
+  let totalPrice = 0;
+  let totalRoom = 0;
+  for (var i = 0; i < listRooms.length; i++) {
+    const _watchAmount = watch(`amountList.${i}.amount`);
+    let result = listRooms[i].priceDetail.reduce(function (total, element) {
+      if (listRooms[i].discount) {
+        return (total + element.price) * ((100 - listRooms[i].discount) / 100);
+      } else {
+        return total + element.price;
+      }
+    }, 0);
+    totalPrice += result * _watchAmount;
+    totalRoom += _watchAmount;
+  }
 
   const _onSubmit = (data) => {
     const roomBillConfirm = [];
@@ -188,7 +241,7 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
     if (!user) {
       router.push(`/auth/login`);
     } else {
-      router.push(`/book/hotel`);
+      router.push(`/book/hotel/:${hotel?.id}`);
     }
   };
 
@@ -203,83 +256,228 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
   };
 
   return (
-    <>
-      <Container className={classes.root} id={HOTEL_SECTION.section_rooms}>
-        <h4 className={classes.titleCheckEmpty}>List room empty</h4>
-        <Form
-          role="form"
-          onSubmit={handleSubmit(_onSubmit)}
-          className={classes.form}
+    <Grid
+      sx={{ backgroundColor: "#f6f2f2", padding: "32px 0 8px 0" }}
+      id={HOTEL_SECTION.section_check_room}
+      component="form"
+      onSubmit={handleSubmit(_onSubmit)}
+    >
+      <Container className={classes.root}>
+        <Grid
+          sx={{
+            padding: "16px",
+            backgroundColor: "var(--white-color)",
+            borderRadius: "10px",
+            boxShadow: "var(--box-shadow-100)",
+          }}
         >
-          <Row xs={4} className={classes.inputDateContainer}>
-            <InputDatePicker
-              className={classes.inputSearchDate}
-              label="Departure date"
-              placeholder="Departure"
-              control={control}
-              name="departure"
-              dateFormat="DD/MM/YYYY"
-              minDate={moment().toDate()}
-              maxDate={watch("return")}
-              timeFormat={false}
-              labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
-              inputRef={register("departure")}
-              errorMessage={errors.departure?.message}
-              isValidDate={disablePastDt}
-            />
-            <InputDatePicker
-              className={classes.inputSearchDate}
-              label="Return date"
-              placeholder="Return"
-              control={control}
-              name="return"
-              dateFormat="DD/MM/YYYY"
-              minDate={watch("departure") || moment().toDate()}
-              timeFormat={false}
-              labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
-              inputRef={register("return")}
-              errorMessage={errors.return?.message}
-              isValidDate={disableEndDt}
-            />
-          </Row>
-
-          {/* =============== Desktop =============== */}
-          <div className={classes.boxTableRoom}>
-            <Table bordered className={classes.table}>
-              <thead>
-                <tr>
-                  <th scope="row" className={classes.roomNumberTitle}>
-                    Room Type
-                  </th>
-                  {/* <th className={clsx(classes.colImgMobile, classes.title)}>Images</th> */}
-                  <th className={classes.title}>Number of bed</th>
-                  <th className={classes.title}>Number of rooms left</th>
-                  <th className={classes.title}>Price</th>
-                  <th className={classes.title}>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {listRooms?.map((room, index) => (
-                  <tr key={room?.id}>
-                    <th scope="row" className={classes.col}>
-                      {room?.title}
-                    </th>
-                    {/* <td className={classes.colImg}>
-                      <Carousel images={room?.images} className={classes.imgCarousel}/>
-                    </td> */}
-                    <td className={classes.col}>{room?.numberOfBed}</td>
-                    <td className={classes.col}>{room?.numberOfRoom}</td>
-                    <td className={classes.col}>
+          <h5 className={classes.titleCheckEmpty}>
+            Available Room Types in Muong Thanh Grand Da Nang Hotel
+          </h5>
+          <Grid>
+            <Row xs={4} className={classes.inputDateContainer}>
+              <InputDatePicker
+                className={classes.inputSearchDate}
+                label="Departure date"
+                placeholder="Departure"
+                control={control}
+                name="departure"
+                dateFormat="DD/MM/YYYY"
+                minDate={moment().toDate()}
+                maxDate={watch("return")}
+                timeFormat={false}
+                labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
+                inputRef={register("departure")}
+                errorMessage={errors.departure?.message}
+                isValidDate={disablePastDt}
+              />
+              <InputDatePicker
+                className={classes.inputSearchDate}
+                label="Return date"
+                placeholder="Return"
+                control={control}
+                name="return"
+                dateFormat="DD/MM/YYYY"
+                minDate={watch("departure") || moment().toDate()}
+                timeFormat={false}
+                labelIcon={<FontAwesomeIcon icon={faCalendarDays} />}
+                inputRef={register("return")}
+                errorMessage={errors.return?.message}
+                isValidDate={disableEndDt}
+              />
+            </Row>
+          </Grid>
+        </Grid>
+      </Container>
+      <Container className={classes.rootRooms}>
+        {listRooms?.map((room, index) => (
+          <Grid
+            sx={{ padding: "16px" }}
+            container
+            key={index}
+            className={classes.containerCheckRoom}
+          >
+            <Grid className={classes.leftPanel} item xs={3}>
+              <Grid className={classes.boxLeftItem}>
+                <Grid sx={{ position: "relative", cursor: "pointer" }}>
+                  <img src={images.bgUser.src} alt="anh"></img>
+                  <Grid className={classes.numberImg}>1/4</Grid>
+                  <Grid container className={classes.moreImg} spacing={0.5}>
+                    <Grid item xs={4}>
+                      <img src={images.bgbook.src} alt="anh"></img>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <img src={images.authen.src} alt="anh"></img>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <img src={images.bg19.src} alt="anh"></img>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid sx={{ padding: "14px" }}>
+                  <Grid sx={{ paddingBottom: "10px" }}>
+                    <Badge className={classes.tag}>Air Condition</Badge>
+                  </Grid>
+                  <Button
+                    btnType={BtnType.Outlined}
+                    className={classes.btnSeeRoom}
+                  >
+                    See Room Detail
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid
+              xs={9}
+              sx={{ paddingLeft: "10px" }}
+              className={classes.rootRightPanel}
+            >
+              <Grid className={classes.rightPanel}>
+                <Grid className={classes.rightPanelHeader}>
+                  <Grid>
+                    <p>{room?.title}</p>
+                  </Grid>
+                  <Grid>
+                    <FontAwesomeIcon icon={faUserGroup}></FontAwesomeIcon>
+                    <span>2 Guests</span>
+                  </Grid>
+                </Grid>
+                <Grid className={classes.boxServices} container>
+                  <Grid item xs={4}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemService}
+                    >
+                      <RestaurantIcon />
+                      <span>Free Breakfast</span>
+                    </Grid>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemService}
+                    >
+                      <WifiIcon />
+                      <span>Free Wifi</span>
+                    </Grid>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemService}
+                    >
+                      <SmokeFreeIcon />
+                      <span>Non-Smoking</span>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemInforRoom}
+                    >
+                      <BedIcon />
+                      <span>Number of bed: {room?.numberOfBed}</span>
+                    </Grid>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemInforRoom}
+                    >
+                      <CheckBoxIcon />
+                      <span>Number of room left: {room?.numberOfRoom}</span>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={4} className={classes.boxPrice}>
+                    {room?.discount !== 0 && (
+                      <Grid
+                        sx={{ padding: "0 0 10px 0" }}
+                        className={classes.itemPriceRoom}
+                      >
+                        <span className={classes.discount}>
+                          {fCurrency2(
+                            Math.ceil(
+                              listMinPrice[index] *
+                                ((100 - room?.discount) / 100)
+                            )
+                          )}{" "}
+                          VND
+                        </span>
+                      </Grid>
+                    )}
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemPriceRoom}
+                    >
+                      <span>From &nbsp;</span>{" "}
+                      <p> {fCurrency2(listMinPrice[index])} VND</p>
+                    </Grid>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemPriceRoom}
+                    >
+                      <span>/ room/ night(s)</span>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid className={classes.boxDetailPrice}>
+                  <Grid
+                    onClick={() => setOpen(open === index ? -1 : index)}
+                    className={classes.boxControl}
+                  >
+                    <p>Price Detail</p>
+                    {open === index ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    )}
+                  </Grid>
+                  <Collapse in={open === index} timeout="auto" unmountOnExit>
+                    <Grid
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                      container
+                    >
                       {room?.priceDetail?.map((priceInfo, index) => (
-                        <p key={index} className={classes.colPrice}>
-                          {moment(priceInfo?.date).format("DD/MM/YYYY")}
-                          {":"}
-                          <br></br>
-                          <span>{fCurrency2(priceInfo?.price)} VND / day</span>
-                        </p>
+                        <Grid
+                          className={classes.itemPrice}
+                          xs={6}
+                          item
+                          key={index}
+                        >
+                          <p>
+                            {moment(priceInfo?.date).format("DD/MM/YYYY")} {":"}{" "}
+                            <span>{fCurrency2(priceInfo?.price)} VND</span> /
+                            room / night(s)
+                          </p>
+                        </Grid>
                       ))}
-                    </td>
-                    <td className={clsx(classes.colAmount, classes.col)}>
+                    </Grid>
+                  </Collapse>
+                </Grid>
+                <Grid className={classes.footerPrice}>
+                  <Grid className={classes.boxTip}>
+                    <InfoIcon />
+                    <p>Please select the number of rooms you want</p>
+                  </Grid>
+                  <Grid className={classes.boxNumberOfRoom}>
+                    <Grid sx={{ flex: "2", paddingRight: "10px" }}>
+                      <p>Number of room(s)</p>
+                    </Grid>
+                    <Grid sx={{ flex: "1" }}>
                       <Controller
                         name={`amountList.${index}.amount`}
                         control={control}
@@ -293,101 +491,33 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
                           />
                         )}
                       />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-            <Table
-              bordered
-              className={clsx(classes.table, classes.tableConfirm)}
-              xs={3}
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        ))}
+        <Grid className={classes.footerRoom}>
+          <Grid className={classes.boxTotalPrice}>
+            <p>Total Price</p>
+            <p className={classes.price}>
+              <span>{fCurrency2(Math.ceil(totalPrice))} VND</span> / {totalRoom}{" "}
+              room / night(s)
+            </p>
+          </Grid>
+          <Grid className={classes.btnControl}>
+            <Button
+              btnType={BtnType.Secondary}
+              type="submit"
+              disabled={!isValid()}
             >
-              <thead>
-                <tr>
-                  <th className={classes.colConfirm}>Confirm</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className={clsx(classes.colConfirm, classes.col)}>
-                    <Button
-                      btnType={BtnType.Secondary}
-                      type="submit"
-                      disabled={!isValid()}
-                    >
-                      Book
-                    </Button>
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
-          {/*=============== Mobile ============  */}
-          <BoxSmallLeft
-            className={classes.tableMobile}
-            title="Choose the right one for you"
-          >
-            {listRooms?.map((room, index) => (
-              <div key={room?.id} className="mb-4 ml-3">
-                <Row className={classes.row}>
-                  <div className={classes.boxInformation}>
-                    <p className="mr-2">
-                      Room number: <span>{room?.title}</span>
-                    </p>
-                  </div>
-                  <div className={classes.boxInformation}>
-                    <p className="mr-2">
-                      Number of rooms left: <span>{room?.numberOfRoom}</span>
-                    </p>
-                  </div>
-                </Row>
-                <Row className={classes.row}>
-                  <div className={classes.boxPriceMobile}>
-                    <p>Price: </p>
-                    {room?.priceDetail?.map((priceInfo, index) => (
-                      <p key={index} className={classes.colPrice}>
-                        <span>
-                          {moment(priceInfo?.date).format("DD/MM/YYYY")} {":"}
-                        </span>
-                        <br></br>
-                        <span>{fCurrency2(priceInfo?.price)} VND</span>
-                      </p>
-                    ))}
-                  </div>
-                </Row>
-                {/* <Row className={classes.boxImgMobile}>
-                <Carousel images={[images.phuQuoc, images.bg19]} className={classes.imgCarouselMobile} />
-              </Row> */}
-                <Row className={classes.row}>
-                  <div className={classes.boxInformation}>
-                    <p className="mr-2">Amount</p>
-                    <Controller
-                      name={`amountList.${index}.amount`}
-                      control={control}
-                      render={({ field }) => (
-                        <InputCounter
-                          className={classes.inputCounter}
-                          max={room?.numberOfRoom}
-                          min={1}
-                          onChange={field.onChange}
-                          value={field.value}
-                        />
-                      )}
-                    />
-                  </div>
-                </Row>
-              </div>
-            ))}
-            <Row className={classes.boxBtnMobile}>
-              <Button btnType={BtnType.Secondary} type="submit">
-                Book
-              </Button>
-            </Row>
-          </BoxSmallLeft>
-        </Form>
+              Book Now
+            </Button>
+          </Grid>
+        </Grid>
       </Container>
-    </>
+    </Grid>
   );
 });
 

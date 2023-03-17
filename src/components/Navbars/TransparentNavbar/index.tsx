@@ -29,6 +29,7 @@ import {
   faBagShopping,
   faKey,
   faSignsPost,
+  faTags,
 } from "@fortawesome/free-solid-svg-icons";
 import clsx from "clsx";
 import Link from "next/link";
@@ -152,6 +153,17 @@ const WhiteNavbar = memo(() => {
                       className={classes.iconNav}
                     />
                     <p>STAYS</p>
+                  </a>
+                </Link>
+              </NavItem>
+              <NavItem className={classes.navItem}>
+                <Link href="/listEvents" passHref>
+                  <a>
+                    <FontAwesomeIcon
+                      icon={faTags}
+                      className={classes.iconNav}
+                    />
+                    <p>COUPONS & DEALS</p>
                   </a>
                 </Link>
               </NavItem>

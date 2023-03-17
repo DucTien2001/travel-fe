@@ -39,7 +39,7 @@ html,
   --gray-80: #494949;
   --gray-90: #333333;
   --blue-color: #1f61a9;
-  --bui-shadow-100: 0 2px 8px 0 rgba(0,0,0,0.16);
+  --box-shadow-100: 0px 4px 4px rgba(0, 0, 0, 0.25);
   --bui-shadow-200: 0 2px 16px 0 rgba(0,0,0,0.24);
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
   Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;

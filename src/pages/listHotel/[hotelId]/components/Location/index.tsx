@@ -3,7 +3,12 @@ import Link from "next/link";
 // reactstrap components
 import { Container, Row, Col, Input, Media } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faLocationDot,
+  faPhone,
+  faPlus,
+  faSignsPost,
+} from "@fortawesome/free-solid-svg-icons";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import Button, { BtnType } from "components/common/buttons/Button";
@@ -25,143 +30,81 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import clsx from "clsx";
-import { useMediaQuery, useTheme } from "@mui/material";
+import { Grid, useMediaQuery, useTheme } from "@mui/material";
 interface Props {
-  comments: Comment[];
   hotel: IHotel;
-  onGetHotelComments: () => void;
 }
 
 // eslint-disable-next-line react/display-name
-const Comments = memo(({ comments, hotel, onGetHotelComments }: Props) => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const hotelId = Number(router.query.hotelId.slice(1));
-  const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
-  const [commentAction, setCommentAction] = useState<Comment>(null);
-  const [isAddComment, setIsAddComment] = useState(false);
-  const [commentDelete, setCommentDelete] = useState<Comment>(null);
-  const [commentEdit, setCommentEdit] = useState(null);
-  const { allRoomBills } = useSelector((state: ReducerType) => state.normal);
-
-  const onOpenPopupAddComment = () => setOpenPopupAddComment(true);
-
-  const onAction = (e, comment: Comment) => {
-    setCommentAction(comment);
-  };
-
-  const onEdit = () => {
-    if (!commentAction) return;
-    setCommentEdit(commentAction);
-    onOpenPopupAddComment();
-  };
-
-  const onDelete = () => {
-    if (!commentAction) return;
-    setCommentDelete(commentAction);
-  };
-
-  const onClosePopupConfirmDelete = () => {
-    if (!commentDelete) return;
-    setCommentDelete(null);
-  };
-
-  const onClosePopupAddComment = () => {
-    setOpenPopupAddComment(false);
-    setCommentEdit(null);
-  };
-
-  const onYesDelete = () => {
-    if (!commentDelete) return;
-    onClosePopupConfirmDelete();
-    dispatch(setLoading(true));
-    CommentService.deleteCommentHotel(commentDelete?.id)
-      .then(() => {
-        onGetHotelComments();
-      })
-      .catch((e) => dispatch(setErrorMess(e)))
-      .finally(() => dispatch(setLoading(false)));
-  };
-
-  useEffect(() => {
-    allRoomBills?.forEach((item) => {
-      if (item.hotelId === hotelId && item.verifyCode === null) {
-        setIsAddComment(!isAddComment);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allRoomBills]);
-
+const Comments = memo(({ hotel }: Props) => {
   return (
-    <>
-      <Container className={classes.root} id={HOTEL_SECTION.section_location}>
-        {/* eslint-disable-next-line react/no-unescaped-entities */}
-        <h3 className="text-center">CUSTOMER'S FEEDBACKS</h3>
-        <Swiper
-          slidesPerView={isMobile ? 1 : 3}
-          spaceBetween={30}
-          slidesPerGroup={3}
-          loop={true}
-          initialSlide={0}
-          loopFillGroupWithBlank={true}
-          pagination={{
-            clickable: true,
+    <Grid
+      sx={{ backgroundColor: "#f6f2f2", padding: "32px 0 8px 0" }}
+      id={HOTEL_SECTION.section_location}
+    >
+      <Container className={classes.root}>
+        <h5> Location Detail</h5>
+        <Grid
+          sx={{
+            padding: "18px",
+            backgroundColor: "var(--white-color)",
+            borderRadius: "10px",
+            boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
           }}
-          navigation={true}
-          modules={[Pagination, Navigation]}
-          className={clsx("mySwiper", classes.swiper)}
         >
-          {comments?.map((cmt) => (
-            <SwiperSlide key={cmt.id}>
-              <CardComment
-                comment={cmt}
-                onAction={onAction}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                hotel={hotel}
-                onGetHotelComments={onGetHotelComments}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <Row xs={3} className={classes.rowComment}>
-          {!comments?.length && (
-            <p className={classes.noComment}>There are no comments yet !</p>
-          )}
-        </Row>
-        <Row className={classes.rowControl}>
-          <div className={classes.btnContainer}>
-            <div>
-              <Button
-                btnType={BtnType.Primary}
-                onClick={onOpenPopupAddComment}
-                disabled={!isAddComment}
-              >
-                <FontAwesomeIcon icon={faPlus} className="mr-1" />
-                Add comments
-              </Button>
-              {!isAddComment && <Warning content="You don't book this hotel" />}
-            </div>
-          </div>
-        </Row>
-        <PopupAddHotelComment
-          isOpen={openPopupAddComment}
-          commentEdit={commentEdit}
-          onClose={onClosePopupAddComment}
-          toggle={onClosePopupAddComment}
-          onGetTourComments={onGetHotelComments}
-        />
-        <PopupConfirmDelete
-          title="Are you sure delete this comment?"
-          isOpen={!!commentDelete}
-          onClose={onClosePopupConfirmDelete}
-          toggle={onClosePopupConfirmDelete}
-          onYes={onYesDelete}
-        />
+          <p className={classes.locationDetail}>
+            143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh Kiên Giang,
+            Vietnam
+          </p>
+          <div className={classes.map}></div>
+          <Grid
+            className={classes.boxNearPlaces}
+            columns={12}
+            container
+            columnSpacing={3}
+          >
+            <Grid className={classes.leftNearPlace} xs={6} item>
+              <Grid sx={{ marginLeft: "0" }}>
+                <Grid sx={{ marginBottom: "14px" }}>
+                  <p>Nearby Places</p>
+                </Grid>
+                <Grid className={classes.itemNearPlace} xs={12}>
+                  <Grid sx={{ display: "flex", alignItems: "center" }}>
+                    <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
+                    <Grid>
+                      <p>Da Nang Night Market</p>
+                      <span>Shop & Gifts</span>
+                    </Grid>
+                  </Grid>
+                  <Grid>
+                    <span>12 km</span>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid className={classes.rightNearPlace} xs={6} item>
+              <Grid sx={{ marginLeft: "0" }}>
+                <Grid sx={{ marginBottom: "14px" }}>
+                  <p>Popular in Area</p>
+                </Grid>
+                <Grid className={classes.itemNearPlace}>
+                  <Grid sx={{ display: "flex", alignItems: "center" }}>
+                    <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
+                    <Grid>
+                      <p>Da Nang Night Market</p>
+                      <span>Shop & Gifts</span>
+                    </Grid>
+                  </Grid>
+                  <Grid>
+                    <span>12 km</span>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </Container>
-    </>
+    </Grid>
   );
 });
 

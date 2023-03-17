@@ -22,3 +22,4 @@ export const sortType: OptionItem[] = [
   { id: 2, name: "Highest price", value: "Highest price" },
   { id: 3, name: "Highest rating", value: "Highest rating" },
 ];
+

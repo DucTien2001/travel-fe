@@ -75,7 +75,7 @@ const InputTextfield = memo((props: InputsProps) => {
         <label className={classes.title}>
           {title}
           {optional ? (
-            <span className={classes.optional}> ({t("common_optional")})</span>
+            <span className={classes.optional}>&nbsp;(optional)</span>
           ) : (
             ""
           )}
