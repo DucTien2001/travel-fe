@@ -225,7 +225,7 @@
 }
 .footerPrice {
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
     align-items: flex-end;
     font-size:14px;
     font-weight: 600;
@@ -250,11 +250,11 @@
 }
 .footerRoom {
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
     padding: 0 16px 16px 16px;
     .boxTotalPrice {
         display: flex;
-        flex-direction: column;
+        flex-direction: column !important;
         align-items: flex-end;
         padding-bottom: 10px;
         p{
