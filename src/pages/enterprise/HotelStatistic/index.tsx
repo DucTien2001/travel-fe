@@ -50,18 +50,18 @@ const HotelStatistic = memo(() => {
     },
   });
 
-  useEffect(() => {
-    if (allHotels) {
-      setListHotels(
-        allHotels.map((item) => {
-          return {
-            id: item?.id,
-            name: item?.name,
-          };
-        })
-      );
-    }
-  }, [dispatch, allHotels]);
+  // useEffect(() => {
+  //   if (allHotels) {
+  //     setListHotels(
+  //       allHotels.map((item) => {
+  //         return {
+  //           id: item?.id,
+  //           name: item?.name,
+  //         };
+  //       })
+  //     );
+  //   }
+  // }, [dispatch, allHotels]);
 
   const _onSubmit = (data: IHotelStatistic) => {
     dispatch(setLoading(true));
@@ -80,17 +80,17 @@ const HotelStatistic = memo(() => {
       });
   };
 
-  const getRoomsTitle = (roomBillDetail) => {
-    let rooms = "";
-    let roomBillDetailIds = [];
-    roomBillDetail.map((item) => {
-      if (!roomBillDetailIds.includes(item?.roomId)) {
-        rooms += `${item?.title}, `;
-        roomBillDetailIds.push(item?.roomId);
-      }
-    });
-    return rooms.slice(0, -2);
-  };
+  // const getRoomsTitle = (roomBillDetail) => {
+  //   let rooms = "";
+  //   let roomBillDetailIds = [];
+  //   roomBillDetail.map((item) => {
+  //     if (!roomBillDetailIds.includes(item?.roomId)) {
+  //       rooms += `${item?.title}, `;
+  //       roomBillDetailIds.push(item?.roomId);
+  //     }
+  //   });
+  //   return rooms.slice(0, -2);
+  // };
 
   return (
     <>
@@ -98,7 +98,11 @@ const HotelStatistic = memo(() => {
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
           <h3>Hotel booking statistics</h3>
         </Row>
-        <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
+        <Form
+          role="form"
+          onSubmit={handleSubmit(_onSubmit)}
+          className={classes.form}
+        >
           <Row className={classes.formWrapper}>
             <div className={classes.formInputWrapper}>
               <div>
@@ -146,7 +150,7 @@ const HotelStatistic = memo(() => {
               return (
                 <tr key={index}>
                   <th scope="row">{index}</th>
-                  <td>{getRoomsTitle(item?.roomBillDetail)}</td>
+                  {/* <td>{getRoomsTitle(item?.roomBillDetail)}</td> */}
                   <td>
                     {item?.firstName} {item?.lastName}
                   </td>

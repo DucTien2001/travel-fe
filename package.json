@@ -21,6 +21,7 @@
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.3",
+    "@mui/x-date-pickers": "^5.0.3",
     "@paypal/react-paypal-js": "^7.8.2",
     "@reduxjs/toolkit": "^1.8.3",
     "@types/history": "^4.7.8",

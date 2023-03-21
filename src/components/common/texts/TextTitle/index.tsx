@@ -13,6 +13,6 @@ const TextTitle = styled(Typography)<TextTitleProps>`
   letter-spacing: 0.015em;
   padding-bottom: 5px;
   margin: 0;
-  font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
 `;
 export default TextTitle;

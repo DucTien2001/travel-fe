@@ -67,76 +67,76 @@ const ToursRevenue = memo(() => {
   const watchYearValue = watch("yearValue");
   const watchRevenueType = watch("revenueType");
 
-  useEffect(() => {
-    if (allTours) {
-      const tempTourIds = allTours.map((tour) => tour?.id);
-      setTourIds(tempTourIds);
-      setValue("monthValue", new Date());
-    }
-  }, [allTours]);
+  // useEffect(() => {
+  //   if (allTours) {
+  //     const tempTourIds = allTours.map((tour) => tour?.id);
+  //     setTourIds(tempTourIds);
+  //     setValue("monthValue", new Date());
+  //   }
+  // }, [allTours]);
 
-  useEffect(() => {
-    if (watchMonthValue) {
-      const month = new Date(watchMonthValue).getMonth();
-      const year = new Date(watchMonthValue).getFullYear();
-      TourBillService.getRevenueOfToursByMonth({
-        tourIds: tourIds,
-        month: month,
-        year: year,
-      }).then((revenue) => {
-        const numberDaysOfMonth = get_day_of_month(year, month + 1);
-        const temprevenueData = [];
-        revenue?.data?.forEach((element) => {
-          const costArr = [];
-          for (let i = 1; i <= numberDaysOfMonth; i++) {
-            const cost = element?.filter((item) => item?.date === i);
-            if (cost.length > 0) {
-              costArr.push(cost[0]?.cost);
-            } else {
-              costArr.push(0);
-            }
-          }
-          temprevenueData.push(costArr);
-        });
-        setRevenueData(temprevenueData);
-      });
-    }
-  }, [watchMonthValue]);
+  // useEffect(() => {
+  //   if (watchMonthValue) {
+  //     const month = new Date(watchMonthValue).getMonth();
+  //     const year = new Date(watchMonthValue).getFullYear();
+  //     TourBillService.getRevenueOfToursByMonth({
+  //       tourIds: tourIds,
+  //       month: month,
+  //       year: year,
+  //     }).then((revenue) => {
+  //       const numberDaysOfMonth = get_day_of_month(year, month + 1);
+  //       const temprevenueData = [];
+  //       revenue?.data?.forEach((element) => {
+  //         const costArr = [];
+  //         for (let i = 1; i <= numberDaysOfMonth; i++) {
+  //           const cost = element?.filter((item) => item?.date === i);
+  //           if (cost.length > 0) {
+  //             costArr.push(cost[0]?.cost);
+  //           } else {
+  //             costArr.push(0);
+  //           }
+  //         }
+  //         temprevenueData.push(costArr);
+  //       });
+  //       setRevenueData(temprevenueData);
+  //     });
+  //   }
+  // }, [watchMonthValue]);
 
-  useEffect(() => {
-    if (watchYearValue) {
-      const year = new Date(watchYearValue).getFullYear();
-      TourBillService.getRevenueOfToursByYear({
-        tourIds: tourIds,
-        year: year,
-      }).then((revenue) => {
-        const temprevenueData = [];
-        revenue?.data?.forEach((element) => {
-          const costArr = [];
-          for (let i = 0; i < 12; i++) {
-            const cost = element?.filter((item) => item?.month === i);
-            if (cost.length > 0) {
-              costArr.push(cost[0]?.cost);
-            } else {
-              costArr.push(0);
-            }
-          }
-          temprevenueData.push(costArr);
-        });
-        setRevenueData(temprevenueData);
-      });
-    }
-  }, [watchYearValue]);
+  // useEffect(() => {
+  //   if (watchYearValue) {
+  //     const year = new Date(watchYearValue).getFullYear();
+  //     TourBillService.getRevenueOfToursByYear({
+  //       tourIds: tourIds,
+  //       year: year,
+  //     }).then((revenue) => {
+  //       const temprevenueData = [];
+  //       revenue?.data?.forEach((element) => {
+  //         const costArr = [];
+  //         for (let i = 0; i < 12; i++) {
+  //           const cost = element?.filter((item) => item?.month === i);
+  //           if (cost.length > 0) {
+  //             costArr.push(cost[0]?.cost);
+  //           } else {
+  //             costArr.push(0);
+  //           }
+  //         }
+  //         temprevenueData.push(costArr);
+  //       });
+  //       setRevenueData(temprevenueData);
+  //     });
+  //   }
+  // }, [watchYearValue]);
 
-  useEffect(() => {
-    if (watchRevenueType) {
-      if (watchRevenueType?.id == 1) {
-        setValue("monthValue", new Date());
-      } else {
-        setValue("yearValue", new Date());
-      }
-    }
-  }, [watchRevenueType]);
+  // useEffect(() => {
+  //   if (watchRevenueType) {
+  //     if (watchRevenueType?.id == 1) {
+  //       setValue("monthValue", new Date());
+  //     } else {
+  //       setValue("yearValue", new Date());
+  //     }
+  //   }
+  // }, [watchRevenueType]);
 
   // Calculate number of days in month
   const get_day_of_month = (year, month) => {
@@ -192,7 +192,10 @@ const ToursRevenue = memo(() => {
       isOpenModal: true,
       revenue: watchRevenueType?.id === 1 ? _revenueData : revenueData,
       revenueType: watchRevenueType?.id,
-      monthOrYearValue: watchRevenueType?.id === 1 ? new Date(watchMonthValue)?.getMonth() : new Date(watchYearValue)?.getFullYear(),
+      monthOrYearValue:
+        watchRevenueType?.id === 1
+          ? new Date(watchMonthValue)?.getMonth()
+          : new Date(watchYearValue)?.getFullYear(),
     });
   };
 
@@ -256,7 +259,13 @@ const ToursRevenue = memo(() => {
               errorMessage={errors.yearValue?.message}
             />
           )}
-          <Button className="m-0" color="primary" onClick={() => handleDownloadRevenue()}>Download revenue</Button>
+          <Button
+            className="m-0"
+            color="primary"
+            onClick={() => handleDownloadRevenue()}
+          >
+            Download revenue
+          </Button>
         </Row>
         <Table className={classes.table} responsive>
           <thead>

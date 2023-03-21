@@ -53,9 +53,11 @@ export interface ChangePassword {
 }
 
 export enum EUserType {
-  ADMIN = 1,
-  ENTERPRISE = 2,
-  USER = 3,
+  SUPER_ADMIN = 1,  
+  ADMIN = 2,
+  ENTERPRISE = 3,
+  STAFF = 4,
+  USER = 5
 }
 
 export const adminTypes: OptionItem[] = [

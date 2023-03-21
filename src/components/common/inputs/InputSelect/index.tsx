@@ -48,7 +48,7 @@ const customStyles = (
     ...provided,
     fontSize: 14,
     fontWeight: 400,
-    color: state.isFocused ? "var(--text-color)" : "var(--gray-50)",
+    color: state.isFocused ? "var(--gray-50)" : "var(--gray-50)",
     whiteSpace: "nowrap",
   }),
   valueContainer: (provided) => ({
@@ -165,9 +165,9 @@ const InputSelect = memo((props: InputSelectProps) => {
       sx={{ width: fullWidth ? "100%" : "auto" }}
     >
       {title && (
-        <TextTitle invalid={errorMessage}>
+        <label className={classes.title}>
           {title} {optional && <span>({t("common_optional")})</span>}
-        </TextTitle>
+        </label>
       )}
       {control ? (
         <>

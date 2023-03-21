@@ -31,8 +31,14 @@ const CheckRoom = memo(() => {
   const schema = useMemo(() => {
     return yup.object().shape({
       hotel: yup.object().required("This field is required"),
-      startDate: yup.date().max(yup.ref("endDate"), "Start date can't be after end date").required("Start date is required"),
-      endDate: yup.date().min(yup.ref("endDate"), "End date can't be before start date").required("End date is required"),
+      startDate: yup
+        .date()
+        .max(yup.ref("endDate"), "Start date can't be after end date")
+        .required("Start date is required"),
+      endDate: yup
+        .date()
+        .min(yup.ref("endDate"), "End date can't be before start date")
+        .required("End date is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -53,18 +59,18 @@ const CheckRoom = memo(() => {
     },
   });
 
-  useEffect(() => {
-    if (allHotels) {
-      setListHotels(
-        allHotels.map((item) => {
-          return {
-            id: item?.id,
-            name: item?.name,
-          };
-        })
-      );
-    }
-  }, [dispatch, allHotels]);
+  // useEffect(() => {
+  //   if (allHotels) {
+  //     setListHotels(
+  //       allHotels.map((item) => {
+  //         return {
+  //           id: item?.id,
+  //           name: item?.name,
+  //         };
+  //       })
+  //     );
+  //   }
+  // }, [dispatch, allHotels]);
 
   const yesterday = moment().subtract(1, "day");
   const disablePastDt = (current) => {
@@ -106,7 +112,11 @@ const CheckRoom = memo(() => {
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
           <h3>Check rooms</h3>
         </Row>
-        <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
+        <Form
+          role="form"
+          onSubmit={handleSubmit(_onSubmit)}
+          className={classes.form}
+        >
           <Row className={classes.formWrapper}>
             <div className={classes.formInputWrapper}>
               <div>

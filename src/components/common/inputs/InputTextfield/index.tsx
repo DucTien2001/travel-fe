@@ -6,16 +6,12 @@ import {
   InputAdornment,
   IconButton,
   OutlinedInputProps,
-  SxProps,
-  Theme,
 } from "@mui/material";
 import classes from "./styles.module.scss";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import ErrorMessage from "components/common/texts/ErrorMessage";
-import TextTitle from "components/common/texts/TextTitle";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -107,25 +103,21 @@ const InputTextfield = memo((props: InputsProps) => {
           e.target.blur()
         }
         endAdornment={
-          !errorMessage ? (
-            showEyes && (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClick}
-                  className={classes.iconEye}
-                  tabIndex={-1}
-                >
-                  {toggleEyes ? (
-                    <FontAwesomeIcon icon={faEye} />
-                  ) : (
-                    <VisibilityOffIcon />
-                  )}
-                </IconButton>
-              </InputAdornment>
-            )
-          ) : (
-            <ErrorOutlineIcon className={classes.iconErrorOutline} />
+          showEyes && (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClick}
+                className={classes.iconEye}
+                tabIndex={-1}
+              >
+                {toggleEyes ? (
+                  <FontAwesomeIcon icon={faEye} />
+                ) : (
+                  <VisibilityOffIcon />
+                )}
+              </IconButton>
+            </InputAdornment>
           )
         }
         {...inputProps}

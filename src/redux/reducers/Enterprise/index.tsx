@@ -5,11 +5,27 @@ export interface ITour {
   id?: number;
   title: string;
   description: string;
-  businessHours: string[];
-  location: string;
-  price: number;
+  priceAdult?: number;
+  priceChild?: [];
+  childOldRangeFrom?: [];
+  childOldRangeTo?: [];
+  city?: string;
+  district?: string;
+  commune?: string;
+  moreLocation?: string;
+  highlight?: string;
+  termsAndCondition?: string;
+  languages?: [];
+  suitablePerson?: [];
+  totalTicket?: [];
+  startDate?: [];
+  endDate?: [];
+  businessHours?: string[];
+  location?: string;
+  price?: number;
   discount: number;
-  tags: string[];
+  tags?: string[];
+  rate?: number;
   images: string[];
   creator: number;
   contact: string;
@@ -49,11 +65,13 @@ export interface IRoom {
 export interface EnterpriseState {
   allTours: ITour[];
   allHotels: IHotel[];
+  tour: ITour;
 }
 
 const initial: EnterpriseState = {
   allTours: [],
   allHotels: [],
+  tour: null,
 };
 
 export const enterpriseReducer = (state = initial, action: any) =>
@@ -64,6 +82,9 @@ export const enterpriseReducer = (state = initial, action: any) =>
         break;
       case types.SET_HOTELS_REDUCER:
         draft.allHotels = action.data;
+        break;
+      case types.SET_TOUR_REDUCER:
+        draft.tour = action.data;
         break;
       default:
         return state;

@@ -12,10 +12,15 @@ import {
   faCircleMinus,
   faHourglass,
 } from "@fortawesome/free-solid-svg-icons";
-import { Row, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
+import {
+  Row,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import PopupAddOrEditTour from "./PopupAddOrEditTour";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import PopupConfirmStop from "components/Popup/PopupDefault";
 import { ETour } from "models/enterprise";
@@ -32,8 +37,41 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EActiveNav } from "..";
+import {
+  Box,
+  Grid,
+  IconButton,
+  Link,
+  Menu,
+  MenuItem,
+  Paper,
+  Table,
+  TableBody,
+  TableContainer,
+  TablePagination,
+  TableRow,
+  Typography,
+  TableCell,
+} from "@mui/material";
+import TableHeader from "components/Table/TableHeader";
+import { TableHeaderLabel } from "models/general";
+import InputTextfield from "components/common/inputs/InputTextfield";
+import {
+  HideSource,
+  EditOutlined,
+  DeleteOutlineOutlined,
+  Done,
+} from "@mui/icons-material";
+import StatusChip from "components/StatusChip";
 
-
+const tableHeaders: TableHeaderLabel[] = [
+  { name: "id", label: "Id", sortable: false },
+  { name: "name", label: "Name", sortable: false },
+  { name: "price", label: "Price", sortable: false },
+  { name: "status", label: "Status", sortable: false },
+  { name: "languages", label: "Languages", sortable: false },
+  { name: "actions", label: "Actions", sortable: false },
+];
 interface SearchData {
   name?: string;
 }
@@ -42,12 +80,10 @@ interface Props {
   handleTourEdit?: (currentTarget: any, item: ETour, type: EActiveNav) => void;
 }
 // eslint-disable-next-line react/display-name
-const Tour = memo(({onChangeTabCreate, handleTourEdit} : Props) => {
+const Tour = memo(({ onChangeTabCreate, handleTourEdit }: Props) => {
   const dispatch = useDispatch();
   const { allTours } = useSelector((state: ReducerType) => state.enterprise);
   const { user } = useSelector((state: ReducerType) => state.user);
-  const [openPopupCreateTour, setOpenPopupCreateTour] = useState(false);
-  const [tourEdit, setTourEdit] = useState<ETour>(null);
   const [tourAction, setTourAction] = useState<ETour>();
   const [tourDelete, setTourDelete] = useState<ETour>(null);
   const [tourStop, setTourStop] = useState<ETour>(null);
@@ -66,99 +102,89 @@ const Tour = memo(({onChangeTabCreate, handleTourEdit} : Props) => {
     mode: "onChange",
   });
 
-  const onTogglePopupCreateTour = () => {
-    setOpenPopupCreateTour(!openPopupCreateTour);
-    setTourEdit(null);
-  };
-
   const handleAction = (currentTarget: any, item: ETour) => {
-    setTourAction(item);
+    // setTourAction(item);
   };
 
   const onYesDelete = () => {
-    if (!tourDelete) return;
-    onClosePopupConfirmDelete();
-    dispatch(setLoading(true));
-    TourService.delete(tourDelete?.id)
-      .then(() => {
-        dispatch(getAllTours(user?.id));
-        dispatch(getAllToursOfNormal());
-      })
-      .catch((e) => dispatch(setErrorMess(e)))
-      .finally(() => dispatch(setLoading(false)));
+    // if (!tourDelete) return;
+    // onClosePopupConfirmDelete();
+    // dispatch(setLoading(true));
+    // TourService.delete(tourDelete?.id)
+    //   .then(() => {
+    //     dispatch(getAllTours(user?.id));
+    //     dispatch(getAllToursOfNormal());
+    //   })
+    //   .catch((e) => dispatch(setErrorMess(e)))
+    //   .finally(() => dispatch(setLoading(false)));
   };
 
-  // const onAction = (currentTarget: any, item: ETour) => {
-  //   onTogglePopupCreateTour();
-  //   setTourEdit(item);
-  // };
-
   const onShowConfirm = () => {
-    if (!tourAction) return;
-    setTourDelete(tourAction);
+    // if (!tourAction) return;
+    // setTourDelete(tourAction);
   };
 
   const onClosePopupConfirmDelete = () => {
-    if (!tourDelete) return;
-    setTourDelete(null);
+    // if (!tourDelete) return;
+    // setTourDelete(null);
   };
 
   const onToggleConfirmStop = () => {
-    setOpenPopupConfirmStop(!openPopupConfirmStop);
+    // setOpenPopupConfirmStop(!openPopupConfirmStop);
   };
   const onTemporarilyStopWorking = (e, item) => {
-    setTourStop(item);
-    onToggleConfirmStop();
+    // setTourStop(item);
+    // onToggleConfirmStop();
   };
 
   const onYesStopWorking = () => {
-    if (!tourStop) return;
-    onToggleConfirmStop();
-    dispatch(setLoading(true));
-    TourService.temporarilyStopWorking(tourStop?.id)
-      .then(() => {
-        dispatch(getAllTours(user?.id));
-        dispatch(getAllToursOfNormal());
-      })
-      .catch((e) => dispatch(setErrorMess(e)))
-      .finally(() => dispatch(setLoading(false)));
+    // if (!tourStop) return;
+    // onToggleConfirmStop();
+    // dispatch(setLoading(true));
+    // TourService.temporarilyStopWorking(tourStop?.id)
+    //   .then(() => {
+    //     dispatch(getAllTours(user?.id));
+    //     dispatch(getAllToursOfNormal());
+    //   })
+    //   .catch((e) => dispatch(setErrorMess(e)))
+    //   .finally(() => dispatch(setLoading(false)));
   };
   const onWorkAgain = (e, item) => {
-    dispatch(setLoading(true));
-    TourService.workAgain(item.id)
-      .then(() => {
-        dispatch(getAllTours(user?.id));
-        dispatch(getAllToursOfNormal());
-      })
-      .catch((e) => dispatch(setErrorMess(e)))
-      .finally(() => dispatch(setLoading(false)));
+    // dispatch(setLoading(true));
+    // TourService.workAgain(item.id)
+    //   .then(() => {
+    //     dispatch(getAllTours(user?.id));
+    //     dispatch(getAllToursOfNormal());
+    //   })
+    //   .catch((e) => dispatch(setErrorMess(e)))
+    //   .finally(() => dispatch(setLoading(false)));
   };
 
   const watchSearch = watch("name");
 
   const handleKeyPress = (e) => {
-    var code = e.keyCode || e.which;
-    if (code === 13) {
-      if (watchSearch === "") {
-        setListTours(allTours);
-      } else {
-        handleSearch();
-      }
-    }
+    // var code = e.keyCode || e.which;
+    // if (code === 13) {
+    //   if (watchSearch === "") {
+    //     setListTours(allTours);
+    //   } else {
+    //     handleSearch();
+    //   }
+    // }
   };
 
   const handleSearch = () => {
-    dispatch(setLoading(true));
-    TourService.searchTour(user?.id, getValues("name"))
-      .then((res) => {
-        setListTours(res?.data);
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
+    // dispatch(setLoading(true));
+    // TourService.searchTour(user?.id, getValues("name"))
+    //   .then((res) => {
+    //     setListTours(res?.data);
+    //   })
+    //   .catch((e) => {
+    //     dispatch(setErrorMess(e));
+    //   })
+    //   .finally(() => {
+    //     dispatch(setLoading(false));
+    //   });
   };
 
   useEffect(() => {
@@ -173,66 +199,52 @@ const Tour = memo(({onChangeTabCreate, handleTourEdit} : Props) => {
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
-            <InputTextFieldBorder
+            <InputTextfield
               placeholder="Search tours"
-              startIcon={<FontAwesomeIcon icon={faSearch} />}
+              startAdornment={<FontAwesomeIcon icon={faSearch} />}
               className={classes.inputSearch}
               onKeyPress={handleKeyPress}
               inputRef={register("name")}
+              autoComplete="off"
             />
           </div>
-          <Button btnType={BtnType.Primary} onClick={() => onChangeTabCreate(EActiveNav.Create_Tour_Active)}>
+          <Button
+            btnType={BtnType.Primary}
+            onClick={() => onChangeTabCreate(EActiveNav.Create_Tour_Active)}
+          >
             <FontAwesomeIcon icon={faPlus} />
             Create
           </Button>
         </Row>
-        <Table className={classes.table} responsive>
-          <thead>
-            <tr>
-              <th scope="row">Id</th>
-              <th>Name</th>
-              <th>Price</th>
-              <th>State</th>
-              <th className={classes.colActionStop}>Action stop</th>
-              <th className={classes.colAction}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className={classes.table}>
+          <TableHeader headers={tableHeaders} />
+          <TableBody>
             {listTours?.map((item, index) => {
               return (
-                <tr key={index}>
-                  <th scope="row">{index}</th>
-                  <td>
-                    <a href={`/listTour/:${item?.tourId}`} target="_blank" rel="noreferrer" className={classes.tourName}>
+                <TableRow key={index}>
+                  <TableCell scope="row" className={classes.tableCell}>
+                    {item.id}
+                  </TableCell>
+                  <TableCell className={classes.tableCell} component="th">
+                    <a
+                      href={`/listTour/:${item?.tourId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={classes.tourName}
+                    >
                       {item?.title}
                     </a>
-                  </td>
-                  <td>{fCurrency2VND(item?.price)} VND</td>
-                  <td>
-                    {!item?.isTemporarilyStopWorking ? (
-                      <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour} />
-                    ) : (
-                      <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour} />
-                    )}
-                  </td>
-                  <td className={classes.colActionStop}>
-                    {!item?.isTemporarilyStopWorking ? (
-                      <Button
-                        className="btn-icon"
-                        btnType={BtnType.Secondary}
-                        size="sm"
-                        type="button"
-                        onClick={(e) => onTemporarilyStopWorking(e, item)}
-                      >
-                        <FontAwesomeIcon icon={faHourglass} />
-                      </Button>
-                    ) : (
-                      <Button className="btn-icon" color="info" size="sm" type="button" onClick={(e) => onWorkAgain(e, item)}>
-                        <FontAwesomeIcon icon={faHourglass} />
-                      </Button>
-                    )}
-                  </td>
-                  <td className="text-center">
+                  </TableCell>
+                  <TableCell className={classes.tableCell} component="th">
+                    {fCurrency2VND(item?.price)} VND
+                  </TableCell>
+                  <TableCell className={classes.tableCell} component="th">
+                    <StatusChip status={!item?.isTemporarilyStopWorking} />
+                  </TableCell>
+                  <TableCell className={classes.tableCell} component="th">
+                    vi
+                  </TableCell>
+                  <TableCell className="text-center" component="th">
                     <UncontrolledDropdown>
                       <DropdownToggle
                         color="default"
@@ -244,25 +256,82 @@ const Tour = memo(({onChangeTabCreate, handleTourEdit} : Props) => {
                           handleAction(event, item);
                         }}
                       >
-                        <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
+                        <FontAwesomeIcon
+                          icon={faCaretDown}
+                          className={classes.iconAction}
+                        />
                       </DropdownToggle>
-                      <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                        {/* <DropdownItem className={classes.dropdownItem} onClick={(e) => onAction(e, item)}>
-                          <FontAwesomeIcon icon={faPen} />
-                          Edit
-                        </DropdownItem> */}
-                        <DropdownItem className={classes.dropdownItem} onClick={(e) => handleTourEdit(e, item, EActiveNav.Create_Tour_Active)}>
-                          <FontAwesomeIcon icon={faPen} />
-                          Edit
+                      <DropdownMenu
+                        aria-labelledby="navbarDropdownMenuLink1"
+                        className={classes.dropdownMenu}
+                      >
+                        <DropdownItem
+                          className={classes.dropdownItem}
+                          onClick={(e) =>
+                            handleTourEdit(
+                              e,
+                              item,
+                              EActiveNav.Create_Tour_Active
+                            )
+                          }
+                        >
+                          <Box display="flex" alignItems={"center"}>
+                            <EditOutlined
+                              sx={{ marginRight: "0.25rem" }}
+                              fontSize="small"
+                            />
+                            <span>Edit</span>
+                          </Box>
                         </DropdownItem>
-                        <DropdownItem className={clsx(classes.dropdownItem, classes.itemDelete)} onClick={onShowConfirm}>
-                          <FontAwesomeIcon icon={faTrash} />
-                          Delete
+                        {!item?.isTemporarilyStopWorking ? (
+                          <DropdownItem
+                            className={classes.dropdownItem}
+                            onClick={(e) => onWorkAgain(e, item)}
+                          >
+                            <Box display="flex" alignItems={"center"}>
+                              <Done
+                                sx={{ marginRight: "0.25rem" }}
+                                color="success"
+                                fontSize="small"
+                              />
+                              <span>Active</span>
+                            </Box>
+                          </DropdownItem>
+                        ) : (
+                          <DropdownItem
+                            className={classes.dropdownItem}
+                            onClick={(e) => onTemporarilyStopWorking(e, item)}
+                          >
+                            <Box display="flex" alignItems={"center"}>
+                              <HideSource
+                                sx={{ marginRight: "0.25rem" }}
+                                color="error"
+                                fontSize="small"
+                              />
+                              <span>Inactive</span>
+                            </Box>
+                          </DropdownItem>
+                        )}
+                        <DropdownItem
+                          className={clsx(
+                            classes.dropdownItem,
+                            classes.itemDelete
+                          )}
+                          onClick={onShowConfirm}
+                        >
+                          <Box display="flex" alignItems={"center"}>
+                            <DeleteOutlineOutlined
+                              sx={{ marginRight: "0.25rem" }}
+                              color="error"
+                              fontSize="small"
+                            />
+                            <span>Delete</span>
+                          </Box>
                         </DropdownItem>
                       </DropdownMenu>
                     </UncontrolledDropdown>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               );
             })}
             {!listTours?.length && (
@@ -272,14 +341,8 @@ const Tour = memo(({onChangeTabCreate, handleTourEdit} : Props) => {
                 </td>
               </tr>
             )}
-          </tbody>
+          </TableBody>
         </Table>
-        <PopupAddOrEditTour
-          isOpen={openPopupCreateTour}
-          onClose={onTogglePopupCreateTour}
-          toggle={onTogglePopupCreateTour}
-          itemEdit={tourEdit}
-        />
         <PopupConfirmDelete
           title="Are you sure delete this tour ?"
           isOpen={!!tourDelete}

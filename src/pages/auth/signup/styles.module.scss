@@ -91,7 +91,8 @@
   margin-bottom: 16px;
   .boxCheckRole {
     display: flex;
-    gap: 24px;
+    align-items: center !important;
+    justify-content: center;
   }
 }
 .textYouAre {

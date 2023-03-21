@@ -45,28 +45,20 @@
 .boxControl {
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 16px;
     button {
         margin-left: auto;
-        margin-right: 70px;
         svg {
             margin-right: 8px;
         }
     }
 }
 
-.table {
-   
-    th {
-        
-        font-size: 14px !important;
-        font-weight: 700 !important;
-    }
-    thead{
-        background-color: var(--primary-color);
-        color: #ffff;
-    }
-}
+.tableCell {
+    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+    text-align: center;
 
+}
 .tourName {
     color: var(--primary-color) !important;
     text-decoration: unset;
@@ -96,10 +88,14 @@
 }
 
 .iconActiveTour {
-    color: var(--green-color);
+    color: var(--success-color);
     font-size: 16px;
 }
-
+.btnStop {
+    svg {
+        margin: 0;
+    }
+}
 .iconStopTour {
     color: var(--gray-40);
     font-size: 16px;

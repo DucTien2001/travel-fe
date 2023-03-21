@@ -1,5 +1,12 @@
 import React, { memo, useState, useEffect } from "react";
-import { Form, Modal, ModalProps, ModalHeader, ModalBody, Table } from "reactstrap";
+import {
+  Form,
+  Modal,
+  ModalProps,
+  ModalHeader,
+  ModalBody,
+  Table,
+} from "reactstrap";
 import classes from "./styles.module.scss";
 import { useDispatch } from "react-redux";
 import { TourBillService } from "services/enterprise/tourBill";
@@ -20,19 +27,19 @@ const PopupShowBills = memo((props: Props) => {
   const { tour, isOpen, onClose } = props;
   const [listBills, setListBills] = useState([]);
 
-  useEffect(() => {
-    if (tour) {
-      dispatch(setLoading(true));
-      TourBillService.getAllBillOfAnyTour(tour?.id).then((bills) => {
-        setListBills(bills?.data);
-      }).catch((e) =>{})
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
-    }
-  }, [tour]);
+  // useEffect(() => {
+  //   if (tour) {
+  //     dispatch(setLoading(true));
+  //     TourBillService.getAllBillOfAnyTour(tour?.id).then((bills) => {
+  //       setListBills(bills?.data);
+  //     }).catch((e) =>{})
+  //     .finally(() => {
+  //       dispatch(setLoading(false));
+  //     });
+  //   }
+  // }, [tour]);
 
-  console.log(listBills)
+  console.log(listBills);
 
   return (
     <>
@@ -67,18 +74,21 @@ const PopupShowBills = memo((props: Props) => {
                       <td>{item?.discount}%</td>
                       <td>{moment(item?.createdAt).format("DD/MM/YYYY")}</td>
                       <td>{fCurrency2VND(item?.totalBill)} VND</td>
-                      <td>{item?.firstName} {item?.lastName}</td>
+                      <td>
+                        {item?.firstName} {item?.lastName}
+                      </td>
                       <td>{item?.email}</td>
                       <td>{fCurrency2VND(item?.deposit)} VND</td>
                       <td>{item?.phoneNumber}</td>
                     </tr>
                   ))}
-                  {!listBills?.length &&
-                    <tr>
-                      <th scope="row" colSpan={9}>
-                        <SearchNotFound mess="No bill found" />
-                      </th>
-                    </tr>}
+                {!listBills?.length && (
+                  <tr>
+                    <th scope="row" colSpan={9}>
+                      <SearchNotFound mess="No bill found" />
+                    </th>
+                  </tr>
+                )}
               </tbody>
             </Table>
           </ModalBody>

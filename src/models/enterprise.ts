@@ -2,11 +2,27 @@ export interface ETour {
   id?: number;
   title: string;
   description: string;
-  businessHours: string[];
-  location: string;
-  price: number;
+  priceAdult?: number;
+  priceChild?: [];
+  childOldRangeFrom?: [];
+  childOldRangeTo?: [];
+  city?: string;
+  district?: string;
+  commune?: string;
+  moreLocation?: string;
+  highlight?: string;
+  termsAndCondition?: string;
+  languages?: [];
+  suitablePerson?: [];
+  totalTicket?: [];
+  startDate?: [];
+  endDate?: [];
+  businessHours?: string[];
+  location?: string;
+  price?: number;
   discount: number;
-  tags: string[];
+  tags?: string[];
+  rate?: number;
   images: string[];
   creator: number;
   contact: string;
@@ -49,4 +65,23 @@ export interface IHotel {
   images: string[];
   creator?: number;
   isTemporarilyStopWorking?: boolean;
+}
+
+
+// ======================== v1.2 ===================
+export interface TourInformation {
+  id?: number;
+  title: string;
+  quantity: string;
+  numberOfDays: number;
+  numberOfNights: number;
+  city: string;
+  district: string;
+  commune: string;
+  moreLocation: string;
+  contact: string;
+  description: string;
+  suitablePerson: string;
+  highlight: string;
+  termsAndCondition: string;
 }

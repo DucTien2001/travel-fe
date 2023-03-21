@@ -1,0 +1,191 @@
+
+.title {
+    h3 {
+        font-size: 24px;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin: 0;
+    }
+    @media only screen and (max-width: 768px) {
+        h3 {
+            margin-bottom: 8px;
+        } 
+    }
+  }
+  .rowHeaderBox {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 24px; 
+    @media only screen and (max-width: 768px) {
+        flex-direction: column;
+        align-items: inherit !important;
+        .boxInputSearch {
+            width: 100%;
+        }
+        button {
+            width: 100%;
+            margin-bottom: 24px;
+        }
+    }
+  }
+  
+  .titleInput {
+    color: rgba(28, 28, 28, 0.9);
+    font-size: 14px;
+    font-weight: 700 !important;
+    line-height: 140%;
+    letter-spacing: 0.015em;
+    padding-bottom: 5px;
+    margin: 0 !important;
+  }
+  .containerUploadImg {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .boxUpload {
+      width: 100%;
+      height: 200px;
+      border-radius: 12px;
+      border: 1px dashed var(--gray-40);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      div {
+        display: flex;
+        flex-direction: column;
+        h4 {
+          margin: 0;  
+          font-weight: 600;
+        }
+      }
+      svg {
+        font-size: 40px;
+        color: var(--blue-color);
+        
+      }
+    }
+  }
+  .imgPreview {
+    position: relative;
+    .iconDelete {
+      width: 20px;
+      height: 20px;
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background-color: #c19995;
+      position: absolute;
+      top: 8px;
+      right: 24px;
+      color: var(--danger-color);
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .iconDelete:hover {
+      background-color: var(--danger-color);
+      color: #c19995;
+    }
+  }
+  
+  .noImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    h4 {
+      font-weight: 600;
+      color: var(--gray-40);
+      font-style: italic;
+    }
+  
+  }
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0!important;
+    margin-bottom: 24px;
+    .btnSave {
+      padding: 16px 48px !important;
+      font-size: 16px;
+    }
+  }
+  
+  .editor {
+    width: 100%;
+    > * {
+      font-family: 'Montserrat' !important;
+    }
+    [class~="ql-toolbar"] {
+      border-radius: 5px 5px 0px 0px;
+      [class~="ql-formats"] {
+        [class~="ql-size"] {
+          [class~="ql-picker-item"] {
+            &::before {
+              font-size: 14px;
+            }
+            &[data-value=small] {
+              &::before {
+                font-size: 12px !important;
+              }
+            }
+            &[data-value=large] {
+              &::before {
+                font-size: 16px !important;
+              }
+            }
+            &[data-value=huge] {
+              &::before {
+                font-size: 18px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+    [class~="ql-container"] {
+      border-radius: 0px 0px 5px 5px;
+    }
+    [class~="ql-editor"] {
+      min-height: 150px;
+      > * {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 0.015em;
+        color: #1c1c1c;
+      }
+      
+      [class~="ql-size-small"] {
+        font-size: 12px;
+        line-height: unset;
+      }
+      [class~="ql-size-large"] {
+        font-size: 16px;
+        line-height: 20px;
+      }
+      [class~="ql-size-huge"] {
+        font-size: 18px;
+        line-height: unset;
+      }
+      ul, ol {
+        padding: 0;
+      }
+      ul {
+        li::before {
+          text-align: center;
+        }
+      }
+    }
+  }
+  .editorError {
+    [class~="ql-toolbar"] {
+      border-color: var(--cimigo-danger) !important;
+    }
+    [class~="ql-container"] {
+      border-color: var(--cimigo-danger) !important;
+    }
+  }
+  

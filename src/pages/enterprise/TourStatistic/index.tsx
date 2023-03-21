@@ -56,37 +56,37 @@ const TourStatistic = memo(() => {
 
   const watchTourValue = watch("tours");
 
-  useEffect(() => {
-    if (allTours) {
-      setTourIds(
-        allTours.map((item) => item?.id)
-      );
+  // useEffect(() => {
+  //   if (allTours) {
+  //     setTourIds(
+  //       allTours.map((item) => item?.id)
+  //     );
 
-      const newTours = [{id: 0, name: "All", value: "All"}];
-      allTours?.map((item, index) => {newTours.push({
-        id: item?.id,
-        name: item?.title,
-        value: item?.title,
-      })
-      })
+  //     const newTours = [{id: 0, name: "All", value: "All"}];
+  //     allTours?.map((item, index) => {newTours.push({
+  //       id: item?.id,
+  //       name: item?.title,
+  //       value: item?.title,
+  //     })
+  //     })
 
-      setTours(newTours);
-      setValue("tours", tours[0]);
-    }
-  }, [dispatch, allTours]);
-  
-  useEffect(() => {
-    if(watchTourValue) {
-      if(watchTourValue.id === 0){
-        setListRoomBills(allRoomBills);
-      }
-      else { 
-        const filterTour = allRoomBills.filter(item => item.tourId  === watchTourValue.id)
-        setListRoomBills(filterTour);
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watchTourValue])
+  //     setTours(newTours);
+  //     setValue("tours", tours[0]);
+  //   }
+  // }, [dispatch, allTours]);
+
+  // useEffect(() => {
+  //   if(watchTourValue) {
+  //     if(watchTourValue.id === 0){
+  //       setListRoomBills(allRoomBills);
+  //     }
+  //     else {
+  //       const filterTour = allRoomBills.filter(item => item.tourId  === watchTourValue.id)
+  //       setListRoomBills(filterTour);
+  //     }
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [watchTourValue])
 
   const _onSubmit = (data: ITourStatistic) => {
     dispatch(setLoading(true));
@@ -113,7 +113,11 @@ const TourStatistic = memo(() => {
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
           <h3>Tour booking statistics</h3>
         </Row>
-        <Form role="form" onSubmit={handleSubmit(_onSubmit)} className={classes.form}>
+        <Form
+          role="form"
+          onSubmit={handleSubmit(_onSubmit)}
+          className={classes.form}
+        >
           <Row className={classes.formWrapper}>
             <div className={classes.formInputWrapper}>
               <InputDatePicker
@@ -131,7 +135,7 @@ const TourStatistic = memo(() => {
             </div>
             <Button className={classes.btnPrimary}>Check</Button>
           </Row>
-        <Row className={classes.rowSelectTour}>
+          <Row className={classes.rowSelectTour}>
             <p>Tour:</p>
             <CustomSelect
               className={classes.input}
@@ -141,7 +145,7 @@ const TourStatistic = memo(() => {
               options={tours}
               errorMessage={errors.tours?.message}
             />
-        </Row>
+          </Row>
         </Form>
         <Table className={classes.table} responsive>
           <thead>

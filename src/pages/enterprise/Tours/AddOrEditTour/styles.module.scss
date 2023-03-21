@@ -15,12 +15,115 @@
       padding: 48px 24px 24px 32px; 
   }
 }
+.tabsBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e8e8e8;
+  border-top: 1px solid #e8e8e8;
+  .statusBox {
+    padding-right: 48px;
+  }
+  @media only screen and (max-width: 767px) {
+    .statusBox {
+      display: none;
+    }
+  }
+}
+.tabsBox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  .statusBox {
+    padding-right: 48px;
+  }
+  @media only screen and (max-width: 767px) {
+    .statusBox {
+      display: none;
+    }
+  }
+}
+.rootTabs {
+  [class~="MuiTab-root"] {
+    padding: 16px 24px;
+    min-width: unset;
+    text-transform: unset;
+    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+    .tabItemIcon {
+      margin-right: 10px;
+      color: var(--gray-80);
+    }
+    &[class~="Mui-selected"] {
+      .tabItemIcon {
+        color: var(--primary-color);
+      }
+      .tabItemTitle {
+        color: var(--primary-color);
+        margin: 0 !important;
+
+      }
+    }
+    &:not(:last-child) {
+      position: relative;
+      overflow: unset;
+      margin-right: 16px;
+      &::before {
+        content: "";
+        background: url("../../../../assets/img/icon/ic-keyboard_arrow_right.svg") center no-repeat;
+        background-size: 16px;
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        right: -16px;
+        top: 50%;
+        transform: translate(0px, -50%);
+      }
+    }
+    &:hover {
+      background-color: #e8f1fb;
+      .tabItemIcon {
+        color: var(--success-color);
+      }
+      .tabItemTitle {
+        color: var(--primary-color);
+      }
+      &:not([class~="Mui-selected"]) {
+        position: relative;
+        &::after {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 2px;
+          bottom: 0;
+          left: 0;
+          border-radius: 5px;
+          background-color: var(--primary-light-color);
+        }
+      }
+    }
+  }
+  @media only screen and (max-width: 767px) {
+    [class~="MuiTab-root"] {
+      padding: 16px 8px;
+    }
+  }
+}
+
+.indicatorTabs {
+  border-radius: 5px;
+  background-color: var(--primary-color);
+}
+
 
 .title {
   h3 {
       font-size: 24px;
       text-transform: uppercase;
       font-weight: 600;
+      margin: 0;
   }
   @media only screen and (max-width: 768px) {
       h3 {
@@ -30,6 +133,9 @@
 }
 .rowHeaderBox {
   margin: 0;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 24px; 
   @media only screen and (max-width: 768px) {
       flex-direction: column;
       align-items: inherit !important;
@@ -44,9 +150,13 @@
 }
 
 .titleInput {
-  font-weight: 500;
-  margin-bottom: 2px;
-  margin-top: 12px;
+  color: rgba(28, 28, 28, 0.9);
+  font-size: 14px;
+  font-weight: 700 !important;
+  line-height: 140%;
+  letter-spacing: 0.015em;
+  padding-bottom: 5px;
+  margin: 0 !important;
 }
 .containerUploadImg {
   width: 100%;
@@ -191,9 +301,9 @@
 }
 .editorError {
   [class~="ql-toolbar"] {
-    border-color: var(--cimigo-danger) !important;
+    border-color: var(--danger-color) !important;
   }
   [class~="ql-container"] {
-    border-color: var(--cimigo-danger) !important;
+    border-color: var(--danger-color) !important;
   }
 }

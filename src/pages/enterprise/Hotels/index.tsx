@@ -12,9 +12,17 @@ import {
   faCircleMinus,
   faHourglass,
   faCircleInfo,
-  faMoneyCheckDollar
+  faMoneyCheckDollar,
 } from "@fortawesome/free-solid-svg-icons";
-import { Row, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Collapse } from "reactstrap";
+import {
+  Row,
+  Table,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+  Collapse,
+} from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import PopupAddOrEditHotel from "./PopupAddOrEditHotel";
@@ -22,13 +30,17 @@ import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import PopupAddRoom from "./PopupAddRoom";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { RoomService } from "services/enterprise/room";
 import { HotelService } from "services/enterprise/hotel";
 import { getAllHotels } from "redux/reducers/Enterprise/actionTypes";
 import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
 import { IHotel } from "models/enterprise";
-import { getAllHotels as getAllHotelsOfNormal} from "redux/reducers/Normal/actionTypes";
+import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
 import PopupEditRoomInformation from "./PopupEditRoomInformation";
 import PopupEditRoomPrice from "./PopupEditRoomPrice";
 import SearchNotFound from "components/SearchNotFound";
@@ -43,10 +55,14 @@ interface SearchData {
 }
 interface Props {
   onChangeTabCreate: (type: EActiveNav) => void;
-  handleHotelEdit?: (currentTarget: any, item: IHotel, type: EActiveNav) => void;
+  handleHotelEdit?: (
+    currentTarget: any,
+    item: IHotel,
+    type: EActiveNav
+  ) => void;
 }
 // eslint-disable-next-line react/display-name
-const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
+const Hotel = memo(({ onChangeTabCreate, handleHotelEdit }: Props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: ReducerType) => state.user);
   const { allHotels } = useSelector((state: ReducerType) => state.enterprise);
@@ -59,19 +75,21 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
   const [openPopupCreateHotel, setOpenPopupCreateHotel] = useState(false);
   const [openPopupConfirmStop, setOpenPopupConfirmStop] = useState(false);
   const [editRoomInformation, setEditRoomInformation] = useState(null);
-  const [openPopupEditRoomInformation, setOpenPopupEditRoomInformation] = useState(null);
+  const [openPopupEditRoomInformation, setOpenPopupEditRoomInformation] =
+    useState(null);
   const [editRoomPrice, setEditRoomPrice] = useState(null);
   const [openPopupEditRoomPrice, setOpenPopupEditRoomPrice] = useState(null);
   const [deleteRoom, setDeleteRoom] = useState(null);
   const [openPopupDeleteRoom, setOpenPopupDeleteRoom] = useState(null);
   const [roomStop, setRoomStop] = useState(null);
-  const [openPopupConfirmStopRoom, setOpenPopupConfirmStopRoom] = useState(false);
+  const [openPopupConfirmStopRoom, setOpenPopupConfirmStopRoom] =
+    useState(false);
   const [listHotels, setListHotels] = useState([]);
-  const [modalOthePrice, setModalOtherPrice]=useState({
+  const [modalOthePrice, setModalOtherPrice] = useState({
     isOpen: false,
     roomId: null,
-  })
-  
+  });
+
   const schema = useMemo(() => {
     return yup.object().shape({
       name: yup.string().notRequired(),
@@ -79,10 +97,11 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { register, getValues, handleSubmit, reset, watch } = useForm<SearchData>({
-    resolver: yupResolver(schema),
-    mode: "onChange",
-  });  
+  const { register, getValues, handleSubmit, reset, watch } =
+    useForm<SearchData>({
+      resolver: yupResolver(schema),
+      mode: "onChange",
+    });
 
   const [modalCreateRoom, setModalCreateRoom] = useState({
     isOpen: false,
@@ -150,7 +169,7 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
       .catch((e) => dispatch(setErrorMess(e)))
       .finally(() => dispatch(setLoading(false)));
   };
-  
+
   const handleToggleSubTable = (hotel, index) => {
     if (subTable[index]?.isCallGet) {
       const newIsOpen = [...isOpenToggleArr];
@@ -210,76 +229,76 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
   const onWorkAgain = (e, item) => {
     dispatch(setLoading(true));
     HotelService.workAgain(item.id)
-    .then(() => {
-      dispatch(getAllHotels(user?.id));
-      dispatch(getAllHotelsOfNormal());
-    })
-    .catch((e) => dispatch(setErrorMess(e)))
-    .finally(() => dispatch(setLoading(false)));
-  }
+      .then(() => {
+        dispatch(getAllHotels(user?.id));
+        dispatch(getAllHotelsOfNormal());
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
 
   const onTogglePopupEditRoomInformation = () => {
     setOpenPopupEditRoomInformation(!openPopupEditRoomInformation);
-  }
+  };
 
   const onEditRoomInformation = (e: any, item: any) => {
     setEditRoomInformation(item);
     onTogglePopupEditRoomInformation();
-  }
+  };
   const onTogglePopupEditRoomPrice = () => {
     setOpenPopupEditRoomPrice(!openPopupEditRoomPrice);
-  }
+  };
   const onEditRoomPrice = (e: any, item: any) => {
     setEditRoomPrice(item);
     onTogglePopupEditRoomPrice();
-  }
+  };
 
   const onTogglePopupDeleteRoom = () => {
     setOpenPopupDeleteRoom(!openPopupDeleteRoom);
-  }
+  };
 
   const onDeleteRoom = (e: any, item: any) => {
     setDeleteRoom(item);
     onTogglePopupDeleteRoom();
-  }
+  };
 
   const onOpenModalOtherPrice = (e: any, item: any) => {
     setModalOtherPrice({
       isOpen: true,
-      roomId: item?.id
-    })
-  }
+      roomId: item?.id,
+    });
+  };
   const onCloseModalOtherPrice = () => {
     setModalOtherPrice({
       isOpen: false,
-      roomId: null
-    })
-  }
+      roomId: null,
+    });
+  };
 
   const onYesDeleteRoom = () => {
     dispatch(setLoading(true));
     RoomService.deleteRoom(deleteRoom?.id)
-    .then((res) => {
-      dispatch(setSuccessMess("Delete room successfully"))
-      onTogglePopupDeleteRoom();
-      dispatch(getAllHotels(user?.id));
-      dispatch(getAllHotelsOfNormal());
-    })
-    .catch((err) => {
-      dispatch(setErrorMess(err))
-    })
-    .finally(() => {
-      dispatch(setLoading(false));
-    })
-  }
+      .then((res) => {
+        dispatch(setSuccessMess("Delete room successfully"));
+        onTogglePopupDeleteRoom();
+        dispatch(getAllHotels(user?.id));
+        dispatch(getAllHotelsOfNormal());
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
 
   const onTogglePopupConfirmStopWorkingRoom = () => {
     setOpenPopupConfirmStopRoom(!openPopupConfirmStopRoom);
-  }
-  const onTemporarilyStopWorkingRoom = (e:any, item:any) => {
+  };
+  const onTemporarilyStopWorkingRoom = (e: any, item: any) => {
     setRoomStop(item);
     onTogglePopupConfirmStopWorkingRoom();
-  }
+  };
 
   const onYesStopWorkingRoom = () => {
     if (!roomStop) return;
@@ -297,43 +316,42 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
   const onWorkAgainRoom = (e, item) => {
     dispatch(setLoading(true));
     RoomService.workAgain(item.id)
-    .then(() => {
-      dispatch(getAllHotels(user?.id));
-      dispatch(getAllHotelsOfNormal());
-    })
-    .catch((e) => dispatch(setErrorMess(e)))
-    .finally(() => dispatch(setLoading(false)));
-  }
+      .then(() => {
+        dispatch(getAllHotels(user?.id));
+        dispatch(getAllHotelsOfNormal());
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
   const watchSearch = watch("name");
 
   const handleKeyPress = (e) => {
     var code = e.keyCode || e.which;
-    if (code === 13) { 
-      if(watchSearch === "" ) {
+    if (code === 13) {
+      if (watchSearch === "") {
         setListHotels(allHotels);
-      }
-      else { 
+      } else {
         handleSearch();
       }
     }
   };
 
   const handleSearch = () => {
-      dispatch(setLoading(true));
-      HotelService.searchHotel(user?.id, getValues("name"))
-        .then((res) => {
-          setListHotels(res?.data);
-        })
-        .catch((e) => {
-          dispatch(setErrorMess(e));
-        })
-        .finally(() => {
-          dispatch(setLoading(false));
-        });
+    dispatch(setLoading(true));
+    HotelService.searchHotel(user?.id, getValues("name"))
+      .then((res) => {
+        setListHotels(res?.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
   };
-  useEffect(() => {
-      setListHotels(allHotels);
-  },[dispatch, allHotels])
+  // useEffect(() => {
+  //     setListHotels(allHotels);
+  // },[dispatch, allHotels])
 
   return (
     <>
@@ -351,7 +369,10 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
               inputRef={register("name")}
             />
           </div>
-          <Button btnType={BtnType.Primary} onClick={() => onChangeTabCreate(EActiveNav.Create_Hotel_Active)}>
+          <Button
+            btnType={BtnType.Primary}
+            onClick={() => onChangeTabCreate(EActiveNav.Create_Hotel_Active)}
+          >
             <FontAwesomeIcon icon={faPlus} />
             Create
           </Button>
@@ -376,41 +397,63 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
                   <>
                     <tr key={item?.id}>
                       <th scope="row">{index}</th>
-                      <td><a href={`/listHotel/:${item?.id}`} target="_blank" rel="noreferrer" className={classes.hotelName}>
-                        {item.name}</a></td>
+                      <td>
+                        <a
+                          href={`/listHotel/:${item?.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={classes.hotelName}
+                        >
+                          {item.name}
+                        </a>
+                      </td>
                       <td>{item.checkInTime}</td>
                       <td>{item.checkOutTime}</td>
                       <td>
                         {!item?.isTemporarilyStopWorking ? (
-                          <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour} />
+                          <FontAwesomeIcon
+                            icon={faCircleCheck}
+                            className={classes.iconActiveTour}
+                          />
                         ) : (
-                          <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour} />
+                          <FontAwesomeIcon
+                            icon={faCircleMinus}
+                            className={classes.iconStopTour}
+                          />
                         )}
                       </td>
-                      <td onClick={() => handleToggleSubTable(item, index)} className={clsx("text-center", classes.showRoomBtn)}>
+                      <td
+                        onClick={() => handleToggleSubTable(item, index)}
+                        className={clsx("text-center", classes.showRoomBtn)}
+                      >
                         Show room {"  "}
-                        <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
+                        <FontAwesomeIcon
+                          icon={faCaretDown}
+                          className={classes.iconAction}
+                        />
                       </td>
                       <td className={classes.colActionStop}>
-                      { !item?.isTemporarilyStopWorking ?
-                        <Button
-                        className="btn-icon"
-                        btnType={BtnType.Secondary}
-                        size="sm"
-                        type="button"
-                        onClick={(e) => onTemporarilyStopWorking(e, item)}
-                        >
-                        <FontAwesomeIcon icon={faHourglass}/>
-                        </Button> :
-                        <Button
-                        className="btn-icon"
-                        color="info"
-                        size="sm"
-                        type="button"
-                        onClick={(e) => onWorkAgain(e, item)}
-                        >
-                        <FontAwesomeIcon icon={faHourglass}/>
-                        </Button>}
+                        {!item?.isTemporarilyStopWorking ? (
+                          <Button
+                            className="btn-icon"
+                            btnType={BtnType.Secondary}
+                            size="sm"
+                            type="button"
+                            onClick={(e) => onTemporarilyStopWorking(e, item)}
+                          >
+                            <FontAwesomeIcon icon={faHourglass} />
+                          </Button>
+                        ) : (
+                          <Button
+                            className="btn-icon"
+                            color="info"
+                            size="sm"
+                            type="button"
+                            onClick={(e) => onWorkAgain(e, item)}
+                          >
+                            <FontAwesomeIcon icon={faHourglass} />
+                          </Button>
+                        )}
                       </td>
                       <td className="text-center">
                         <UncontrolledDropdown>
@@ -424,18 +467,42 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
                               handleAction(event, item);
                             }}
                           >
-                            <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
+                            <FontAwesomeIcon
+                              icon={faCaretDown}
+                              className={classes.iconAction}
+                            />
                           </DropdownToggle>
-                          <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                            <DropdownItem className={classes.dropdownItem} onClick={(e) => handleHotelEdit(e, item, EActiveNav.Create_Tour_Active)}>
+                          <DropdownMenu
+                            aria-labelledby="navbarDropdownMenuLink1"
+                            className={classes.dropdownMenu}
+                          >
+                            <DropdownItem
+                              className={classes.dropdownItem}
+                              onClick={(e) =>
+                                handleHotelEdit(
+                                  e,
+                                  item,
+                                  EActiveNav.Create_Tour_Active
+                                )
+                              }
+                            >
                               <FontAwesomeIcon icon={faPen} />
                               Edit
                             </DropdownItem>
-                            <DropdownItem className={classes.dropdownItem} onClick={() => onOpenModalCreateRoom(item?.id)}>
+                            <DropdownItem
+                              className={classes.dropdownItem}
+                              onClick={() => onOpenModalCreateRoom(item?.id)}
+                            >
                               <FontAwesomeIcon icon={faPlus} />
                               Add room
                             </DropdownItem>
-                            <DropdownItem className={clsx(classes.dropdownItem, classes.itemDelete)} onClick={onShowConfirm}>
+                            <DropdownItem
+                              className={clsx(
+                                classes.dropdownItem,
+                                classes.itemDelete
+                              )}
+                              onClick={onShowConfirm}
+                            >
                               <FontAwesomeIcon icon={faTrash} />
                               Delete
                             </DropdownItem>
@@ -454,79 +521,139 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
                                 <th>Number of bed</th>
                                 <th>Number of room</th>
                                 <th>State</th>
-                                <th className={classes.colActionStop}>Action stop</th>
+                                <th className={classes.colActionStop}>
+                                  Action stop
+                                </th>
                                 <th>Action</th>
                               </tr>
                             </thead>
                             <tbody className={classes.bodySubTable}>
-                              {subTable[index]?.allRooms?.map((itemSubtable, indexSub) => (
-                                <tr key={indexSub}>
-                                  <td>{indexSub}</td>
-                                  <td>{itemSubtable?.title}</td>
-                                  <td>{itemSubtable?.numberOfBed}</td>
-                                  <td>{itemSubtable?.numberOfRoom}</td>
-                                  <td>
-                                    {!itemSubtable?.isTemporarilyStopWorking ? (
-                                      <FontAwesomeIcon icon={faCircleCheck} className={classes.iconActiveTour} />
-                                    ) : (
-                                      <FontAwesomeIcon icon={faCircleMinus} className={classes.iconStopTour} />
-                                    )}
-                                  </td>
-                                  <td className={classes.colActionStop}>
-                                  { !itemSubtable?.isTemporarilyStopWorking ?
-                                  <Button
-                                  className="btn-icon"
-                                  btnType={BtnType.Secondary}
-                                  size="sm"
-                                  type="button"
-                                  onClick={(e) => onTemporarilyStopWorkingRoom(e, itemSubtable)}
-                                  >
-                                  <FontAwesomeIcon icon={faHourglass}/>
-                                  </Button> :
-                                  <Button
-                                  className="btn-icon"
-                                  color="info"
-                                  size="sm"
-                                  type="button"
-                                  onClick={(e) => onWorkAgainRoom(e, itemSubtable)}
-                                  >
-                                  <FontAwesomeIcon icon={faHourglass}/>
-                                  </Button>}
-                                  </td>
-                                  <td>
-                                    <UncontrolledDropdown>
-                                      <DropdownToggle
-                                        color="default"
-                                        data-toggle="dropdown"
-                                        href="#pablo"
-                                        id="navbarDropdownMenuLink1"
-                                        nav
-                                        onClick={(e) => e.preventDefault()}
-                                      >
-                                        <FontAwesomeIcon icon={faCaretDown} className={classes.iconAction} />
-                                      </DropdownToggle>
-                                      <DropdownMenu aria-labelledby="navbarDropdownMenuLink1" className={classes.dropdownMenu}>
-                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onEditRoomInformation(e, itemSubtable)}>
-                                          <FontAwesomeIcon icon={faCircleInfo}/>
-                                          Edit information
-                                        </DropdownItem>
-                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onEditRoomPrice(e, itemSubtable)}>
-                                          <FontAwesomeIcon icon={faMoneyCheckDollar} />
-                                          Edit price
-                                        </DropdownItem>
-                                        <DropdownItem className={classes.dropdownItem} onClick={(e) => onOpenModalOtherPrice(e, itemSubtable)}>
-                                          <FontAwesomeIcon icon={faMoneyCheckDollar} />
-                                          Room other price
-                                        </DropdownItem>
-                                        <DropdownItem className={clsx(classes.dropdownItem, classes.itemDelete)} onClick={(e) => onDeleteRoom(e, itemSubtable)}>
-                                          <FontAwesomeIcon icon={faTrash} />
-                                          Delete
-                                        </DropdownItem>
-                                      </DropdownMenu>
-                                    </UncontrolledDropdown>
-                                  </td>
-                                </tr>
-                              ))}
+                              {subTable[index]?.allRooms?.map(
+                                (itemSubtable, indexSub) => (
+                                  <tr key={indexSub}>
+                                    <td>{indexSub}</td>
+                                    <td>{itemSubtable?.title}</td>
+                                    <td>{itemSubtable?.numberOfBed}</td>
+                                    <td>{itemSubtable?.numberOfRoom}</td>
+                                    <td>
+                                      {!itemSubtable?.isTemporarilyStopWorking ? (
+                                        <FontAwesomeIcon
+                                          icon={faCircleCheck}
+                                          className={classes.iconActiveTour}
+                                        />
+                                      ) : (
+                                        <FontAwesomeIcon
+                                          icon={faCircleMinus}
+                                          className={classes.iconStopTour}
+                                        />
+                                      )}
+                                    </td>
+                                    <td className={classes.colActionStop}>
+                                      {!itemSubtable?.isTemporarilyStopWorking ? (
+                                        <Button
+                                          className="btn-icon"
+                                          btnType={BtnType.Secondary}
+                                          size="sm"
+                                          type="button"
+                                          onClick={(e) =>
+                                            onTemporarilyStopWorkingRoom(
+                                              e,
+                                              itemSubtable
+                                            )
+                                          }
+                                        >
+                                          <FontAwesomeIcon icon={faHourglass} />
+                                        </Button>
+                                      ) : (
+                                        <Button
+                                          className="btn-icon"
+                                          color="info"
+                                          size="sm"
+                                          type="button"
+                                          onClick={(e) =>
+                                            onWorkAgainRoom(e, itemSubtable)
+                                          }
+                                        >
+                                          <FontAwesomeIcon icon={faHourglass} />
+                                        </Button>
+                                      )}
+                                    </td>
+                                    <td>
+                                      <UncontrolledDropdown>
+                                        <DropdownToggle
+                                          color="default"
+                                          data-toggle="dropdown"
+                                          href="#pablo"
+                                          id="navbarDropdownMenuLink1"
+                                          nav
+                                          onClick={(e) => e.preventDefault()}
+                                        >
+                                          <FontAwesomeIcon
+                                            icon={faCaretDown}
+                                            className={classes.iconAction}
+                                          />
+                                        </DropdownToggle>
+                                        <DropdownMenu
+                                          aria-labelledby="navbarDropdownMenuLink1"
+                                          className={classes.dropdownMenu}
+                                        >
+                                          <DropdownItem
+                                            className={classes.dropdownItem}
+                                            onClick={(e) =>
+                                              onEditRoomInformation(
+                                                e,
+                                                itemSubtable
+                                              )
+                                            }
+                                          >
+                                            <FontAwesomeIcon
+                                              icon={faCircleInfo}
+                                            />
+                                            Edit information
+                                          </DropdownItem>
+                                          <DropdownItem
+                                            className={classes.dropdownItem}
+                                            onClick={(e) =>
+                                              onEditRoomPrice(e, itemSubtable)
+                                            }
+                                          >
+                                            <FontAwesomeIcon
+                                              icon={faMoneyCheckDollar}
+                                            />
+                                            Edit price
+                                          </DropdownItem>
+                                          <DropdownItem
+                                            className={classes.dropdownItem}
+                                            onClick={(e) =>
+                                              onOpenModalOtherPrice(
+                                                e,
+                                                itemSubtable
+                                              )
+                                            }
+                                          >
+                                            <FontAwesomeIcon
+                                              icon={faMoneyCheckDollar}
+                                            />
+                                            Room other price
+                                          </DropdownItem>
+                                          <DropdownItem
+                                            className={clsx(
+                                              classes.dropdownItem,
+                                              classes.itemDelete
+                                            )}
+                                            onClick={(e) =>
+                                              onDeleteRoom(e, itemSubtable)
+                                            }
+                                          >
+                                            <FontAwesomeIcon icon={faTrash} />
+                                            Delete
+                                          </DropdownItem>
+                                        </DropdownMenu>
+                                      </UncontrolledDropdown>
+                                    </td>
+                                  </tr>
+                                )
+                              )}
                             </tbody>
                           </Table>
                         </Collapse>
@@ -535,13 +662,13 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
                   </>
                 );
               })}
-            {!listHotels?.length && 
+            {!listHotels?.length && (
               <tr>
-                <td scope="row" colSpan={8}> 
-                  <SearchNotFound/>
-                </td>                 
+                <td scope="row" colSpan={8}>
+                  <SearchNotFound />
+                </td>
               </tr>
-            }
+            )}
           </tbody>
         </Table>
         <PopupAddOrEditHotel
@@ -557,20 +684,20 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
           toggle={onClosePopupConfirmDelete}
           onYes={onYesDelete}
         />
-        <PopupAddRoom 
-        hotelId={modalCreateRoom.hotelId} 
-        isOpen={modalCreateRoom.isOpen} 
-        onClose={onCloseModalCreateRoom} 
+        <PopupAddRoom
+          hotelId={modalCreateRoom.hotelId}
+          isOpen={modalCreateRoom.isOpen}
+          onClose={onCloseModalCreateRoom}
         />
         <PopupEditRoomInformation
-        isOpen={openPopupEditRoomInformation} 
-        onClose={onTogglePopupEditRoomInformation} 
-        itemEdit={editRoomInformation}
+          isOpen={openPopupEditRoomInformation}
+          onClose={onTogglePopupEditRoomInformation}
+          itemEdit={editRoomInformation}
         />
         <PopupEditRoomPrice
-        isOpen={openPopupEditRoomPrice} 
-        onClose={onTogglePopupEditRoomPrice} 
-        itemEdit={editRoomPrice}
+          isOpen={openPopupEditRoomPrice}
+          onClose={onTogglePopupEditRoomPrice}
+          itemEdit={editRoomPrice}
         />
         <PopupConfirmDelete
           title="Are you sure delete this room ?"
@@ -594,8 +721,8 @@ const Hotel = memo(({onChangeTabCreate, handleHotelEdit} : Props) => {
           onYes={onYesStopWorkingRoom}
         />
         <PopupAddOrEditRoomOtherPrice
-          isOpen={modalOthePrice?.isOpen} 
-          onClose={onCloseModalOtherPrice} 
+          isOpen={modalOthePrice?.isOpen}
+          onClose={onCloseModalOtherPrice}
           roomId={modalOthePrice?.roomId}
         />
       </div>

@@ -1,10 +1,11 @@
 import { API } from "configs/constants";
-import { ETour, EUpdateTour } from "models/enterprise";
+import { ETour, EUpdateTour, TourInformation } from "models/enterprise";
+import { User } from "models/user";
 import api from "../configApi";
 
 export class TourService {
-    static async createTour(data: ETour): Promise<any> {
-        return await api.post(API.ENTERPRISE.TOUR.CREATE_TOUR, data)
+    static async createTour(data: FormData): Promise<any> {
+        return await api.post(API.ENTERPRISE.TOUR.DEFAULT, data)
           .then((res) => {
             return Promise.resolve(res.data)
           })

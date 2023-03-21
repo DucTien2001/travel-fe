@@ -105,17 +105,17 @@ const TourComments = memo(() => {
   };
 
   const onGetTourComments = () => {
-    CommentService.getAllTourComments({ tourIds: tourIds })
-      .then((res) => {
-        setComments(res.data.sort(sortDate));
-        setAllComments(res.data.sort(sortDate));
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
+    // CommentService.getAllTourComments({ tourIds: tourIds })
+    //   .then((res) => {
+    //     setComments(res.data.sort(sortDate));
+    //     setAllComments(res.data.sort(sortDate));
+    //   })
+    //   .catch((e) => {
+    //     dispatch(setErrorMess(e));
+    //   })
+    //   .finally(() => {
+    //     dispatch(setLoading(false));
+    //   });
   };
 
   const onYesDelete = () => {
@@ -130,40 +130,40 @@ const TourComments = memo(() => {
       .finally(() => dispatch(setLoading(false)));
   };
 
-  useEffect(() => {
-    dispatch(setLoading(true));
-    onGetTourComments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tourIds]);
+  // useEffect(() => {
+  //   dispatch(setLoading(true));
+  //   onGetTourComments();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [tourIds]);
 
-  useEffect(() => {
-    const newTours = [{ id: 0, name: "All", value: "All" }];
-    allTours?.map((item, index) => {
-      newTours.push({
-        id: item?.id,
-        name: item?.title,
-        value: item?.title,
-      });
-    });
-    const tempTourIds = allTours.map((tour) => tour?.id);
-    setTourIds(tempTourIds);
-    setTours(newTours);
-    setValue("tours", tours[0]);
-  }, [allTours]);
+  // useEffect(() => {
+  //   const newTours = [{ id: 0, name: "All", value: "All" }];
+  //   allTours?.map((item, index) => {
+  //     newTours.push({
+  //       id: item?.id,
+  //       name: item?.title,
+  //       value: item?.title,
+  //     });
+  //   });
+  //   const tempTourIds = allTours.map((tour) => tour?.id);
+  //   setTourIds(tempTourIds);
+  //   setTours(newTours);
+  //   setValue("tours", tours[0]);
+  // }, [allTours]);
 
-  useEffect(() => {
-    if (watchTourValue) {
-      if (watchTourValue.id === 0) {
-        setComments(allComments);
-      } else {
-        const filterTour = allComments.filter(
-          (item) => item.tourId === watchTourValue.id
-        );
-        setComments(filterTour);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watchTourValue]);
+  // useEffect(() => {
+  //   if (watchTourValue) {
+  //     if (watchTourValue.id === 0) {
+  //       setComments(allComments);
+  //     } else {
+  //       const filterTour = allComments.filter(
+  //         (item) => item.tourId === watchTourValue.id
+  //       );
+  //       setComments(filterTour);
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [watchTourValue]);
 
   return (
     <>

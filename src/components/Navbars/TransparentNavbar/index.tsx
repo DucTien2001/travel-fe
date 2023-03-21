@@ -40,6 +40,7 @@ import SignOutButton from "components/common/buttons/SignOutButton";
 import UseAuth from "hooks/useAuth";
 import { EUserType } from "models/user";
 import { images } from "configs/images";
+import { langSupports } from "models/general";
 
 const WhiteNavbar = memo(() => {
   const { isLoggedIn, logout, user } = UseAuth();
@@ -50,6 +51,20 @@ const WhiteNavbar = memo(() => {
       document.documentElement.classList.toggle("nav-open");
       setCollapseOpen(!collapseOpen);
     }
+  };
+
+  const changeLanguage = async (lang: string) => {
+    // setAnchorElLang(null);
+    // if (lang === i18n.language) return;
+    // if (isLoggedIn) {
+    //   dispatch(setLoading(true));
+    //   await UserService.changeLanguage(lang).finally(() =>
+    //     dispatch(setLoading(false))
+    //   );
+    // }
+    // i18n.changeLanguage(lang, () => {
+    //   window.location.reload();
+    // });
   };
 
   useEffect(() => {
@@ -184,22 +199,16 @@ const WhiteNavbar = memo(() => {
                   <p>Languages</p>
                 </DropdownToggle>
                 <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
-                  <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/" passHref>
-                      <a>
-                        <img src={images.anh.src} alt="anh" />
-                        English
-                      </a>
-                    </Link>
-                  </DropdownItem>
-                  <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/" passHref>
-                      <a>
-                        <img src={images.vietnam.src} alt="anh" />
-                        VietNamese
-                      </a>
-                    </Link>
-                  </DropdownItem>
+                  {langSupports.map((it) => (
+                    <DropdownItem
+                      className={classes.dropdownItem}
+                      key={it.key}
+                      onClick={() => changeLanguage(it.key)}
+                    >
+                      <img src={it.img} alt="anh" />
+                      {it.name}
+                    </DropdownItem>
+                  ))}
                 </DropdownMenu>
               </UncontrolledDropdown>
               {isLoggedIn ? (

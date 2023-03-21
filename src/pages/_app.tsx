@@ -73,10 +73,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   let allowed = true;
   const router = useRouter();
-  if (router.pathname.startsWith("/enterprise") && user?.role === 3) {
+  if (
+    router.pathname.startsWith("/enterprise") &&
+    user?.role === EUserType.USER
+  ) {
     allowed = false;
   }
-  if (router.pathname.startsWith("/admin") && user?.role !== 1) {
+  if (router.pathname.startsWith("/admin") && user?.role !== EUserType.ADMIN) {
     allowed = false;
   }
 

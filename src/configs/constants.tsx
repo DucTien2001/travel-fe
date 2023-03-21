@@ -57,14 +57,14 @@ export const API = {
       CREATE: "/v1.0/room-bill/create",
       GET_ALL_ROOMBILL: "/v1.0/room-bill/get-all-user-room-bills/:id",
       VERIFY_BOOKROOM: "/v1.0/room-bill/verify-book-room",
-      CANCEL_BOOK_ROOM:"/v1.0/room-bill/cancel-room-bill/:id",
+      CANCEL_BOOK_ROOM: "/v1.0/room-bill/cancel-room-bill/:id",
     },
     TOURBILL: {
       CREATE: "/v1.0/tour-bill/create",
       GET_ALL_TOURBILL: "/v1.0/tour-bill/get-all-user-tour-bills/:id",
       GET_TOURBILL: "/v1.0/tour-bill/get-tour-bill/:id",
       VERIFY_BOOKTOUR: "/v1.0/tour-bill/verify-book-tour",
-      CANCEL_BOOK_TOUR:"/v1.0/tour-bill/cancel-tour-bill/:id",
+      CANCEL_BOOK_TOUR: "/v1.0/tour-bill/cancel-tour-bill/:id",
     },
     HOTEL: {
       ALL_HOTELS: "/v1.0/hotel/get-all-hotels",
@@ -96,7 +96,8 @@ export const API = {
       },
     },
     TOUR: {
-      CREATE_TOUR: "/v1.0/tour/create",
+      DEFAULT: "/v1.0/enterprise/tour",
+      CREATE_TOUR: "/v1.0/enterprise/tour",
       UPDATE_TOUR: "/v1.0/tour/update/:id",
       DELETE_TOUR: "/v1.0/tour/delete/:id",
       GET_TOURS: "/v1.0/tour/get-tours/:id",
@@ -114,16 +115,16 @@ export const API = {
     },
     ROOM: {
       CREATE_ROOM: "/v1.0/room/create",
-      GET_ALL_ROOM:"/v1.0/room/get-all-rooms/:id",
-      UPDATE_INFORMATION:"/v1.0/room/update-information/:id",
-      UPDATE_PRICE:"/v1.0/room/update-price/:id",
-      DELETE:"/v1.0/room/delete/:id",
-      STOP_WORKING:"/v1.0/room/temporarily-stop-working/:id",
+      GET_ALL_ROOM: "/v1.0/room/get-all-rooms/:id",
+      UPDATE_INFORMATION: "/v1.0/room/update-information/:id",
+      UPDATE_PRICE: "/v1.0/room/update-price/:id",
+      DELETE: "/v1.0/room/delete/:id",
+      STOP_WORKING: "/v1.0/room/temporarily-stop-working/:id",
       WORK_AGAIN: "/v1.0/room/work-again/:id",
-      GET_ROOM_OTHER_PRICE:"/v1.0/room-other-price/get-all-prices/:id",
-      CREATE_ROOM_OTHER_PRICE:"/v1.0/room-other-price/create",
-      UPDATE_ROOM_OTHER_PRICE:"/v1.0/room-other-price/update/:id",
-      DELETE_ROOM_OTHER_PRICE:"/v1.0/room-other-price/delete/:id",
+      GET_ROOM_OTHER_PRICE: "/v1.0/room-other-price/get-all-prices/:id",
+      CREATE_ROOM_OTHER_PRICE: "/v1.0/room-other-price/create",
+      UPDATE_ROOM_OTHER_PRICE: "/v1.0/room-other-price/update/:id",
+      DELETE_ROOM_OTHER_PRICE: "/v1.0/room-other-price/delete/:id",
       GET_ROOMS_AVAILABLE: "/v1.0/room/get-rooms-available",
     },
     TOURBILL: {
@@ -133,7 +134,8 @@ export const API = {
       GET_BILLS_ANY_DATE: "/v1.0/tour-bill/get-tour-bills-any-date",
     },
     ROOMBILL: {
-      GET_HOTELS_REVENUE_BY_MONTH: "/v1.0/room-bill/get-hotels-revenue-by-month",
+      GET_HOTELS_REVENUE_BY_MONTH:
+        "/v1.0/room-bill/get-hotels-revenue-by-month",
       GET_HOTELS_REVENUE_BY_YEAR: "/v1.0/room-bill/get-hotels-revenue-by-year",
       GET_ALL_BILLS_OF_ANY_ROOM: "/v1.0/room-bill/get-all-room-bills/:id",
       GET_BILLS_ANY_DATE: "/v1.0/room-bill/get-room-bills-any-date",
@@ -145,52 +147,55 @@ export const API = {
     },
     COMMENT: {
       HOTEL_COMMENT: {
-        GET_COMMENT_NEED_DELETE: "/v1.0/hotel-comment/get-hotel-comments-need-delete",
+        GET_COMMENT_NEED_DELETE:
+          "/v1.0/hotel-comment/get-hotel-comments-need-delete",
         DECLINE_DELETE_COMMENT: "/v1.0/hotel-comment/decline-delete/:id",
         DELETE: "/v1.0/hotel-comment/delete/:id",
       },
       TOUR_COMMENT: {
-        GET_COMMENT_NEED_DELETE: "/v1.0/tour-comment/get-tour-comments-need-delete",
+        GET_COMMENT_NEED_DELETE:
+          "/v1.0/tour-comment/get-tour-comments-need-delete",
         DECLINE_DELETE_COMMENT: "/v1.0/tour-comment/decline-delete/:id",
         DELETE: "/v1.0/tour-comment/delete/:id",
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 export const VALIDATION = {
-  password: /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[a-zA-Z0-9!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]*$/,
+  password:
+    /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[a-zA-Z0-9!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]*$/,
   phone: /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/,
 };
 
 export const ratingList = [
   {
     id: 1,
-    value: '1',
+    value: "1",
     // label: '🌟',
     label: 1,
   },
   {
     id: 2,
-    value: '2',
+    value: "2",
     // label: '🌟🌟',
     label: 2,
   },
   {
     id: 3,
-    value: '3',
+    value: "3",
     // label: '🌟🌟🌟',
     label: 3,
   },
   {
     id: 4,
-    value: '4',
+    value: "4",
     // label: '🌟🌟🌟🌟',
-    label:4,
+    label: 4,
   },
   {
     id: 5,
-    value: '5',
+    value: "5",
     // label: '🌟🌟🌟🌟🌟',
     label: 5,
   },
@@ -205,4 +210,4 @@ export const tagsOption = [
   { id: 6, name: "Chill", value: "Chill" },
   { id: 7, name: "Music", value: "Music" },
   { id: 8, name: "Eat", value: "Eat" },
-]
+];

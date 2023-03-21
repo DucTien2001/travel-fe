@@ -216,22 +216,26 @@ const Login: NextPage = () => {
                               control={control}
                               render={({ field }) => (
                                 <>
-                                  <InputCheckbox
-                                    content="Normal"
-                                    checked={field.value === EUserType.USER}
-                                    onChange={() => {
-                                      setValue("role", EUserType.USER);
-                                    }}
-                                  />
-                                  <InputCheckbox
-                                    content="Enterprise"
-                                    checked={
-                                      field.value === EUserType.ENTERPRISE
-                                    }
-                                    onChange={() => {
-                                      setValue("role", EUserType.ENTERPRISE);
-                                    }}
-                                  />
+                                  <Grid sx={{ paddingRight: "14px" }}>
+                                    <InputCheckbox
+                                      content="Normal"
+                                      checked={field.value === EUserType.USER}
+                                      onChange={() => {
+                                        setValue("role", EUserType.USER);
+                                      }}
+                                    />
+                                  </Grid>
+                                  <Grid>
+                                    <InputCheckbox
+                                      content="Enterprise"
+                                      checked={
+                                        field.value === EUserType.ENTERPRISE
+                                      }
+                                      onChange={() => {
+                                        setValue("role", EUserType.ENTERPRISE);
+                                      }}
+                                    />
+                                  </Grid>
                                 </>
                               )}
                             />
