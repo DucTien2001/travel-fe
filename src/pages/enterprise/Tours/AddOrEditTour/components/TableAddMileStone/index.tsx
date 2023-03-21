@@ -1,16 +1,5 @@
 import React, { useMemo, memo, useEffect } from "react";
-import {
-  Form,
-  Modal,
-  ModalProps,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
+import { ModalProps } from "reactstrap";
 import classes from "./styles.module.scss";
 import * as yup from "yup";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
@@ -26,24 +15,11 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import TimePicker from "components/common/inputs/TimePicker";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import AddAlarmIcon from "@mui/icons-material/AddAlarm";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import DeleteIcon from "@mui/icons-material/Delete";
-import InputTextfield from "components/common/inputs/InputTextfield";
 import InputTimePicker from "components/common/inputs/TimePicker";
 import Button, { BtnType } from "components/common/buttons/Button";
 import TableHeader from "components/Table/TableHeader";
 import { TableHeaderLabel } from "models/general";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
-import {
-  AddCircle,
-  DeleteOutlineOutlined,
-  EditOutlined,
-} from "@mui/icons-material";
-import clsx from "clsx";
+import { AddCircle, DeleteOutlineOutlined } from "@mui/icons-material";
 import InputLineTextField from "components/common/inputs/InputLineTextfield";
 
 const tableHeaders: TableHeaderLabel[] = [

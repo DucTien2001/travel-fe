@@ -17,18 +17,19 @@ import { ETour } from "models/enterprise";
 
 import "react-quill/dist/quill.snow.css";
 import { Grid, IconButton } from "@mui/material";
-
-import InputTextfield from "components/common/inputs/InputTextfield";
-import TimePicker from "components/common/inputs/TimePicker";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import AddAlarmIcon from "@mui/icons-material/AddAlarm";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { number } from "yup/lib/locale";
 import Button, { BtnType } from "components/common/buttons/Button";
 import TableAddMileStone from "../TableAddMileStone";
+import { ScheduleItem } from "models/tour";
+import { DeleteOutlineOutlined } from "@mui/icons-material";
+import clsx from "clsx";
 export interface ScheduleForm {
-  day: {}[];
+  schedule: {
+    day: number;
+    scheduleItem: ScheduleItem[];
+  }[];
 }
 
 interface Props {
@@ -41,11 +42,18 @@ interface Props {
 const InformationComponent = memo((props: Props) => {
   const { value, index, itemEdit } = props;
 
-  const [openAddMileStone, setOpenAddMileStone] = useState(false);
-
   const schema = useMemo(() => {
     return yup.object().shape({
-      day: yup.array(),
+      schedule: yup.array(
+        yup.object({
+          day: yup
+            .number()
+            .typeError("Day is required.")
+            .positive("Day must be a positive number")
+            .required("Day is required."),
+          scheduleItem: yup.array().required("Schedule item is required"),
+        })
+      ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -63,23 +71,30 @@ const InformationComponent = memo((props: Props) => {
   });
 
   const {
-    fields: fieldsDay,
-    append: appendDay,
-    remove: removeDay,
+    fields: fieldsSchedule,
+    append: appendSchedule,
+    remove: removeSchedule,
   } = useFieldArray({
     control,
-    name: "day",
+    name: "schedule",
   });
 
-  const onOpenAddMileStone = () => {
-    setOpenAddMileStone(true);
+  const onAddSchedule = () => {
+    appendSchedule({
+      day: 1,
+      scheduleItem: [],
+    });
   };
 
-  const onToggleAddMileStone = () => {
-    setOpenAddMileStone(!openAddMileStone);
+  const onDeleteSchedule = (index) => () => {
+    removeSchedule(index);
   };
 
   const _onSubmit = (data: ScheduleForm) => {};
+
+  useEffect(() => {
+    onAddSchedule();
+  }, [appendSchedule]);
 
   return (
     <div
@@ -95,17 +110,51 @@ const InformationComponent = memo((props: Props) => {
           className={classes.root}
         >
           <h3 className={classes.title}>Tour&apos;s Schedule</h3>
-          <Grid sx={{ display: "flex", alignItems: "center" }}>
-            <Grid className={classes.boxDateTitle}>
-              <p>Day 1</p>
-            </Grid>
-          </Grid>
-          <Grid sx={{ paddingTop: "16px" }}>
-            <TableAddMileStone />
-          </Grid>
+          {!!fieldsSchedule?.length &&
+            fieldsSchedule?.map((field, index) => (
+              <Grid key={index}>
+                <Grid sx={{ display: "flex", alignItems: "center" }}>
+                  <Grid className={classes.boxDateTitle}>
+                    <p>Day {index + 1}</p>
+                  </Grid>
+                  <IconButton
+                    onClick={onDeleteSchedule(index)}
+                    disabled={fieldsSchedule?.length !== 1 ? false : true}
+                  >
+                    <DeleteOutlineOutlined
+                      sx={{ marginRight: "0.25rem" }}
+                      className={classes.iconDelete}
+                      color={
+                        fieldsSchedule?.length !== 1 ? "error" : "disabled"
+                      }
+                      fontSize="small"
+                    />
+                  </IconButton>
+                </Grid>
+                <Grid sx={{ paddingTop: "16px" }}>
+                  <TableAddMileStone />
+                </Grid>
+              </Grid>
+            ))}
           <Grid className={classes.boxAddDay}>
-            <Button btnType={BtnType.Outlined}>
+            <Button btnType={BtnType.Outlined} onClick={onAddSchedule}>
               <AddCircleIcon /> Click add to day
+            </Button>
+          </Grid>
+          <Grid className={classes.boxControl}>
+            <Button
+              btnType={BtnType.Primary}
+              type="submit"
+              className={classes.btnFooter}
+            >
+              Save
+            </Button>
+            <Button
+              btnType={BtnType.Outlined}
+              type="submit"
+              className={clsx(classes.btnFooter, classes.btnUpdate)}
+            >
+              Update
             </Button>
           </Grid>
         </Grid>

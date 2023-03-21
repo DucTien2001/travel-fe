@@ -24,5 +24,19 @@
     margin-left: 24px;
 }
 .boxAddDay {
-    margin-top: 32px;
+    margin-top: 24px;
+}
+
+.boxControl{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0;
+    .btnUpdate {
+        margin: 16px 0 0 0;
+    }
+    .btnFooter {
+        width: 50%;
+    }
 }

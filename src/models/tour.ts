@@ -30,7 +30,12 @@ export interface Tour {
     contact: string;
     isTemporarilyStopWorking?: boolean;
 }
-
+export interface ScheduleItem {
+    startTime: Date;
+    endTime: Date;
+    description: string;
+  }
+  
 export interface Image {
     altText: string;
     caption: string;
