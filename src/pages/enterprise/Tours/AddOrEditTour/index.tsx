@@ -50,6 +50,7 @@ import { CheckCircle } from "@mui/icons-material";
 import { TourHelper } from "helpers/tour";
 import { ReducerType } from "redux/reducers";
 import Schedule from "./components/Schedule";
+import RangePrice from "./components/RangePrice";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const modules = {
@@ -183,6 +184,7 @@ const AddOrEditTour = memo((props: Props) => {
         </Box>
         <Information itemEdit={itemEdit} value={value} index={0} />
         <Schedule itemEdit={itemEdit} value={value} index={1} />
+        <RangePrice itemEdit={itemEdit} value={value} index={2} />
       </div>
     </>
   );

@@ -69,7 +69,7 @@ const CustomDatePicker = memo(
                         _onChange && _onChange();
                         return field?.onChange(date);
                       }}
-                      dateFormat={dateFormat || "D/M/YYYY"}
+                      dateFormat={"D/M/YYYY"}
                       inputProps={{
                         className: "form-control",
                         placeholder: `${placeholder}`,
@@ -97,7 +97,7 @@ const CustomDatePicker = memo(
                 className: "form-control",
                 placeholder: `${placeholder}`,
               }}
-              dateFormat="YYYY-MM"
+              dateFormat={"D/M/YYYY"}
               onChange={(date) => {
                 _onChange && _onChange();
               }}

@@ -1,7 +1,7 @@
 import React, { useMemo, memo, useEffect } from "react";
 import { ModalProps } from "reactstrap";
 import classes from "./styles.module.scss";
-import * as yup from "yup";
+
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -21,6 +21,8 @@ import TableHeader from "components/Table/TableHeader";
 import { TableHeaderLabel } from "models/general";
 import { AddCircle, DeleteOutlineOutlined } from "@mui/icons-material";
 import InputLineTextField from "components/common/inputs/InputLineTextfield";
+import moment from "moment";
+import yup from "configs/yup.custom";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "From", label: "From", sortable: false },
@@ -37,23 +39,50 @@ export interface MileStoneForm {
   }[];
 }
 
-interface Props extends ModalProps {}
+interface Props {
+  day: number;
+}
 
 // eslint-disable-next-line react/display-name
 const PopupAddMileStone = memo((props: Props) => {
-  const {} = props;
+  const { day } = props;
 
   const schema = useMemo(() => {
+    const min = moment().startOf("day").toDate();
+    const max = moment().startOf("day").toDate();
     return yup.object().shape({
       mileStone: yup.array(
         yup.object({
           startTime: yup
             .date()
-            .max(yup.ref("endTime"), "Start time must be less than end time")
+            .typeError("Start time is required")
+            .startTime({
+              lessThan: function (params: any) {
+                return `Start time must be less than End Time`;
+              },
+              between: function (params: any) {
+                return `Start time must be less than ${params.greaterThan}`;
+              },
+            })
+            .min(
+              min,
+              `Start time must be greater than or equal to ${moment(min).format(
+                "mm:ss"
+              )}`
+            )
             .required("Start time is required"),
           endTime: yup
             .date()
-            .max(yup.ref("startTime"), "End time must be less than start time")
+            .typeError("End time is required")
+            // .max(yup.ref("startTime"), `End time must be greater than ${startTime}`)
+            .endTime({
+              moreThan: function (params: any) {
+                return `End time must be greater than Start Time`;
+              },
+              between: function (params: any) {
+                return `End time must be greater than ${params.lessThan}`;
+              },
+            })
             .required("End time is required"),
           content: yup.string().required("Content is required"),
         })
@@ -93,14 +122,21 @@ const PopupAddMileStone = memo((props: Props) => {
     removeMileStone(index);
   };
 
-  const _onSubmit = () => {};
+  const _onSubmit = (data: MileStoneForm) => {
+    console.log(
+      day,
+      data?.mileStone,
+
+      "========"
+    );
+  };
 
   useEffect(() => {
     onAddMileStone();
   }, [appendMileStone]);
 
   return (
-    <Grid component="form">
+    <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
       <Table className={classes.table}>
         <TableHeader headers={tableHeaders}></TableHeader>
         <TableBody>

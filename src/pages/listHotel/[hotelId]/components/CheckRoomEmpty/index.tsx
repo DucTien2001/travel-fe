@@ -203,8 +203,6 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
     return isOK;
   };
 
-  console.log(listRooms);
-
   let totalPrice = 0;
   let totalRoom = 0;
   for (var i = 0; i < listRooms.length; i++) {
@@ -251,6 +249,8 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
   };
 
   const watchStartDate = watch("departure");
+
+  console.log(watchStartDate);
   const disableEndDt = (current) => {
     return current.isAfter(watchStartDate);
   };

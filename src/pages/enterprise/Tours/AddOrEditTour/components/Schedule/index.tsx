@@ -21,14 +21,13 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { number } from "yup/lib/locale";
 import Button, { BtnType } from "components/common/buttons/Button";
-import TableAddMileStone from "../TableAddMileStone";
+import TableAddMileStone from "./components/TableAddMileStone";
 import { ScheduleItem } from "models/tour";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import clsx from "clsx";
 export interface ScheduleForm {
   schedule: {
     day: number;
-    scheduleItem: ScheduleItem[];
   }[];
 }
 
@@ -51,7 +50,6 @@ const InformationComponent = memo((props: Props) => {
             .typeError("Day is required.")
             .positive("Day must be a positive number")
             .required("Day is required."),
-          scheduleItem: yup.array().required("Schedule item is required"),
         })
       ),
     });
@@ -81,16 +79,13 @@ const InformationComponent = memo((props: Props) => {
 
   const onAddSchedule = () => {
     appendSchedule({
-      day: 1,
-      scheduleItem: [],
+      day: null,
     });
   };
 
   const onDeleteSchedule = (index) => () => {
     removeSchedule(index);
   };
-
-  const _onSubmit = (data: ScheduleForm) => {};
 
   useEffect(() => {
     onAddSchedule();
@@ -104,11 +99,7 @@ const InformationComponent = memo((props: Props) => {
       aria-labelledby={`simple-tab-${index}`}
     >
       {value === index && (
-        <Grid
-          component="form"
-          onSubmit={handleSubmit(_onSubmit)}
-          className={classes.root}
-        >
+        <Grid className={classes.root}>
           <h3 className={classes.title}>Tour&apos;s Schedule</h3>
           {!!fieldsSchedule?.length &&
             fieldsSchedule?.map((field, index) => (
@@ -132,29 +123,13 @@ const InformationComponent = memo((props: Props) => {
                   </IconButton>
                 </Grid>
                 <Grid sx={{ paddingTop: "16px" }}>
-                  <TableAddMileStone />
+                  <TableAddMileStone day={index + 1} />
                 </Grid>
               </Grid>
             ))}
           <Grid className={classes.boxAddDay}>
             <Button btnType={BtnType.Outlined} onClick={onAddSchedule}>
               <AddCircleIcon /> Click add to day
-            </Button>
-          </Grid>
-          <Grid className={classes.boxControl}>
-            <Button
-              btnType={BtnType.Primary}
-              type="submit"
-              className={classes.btnFooter}
-            >
-              Save
-            </Button>
-            <Button
-              btnType={BtnType.Outlined}
-              type="submit"
-              className={clsx(classes.btnFooter, classes.btnUpdate)}
-            >
-              Update
             </Button>
           </Grid>
         </Grid>
