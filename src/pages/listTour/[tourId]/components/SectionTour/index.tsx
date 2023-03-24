@@ -45,6 +45,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputSelect from "components/common/inputs/InputSelect";
 import InputCounter from "components/common/inputs/InputCounter";
+import Map from "../../../../../components/common/Map";
 
 const steps = [
   {
@@ -136,6 +137,16 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
 
   const _numberOfAdult = watch("numberOfAdult");
   const _numberOfChild = watch("numberOfChild");
+
+  const [coords, setCoords] = useState(null);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { longitude, latitude } }) => {
+        setCoords({ lat: latitude, lng: longitude });
+      }
+    );
+  }, []);
 
   return (
     <>
@@ -270,7 +281,7 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                     143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh
                     Kiên Giang, Vietnam
                   </p>
-                  <div className={classes.map}></div>
+                  <Map coords={coords} className={classes.map} />
                   <div className={classes.contactBox}>
                     <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
                     <p>Contact Partner: </p>
