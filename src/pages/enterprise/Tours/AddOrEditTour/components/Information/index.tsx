@@ -132,9 +132,9 @@ const InformationComponent = memo((props: Props) => {
       termsAndCondition: yup
         .string()
         .required("Terms and Condition is required"),
-      // images: yup.mixed().test("required", "Please select images", (value) => {
-      //   return value && value.length;
-      // }),
+      images: yup.array(
+        yup.mixed()
+      ),
       // imagesRoom: yup.array().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,6 +145,8 @@ const InformationComponent = memo((props: Props) => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    getValues,
     control,
     watch,
   } = useForm<TourForm>({
@@ -174,6 +176,8 @@ const InformationComponent = memo((props: Props) => {
   const handleFile = async (e) => {
     e.stopPropagation();
     let files = e.target.files;
+    const _image = getValues("images")
+    setValue("images", [..._image, files[0]])
     for (let file of files) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -202,7 +206,9 @@ const InformationComponent = memo((props: Props) => {
     formData.append("numberOfNights", `${data.numberOfNights}`);
     formData.append("highlight", data.highlight);
     formData.append("termsAndCondition", data.termsAndCondition);
-    formData.append("files", `${data.images}`);
+    data?.images?.forEach((item, index) => {
+      formData.append(`images${index}`, item);
+    })
     // formData.append("user", `${user}`);
     TourService.createTour(formData)
       .then(() => {
