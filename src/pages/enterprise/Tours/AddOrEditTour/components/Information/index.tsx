@@ -1,17 +1,11 @@
-import React, { useMemo, memo, useCallback, useState, useEffect } from "react";
-import { Row, Form, Col, Input } from "reactstrap";
+import React, { useMemo, memo, useState, useEffect } from "react";
+import { Row, Col, Input } from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import Button, { BtnType } from "components/common/buttons/Button";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import InputTextArea from "components/common/inputs/InputTextArea";
-import InputTags from "components/common/inputs/InputTags";
-import InputSelect from "components/common/inputs/InputSelect";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import UploadImage from "components/UploadImage";
-import UploadFile from "components/UploadFile";
 import { useDispatch } from "react-redux";
 import { TourService } from "services/enterprise/tour";
 import useAuth from "hooks/useAuth";
@@ -21,30 +15,18 @@ import {
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
 import { ETour } from "models/enterprise";
-import axios from "axios";
-import { ImageService } from "services/image";
-import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
-import { getAllTours as getAllToursNormal } from "redux/reducers/Normal/actionTypes";
-import { tagsOption, VALIDATION } from "configs/constants";
-import { languagesType, OptionItem } from "models/general";
+import { VALIDATION } from "configs/constants";
+import { OptionItem } from "models/general";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendarDays,
-  faCamera,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
-import CustomSelect from "components/common/CustomSelect";
 import clsx from "clsx";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Box, Grid, Tab, Tabs } from "@mui/material";
-import { EActiveNav } from "pages/enterprise";
+import { Grid } from "@mui/material";
 import InputTextfield from "components/common/inputs/InputTextfield";
-import InputDatePicker from "components/common/inputs/InputDatePicker";
+import InputLocation from "components/common//GoogleAddress";
 import InputCreatableSelect from "components/common/inputs/InputCreatableSelect";
-
+import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const modules = {
   toolbar: [
@@ -145,10 +127,10 @@ const InformationComponent = memo((props: Props) => {
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
     getValues,
     control,
     watch,
+    setValue,
   } = useForm<TourForm>({
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -235,6 +217,9 @@ const InformationComponent = memo((props: Props) => {
   //   }
   // }, [reset, itemEdit]);
 
+  const watchlocation = watch("moreLocation");
+  console.log(watchlocation);
+
   useEffect(() => {
     if (!itemEdit) {
       clearForm();
@@ -306,13 +291,32 @@ const InformationComponent = memo((props: Props) => {
               />
             </Grid>
             <Grid item xs={6}>
-              <InputTextfield
+              {/* <InputTextfield
                 title="More location"
                 placeholder="Enter more location"
                 autoComplete="off"
                 name="moreLocation"
                 inputRef={register("moreLocation")}
                 errorMessage={errors.moreLocation?.message}
+              /> */}
+
+              <Controller
+                name="moreLocation"
+                control={control}
+                render={({ field }) => (
+                  <InputLocation
+                    {...field}
+                    title="More location"
+                    ref={null}
+                    placeholder="Your nearest town or city"
+                    errorMessage={errors.moreLocation?.message}
+                    value={field.value}
+                    onChange={(value: any) => {
+                      setValue("moreLocation", value?.address?.city);
+                      return field.onChange(value?.address?.formattedAddress);
+                    }}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={6}>
