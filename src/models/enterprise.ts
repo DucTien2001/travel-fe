@@ -43,6 +43,12 @@ export interface EUpdateTour {
   isTemporarilyStopWorking?: boolean;
 }
 
+export interface GetTours {
+  take: number;
+  page: number;
+  keyword?: string;
+}
+
 export interface EGetRoomsAvailable {
   hotelId: number;
   startDate: Date;
