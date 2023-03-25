@@ -98,6 +98,8 @@ export const API = {
     TOUR: {
       DEFAULT: "/v1.0/enterprise/tour",
       CREATE_TOUR: "/v1.0/enterprise/tour",
+      CREATE_SCHEDULE_TOUR: "/v1.0/enterprise/tour-schedule/multi",
+      CREATE_PRICE_TOUR: "/v1.0/enterprise/tour-on-sale",
       UPDATE_TOUR: "/v1.0/tour/update/:id",
       DELETE_TOUR: "/v1.0/tour/delete/:id",
       GET_TOURS: "/v1.0/tour/get-tours/:id",

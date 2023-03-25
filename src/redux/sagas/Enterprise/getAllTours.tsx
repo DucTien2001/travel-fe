@@ -9,8 +9,8 @@ import { TourService } from "services/enterprise/tour";
 function* requestGetAllTours(data: { type: string; userId: number }) {
   try {
     yield put(setLoading(true));
-    // const hotels = yield call(TourService.getTours, data.userId);
-    // yield put(setAllToursReducer(hotels.data));
+    // const tours = yield call(TourService.getTours, data.userId);
+    // yield put(setAllToursReducer(tours.data));
   } catch (e: any) {
     console.log(e);
   } finally {

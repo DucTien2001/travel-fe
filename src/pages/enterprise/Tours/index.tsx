@@ -3,14 +3,9 @@ import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPen,
-  faTrash,
   faCaretDown,
   faSearch,
   faPlus,
-  faCircleCheck,
-  faCircleMinus,
-  faHourglass,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   Row,
@@ -20,19 +15,16 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
-import PopupConfirmStop from "components/Popup/PopupDefault";
-import { ETour } from "models/enterprise";
+import { AdminGetTours, ETour } from "models/enterprise";
 import { useDispatch, useSelector } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/enterprise/tour";
 import SearchNotFound from "components/SearchNotFound";
 import { ReducerType } from "redux/reducers";
-import { getAllTours } from "redux/reducers/Enterprise/actionTypes";
-import { fCurrency2VND } from "utils/formatNumber";
+
 import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
-import { getAllTours as getAllToursOfNormal } from "redux/reducers/Normal/actionTypes";
+
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -54,7 +46,7 @@ import {
   TableCell,
 } from "@mui/material";
 import TableHeader from "components/Table/TableHeader";
-import { TableHeaderLabel } from "models/general";
+import { DataPagination, TableHeaderLabel } from "models/general";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import {
   HideSource,
@@ -67,7 +59,6 @@ import StatusChip from "components/StatusChip";
 const tableHeaders: TableHeaderLabel[] = [
   { name: "id", label: "Id", sortable: false },
   { name: "name", label: "Name", sortable: false },
-  { name: "price", label: "Price", sortable: false },
   { name: "status", label: "Status", sortable: false },
   { name: "languages", label: "Languages", sortable: false },
   { name: "actions", label: "Actions", sortable: false },
@@ -82,13 +73,16 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const Tour = memo(({ onChangeTabCreate, handleTourEdit }: Props) => {
   const dispatch = useDispatch();
-  const { allTours } = useSelector((state: ReducerType) => state.enterprise);
+  // const { allTours } = useSelector((state: ReducerType) => state.enterprise);
   const { user } = useSelector((state: ReducerType) => state.user);
+
+  const [keyword, setKeyword] = useState<string>("");
+  const [data, setData] = useState<DataPagination<ETour>>();
+
   const [tourAction, setTourAction] = useState<ETour>();
   const [tourDelete, setTourDelete] = useState<ETour>(null);
   const [tourStop, setTourStop] = useState<ETour>(null);
   const [openPopupConfirmStop, setOpenPopupConfirmStop] = useState(false);
-  const [listTours, setListTours] = useState([]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -187,9 +181,39 @@ const Tour = memo(({ onChangeTabCreate, handleTourEdit }: Props) => {
     //   });
   };
 
+  // useEffect(() => {
+  //   setListTours(allTours);
+  // }, [dispatch, allTours]);
+
+  const fetchData = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+  }) => {
+    const params: AdminGetTours = {
+      take: value?.take || data?.meta?.take || 10,
+      page: value?.page || data?.meta?.page || 1,
+      keyword: keyword,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
+    }
+    dispatch(setLoading(true));
+    TourService.getTours(params)
+      .then((res) => {
+        setData({
+          data: res.data,
+          meta: res.meta,
+        });
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
   useEffect(() => {
-    setListTours(allTours);
-  }, [dispatch, allTours]);
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -219,127 +243,125 @@ const Tour = memo(({ onChangeTabCreate, handleTourEdit }: Props) => {
         <Table className={classes.table}>
           <TableHeader headers={tableHeaders} />
           <TableBody>
-            {listTours?.map((item, index) => {
-              return (
-                <TableRow key={index}>
-                  <TableCell scope="row" className={classes.tableCell}>
-                    {item.id}
-                  </TableCell>
-                  <TableCell className={classes.tableCell} component="th">
-                    <a
-                      href={`/listTour/:${item?.tourId}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={classes.tourName}
-                    >
-                      {item?.title}
-                    </a>
-                  </TableCell>
-                  <TableCell className={classes.tableCell} component="th">
-                    {fCurrency2VND(item?.price)} VND
-                  </TableCell>
-                  <TableCell className={classes.tableCell} component="th">
-                    <StatusChip status={!item?.isTemporarilyStopWorking} />
-                  </TableCell>
-                  <TableCell className={classes.tableCell} component="th">
-                    vi
-                  </TableCell>
-                  <TableCell className="text-center" component="th">
-                    <UncontrolledDropdown>
-                      <DropdownToggle
-                        color="default"
-                        data-toggle="dropdown"
-                        href="#pablo"
-                        id="navbarDropdownMenuLink1"
-                        nav
-                        onClick={(event) => {
-                          handleAction(event, item);
-                        }}
+            {data?.data?.length ? (
+              data.data?.map((item, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell scope="row" className={classes.tableCell}>
+                      {item.id}
+                    </TableCell>
+                    <TableCell className={classes.tableCell} component="th">
+                      <a
+                        href={`/listTour/:${item?.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={classes.tourName}
                       >
-                        <FontAwesomeIcon
-                          icon={faCaretDown}
-                          className={classes.iconAction}
-                        />
-                      </DropdownToggle>
-                      <DropdownMenu
-                        aria-labelledby="navbarDropdownMenuLink1"
-                        className={classes.dropdownMenu}
-                      >
-                        <DropdownItem
-                          className={classes.dropdownItem}
-                          onClick={(e) =>
-                            handleTourEdit(
-                              e,
-                              item,
-                              EActiveNav.Create_Tour_Active
-                            )
-                          }
+                        {item?.title}
+                      </a>
+                    </TableCell>
+                    <TableCell className={classes.tableCell} component="th">
+                      <StatusChip status={!item?.isTemporarilyStopWorking} />
+                    </TableCell>
+                    <TableCell className={classes.tableCell} component="th">
+                      vi
+                    </TableCell>
+                    <TableCell className="text-center" component="th">
+                      <UncontrolledDropdown>
+                        <DropdownToggle
+                          color="default"
+                          data-toggle="dropdown"
+                          href="#pablo"
+                          id="navbarDropdownMenuLink1"
+                          nav
+                          onClick={(event) => {
+                            handleAction(event, item);
+                          }}
                         >
-                          <Box display="flex" alignItems={"center"}>
-                            <EditOutlined
-                              sx={{ marginRight: "0.25rem" }}
-                              fontSize="small"
-                            />
-                            <span>Edit</span>
-                          </Box>
-                        </DropdownItem>
-                        {!item?.isTemporarilyStopWorking ? (
+                          <FontAwesomeIcon
+                            icon={faCaretDown}
+                            className={classes.iconAction}
+                          />
+                        </DropdownToggle>
+                        <DropdownMenu
+                          aria-labelledby="navbarDropdownMenuLink1"
+                          className={classes.dropdownMenu}
+                        >
                           <DropdownItem
                             className={classes.dropdownItem}
-                            onClick={(e) => onWorkAgain(e, item)}
+                            onClick={(e) =>
+                              handleTourEdit(
+                                e,
+                                item,
+                                EActiveNav.Create_Tour_Active
+                              )
+                            }
                           >
                             <Box display="flex" alignItems={"center"}>
-                              <Done
+                              <EditOutlined
                                 sx={{ marginRight: "0.25rem" }}
-                                color="success"
                                 fontSize="small"
                               />
-                              <span>Active</span>
+                              <span>Edit</span>
                             </Box>
                           </DropdownItem>
-                        ) : (
+                          {!item?.isTemporarilyStopWorking ? (
+                            <DropdownItem
+                              className={classes.dropdownItem}
+                              onClick={(e) => onWorkAgain(e, item)}
+                            >
+                              <Box display="flex" alignItems={"center"}>
+                                <Done
+                                  sx={{ marginRight: "0.25rem" }}
+                                  color="success"
+                                  fontSize="small"
+                                />
+                                <span>Active</span>
+                              </Box>
+                            </DropdownItem>
+                          ) : (
+                            <DropdownItem
+                              className={classes.dropdownItem}
+                              onClick={(e) => onTemporarilyStopWorking(e, item)}
+                            >
+                              <Box display="flex" alignItems={"center"}>
+                                <HideSource
+                                  sx={{ marginRight: "0.25rem" }}
+                                  color="error"
+                                  fontSize="small"
+                                />
+                                <span>Inactive</span>
+                              </Box>
+                            </DropdownItem>
+                          )}
                           <DropdownItem
-                            className={classes.dropdownItem}
-                            onClick={(e) => onTemporarilyStopWorking(e, item)}
+                            className={clsx(
+                              classes.dropdownItem,
+                              classes.itemDelete
+                            )}
+                            onClick={onShowConfirm}
                           >
                             <Box display="flex" alignItems={"center"}>
-                              <HideSource
+                              <DeleteOutlineOutlined
                                 sx={{ marginRight: "0.25rem" }}
                                 color="error"
                                 fontSize="small"
                               />
-                              <span>Inactive</span>
+                              <span>Delete</span>
                             </Box>
                           </DropdownItem>
-                        )}
-                        <DropdownItem
-                          className={clsx(
-                            classes.dropdownItem,
-                            classes.itemDelete
-                          )}
-                          onClick={onShowConfirm}
-                        >
-                          <Box display="flex" alignItems={"center"}>
-                            <DeleteOutlineOutlined
-                              sx={{ marginRight: "0.25rem" }}
-                              color="error"
-                              fontSize="small"
-                            />
-                            <span>Delete</span>
-                          </Box>
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-            {!listTours?.length && (
-              <tr>
-                <td scope="row" colSpan={5}>
-                  <SearchNotFound />
-                </td>
-              </tr>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell align="center" colSpan={6}>
+                  <SearchNotFound searchQuery={keyword} />
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>

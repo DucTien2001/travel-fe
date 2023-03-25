@@ -31,11 +31,31 @@ export interface Tour {
     isTemporarilyStopWorking?: boolean;
 }
 export interface ScheduleItem {
+    id?: number
     startTime: Date;
     endTime: Date;
     description: string;
   }
+  export interface CreateMultipleSchedule {
+    id?: number
+    tourId: number;
+    day: number;
+    schedule: ScheduleItem[];
+  }
+  interface Price {
+    title: string;
+    minOld: number;
+    maxOld: number;
+    price: number;
+  }
   
+  export interface CreatePrice {
+    tourId: number;
+    discount: number;
+    quantity: number;
+    startDate: Date;
+    prices: Price[];
+  }    
 export interface Image {
     altText: string;
     caption: string;

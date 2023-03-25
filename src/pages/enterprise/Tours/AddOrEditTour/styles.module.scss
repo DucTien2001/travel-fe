@@ -15,6 +15,58 @@
       padding: 48px 24px 24px 32px; 
   }
 }
+
+
+.rootStepper {
+  padding: 30px 0px 48px 0px;
+  width: 624px;
+  margin: auto;
+  min-width: 624px;
+  @media only screen and (max-width: 767px) {
+    min-width: 340px;
+    width: auto;
+    padding: 30px 0px 30px 0px;
+  }
+}
+.rootStepLabel {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-color) !important;
+  font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+  &[class~="MuiStepLabel-label"] {
+      margin-top: 8px !important;
+  }
+  @media only screen and (max-width: 767px) {
+    font-size: 14px;
+  }
+}
+.rootStepLabelCompleted {
+  color: var(--text-color) !important;
+  font-weight: 600 !important;
+  font-size: 16px;
+  @media only screen and (max-width: 767px) {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+.rootStepLabelActive {
+  color: var(--text-color) !important;
+  font-weight: 600 !important;
+  font-size: 16px;
+  @media only screen and (max-width: 767px) {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+.rootConnector {
+  top: 16px !important;
+  margin: 0px 7px !important;
+}
+.activeConnector {
+  span {
+    border-color: var(--cimigo-green-dark);
+  }
+}
 .tabsBox {
   display: flex;
   justify-content: space-between;
@@ -30,93 +82,6 @@
     }
   }
 }
-.tabsBox {
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
-  .statusBox {
-    padding-right: 48px;
-  }
-  @media only screen and (max-width: 767px) {
-    .statusBox {
-      display: none;
-    }
-  }
-}
-.rootTabs {
-  [class~="MuiTab-root"] {
-    padding: 16px 24px;
-    min-width: unset;
-    text-transform: unset;
-    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-color);
-    .tabItemIcon {
-      margin-right: 10px;
-      color: var(--gray-80);
-    }
-    &[class~="Mui-selected"] {
-      .tabItemIcon {
-        color: var(--primary-color);
-      }
-      .tabItemTitle {
-        color: var(--primary-color);
-        margin: 0 !important;
-
-      }
-    }
-    &:not(:last-child) {
-      position: relative;
-      overflow: unset;
-      margin-right: 16px;
-      &::before {
-        content: "";
-        background: url("../../../../assets/img/icon/ic-keyboard_arrow_right.svg") center no-repeat;
-        background-size: 16px;
-        width: 16px;
-        height: 16px;
-        position: absolute;
-        right: -16px;
-        top: 50%;
-        transform: translate(0px, -50%);
-      }
-    }
-    &:hover {
-      background-color: #e8f1fb;
-      .tabItemIcon {
-        color: var(--success-color);
-      }
-      .tabItemTitle {
-        color: var(--primary-color);
-      }
-      &:not([class~="Mui-selected"]) {
-        position: relative;
-        &::after {
-          content: "";
-          position: absolute;
-          width: 100%;
-          height: 2px;
-          bottom: 0;
-          left: 0;
-          border-radius: 5px;
-          background-color: var(--primary-light-color);
-        }
-      }
-    }
-  }
-  @media only screen and (max-width: 767px) {
-    [class~="MuiTab-root"] {
-      padding: 16px 8px;
-    }
-  }
-}
-
-.indicatorTabs {
-  border-radius: 5px;
-  background-color: var(--primary-color);
-}
-
 
 .title {
   h3 {
@@ -229,81 +194,5 @@
   .btnSave {
     padding: 16px 48px !important;
     font-size: 16px;
-  }
-}
-
-.editor {
-  width: 100%;
-  > * {
-    font-family: 'Montserrat' !important;
-  }
-  [class~="ql-toolbar"] {
-    border-radius: 5px 5px 0px 0px;
-    [class~="ql-formats"] {
-      [class~="ql-size"] {
-        [class~="ql-picker-item"] {
-          &::before {
-            font-size: 14px;
-          }
-          &[data-value=small] {
-            &::before {
-              font-size: 12px !important;
-            }
-          }
-          &[data-value=large] {
-            &::before {
-              font-size: 16px !important;
-            }
-          }
-          &[data-value=huge] {
-            &::before {
-              font-size: 18px !important;
-            }
-          }
-        }
-      }
-    }
-  }
-  [class~="ql-container"] {
-    border-radius: 0px 0px 5px 5px;
-  }
-  [class~="ql-editor"] {
-    min-height: 150px;
-    > * {
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 20px;
-      letter-spacing: 0.015em;
-      color: #1c1c1c;
-    }
-    
-    [class~="ql-size-small"] {
-      font-size: 12px;
-      line-height: unset;
-    }
-    [class~="ql-size-large"] {
-      font-size: 16px;
-      line-height: 20px;
-    }
-    [class~="ql-size-huge"] {
-      font-size: 18px;
-      line-height: unset;
-    }
-    ul, ol {
-      padding: 0;
-    }
-    ul {
-      li::before {
-        text-align: center;
-      }
-    }
-  }
-}
-.editorError {
-  [class~="ql-toolbar"] {
-    border-color: var(--danger-color) !important;
-  }
-  [class~="ql-container"] {
-    border-color: var(--danger-color) !important;
   }
 }

@@ -88,16 +88,6 @@ const BookingComponent: NextPage = () => {
         title="BOOK ROOM"
         src={images.pricing2.src}
       />
-      {/* <Container>
-        <Row className={classes.root}>
-          <Col xs={4} className={classes.boxLeft}>
-            <DetailRoom roomBillConfirm={roomBillConfirm} />
-          </Col>
-          <Col xs={8} className={classes.boxRight}>
-            <DetailCustomer roomBillConfirm={roomBillConfirm} />
-          </Col>
-        </Row>
-      </Container> */}
       <Grid className={classes.rootContent}>
         <Container>
           <Grid className={classes.boxStepPayment}>

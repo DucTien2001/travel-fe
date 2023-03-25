@@ -23,6 +23,15 @@ import { AddCircle, DeleteOutlineOutlined } from "@mui/icons-material";
 import InputLineTextField from "components/common/inputs/InputLineTextfield";
 import moment from "moment";
 import yup from "configs/yup.custom";
+import { useSelector } from "react-redux";
+import { ReducerType } from "redux/reducers";
+import { TourService } from "services/enterprise/tour";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
+import { useDispatch } from "react-redux";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "From", label: "From", sortable: false },
@@ -35,7 +44,7 @@ export interface MileStoneForm {
   mileStone: {
     startTime: Date;
     endTime: Date;
-    content: string;
+    description: string;
   }[];
 }
 
@@ -46,6 +55,11 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const PopupAddMileStone = memo((props: Props) => {
   const { day } = props;
+  const dispatch = useDispatch();
+
+  const { tourInformation } = useSelector(
+    (state: ReducerType) => state.enterprise
+  );
 
   const schema = useMemo(() => {
     const min = moment().startOf("day").toDate();
@@ -84,7 +98,7 @@ const PopupAddMileStone = memo((props: Props) => {
               },
             })
             .required("End time is required"),
-          content: yup.string().required("Content is required"),
+          description: yup.string().required("Content is required"),
         })
       ),
     });
@@ -114,7 +128,7 @@ const PopupAddMileStone = memo((props: Props) => {
     appendMileStone({
       startTime: null,
       endTime: null,
-      content: "",
+      description: "",
     });
   };
 
@@ -123,12 +137,20 @@ const PopupAddMileStone = memo((props: Props) => {
   };
 
   const _onSubmit = (data: MileStoneForm) => {
-    console.log(
-      day,
-      data?.mileStone,
-
-      "========"
-    );
+    if (tourInformation) {
+      dispatch(setLoading(true));
+      TourService.createScheduleTour({
+        tourId: tourInformation?.id,
+        day: day,
+        schedule: data.mileStone,
+      })
+        .then(() => {
+          dispatch(setSuccessMess("Create schedule tour successfully"));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+    }
   };
 
   useEffect(() => {
@@ -185,9 +207,11 @@ const PopupAddMileStone = memo((props: Props) => {
                 </TableCell>
                 <TableCell scope="row" className={classes.tableCell}>
                   <InputLineTextField
-                    placeholder="Enter content"
-                    inputRef={register(`mileStone.${index}.content`)}
-                    errorMessage={errors.mileStone?.[index]?.content?.message}
+                    placeholder="Enter description"
+                    inputRef={register(`mileStone.${index}.description`)}
+                    errorMessage={
+                      errors.mileStone?.[index]?.description?.message
+                    }
                   />
                 </TableCell>
                 <TableCell

@@ -7,8 +7,8 @@ export const GET_HOTELS_REQUEST = "GET_HOTELS_REQUEST";
 export const SET_HOTELS_REDUCER = "SET_HOTELS_REDUCER";
 
 //one-tour
-export const GET_TOUR_REQUEST = "GET_TOUR_REQUEST";
-export const SET_TOUR_REDUCER = "SET_TOUR_REDUCER";
+export const GET_TOUR_INFORMATION_REQUEST = "GET_TOUR_INFORMATION_REQUEST";
+export const SET_TOUR_INFORMATION_REDUCER = "SET_TOUR_INFORMATION_REDUCER";
 
 // ********** tour **********
 export const getAllTours = (userId: number) => {
@@ -26,14 +26,14 @@ export const setAllToursReducer = (data: any) => {
 };
 export const getTour = (id: number) => {
   return {
-    type: GET_TOUR_REQUEST,
+    type: GET_TOUR_INFORMATION_REQUEST,
     id,
   };
 };
 
 export const setTourReducer = (data: any) => {
   return {
-    type: SET_TOUR_REDUCER,
+    type: SET_TOUR_INFORMATION_REDUCER,
     data: data,
   };
 };

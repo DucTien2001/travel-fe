@@ -31,6 +31,7 @@ import InputDatePicker from "components/common/inputs/InputDatePicker";
 import moment from "moment";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import TableAddPriceRange from "./components/TableAddPriceRange";
+import router from "next/router";
 
 export interface SaleForm {
   sale: {
@@ -41,16 +42,16 @@ export interface SaleForm {
 }
 
 interface Props {
-  value: number;
-  index: number;
   itemEdit?: ETour;
 }
 
 // eslint-disable-next-line react/display-name
-const InformationComponent = memo((props: Props) => {
-  const { value, index, itemEdit } = props;
+const RangePriceComponent = memo((props: Props) => {
+  const { itemEdit } = props;
 
   const [datePrice, setDatePrice] = useState(new Date());
+  const [discount, setDiscount] = useState(null);
+  const [quantity, setQuantity] = useState(null);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -116,6 +117,10 @@ const InformationComponent = memo((props: Props) => {
     });
   };
 
+  const onHandleDone = () => {
+    router.push(`/enterpise`);
+  };
+
   useEffect(() => {
     onAddSale();
   }, [appendSale]);
@@ -127,94 +132,98 @@ const InformationComponent = memo((props: Props) => {
   });
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {value === index && (
-        <Grid className={classes.root}>
-          <h3 className={classes.title}>Range Price and Date</h3>
-          {!!fieldsSale?.length &&
-            fieldsSale?.map((field, index) => (
-              <Grid key={index}>
-                <Grid
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
+    <div>
+      <Grid className={classes.root}>
+        <h3 className={classes.title}>Range Price and Date</h3>
+        {!!fieldsSale?.length &&
+          fieldsSale?.map((field, index) => (
+            <Grid key={index}>
+              <Grid
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Grid>
+                  <Controller
+                    name={`sale.${index}.startDate`}
+                    control={control}
+                    render={({ field }) => (
+                      <InputDatePicker
+                        label="Date"
+                        placeholder="Select date"
+                        timeFormat={false}
+                        errorMessage={errors.sale?.[index]?.startDate?.message}
+                        onChange={(date) => {
+                          setDatePrice(date?._d);
+                          field.onChange(date);
+                        }}
+                        isValidDate={disablePastDt}
+                      />
+                    )}
+                  />
+                </Grid>
+                <IconButton
+                  sx={{ marginLeft: "24px" }}
+                  onClick={onDeleteSale(index)}
+                  disabled={fieldsSale?.length !== 1 ? false : true}
                 >
-                  <Grid>
-                    <Controller
-                      name={`sale.${index}.startDate`}
-                      control={control}
-                      render={({ field }) => (
-                        <InputDatePicker
-                          label="Date"
-                          placeholder="Select date"
-                          timeFormat={false}
-                          errorMessage={
-                            errors.sale?.[index]?.startDate?.message
-                          }
-                          onChange={(date) => {
-                            setDatePrice(date?._d);
-                            field.onChange(date);
-                          }}
-                          isValidDate={disablePastDt}
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <IconButton
-                    sx={{ marginLeft: "24px" }}
-                    onClick={onDeleteSale(index)}
-                    disabled={fieldsSale?.length !== 1 ? false : true}
-                  >
-                    <DeleteOutlineOutlined
-                      sx={{ marginRight: "0.25rem" }}
-                      className={classes.iconDelete}
-                      color={fieldsSale?.length !== 1 ? "error" : "disabled"}
-                      fontSize="small"
-                    />
-                  </IconButton>
+                  <DeleteOutlineOutlined
+                    sx={{ marginRight: "0.25rem" }}
+                    className={classes.iconDelete}
+                    color={fieldsSale?.length !== 1 ? "error" : "disabled"}
+                    fontSize="small"
+                  />
+                </IconButton>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={3}>
+                  <InputTextfield
+                    title="Total ticket"
+                    placeholder="Enter total ticket"
+                    autoComplete="off"
+                    name="quantity"
+                    onChange={(e) => {
+                      setQuantity(e.target.value);
+                    }}
+                    inputRef={register(`sale.${index}.quantity`)}
+                    errorMessage={errors.sale?.[index]?.quantity?.message}
+                  />
                 </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={3}>
-                    <InputTextfield
-                      title="Total ticket"
-                      placeholder="Enter total ticket"
-                      autoComplete="off"
-                      name="quantity"
-                      inputRef={register(`sale.${index}.quantity`)}
-                      errorMessage={errors.sale?.[index]?.quantity?.message}
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <InputTextfield
-                      title="Discount"
-                      placeholder="Enter discount"
-                      autoComplete="off"
-                      name="discount    "
-                      inputRef={register(`sale.${index}.discount`)}
-                      errorMessage={errors.sale?.[index]?.discount?.message}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid sx={{ paddingTop: "16px" }}>
-                  <TableAddPriceRange day={datePrice} />
+                <Grid item xs={3}>
+                  <InputTextfield
+                    title="Discount"
+                    placeholder="Enter discount"
+                    autoComplete="off"
+                    name="discount"
+                    onChange={(e) => {
+                      setDiscount(e.target.value);
+                    }}
+                    inputRef={register(`sale.${index}.discount`)}
+                    errorMessage={errors.sale?.[index]?.discount?.message}
+                  />
                 </Grid>
               </Grid>
-            ))}
-          <Grid className={classes.boxAddDay}>
-            <Button btnType={BtnType.Outlined} onClick={onAddSale}>
-              <AddCircleIcon /> Click add to price day
-            </Button>
-          </Grid>
+              <Grid sx={{ paddingTop: "16px" }}>
+                <TableAddPriceRange
+                  day={datePrice}
+                  quantity={quantity}
+                  discount={discount}
+                />
+              </Grid>
+            </Grid>
+          ))}
+        <Grid className={classes.boxAddDay}>
+          <Button btnType={BtnType.Outlined} onClick={onAddSale}>
+            <AddCircleIcon /> Click add to price day
+          </Button>
+          <Button btnType={BtnType.Primary} onClick={onHandleDone}>
+            Done
+          </Button>
         </Grid>
-      )}
+      </Grid>
     </div>
   );
 });
 
-export default InformationComponent;
+export default RangePriceComponent;

@@ -1,35 +1,27 @@
 import produce from "immer";
+import { OptionItem } from "models/general";
 import * as types from "./actionTypes";
 
 export interface ITour {
   id?: number;
   title: string;
-  description: string;
-  priceAdult?: number;
-  priceChild?: [];
-  childOldRangeFrom?: [];
-  childOldRangeTo?: [];
-  city?: string;
-  district?: string;
-  commune?: string;
+  city: string;
+  district: string;
+  commune: string;
   moreLocation?: string;
-  highlight?: string;
-  termsAndCondition?: string;
-  languages?: [];
-  suitablePerson?: [];
-  totalTicket?: [];
-  startDate?: [];
-  endDate?: [];
-  businessHours?: string[];
-  location?: string;
-  price?: number;
-  discount: number;
-  tags?: string[];
-  rate?: number;
-  images: string[];
-  creator: number;
   contact: string;
+  description: string;
+  highlight: string;
+  suitablePerson: OptionItem<string>[];
+  quantity: number;
+  numberOfDays: number;
+  numberOfNights: number;
+  termsAndCondition: string;
+  images?: File[];
+  rate?: number;
+  isTemporary?: boolean;
   isTemporarilyStopWorking?: boolean;
+  isDelete?: boolean;
 }
 export interface IHotel {
   id?: number;
@@ -65,13 +57,13 @@ export interface IRoom {
 export interface EnterpriseState {
   allTours: ITour[];
   allHotels: IHotel[];
-  tour: ITour;
+  tourInformation: ITour;
 }
 
 const initial: EnterpriseState = {
   allTours: [],
   allHotels: [],
-  tour: null,
+  tourInformation: null,
 };
 
 export const enterpriseReducer = (state = initial, action: any) =>
@@ -83,8 +75,8 @@ export const enterpriseReducer = (state = initial, action: any) =>
       case types.SET_HOTELS_REDUCER:
         draft.allHotels = action.data;
         break;
-      case types.SET_TOUR_REDUCER:
-        draft.tour = action.data;
+      case types.SET_TOUR_INFORMATION_REDUCER:
+        draft.tourInformation = action.data;
         break;
       default:
         return state;

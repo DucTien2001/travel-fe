@@ -23,6 +23,10 @@ import { AddCircle, DeleteOutlineOutlined } from "@mui/icons-material";
 import InputLineTextField from "components/common/inputs/InputLineTextfield";
 import moment from "moment";
 import yup from "configs/yup.custom";
+import { useDispatch, useSelector } from "react-redux";
+import { ReducerType } from "redux/reducers";
+import { TourService } from "services/enterprise/tour";
+import { setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "Title", label: "Title", sortable: false },
@@ -43,12 +47,18 @@ export interface MileStoneForm {
 
 interface Props {
   day: Date;
+  quantity: number;
+  discount: number;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddMileStone = memo((props: Props) => {
-  const { day } = props;
+  const { day, quantity, discount } = props;
+  const dispatch = useDispatch();
 
+  const { tourInformation } = useSelector(
+    (state: ReducerType) => state.enterprise
+  );
   const schema = useMemo(() => {
     return yup.object().shape({
       priceRange: yup.array(
@@ -57,11 +67,13 @@ const PopupAddMileStone = memo((props: Props) => {
           minOld: yup
             .number()
             .typeError("Min old is required")
-            .required("Min old is required"),
+            .required("Min old is required")
+            .max(yup.ref("maxOld"), "Min old must be greater than max old"),
           maxOld: yup
             .number()
             .typeError("Max old is required")
-            .required("Max old is required"),
+            .required("Max old is required")
+            .min(yup.ref("minOld"), "Max old must be greater than min old"),
           price: yup
             .number()
             .typeError("Price is required")
@@ -105,7 +117,22 @@ const PopupAddMileStone = memo((props: Props) => {
   };
 
   const _onSubmit = (data: MileStoneForm) => {
-    console.log(day, data.priceRange);
+    if (tourInformation) {
+      dispatch(setLoading(true));
+      TourService.createPriceTour({
+        tourId: tourInformation?.id,
+        startDate: day,
+        quantity: quantity,
+        discount: discount,
+        prices: data.priceRange,
+      })
+        .then(() => {
+          dispatch(setSuccessMess("Create range price tour successfully"));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+    }
   };
 
   useEffect(() => {

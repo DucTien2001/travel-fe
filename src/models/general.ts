@@ -4,7 +4,20 @@ export enum EKey {
   TOKEN = "token",
   REFRESH_TOKEN = "refresh_token",
 }
-
+export interface SortItem {
+  sortedField: string;
+  isDescending: boolean;
+}
+export interface Meta {
+  take: number;
+  itemCount: number;
+  page: number;
+  pageCount: number;
+}
+export interface DataPagination<T> {
+  data: T[];
+  meta: Meta;
+}
 export interface OptionItem<T = number> {
   id?: T | string;
   name: string;

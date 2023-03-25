@@ -27,6 +27,9 @@ import InputTextfield from "components/common/inputs/InputTextfield";
 import InputLocation from "components/common//GoogleAddress";
 import InputCreatableSelect from "components/common/inputs/InputCreatableSelect";
 import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { setTourReducer } from "redux/reducers/Enterprise/actionTypes";
+import GoogleMapReact from "google-map-react";
+
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const modules = {
   toolbar: [
@@ -58,20 +61,18 @@ export interface TourForm {
 }
 
 interface Props {
-  value: number;
-  index: number;
   itemEdit?: ETour;
+  handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const InformationComponent = memo((props: Props) => {
-  const { value, index, itemEdit } = props;
+  const { itemEdit, handleNextStep } = props;
   const dispatch = useDispatch();
   const { user } = useAuth();
 
   const [imagesPreview, setImagesPreview] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isValidValue, setIsValidValue] = useState(false);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -114,9 +115,7 @@ const InformationComponent = memo((props: Props) => {
       termsAndCondition: yup
         .string()
         .required("Terms and Condition is required"),
-      images: yup.array(
-        yup.mixed()
-      ),
+      images: yup.array(yup.mixed()),
       // imagesRoom: yup.array().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,8 +157,8 @@ const InformationComponent = memo((props: Props) => {
   const handleFile = async (e) => {
     e.stopPropagation();
     let files = e.target.files;
-    const _image = getValues("images")
-    setValue("images", [..._image, files[0]])
+    const _image = getValues("images");
+    setValue("images", [..._image, files[0]]);
     for (let file of files) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -174,30 +173,51 @@ const InformationComponent = memo((props: Props) => {
   };
 
   const _onSubmit = (data: TourForm) => {
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("city", data.city);
-    formData.append("district", data.district);
-    formData.append("commune", data.commune);
-    formData.append("moreLocation", data.moreLocation);
-    formData.append("contact", data.contact);
-    formData.append("description", data.description);
-    formData.append("suitablePerson", `${data.suitablePerson}`);
-    formData.append("quantity", `${data.quantity}`);
-    formData.append("numberOfDays", `${data.numberOfDays}`);
-    formData.append("numberOfNights", `${data.numberOfNights}`);
-    formData.append("highlight", data.highlight);
-    formData.append("termsAndCondition", data.termsAndCondition);
-    data?.images?.forEach((item, index) => {
-      formData.append(`images${index}`, item);
-    })
-    // formData.append("user", `${user}`);
-    TourService.createTour(formData)
-      .then(() => {
-        dispatch(setSuccessMess("Create tour successfully"));
-      })
-      .catch((e) => dispatch(setErrorMess(e)))
-      .finally(() => dispatch(setLoading(false)));
+    // const formData = new FormData();
+    // formData.append("title", data.title);
+    // formData.append("city", data.city);
+    // formData.append("district", data.district);
+    // formData.append("commune", data.commune);
+    // formData.append("moreLocation", data.moreLocation);
+    // formData.append("contact", data.contact);
+    // formData.append("description", data.description);
+    // formData.append("suitablePerson", `${data.suitablePerson}`);
+    // formData.append("quantity", `${data.quantity}`);
+    // formData.append("numberOfDays", `${data.numberOfDays}`);
+    // formData.append("numberOfNights", `${data.numberOfNights}`);
+    // formData.append("highlight", data.highlight);
+    // formData.append("termsAndCondition", data.termsAndCondition);
+    // data?.images?.forEach((item, index) => {
+    //   formData.append(`images${index}`, item);
+    // });
+    // dispatch(setLoading(true));
+    // TourService.createTour(formData)
+    //   .then((res) => {
+    //     dispatch(
+    //       setTourReducer({
+    //         id: res?.data?.id,
+    //         title: res?.data?.title,
+    //         city: res?.data?.city,
+    //         district: res?.data?.district,
+    //         commune: res?.data?.commune,
+    //         moreLocation: res?.data?.moreLocation,
+    //         contact: res?.data?.contact,
+    //         description: res?.data?.description,
+    //         highlight: res?.data?.highlight,
+    //         suitablePerson: res?.data?.suitablePerson,
+    //         quantity: res?.data?.quantity,
+    //         numberOfDays: res?.data?.numberOfDays,
+    //         numberOfNights: res?.data?.numberOfNights,
+    //         termsAndCondition: res?.data?.termsAndCondition,
+    //         images: res?.data?.images,
+    //       })
+    //     );
+
+    //     dispatch(setSuccessMess("Create tour successfully"));
+    //   })
+    //   .catch((e) => dispatch(setErrorMess(e)))
+    //   .finally(() => dispatch(setLoading(false)));
+    handleNextStep();
   };
 
   // useEffect(() => {
@@ -217,8 +237,16 @@ const InformationComponent = memo((props: Props) => {
   //   }
   // }, [reset, itemEdit]);
 
-  const watchlocation = watch("moreLocation");
-  console.log(watchlocation);
+  // const [coords, setCoords] = useState(null);
+  // useEffect(() => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     ({ coords: { latitude, longitude } }) => {
+  //       setCoords({ lat: latitude, lng: longitude });
+  //     }
+  //   );
+  // }, []);
+
+  // console.log(coords, "====");
 
   useEffect(() => {
     if (!itemEdit) {
@@ -228,286 +256,244 @@ const InformationComponent = memo((props: Props) => {
   }, [itemEdit]);
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {value === index && (
-        <Grid
-          component="form"
-          onSubmit={handleSubmit(_onSubmit)}
-          className={classes.form}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <InputTextfield
-                title="Tour's name"
-                placeholder="Enter tour's name"
-                inputRef={register("title")}
-                autoComplete="off"
-                name="title"
-                errorMessage={errors.title?.message}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputTextfield
-                title="Contact"
-                placeholder="Enter contact"
-                autoComplete="off"
-                name="contact"
-                inputRef={register("contact")}
-                errorMessage={errors.contact?.message}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputTextfield
-                title="City"
-                placeholder="Enter city"
-                autoComplete="off"
-                name="city"
-                inputRef={register("city")}
-                errorMessage={errors.city?.message}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputTextfield
-                title="District"
-                placeholder="Enter district"
-                name="district"
-                inputRef={register("district")}
-                errorMessage={errors.district?.message}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputTextfield
-                title="Commune"
-                autoComplete="off"
-                placeholder="Enter commune"
-                name="commune"
-                inputRef={register("commune")}
-                errorMessage={errors.commune?.message}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              {/* <InputTextfield
-                title="More location"
-                placeholder="Enter more location"
-                autoComplete="off"
-                name="moreLocation"
-                inputRef={register("moreLocation")}
-                errorMessage={errors.moreLocation?.message}
-              /> */}
-
-              <Controller
-                name="moreLocation"
-                control={control}
-                render={({ field }) => (
-                  <InputLocation
-                    {...field}
-                    title="More location"
-                    ref={null}
-                    placeholder="Your nearest town or city"
-                    errorMessage={errors.moreLocation?.message}
-                    value={field.value}
-                    onChange={(value: any) => {
-                      setValue("moreLocation", value?.address?.city);
-                      return field.onChange(value?.address?.formattedAddress);
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputCreatableSelect
-                title="Suitable person"
-                name="suitablePerson"
-                control={control}
-                selectProps={{
-                  options: [],
-                  isClearable: true,
-                  isMulti: true,
-                  placeholder: "Select suitable person",
-                }}
-                errorMessage={errors.suitablePerson?.message}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputTextfield
-                title="Quantity ticket"
-                placeholder="Enter quantity ticket"
-                autoComplete="off"
-                name="quantity"
-                inputRef={register("quantity")}
-                errorMessage={errors.quantity?.message}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputTextfield
-                title="Number of days"
-                placeholder="Enter number of days"
-                autoComplete="off"
-                name="numberOfDays"
-                inputRef={register("numberOfDays")}
-                errorMessage={errors.numberOfDays?.message}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputTextfield
-                title="Number of nights"
-                placeholder="Enter number of nights"
-                autoComplete="off"
-                name="numberOfNights"
-                inputRef={register("numberOfNights")}
-                errorMessage={errors.numberOfNights?.message}
-              />
-            </Grid>
-            <Grid xs={12} item>
-              <p className={classes.titleInput}>Description</p>
-              <Controller
-                name="description"
-                control={control}
-                render={({ field }) => (
-                  <ReactQuill
-                    modules={modules}
-                    className={clsx(classes.editor, {
-                      [classes.editorError]: !!errors.description?.message,
-                    })}
-                    value={field.value || ""}
-                    onBlur={() => field.onBlur()}
-                    onChange={(value) => field.onChange(value)}
-                  />
-                )}
-              />
-              {errors.description?.message && (
-                <ErrorMessage>{errors.description?.message}</ErrorMessage>
-              )}
-            </Grid>
-            <Grid xs={12} item>
-              <p className={classes.titleInput}>Highlight</p>
-              <Controller
-                name="highlight"
-                control={control}
-                render={({ field }) => (
-                  <ReactQuill
-                    modules={modules}
-                    className={clsx(classes.editor, {
-                      [classes.editorError]: !!errors.highlight?.message,
-                    })}
-                    value={field.value || ""}
-                    onBlur={() => field.onBlur()}
-                    onChange={(value) => field.onChange(value)}
-                  />
-                )}
-              />
-              {errors.highlight?.message && (
-                <ErrorMessage>{errors.highlight?.message}</ErrorMessage>
-              )}
-            </Grid>
-            <Grid xs={12} item>
-              <p className={classes.titleInput}>Terms and condition</p>
-              <Controller
-                name="termsAndCondition"
-                control={control}
-                render={({ field }) => (
-                  <ReactQuill
-                    modules={modules}
-                    className={clsx(classes.editor, {
-                      [classes.editorError]:
-                        !!errors.termsAndCondition?.message,
-                    })}
-                    value={field.value || ""}
-                    onBlur={() => field.onBlur()}
-                    onChange={(value) => field.onChange(value)}
-                  />
-                )}
-              />
-              {errors.termsAndCondition?.message && (
-                <ErrorMessage>{errors.termsAndCondition?.message}</ErrorMessage>
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <p className={classes.titleInput}>Upload images</p>
-              <div className={classes.containerUploadImg}>
-                <label htmlFor="file" className={classes.boxUpload}>
-                  <div>
-                    <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon>
-                    {isLoading ? <h4>Uploading...</h4> : <h4>Upload images</h4>}
-                  </div>
-                </label>
-                <Input
-                  inputRef={register("images")}
-                  onChange={handleFile}
-                  hidden
-                  type="file"
-                  id="file"
-                  multiple
-                />
-              </div>
-            </Grid>
-            <Grid item xs={12}>
-              <p className={classes.titleInput}>Images preview</p>
-              <Row>
-                {imagesPreview?.map((item, index) => {
-                  return (
-                    <Col key={index} xs={4} className={classes.imgPreview}>
-                      <img src={item} alt="preview" />
-                      <div
-                        onClick={() => handleDeleteImage(item)}
-                        title="Delete"
-                        className={classes.iconDelete}
-                      >
-                        <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                      </div>
-                    </Col>
-                  );
-                })}
-
-                {!imagesPreview?.length && (
-                  <Col className={classes.noImg}>
-                    <h4>No photos uploaded yet</h4>
-                  </Col>
-                )}
-              </Row>
-              <Row className={classes.footer}>
-                <Button
-                  btnType={BtnType.Primary}
-                  type="submit"
-                  className={classes.btnSave}
-                >
-                  Save
-                </Button>
-              </Row>
-            </Grid>
+    <div>
+      <Grid
+        component="form"
+        onSubmit={handleSubmit(_onSubmit)}
+        className={classes.form}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <InputTextfield
+              title="Tour's name"
+              placeholder="Enter tour's name"
+              inputRef={register("title")}
+              autoComplete="off"
+              name="title"
+              errorMessage={errors.title?.message}
+            />
           </Grid>
+          <Grid item xs={6}>
+            <InputTextfield
+              title="Contact"
+              placeholder="Enter contact"
+              autoComplete="off"
+              name="contact"
+              inputRef={register("contact")}
+              errorMessage={errors.contact?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputTextfield
+              title="City"
+              placeholder="Enter city"
+              autoComplete="off"
+              name="city"
+              inputRef={register("city")}
+              errorMessage={errors.city?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputTextfield
+              title="District"
+              placeholder="Enter district"
+              name="district"
+              inputRef={register("district")}
+              errorMessage={errors.district?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputTextfield
+              title="Commune"
+              autoComplete="off"
+              placeholder="Enter commune"
+              name="commune"
+              inputRef={register("commune")}
+              errorMessage={errors.commune?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputTextfield
+              title="More location"
+              placeholder="Enter more location"
+              autoComplete="off"
+              name="moreLocation"
+              inputRef={register("moreLocation")}
+              errorMessage={errors.moreLocation?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputCreatableSelect
+              title="Suitable person"
+              name="suitablePerson"
+              control={control}
+              selectProps={{
+                options: [],
+                isClearable: true,
+                isMulti: true,
+                placeholder: "Select suitable person",
+              }}
+              errorMessage={errors.suitablePerson?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputTextfield
+              title="Quantity ticket"
+              placeholder="Enter quantity ticket"
+              autoComplete="off"
+              name="quantity"
+              inputRef={register("quantity")}
+              errorMessage={errors.quantity?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputTextfield
+              title="Number of days"
+              placeholder="Enter number of days"
+              autoComplete="off"
+              name="numberOfDays"
+              inputRef={register("numberOfDays")}
+              errorMessage={errors.numberOfDays?.message}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputTextfield
+              title="Number of nights"
+              placeholder="Enter number of nights"
+              autoComplete="off"
+              name="numberOfNights"
+              inputRef={register("numberOfNights")}
+              errorMessage={errors.numberOfNights?.message}
+            />
+          </Grid>
+          <Grid xs={12} item>
+            <p className={classes.titleInput}>Description</p>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <ReactQuill
+                  modules={modules}
+                  className={clsx(classes.editor, {
+                    [classes.editorError]: !!errors.description?.message,
+                  })}
+                  value={field.value || ""}
+                  onBlur={() => field.onBlur()}
+                  onChange={(value) => field.onChange(value)}
+                />
+              )}
+            />
+            {errors.description?.message && (
+              <ErrorMessage>{errors.description?.message}</ErrorMessage>
+            )}
+          </Grid>
+          <Grid xs={12} item>
+            <p className={classes.titleInput}>Highlight</p>
+            <Controller
+              name="highlight"
+              control={control}
+              render={({ field }) => (
+                <ReactQuill
+                  modules={modules}
+                  className={clsx(classes.editor, {
+                    [classes.editorError]: !!errors.highlight?.message,
+                  })}
+                  value={field.value || ""}
+                  onBlur={() => field.onBlur()}
+                  onChange={(value) => field.onChange(value)}
+                />
+              )}
+            />
+            {errors.highlight?.message && (
+              <ErrorMessage>{errors.highlight?.message}</ErrorMessage>
+            )}
+          </Grid>
+          <Grid xs={12} item>
+            <p className={classes.titleInput}>Terms and condition</p>
+            <Controller
+              name="termsAndCondition"
+              control={control}
+              render={({ field }) => (
+                <ReactQuill
+                  modules={modules}
+                  className={clsx(classes.editor, {
+                    [classes.editorError]: !!errors.termsAndCondition?.message,
+                  })}
+                  value={field.value || ""}
+                  onBlur={() => field.onBlur()}
+                  onChange={(value) => field.onChange(value)}
+                />
+              )}
+            />
+            {errors.termsAndCondition?.message && (
+              <ErrorMessage>{errors.termsAndCondition?.message}</ErrorMessage>
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            <p className={classes.titleInput}>Upload images</p>
+            <div className={classes.containerUploadImg}>
+              <label htmlFor="file" className={classes.boxUpload}>
+                <div>
+                  <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon>
+                  {isLoading ? <h4>Uploading...</h4> : <h4>Upload images</h4>}
+                </div>
+              </label>
+              <Input
+                inputRef={register("images")}
+                onChange={handleFile}
+                hidden
+                type="file"
+                id="file"
+                multiple
+              />
+            </div>
+          </Grid>
+          <Grid item xs={12}>
+            <p className={classes.titleInput}>Images preview</p>
+            <Row>
+              {imagesPreview?.map((item, index) => {
+                return (
+                  <Col key={index} xs={4} className={classes.imgPreview}>
+                    <img src={item} alt="preview" />
+                    <div
+                      onClick={() => handleDeleteImage(item)}
+                      title="Delete"
+                      className={classes.iconDelete}
+                    >
+                      <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                    </div>
+                  </Col>
+                );
+              })}
 
-          {/* <Controller
-              name="images"
-              control={control}
-              render={({ field }) => (
-                <UploadFile
-                  title="Upload your tour images"
-                  file={field.value ? field.value : []}
-                  onChange={(value) => field.onChange(value)}
-                  errorMessage={errors.images?.message}
-                />
+              {!imagesPreview?.length && (
+                <Col className={classes.noImg}>
+                  <h4>No photos uploaded yet</h4>
+                </Col>
               )}
-            /> */}
-          {/* <Controller
-              name="images"
-              control={control}
-              render={({ field }) => (
-                <UploadImage
-                  title="Upload your tour images"
-                  files={field.value as unknown as File[]}
-                  onChange={(value) => field.onChange(value)}
-                  errorMessage={errors.images?.message}
-                />
-              )}
-            /> */}
+            </Row>
+            <Row className={classes.footer}>
+              <Button
+                btnType={BtnType.Primary}
+                type="submit"
+                className={classes.btnSave}
+              >
+                Save & Next Schedule
+              </Button>
+            </Row>
+          </Grid>
         </Grid>
-      )}
+        {/* <div style={{ height: "100vh", width: "100%" }}>
+          <GoogleMapReact
+            bootstrapURLKeys={{
+              key: "AIzaSyAUgSeQyoks-6hx-wJ7dTmWuCJl2xlfI5s",
+            }}
+            defaultCenter={coords}
+            defaultZoom={11}
+            center={coords}
+          ></GoogleMapReact>
+        </div> */}
+      </Grid>
     </div>
   );
 });

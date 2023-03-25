@@ -1,5 +1,6 @@
 import { API } from "configs/constants";
-import { ETour, EUpdateTour, GetTours, TourInformation } from "models/enterprise";
+import { ETour, EUpdateTour, AdminGetTours, TourInformation } from "models/enterprise";
+import { CreateMultipleSchedule, CreatePrice } from "models/tour";
 import { User } from "models/user";
 import api from "../configApi";
 
@@ -18,7 +19,7 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       });
   }
-  static async testGetTours(data: GetTours): Promise<any> {
+  static async getTours(data: AdminGetTours): Promise<any> {
     return await api
       .get(API.ENTERPRISE.TOUR.DEFAULT, { params: data })
       .then((res) => {
@@ -28,7 +29,26 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       });
   }
-
+  static async createScheduleTour(data: CreateMultipleSchedule): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.TOUR.CREATE_SCHEDULE_TOUR, data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  static async createPriceTour(data: CreatePrice): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.TOUR.CREATE_PRICE_TOUR, data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
   static async updateTour(tourId: number, data: EUpdateTour): Promise<any> {
     return await api
       .put(API.ENTERPRISE.TOUR.UPDATE_TOUR.replace(":id", `${tourId}`), data)
@@ -51,16 +71,16 @@ export class TourService {
       });
   }
 
-  static async getTours(userId: number): Promise<any> {
-    return await api
-      .get(API.ENTERPRISE.TOUR.GET_TOURS.replace(":id", `${userId}`))
-      .then((res) => {
-        return Promise.resolve(res.data);
-      })
-      .catch((e) => {
-        return Promise.reject(e?.response?.data);
-      });
-  }
+  // static async getTours(userId: number): Promise<any> {
+  //   return await api
+  //     .get(API.ENTERPRISE.TOUR.GET_TOURS.replace(":id", `${userId}`))
+  //     .then((res) => {
+  //       return Promise.resolve(res.data);
+  //     })
+  //     .catch((e) => {
+  //       return Promise.reject(e?.response?.data);
+  //     });
+  // }
 
   static async temporarilyStopWorking(tourId: number): Promise<any> {
     return await api
