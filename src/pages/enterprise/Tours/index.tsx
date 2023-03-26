@@ -67,7 +67,7 @@ interface SearchData {
   name?: string;
 }
 interface Props {
-  onChangeTabCreate: (type: EActiveNav) => void;
+  onChangeTabCreate?: (type: EActiveNav) => void;
   handleTourEdit?: (currentTarget: any, item: ETour, type: EActiveNav) => void;
 }
 // eslint-disable-next-line react/display-name

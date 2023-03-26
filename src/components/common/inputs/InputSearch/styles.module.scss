@@ -1,0 +1,27 @@
+.root {
+  
+}
+.rootTextField {
+    div::first-letter  {
+      border: 1px solid rgba(28, 28, 28, 0.2);
+      border-radius: 4px;
+    }
+}
+.inputTextfield {
+  &.placeholder {
+    opacity: 1;
+    color: rgba(28, 28, 28, 0.4);    
+    font-size: 14px;
+  }
+  padding: 6px 16px;
+  height: 32px;
+  border-radius: 40px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px !important;
+  line-height: 24px;
+  letter-spacing: 0.015em;
+  color: var(--eerie-black);
+  font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+
+}

@@ -345,7 +345,7 @@ const Enterprise: NextPage = () => {
               <HotelStatistic />
             </TabPane>
             <TabPane tabId="verticalTabs12" className={classes.tabPane}>
-              <AddOrEditTour itemEdit={tourEdit} />
+              <AddOrEditTour itemEdit={tourEdit} onBack={onChangeTab} />
             </TabPane>
             <TabPane tabId="verticalTabs13" className={classes.tabPane}>
               <AddOrEditHotel itemEdit={hotelEdit} />

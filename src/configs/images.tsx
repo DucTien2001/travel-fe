@@ -37,6 +37,7 @@ import deal2 from "assets/img/deal2.webp";
 import deal3 from "assets/img/deal3.webp";
 import bgbook from "assets/img/employer_login.jpg";
 import imgChecking from "assets/img/checking.svg";
+import icSearch from "assets/img/icon/ic-search.svg";
 
 // import pricing1 from 'assets/img/pricing1.jpg'
 
@@ -80,4 +81,5 @@ export const images = {
   deal3,
   bgbook,
   imgChecking,
+  icSearch,
 };

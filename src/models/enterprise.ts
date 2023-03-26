@@ -16,7 +16,6 @@ export interface ETour {
   images: string[];
   creator: number;
   contact: string;
-  isTemporarilyStopWorking?: boolean;
   isDeleted?: boolean;
   schedule?: CreateMultipleSchedule[];
   priceRange?: CreatePrice[];

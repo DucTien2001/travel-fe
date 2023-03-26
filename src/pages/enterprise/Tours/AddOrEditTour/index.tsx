@@ -82,6 +82,13 @@ export enum EStep {
   PRICE,
 }
 
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 interface Props {
   itemEdit?: ETour;
   onBack?: (type: EActiveNav) => void;
@@ -95,6 +102,10 @@ const AddOrEditTour = memo((props: Props) => {
 
   const [activeStep, setActiveStep] = useState<EStep>(EStep.INFORMATION);
   // const [activeTab, setActiveTab] = useState(ETab.INFORMATION);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveStep(newValue);
+  };
 
   const steps = useMemo(() => {
     return [
@@ -135,18 +146,87 @@ const AddOrEditTour = memo((props: Props) => {
   return (
     <>
       <div className={classes.root}>
-        <Grid className={clsx(classes.rowHeaderBox, classes.title)}>
+        <Container className={clsx(classes.rowHeaderBox, classes.title)}>
           {!itemEdit ? <h3>Create tour</h3> : <h3>Edit tour</h3>}
-        </Grid>
-        {/* <Schedule
-          itemEdit={itemEdit}
-          value={activeTab}
-          index={ETab.SCHEDULE}
-          onChangeTab={() => onChangeTab(ETab.PRICE)}
-        />
-        <RangePrice itemEdit={itemEdit} value={activeTab} index={ETab.PRICE} /> */}
-        <Container>
-          <Grid className={classes.boxStepPayment}>
+          <Button onClick={handleBack} btnType={BtnType.Primary}>
+            Back
+          </Button>
+        </Container>
+        <Container className={classes.tabsBox}>
+          <Tabs
+            value={activeStep}
+            onChange={handleChange}
+            variant="scrollable"
+            classes={{
+              root: classes.rootTabs,
+              indicator: classes.indicatorTabs,
+              flexContainer: classes.flexContainer,
+            }}
+          >
+            <Tab
+              {...a11yProps(EStep.INFORMATION)}
+              label={
+                <Box display="flex" alignItems="center">
+                  {/* {isValidInformation && (
+                    <CheckCircle className={classes.tabItemIcon} />
+                  )} */}
+                  <span className={classes.tabItemTitle}>Information</span>
+                </Box>
+              }
+            />
+            <Tab
+              {...a11yProps(EStep.SCHEDULE)}
+              label={
+                <Box display="flex" alignItems="center">
+                  {/* {isValidTargetTab && (
+                    <CheckCircle className={classes.tabItemIcon} />
+                  )} */}
+                  <span
+                    className={classes.tabItemTitle}
+                    // translation-key="target_tab"
+                  >
+                    Schedule
+                  </span>
+                </Box>
+              }
+            />
+            <Tab
+              {...a11yProps(EStep.PRICE)}
+              label={
+                <Box display="flex" alignItems="center">
+                  {/* {project?.agreeQuota && (
+                    <CheckCircle className={classes.tabItemIcon} />
+                  )} */}
+                  <span className={classes.tabItemTitle}>
+                    Range Price & Date
+                  </span>
+                </Box>
+              }
+            />
+          </Tabs>
+        </Container>
+        <Container className={classes.tabContent}>
+          <Information
+            itemEdit={itemEdit}
+            value={activeStep}
+            index={EStep.INFORMATION}
+            handleNextStep={() => onNextStep(EStep.SCHEDULE)}
+          />
+          <Schedule
+            itemEdit={itemEdit}
+            value={activeStep}
+            index={EStep.SCHEDULE}
+            handleNextStep={() => onNextStep(EStep.PRICE)}
+          />
+          <RangePrice
+            itemEdit={itemEdit}
+            value={activeStep}
+            index={EStep.PRICE}
+            handleNextStep={handleBack}
+          />
+        </Container>
+        {/* <Container>
+          <Grid sx={{ borderTop: "2px solid var(--gray-60)" }}>
             <Stepper
               alternativeLabel
               activeStep={activeStep}
@@ -194,10 +274,11 @@ const AddOrEditTour = memo((props: Props) => {
                 handleNextStep={() => onNextStep(EStep.PRICE)}
               />
             )}
-            {activeStep === EStep.PRICE && <RangePrice itemEdit={itemEdit} />}
+            {activeStep === EStep.PRICE && (
+              <RangePrice itemEdit={itemEdit} handleNextStep={handleBack} />
+            )}
           </Grid>
-          <Grid></Grid>
-        </Container>
+        </Container> */}
       </div>
     </>
   );

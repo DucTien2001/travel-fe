@@ -54,7 +54,7 @@ interface SearchData {
   name?: string;
 }
 interface Props {
-  onChangeTabCreate: (type: EActiveNav) => void;
+  onChangeTabCreate?: (type: EActiveNav) => void;
   handleHotelEdit?: (
     currentTarget: any,
     item: IHotel,

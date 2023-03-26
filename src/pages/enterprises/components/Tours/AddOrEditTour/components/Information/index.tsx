@@ -8,7 +8,6 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch } from "react-redux";
 import { TourService } from "services/enterprise/tour";
-import useAuth from "hooks/useAuth";
 import {
   setErrorMess,
   setLoading,
@@ -24,11 +23,9 @@ import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import { Grid } from "@mui/material";
 import InputTextfield from "components/common/inputs/InputTextfield";
-import InputLocation from "components/common//GoogleAddress";
 import InputCreatableSelect from "components/common/inputs/InputCreatableSelect";
 import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { setTourReducer } from "redux/reducers/Enterprise/actionTypes";
-import GoogleMapReact from "google-map-react";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const modules = {
@@ -71,7 +68,6 @@ interface Props {
 const InformationComponent = memo((props: Props) => {
   const { value, index, itemEdit, handleNextStep } = props;
   const dispatch = useDispatch();
-  const { user } = useAuth();
 
   const [imagesPreview, setImagesPreview] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -221,34 +217,6 @@ const InformationComponent = memo((props: Props) => {
       .catch((e) => dispatch(setErrorMess(e)))
       .finally(() => dispatch(setLoading(false)));
   };
-
-  // useEffect(() => {
-  //   if (itemEdit) {
-  //     reset({
-  //       name: itemEdit.title,
-  //       description: itemEdit.description,
-  //       businessHours: itemEdit.businessHours,
-  //       location: itemEdit.location,
-  //       price: itemEdit.price,
-  //       discount: itemEdit.discount || null,
-  //       tags: itemEdit.tags.map((it) => ({ name: it })),
-  //       contact: itemEdit.contact,
-  //       // images: itemEdit.images,
-  //     });
-  //     setImagesPreview(itemEdit.images);
-  //   }
-  // }, [reset, itemEdit]);
-
-  // const [coords, setCoords] = useState(null);
-  // useEffect(() => {
-  //   navigator.geolocation.getCurrentPosition(
-  //     ({ coords: { latitude, longitude } }) => {
-  //       setCoords({ lat: latitude, lng: longitude });
-  //     }
-  //   );
-  // }, []);
-
-  // console.log(coords, "====");
 
   useEffect(() => {
     if (!itemEdit) {
@@ -492,16 +460,6 @@ const InformationComponent = memo((props: Props) => {
               </Row>
             </Grid>
           </Grid>
-          {/* <div style={{ height: "100vh", width: "100%" }}>
-          <GoogleMapReact
-            bootstrapURLKeys={{
-              key: "AIzaSyAUgSeQyoks-6hx-wJ7dTmWuCJl2xlfI5s",
-            }}
-            defaultCenter={coords}
-            defaultZoom={11}
-            center={coords}
-          ></GoogleMapReact>
-        </div> */}
         </Grid>
       )}
     </div>

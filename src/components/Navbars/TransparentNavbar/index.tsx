@@ -257,7 +257,7 @@ const WhiteNavbar = memo(() => {
                       </DropdownItem>
                       {user?.role === EUserType.ENTERPRISE && (
                         <DropdownItem className={classes.dropdownItem}>
-                          <Link href="/enterprise" passHref>
+                          <Link href="/enterprises/tours" passHref>
                             <a>
                               <FontAwesomeIcon
                                 icon={faBarsProgress}
