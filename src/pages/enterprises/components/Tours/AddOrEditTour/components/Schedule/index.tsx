@@ -11,7 +11,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button, { BtnType } from "components/common/buttons/Button";
 import TableAddMileStone from "./components/TableAddMileStone";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
-
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 export interface ScheduleForm {
   schedule: {
     day: number;
@@ -111,8 +111,11 @@ const InformationComponent = memo((props: Props) => {
             <Button btnType={BtnType.Outlined} onClick={onAddSchedule}>
               <AddCircleIcon /> Click add to day
             </Button>
+          </Grid>
+          <Grid className={classes.boxNextBtn}>
             <Button btnType={BtnType.Primary} onClick={handleNextStep}>
               Next Range Rice and Date
+              <ArrowRightAltIcon />
             </Button>
           </Grid>
         </Grid>

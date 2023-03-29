@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { ETour, EUpdateTour, AdminGetTours, TourInformation } from "models/enterprise";
+import { ETour, EUpdateTour, AdminGetTours, TourInformation, UpdateTourInformation } from "models/enterprise";
 import { CreateMultipleSchedule, CreatePrice } from "models/tour";
 import { User } from "models/user";
 import api from "../configApi";
@@ -49,6 +49,37 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       });
   }
+
+  static async getOneTour(tourId: number, language?: string): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.TOUR.GET_ONE_TOUR.replace(":id", `${tourId}`), {
+      params: {
+        language
+      }
+    })
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async updateTourInformation(tourId: number, data: FormData): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.TOUR.UPDATE_TOUR.replace(":id", `${tourId}`), data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+
+
+
+
   static async updateTour(tourId: number, data: EUpdateTour): Promise<any> {
     return await api
       .put(API.ENTERPRISE.TOUR.UPDATE_TOUR.replace(":id", `${tourId}`), data)

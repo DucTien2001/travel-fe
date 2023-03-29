@@ -1,25 +1,47 @@
+import { OptionItem } from "./general";
+
 export interface ETour {
   id?: number;
   title: string;
   description: string;
-  city?: string;
-  district?: string;
-  commune?: string;
+  city?: OptionItem;
+  district?: OptionItem;
+  commune?: OptionItem;
   moreLocation?: string;
   highlight?: string;
   termsAndCondition?: string;
-  suitablePerson?: [];
-  quantity?: number;
+  suitablePerson?: string;
   numberOfDays?: number;
-  numberOfNight?: number;
+  numberOfNights?: number;
   rate?: number;
-  images: string[];
+  images: File[];
   creator: number;
   contact: string;
   isDeleted?: boolean;
   schedule?: CreateMultipleSchedule[];
   priceRange?: CreatePrice[];
+  languages?: ETour[];
+  parentLanguage: number,
+  language: string;
 }
+export interface UpdateTourInformation {
+  title: string;
+  numberOfDays: number;
+  numberOfNights: number;
+  city: string;
+  district: string;
+  commune: string;
+  moreLocation: string;
+  contact: string;
+  description: string;
+  suitablePerson: string;
+  highlight: string;
+  termsAndCondition: string;
+  language: string;
+  images: string[];
+  imagesDeleted: string[];
+}
+
 export interface ScheduleItem {
   id?: number
   startTime: Date;

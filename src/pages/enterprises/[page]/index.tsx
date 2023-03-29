@@ -1,26 +1,15 @@
-import React, {
-  Fragment,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { memo, useRef } from "react";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import Head from "next/head";
-import { useTranslation } from "react-i18next";
+
 import dynamic from "next/dynamic";
 import { Col, Nav, NavItem, NavLink, TabContent } from "reactstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBuilding,
-  faPlaneDeparture,
-} from "@fortawesome/free-solid-svg-icons";
 import classes from "./styles.module.scss";
 import { images } from "configs/images";
-import Tours from "pages/enterprises/components/Tours";
-import Hotels from "pages/enterprises/components/Hotels";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import AttractionsIcon from "@mui/icons-material/Attractions";
+
+const Tours = dynamic(() => import("pages/enterprises/components/Tours"));
+const Hotels = dynamic(() => import("pages/enterprises/components/Hotels"));
 
 interface PropTypes {}
 
@@ -28,9 +17,19 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
   const router = useRouter();
   const { page } = router.query;
 
+  const toursRef = useRef<HTMLDivElement>(null);
+  const hotelsRef = useRef<HTMLDivElement>(null);
+
   const renderComponent = () => {
     switch (page) {
       case "tours":
+        toursRef &&
+          toursRef.current &&
+          toursRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+          });
         return (
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
@@ -39,6 +38,13 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           </Col>
         );
       case "hotels":
+        hotelsRef &&
+          hotelsRef.current &&
+          hotelsRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+          });
         return (
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
@@ -72,8 +78,8 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             className={classes.navItem}
           >
             <NavLink className={renderClass("tours")}>
-              <FontAwesomeIcon icon={faPlaneDeparture} />
-              Tours
+              <AttractionsIcon />
+              <span ref={toursRef}>Tours</span>
             </NavLink>
           </NavItem>
           <NavItem
@@ -81,8 +87,8 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             className={classes.navItem}
           >
             <NavLink className={renderClass("hotels")}>
-              <FontAwesomeIcon icon={faBuilding} />
-              Hotels
+              <ApartmentIcon />
+              <span ref={hotelsRef}>Hotels</span>
             </NavLink>
           </NavItem>
         </Nav>

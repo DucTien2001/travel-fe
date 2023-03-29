@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useState, useEffect } from "react";
+import React, { useMemo, memo, useState, useEffect, useCallback } from "react";
 import { Row, Col, Input } from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
@@ -23,10 +23,16 @@ import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import { Grid } from "@mui/material";
 import InputTextfield from "components/common/inputs/InputTextfield";
-import InputCreatableSelect from "components/common/inputs/InputCreatableSelect";
 import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { setTourReducer } from "redux/reducers/Enterprise/actionTypes";
+import { ProvinceService } from "services/address";
+import InputSelect from "components/common/inputs/InputSelect";
+import QueryString from "query-string";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
+interface IQueryString {
+  lang?: string;
+}
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const modules = {
   toolbar: [
@@ -42,15 +48,14 @@ const modules = {
 
 export interface TourForm {
   title: string;
-  city: string;
-  district: string;
-  commune: string;
+  city: OptionItem;
+  district: OptionItem;
+  commune: OptionItem;
   moreLocation?: string;
   contact: string;
   description: string;
   highlight: string;
-  suitablePerson: OptionItem<string>[];
-  quantity: number;
+  suitablePerson: string;
   numberOfDays: number;
   numberOfNights: number;
   termsAndCondition: string;
@@ -68,17 +73,45 @@ interface Props {
 const InformationComponent = memo((props: Props) => {
   const { value, index, itemEdit, handleNextStep } = props;
   const dispatch = useDispatch();
+  let lang;
+  if (typeof window !== "undefined") {
+    ({ lang } = QueryString.parse(window.location.search));
+  }
 
   const [imagesPreview, setImagesPreview] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [communes, setCommunes] = useState([]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
       title: yup.string().required("Name is required"),
-      city: yup.string().required("City  is required"),
-      district: yup.string().required("District is required"),
-      commune: yup.string().required("Commune is required"),
-      moreLocation: yup.string().required("More location is required"),
+      city: yup
+        .object()
+        .typeError("City is required.")
+        .shape({
+          id: yup.number().required("City is required"),
+          name: yup.string().required(),
+        })
+        .required(),
+      district: yup
+        .object()
+        .typeError("District is required.")
+        .shape({
+          id: yup.number().required("District is required"),
+          name: yup.string().required(),
+        })
+        .required(),
+      commune: yup
+        .object()
+        .typeError("Commune is required.")
+        .shape({
+          id: yup.number().required("Commune is required"),
+          name: yup.string().required(),
+        })
+        .required(),
+      moreLocation: yup.string().required("Detail address is required"),
       contact: yup
         .string()
         .required("Contact is required")
@@ -88,18 +121,7 @@ const InformationComponent = memo((props: Props) => {
         }),
       description: yup.string().required("Description is required"),
       highlight: yup.string().required("Highlight is required"),
-      suitablePerson: yup
-        .array(
-          yup.object({
-            name: yup.string().required("Suitable person is required."),
-          })
-        )
-        .required("Suitable person is required."),
-      quantity: yup
-        .number()
-        .typeError("Quantity is required.")
-        .positive("Quantity must be a positive number")
-        .required("Quantity is required."),
+      suitablePerson: yup.string().required("Suitable person is required."),
       numberOfDays: yup
         .number()
         .typeError("Number of days is required.")
@@ -114,7 +136,6 @@ const InformationComponent = memo((props: Props) => {
         .string()
         .required("Terms and Condition is required"),
       images: yup.array(yup.mixed()),
-      // imagesRoom: yup.array().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -136,14 +157,13 @@ const InformationComponent = memo((props: Props) => {
   const clearForm = () => {
     reset({
       title: "",
-      city: "",
-      district: "",
-      commune: "",
+      city: null,
+      district: null,
+      commune: null,
       moreLocation: "",
       contact: "",
       description: "",
-      suitablePerson: [],
-      quantity: null,
+      suitablePerson: "",
       numberOfDays: null,
       numberOfNights: null,
       highlight: "",
@@ -155,8 +175,12 @@ const InformationComponent = memo((props: Props) => {
   const handleFile = async (e) => {
     e.stopPropagation();
     let files = e.target.files;
-    const _image = getValues("images");
-    setValue("images", [..._image, files[0]]);
+
+    const _images = [];
+    for (var i = 0; i < files?.length; i++) {
+      _images.push(files[i]);
+    }
+    setValue("images", _images);
     for (let file of files) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -166,21 +190,28 @@ const InformationComponent = memo((props: Props) => {
     }
   };
 
-  const handleDeleteImage = (image) => {
-    setImagesPreview((prev) => prev?.filter((item) => item !== image));
-  };
+  const [imagesDeleted, setImagesDeleted] = useState([]);
 
+  const handleDeleteImage = (image) => {
+    setImagesDeleted((prevState: any) => [...prevState, image]);
+
+    setImagesPreview((prevState: any) =>
+      prevState?.filter((item) => item !== image)
+    );
+  };
   const _onSubmit = (data: TourForm) => {
     const formData = new FormData();
     formData.append("title", data.title);
-    formData.append("city", data.city);
-    formData.append("district", data.district);
-    formData.append("commune", data.commune);
+    formData.append("city[id]", `${data?.city?.id}`);
+    formData.append("city[name]", data?.city?.name);
+    formData.append("district[id]", `${data?.district?.id}`);
+    formData.append("district[name]", data?.district?.name);
+    formData.append("commune[id]", `${data?.commune?.id}`);
+    formData.append("commune[name]", data?.commune?.name);
     formData.append("moreLocation", data.moreLocation);
     formData.append("contact", data.contact);
     formData.append("description", data.description);
     formData.append("suitablePerson", `${data.suitablePerson}`);
-    formData.append("quantity", `${data.quantity}`);
     formData.append("numberOfDays", `${data.numberOfDays}`);
     formData.append("numberOfNights", `${data.numberOfNights}`);
     formData.append("highlight", data.highlight);
@@ -188,35 +219,90 @@ const InformationComponent = memo((props: Props) => {
     data?.images?.forEach((item, index) => {
       formData.append(`images${index}`, item);
     });
-    dispatch(setLoading(true));
-    TourService.createTour(formData)
-      .then((res) => {
-        dispatch(
-          setTourReducer({
-            id: res?.data?.id,
-            title: res?.data?.title,
-            city: res?.data?.city,
-            district: res?.data?.district,
-            commune: res?.data?.commune,
-            moreLocation: res?.data?.moreLocation,
-            contact: res?.data?.contact,
-            description: res?.data?.description,
-            highlight: res?.data?.highlight,
-            suitablePerson: res?.data?.suitablePerson,
-            quantity: res?.data?.quantity,
-            numberOfDays: res?.data?.numberOfDays,
-            numberOfNights: res?.data?.numberOfNights,
-            termsAndCondition: res?.data?.termsAndCondition,
-            images: res?.data?.images,
-          })
-        );
+    const formDataEdit = new FormData();
+    formDataEdit.append("title", data.title);
+    formDataEdit.append("city[id]", `${data?.city?.id}`);
+    formDataEdit.append("city[name]", data?.city?.name);
+    formDataEdit.append("district[id]", `${data?.district?.id}`);
+    formDataEdit.append("district[name]", data?.district?.name);
+    formDataEdit.append("commune[id]", `${data?.commune?.id}`);
+    formDataEdit.append("commune[name]", data?.commune?.name);
+    formDataEdit.append("moreLocation", data.moreLocation);
+    formDataEdit.append("contact", data.contact);
+    formDataEdit.append("description", data.description);
+    formDataEdit.append("suitablePerson", `${data.suitablePerson}`);
+    formDataEdit.append("numberOfDays", `${data.numberOfDays}`);
+    formDataEdit.append("numberOfNights", `${data.numberOfNights}`);
+    formDataEdit.append("highlight", data.highlight);
+    formDataEdit.append("termsAndCondition", data.termsAndCondition);
+    data?.images?.forEach((item, index) => {
+      formDataEdit.append(`images${index}`, item);
+    });
+    imagesPreview?.forEach((item, index) => {
+      formDataEdit.append(`images[]`, item);
+    });
+    imagesDeleted?.forEach((item, index) => {
+      formDataEdit.append(`imagesDeleted[]`, item);
+    });
 
-        dispatch(setSuccessMess("Create tour successfully"));
-        handleNextStep();
-      })
-      .catch((e) => dispatch(setErrorMess(e)))
-      .finally(() => dispatch(setLoading(false)));
+    dispatch(setLoading(true));
+    if (itemEdit) {
+      TourService.updateTourInformation(itemEdit?.id, formDataEdit)
+        .then(() => {
+          dispatch(setSuccessMess("Update tour successfully"));
+          handleNextStep();
+        })
+        .catch((e) => dispatch(setErrorMess(e)))
+        .finally(() => dispatch(setLoading(false)));
+    } else {
+      TourService.createTour(formData)
+        .then((res) => {
+          dispatch(
+            setTourReducer({
+              id: res?.data?.id,
+              title: res?.data?.title,
+              city: res?.data?.city,
+              district: res?.data?.district,
+              commune: res?.data?.commune,
+              moreLocation: res?.data?.moreLocation,
+              contact: res?.data?.contact,
+              description: res?.data?.description,
+              highlight: res?.data?.highlight,
+              suitablePerson: res?.data?.suitablePerson,
+              numberOfDays: res?.data?.numberOfDays,
+              numberOfNights: res?.data?.numberOfNights,
+              termsAndCondition: res?.data?.termsAndCondition,
+              images: res?.data?.images,
+            })
+          );
+
+          dispatch(setSuccessMess("Create tour successfully"));
+          handleNextStep();
+        })
+        .catch((e) => dispatch(setErrorMess(e)))
+        .finally(() => dispatch(setLoading(false)));
+    }
   };
+
+  useEffect(() => {
+    if (itemEdit) {
+      reset({
+        title: itemEdit?.title,
+        city: itemEdit?.city,
+        district: itemEdit?.district,
+        commune: itemEdit?.commune,
+        moreLocation: itemEdit?.moreLocation,
+        contact: itemEdit?.contact,
+        description: itemEdit?.description,
+        highlight: itemEdit?.highlight,
+        suitablePerson: itemEdit?.suitablePerson,
+        numberOfDays: itemEdit?.numberOfDays,
+        numberOfNights: itemEdit?.numberOfNights,
+        termsAndCondition: itemEdit?.termsAndCondition,
+      });
+      setImagesPreview(itemEdit?.images);
+    }
+  }, [itemEdit, reset]);
 
   useEffect(() => {
     if (!itemEdit) {
@@ -224,6 +310,73 @@ const InformationComponent = memo((props: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemEdit]);
+
+  useEffect(() => {
+    ProvinceService.getProvince()
+      .then((res) => {
+        setProvinces(res?.data.results);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess("Get province fail"));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchProvince = () => {
+    const _provinces = provinces.map((item) => {
+      return {
+        id: item.province_id,
+        name: item.province_name,
+      };
+    });
+    return _provinces;
+  };
+
+  const watchCity = watch("city");
+
+  useEffect(() => {
+    ProvinceService.getDistrict(Number(watchCity?.id))
+      .then((res) => {
+        setDistricts(res?.data.results);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess("Get district fail"));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchCity?.id]);
+
+  const fetchDistrict = () => {
+    const _districts = districts?.map((item) => {
+      return {
+        id: item.district_id,
+        name: item.district_name,
+      };
+    });
+    return _districts;
+  };
+
+  const watchDistrict = watch("district");
+
+  useEffect(() => {
+    ProvinceService.getCommune(Number(watchDistrict?.id))
+      .then((res) => {
+        setCommunes(res?.data.results);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess("Get commune fail"));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchDistrict?.id]);
+
+  const fetchCommune = () => {
+    const _communes = communes?.map((item) => {
+      return {
+        id: item.ward_id,
+        name: item.ward_name,
+      };
+    });
+    return _communes;
+  };
 
   return (
     <div
@@ -260,68 +413,55 @@ const InformationComponent = memo((props: Props) => {
               />
             </Grid>
             <Grid item xs={6}>
-              <InputTextfield
+              <InputSelect
+                fullWidth
                 title="City"
-                placeholder="Enter city"
-                autoComplete="off"
                 name="city"
-                inputRef={register("city")}
-                errorMessage={errors.city?.message}
+                control={control}
+                selectProps={{
+                  options: fetchProvince(),
+                  placeholder: "-- City --",
+                }}
+                errorMessage={(errors.city as any)?.message}
               />
             </Grid>
             <Grid item xs={6}>
-              <InputTextfield
+              <InputSelect
+                fullWidth
                 title="District"
-                placeholder="Enter district"
                 name="district"
-                inputRef={register("district")}
-                errorMessage={errors.district?.message}
+                control={control}
+                selectProps={{
+                  options: fetchDistrict(),
+                  placeholder: "-- District --",
+                }}
+                errorMessage={(errors.district as any)?.message}
               />
             </Grid>
             <Grid item xs={6}>
-              <InputTextfield
+              <InputSelect
+                fullWidth
                 title="Commune"
-                autoComplete="off"
-                placeholder="Enter commune"
                 name="commune"
-                inputRef={register("commune")}
-                errorMessage={errors.commune?.message}
+                control={control}
+                selectProps={{
+                  options: fetchCommune(),
+                  placeholder: "-- Commune --",
+                }}
+                errorMessage={(errors.commune as any)?.message}
               />
             </Grid>
             <Grid item xs={6}>
               <InputTextfield
-                title="More location"
-                placeholder="Enter more location"
+                title="Detail address"
+                placeholder="Enter detail address"
                 autoComplete="off"
                 name="moreLocation"
                 inputRef={register("moreLocation")}
                 errorMessage={errors.moreLocation?.message}
               />
             </Grid>
-            <Grid item xs={6}>
-              <InputCreatableSelect
-                title="Suitable person"
-                name="suitablePerson"
-                control={control}
-                selectProps={{
-                  options: [],
-                  isClearable: true,
-                  isMulti: true,
-                  placeholder: "Select suitable person",
-                }}
-                errorMessage={errors.suitablePerson?.message}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputTextfield
-                title="Quantity ticket"
-                placeholder="Enter quantity ticket"
-                autoComplete="off"
-                name="quantity"
-                inputRef={register("quantity")}
-                errorMessage={errors.quantity?.message}
-              />
-            </Grid>
+
             <Grid item xs={6}>
               <InputTextfield
                 title="Number of days"
@@ -340,6 +480,18 @@ const InformationComponent = memo((props: Props) => {
                 name="numberOfNights"
                 inputRef={register("numberOfNights")}
                 errorMessage={errors.numberOfNights?.message}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <InputTextfield
+                title="Suitable person"
+                placeholder="Enter Suitable person"
+                autoComplete="off"
+                name="suitablePerson"
+                multiline
+                rows={3}
+                inputRef={register("suitablePerson")}
+                errorMessage={errors.suitablePerson?.message}
               />
             </Grid>
             <Grid xs={12} item>
@@ -427,10 +579,10 @@ const InformationComponent = memo((props: Props) => {
             </Grid>
             <Grid item xs={12}>
               <p className={classes.titleInput}>Images preview</p>
-              <Row>
+              <Grid container spacing={2}>
                 {imagesPreview?.map((item, index) => {
                   return (
-                    <Col key={index} xs={4} className={classes.imgPreview}>
+                    <Grid key={item} xs={4} className={classes.imgPreview} item>
                       <img src={item} alt="preview" />
                       <div
                         onClick={() => handleDeleteImage(item)}
@@ -439,16 +591,15 @@ const InformationComponent = memo((props: Props) => {
                       >
                         <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
                       </div>
-                    </Col>
+                    </Grid>
                   );
                 })}
-
                 {!imagesPreview?.length && (
                   <Col className={classes.noImg}>
                     <h4>No photos uploaded yet</h4>
                   </Col>
                 )}
-              </Row>
+              </Grid>
               <Row className={classes.footer}>
                 <Button
                   btnType={BtnType.Primary}
@@ -456,6 +607,7 @@ const InformationComponent = memo((props: Props) => {
                   className={classes.btnSave}
                 >
                   Save & Next Schedule
+                  <ArrowRightAltIcon />
                 </Button>
               </Row>
             </Grid>

@@ -15,8 +15,7 @@ export interface Tour {
     highlight?: string;
     termsAndCondition?: string;
     languages?: [];
-    suitablePerson?: [];
-    totalTicket?: [];
+    suitablePerson?: string;
     startDate?: [];
     endDate?: [];
     businessHours?: string[];

@@ -4,9 +4,7 @@ import "aos/dist/aos.css";
 import * as yup from "yup";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import { useDispatch } from "react-redux";
-import { TourService } from "services/enterprise/tour";
 import useAuth from "hooks/useAuth";
 import {
   setErrorMess,
@@ -14,25 +12,16 @@ import {
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
 import { ETour } from "models/enterprise";
-
 import "react-quill/dist/quill.snow.css";
 import { Grid, IconButton } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { number } from "yup/lib/locale";
 import Button, { BtnType } from "components/common/buttons/Button";
-import TableAddMileStone from "../Schedule/components/TableAddMileStone";
-import { ScheduleItem } from "models/tour";
-import { DeleteOutlineOutlined, PriceChange } from "@mui/icons-material";
-import clsx from "clsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import { DeleteOutlineOutlined } from "@mui/icons-material";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import moment from "moment";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import TableAddPriceRange from "./components/TableAddPriceRange";
-import router from "next/router";
-import { EActiveNav } from "pages/enterprise";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
 export interface SaleForm {
   sale: {
@@ -225,8 +214,11 @@ const RangePriceComponent = memo((props: Props) => {
             <Button btnType={BtnType.Outlined} onClick={onAddSale}>
               <AddCircleIcon /> Click add to price day
             </Button>
+          </Grid>
+          <Grid className={classes.boxNextBtn}>
             <Button btnType={BtnType.Primary} onClick={handleNextStep}>
-              Done
+              Done Set Up
+              <ArrowRightAltIcon />
             </Button>
           </Grid>
         </Grid>

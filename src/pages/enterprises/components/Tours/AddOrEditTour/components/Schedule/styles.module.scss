@@ -27,3 +27,11 @@
     margin: 24px 0;
     display: flex;
 }
+
+.boxNextBtn {
+    display: flex;
+    justify-content: flex-end;
+    svg {
+        font-size: 24px;
+    }
+}

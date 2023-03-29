@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Container } from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
@@ -11,6 +11,10 @@ import Schedule from "./components/Schedule";
 import RangePrice from "./components/RangePrice";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import QueryString from "query-string";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { TourService } from "services/enterprise/tour";
 
 export enum EStep {
   INFORMATION,
@@ -24,18 +28,26 @@ function controlProps(index: number) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-
+interface IQueryString {
+  lang?: string;
+}
 interface Props {
-  itemEdit?: ETour;
+  tourId?: number;
 }
 
 // eslint-disable-next-line react/display-name
 const AddOrEditTour = memo((props: Props) => {
-  const { itemEdit } = props;
+  const { tourId } = props;
+  const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const router = useRouter();
+  let lang;
+  if (typeof window !== "undefined") {
+    ({ lang } = QueryString.parse(window.location.search));
+  }
 
   const [activeStep, setActiveStep] = useState<EStep>(EStep.INFORMATION);
+  const [itemEdit, setItemEdit] = useState<ETour>(null);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveStep(newValue);
@@ -59,11 +71,27 @@ const AddOrEditTour = memo((props: Props) => {
     router.push("/enterprises/tours");
   };
 
+  useEffect(() => {
+    if (tourId && !isNaN(Number(tourId))) {
+      const fetchData = async () => {
+        dispatch(setLoading(true));
+        TourService.getOneTour(Number(tourId), lang)
+          .then((res) => {
+            setItemEdit(res?.data);
+          })
+          .catch((err) => setErrorMess(err))
+          .finally(() => dispatch(setLoading(false)));
+      };
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tourId, dispatch]);
+
   return (
     <>
       <div className={classes.root}>
         <Container className={clsx(classes.rowHeaderBox, classes.title)}>
-          {!itemEdit ? <h3>Create tour</h3> : <h3>Edit tour</h3>}
+          {!tourId ? <h3>Create tour</h3> : <h3>Edit tour</h3>}
           <Button onClick={onBack} btnType={BtnType.Primary}>
             Back
           </Button>
@@ -114,22 +142,17 @@ const AddOrEditTour = memo((props: Props) => {
         </Container>
         <Container className={classes.tabContent}>
           <Information
-            itemEdit={itemEdit}
             value={activeStep}
             index={EStep.INFORMATION}
+            itemEdit={itemEdit}
             handleNextStep={() => onNextStep(EStep.SCHEDULE)}
           />
           <Schedule
-            itemEdit={itemEdit}
             value={activeStep}
             index={EStep.SCHEDULE}
             handleNextStep={() => onNextStep(EStep.PRICE)}
           />
-          <RangePrice
-            itemEdit={itemEdit}
-            value={activeStep}
-            index={EStep.PRICE}
-          />
+          <RangePrice value={activeStep} index={EStep.PRICE} />
         </Container>
       </div>
     </>

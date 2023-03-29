@@ -20,7 +20,10 @@ import {
 import classes from "./styles.module.scss";
 import { images } from "configs/images";
 import Hotels from "pages/enterprises/components/Hotels";
-import AddOrEditTour from "pages/enterprises/components/Tours/AddOrEditTour";
+
+const AddOrEditTour = dynamic(
+  () => import("pages/enterprises/components/Tours/AddOrEditTour")
+);
 
 interface PropTypes {}
 
@@ -28,18 +31,38 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
   const router = useRouter();
   const { page, action, type } = router.query;
 
+  const toursRef = useRef<HTMLDivElement>(null);
+
   const renderComponent = () => {
     switch (page) {
       case "tours":
+        toursRef &&
+          toursRef.current &&
+          toursRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+          });
         if (action === "create-tour") {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <AddOrEditTour />
+              </TabContent>
+            </Col>
+          );
         }
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <AddOrEditTour />
-            </TabContent>
-          </Col>
-        );
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <AddOrEditTour tourId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+
+          console.log(action);
+        }
       case "hotels":
         return (
           <Col xs={10} className={classes.content}>
@@ -75,7 +98,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           >
             <NavLink className={renderClass("tours")}>
               <FontAwesomeIcon icon={faPlaneDeparture} />
-              Tours
+              <span ref={toursRef}>Tours</span>
             </NavLink>
           </NavItem>
           <NavItem

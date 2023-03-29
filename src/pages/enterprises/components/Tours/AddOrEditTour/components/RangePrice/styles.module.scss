@@ -28,3 +28,10 @@
     margin-top: 24px;
     display: flex;
 }
+.boxNextBtn {
+    display: flex;
+    justify-content: flex-end;
+    svg {
+        font-size: 24px;
+    }
+}

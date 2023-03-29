@@ -41,7 +41,12 @@ import UseAuth from "hooks/useAuth";
 import { EUserType } from "models/user";
 import { images } from "configs/images";
 import { langSupports } from "models/general";
-
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import AttractionsIcon from "@mui/icons-material/Attractions";
+import SellIcon from "@mui/icons-material/Sell";
+import PublicIcon from "@mui/icons-material/Public";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 const WhiteNavbar = memo(() => {
   const { isLoggedIn, logout, user } = UseAuth();
   const [collapseOpen, setCollapseOpen] = useState(false);
@@ -152,9 +157,8 @@ const WhiteNavbar = memo(() => {
               <NavItem className={classes.navItem}>
                 <Link href="/listTour" passHref>
                   <a>
-                    <FontAwesomeIcon
-                      icon={faSignsPost}
-                      className={classes.iconNav}
+                    <AttractionsIcon
+                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
                     />
                     <p>TOURS</p>
                   </a>
@@ -163,9 +167,8 @@ const WhiteNavbar = memo(() => {
               <NavItem className={classes.navItem}>
                 <Link href="/listHotel" passHref>
                   <a>
-                    <FontAwesomeIcon
-                      icon={faHotel}
-                      className={classes.iconNav}
+                    <ApartmentIcon
+                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
                     />
                     <p>STAYS</p>
                   </a>
@@ -174,9 +177,8 @@ const WhiteNavbar = memo(() => {
               <NavItem className={classes.navItem}>
                 <Link href="/listEvents" passHref>
                   <a>
-                    <FontAwesomeIcon
-                      icon={faTags}
-                      className={classes.iconNav}
+                    <SellIcon
+                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
                     />
                     <p>COUPONS & DEALS</p>
                   </a>
@@ -184,19 +186,19 @@ const WhiteNavbar = memo(() => {
               </NavItem>
               <UncontrolledDropdown nav>
                 <DropdownToggle
-                  caret
                   color="default"
                   data-toggle="dropdown"
                   href="#pablo"
                   id="navbarDropdownMenuLink"
                   nav
                   onClick={(e) => e.preventDefault()}
+                  className={classes.dropdownMenu}
                 >
-                  <FontAwesomeIcon
-                    icon={faEarthAsia}
-                    className={classes.iconNav}
+                  <PublicIcon
+                    sx={{ fontSize: "20px !important", marginRight: "8px" }}
                   />
                   <p>Languages</p>
+                  <ArrowDropDownIcon />
                 </DropdownToggle>
                 <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
                   {langSupports.map((it) => (
@@ -215,19 +217,19 @@ const WhiteNavbar = memo(() => {
                 <>
                   <UncontrolledDropdown nav>
                     <DropdownToggle
-                      caret
                       color="default"
                       data-toggle="dropdown"
                       href="#pablo"
                       id="navbarDropdownMenuLink"
                       nav
                       onClick={(e) => e.preventDefault()}
+                      className={classes.dropdownMenu}
                     >
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        className={classes.iconNav}
+                      <AccountBoxIcon
+                        sx={{ fontSize: "20px !important", marginRight: "8px" }}
                       />
                       <p>Profile</p>
+                      <ArrowDropDownIcon />
                     </DropdownToggle>
                     <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
                       <DropdownItem className="noti-title" header tag="div">

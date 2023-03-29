@@ -26,7 +26,12 @@ import {
   Paper,
 } from "@mui/material";
 import TableHeader from "components/Table/TableHeader";
-import { DataPagination, langSupports, TableHeaderLabel } from "models/general";
+import {
+  DataPagination,
+  LangSupport,
+  langSupports,
+  TableHeaderLabel,
+} from "models/general";
 import {
   EditOutlined,
   DeleteOutlineOutlined,
@@ -64,7 +69,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
     event: React.MouseEvent<HTMLButtonElement>,
     item: ETour
   ) => {
-    // setTourAction(item);
+    setItemAction(item);
     setActionAnchor(event.currentTarget);
   };
 
@@ -139,6 +144,19 @@ const Tour = memo(({ handleTourEdit }: Props) => {
     setLanguageAnchor(null);
   };
 
+  const handleLanguageRedirect = (lang?: LangSupport) => {
+    if (!itemAction) return;
+    onRedirectEdit(itemAction, lang);
+    onCloseActionMenu();
+  };
+
+  const onRedirectEdit = (item: ETour, lang?: LangSupport) => {
+    router.push({
+      pathname: `/enterprises/tours/${item.id}`,
+      search: lang && `?lang=${lang.key}`,
+    });
+  };
+
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -186,7 +204,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
                         </a>
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        vi
+                        {item?.languages?.map((it) => it.language).join(", ")}
                       </TableCell>
                       <TableCell className="text-center" component="th">
                         <IconButton
@@ -262,7 +280,13 @@ const Tour = memo(({ handleTourEdit }: Props) => {
           open={Boolean(languageAnchor)}
           onClose={onCloseLangAction}
         >
-          <MenuItem sx={{ fontSize: "0.875rem" }} className={classes.menuItem}>
+          <MenuItem
+            sx={{ fontSize: "0.875rem" }}
+            className={classes.menuItem}
+            onClick={() => {
+              handleLanguageRedirect();
+            }}
+          >
             <span>Default</span>
           </MenuItem>
           {langSupports.map((item, index) => (
@@ -270,6 +294,9 @@ const Tour = memo(({ handleTourEdit }: Props) => {
               key={index}
               sx={{ fontSize: "0.875rem" }}
               className={classes.menuItem}
+              onClick={() => {
+                handleLanguageRedirect(item);
+              }}
             >
               <span>{item.name}</span>
             </MenuItem>
