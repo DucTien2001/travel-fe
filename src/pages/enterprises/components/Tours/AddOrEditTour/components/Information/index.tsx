@@ -83,6 +83,8 @@ const InformationComponent = memo((props: Props) => {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [communes, setCommunes] = useState([]);
+  const [oldImages, setOldImages] = useState<any>([]);
+  const [imagesDeleted, setImagesDeleted] = useState([]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -190,11 +192,12 @@ const InformationComponent = memo((props: Props) => {
     }
   };
 
-  const [imagesDeleted, setImagesDeleted] = useState([]);
-
   const handleDeleteImage = (image) => {
     setImagesDeleted((prevState: any) => [...prevState, image]);
 
+    setOldImages((prevState: any) =>
+      prevState?.filter((item) => item !== image)
+    );
     setImagesPreview((prevState: any) =>
       prevState?.filter((item) => item !== image)
     );
@@ -217,7 +220,7 @@ const InformationComponent = memo((props: Props) => {
     formData.append("highlight", data.highlight);
     formData.append("termsAndCondition", data.termsAndCondition);
     data?.images?.forEach((item, index) => {
-      formData.append(`images${index}`, item);
+      formData.append(`imageFiles${index}`, item);
     });
     const formDataEdit = new FormData();
     formDataEdit.append("title", data.title);
@@ -236,9 +239,9 @@ const InformationComponent = memo((props: Props) => {
     formDataEdit.append("highlight", data.highlight);
     formDataEdit.append("termsAndCondition", data.termsAndCondition);
     data?.images?.forEach((item, index) => {
-      formDataEdit.append(`images${index}`, item);
+      formDataEdit.append(`imageFiles${index}`, item);
     });
-    imagesPreview?.forEach((item, index) => {
+    oldImages?.forEach((item, index) => {
       formDataEdit.append(`images[]`, item);
     });
     imagesDeleted?.forEach((item, index) => {
@@ -300,6 +303,7 @@ const InformationComponent = memo((props: Props) => {
         numberOfNights: itemEdit?.numberOfNights,
         termsAndCondition: itemEdit?.termsAndCondition,
       });
+      setOldImages(itemEdit?.images);
       setImagesPreview(itemEdit?.images);
     }
   }, [itemEdit, reset]);
