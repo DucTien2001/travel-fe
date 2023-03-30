@@ -174,16 +174,13 @@ const InformationComponent = memo((props: Props) => {
     });
   };
 
+  const [imagesUpload, setImagesUpload] = useState([]);
+
   const handleFile = async (e) => {
     e.stopPropagation();
     let files = e.target.files;
-
-    const _images = [];
-    for (var i = 0; i < files?.length; i++) {
-      _images.push(files[i]);
-    }
-    setValue("images", _images);
     for (let file of files) {
+      setImagesUpload((prevState: any) => [...prevState, file]);
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
@@ -192,16 +189,53 @@ const InformationComponent = memo((props: Props) => {
     }
   };
 
-  const handleDeleteImage = (image) => {
+  const handleDeleteImage = (image, index) => {
     setImagesDeleted((prevState: any) => [...prevState, image]);
-
     setOldImages((prevState: any) =>
       prevState?.filter((item) => item !== image)
     );
     setImagesPreview((prevState: any) =>
       prevState?.filter((item) => item !== image)
     );
+    setImagesUpload((prevState: any) =>
+      prevState?.filter((_, i) => i !== index)
+    );
   };
+
+  const fetchProvince = () => {
+    const _provinces = provinces.map((item) => {
+      return {
+        id: item.province_id,
+        name: item.province_name,
+      };
+    });
+    return _provinces;
+  };
+
+  const watchCity = watch("city");
+
+  const fetchDistrict = () => {
+    const _districts = districts?.map((item) => {
+      return {
+        id: item.district_id,
+        name: item.district_name,
+      };
+    });
+    return _districts;
+  };
+
+  const watchDistrict = watch("district");
+
+  const fetchCommune = () => {
+    const _communes = communes?.map((item) => {
+      return {
+        id: item.ward_id,
+        name: item.ward_name,
+      };
+    });
+    return _communes;
+  };
+
   const _onSubmit = (data: TourForm) => {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -219,37 +253,42 @@ const InformationComponent = memo((props: Props) => {
     formData.append("numberOfNights", `${data.numberOfNights}`);
     formData.append("highlight", data.highlight);
     formData.append("termsAndCondition", data.termsAndCondition);
-    data?.images?.forEach((item, index) => {
+    imagesUpload.forEach((item, index) => {
       formData.append(`imageFiles${index}`, item);
     });
-    const formDataEdit = new FormData();
-    formDataEdit.append("title", data.title);
-    formDataEdit.append("city[id]", `${data?.city?.id}`);
-    formDataEdit.append("city[name]", data?.city?.name);
-    formDataEdit.append("district[id]", `${data?.district?.id}`);
-    formDataEdit.append("district[name]", data?.district?.name);
-    formDataEdit.append("commune[id]", `${data?.commune?.id}`);
-    formDataEdit.append("commune[name]", data?.commune?.name);
-    formDataEdit.append("moreLocation", data.moreLocation);
-    formDataEdit.append("contact", data.contact);
-    formDataEdit.append("description", data.description);
-    formDataEdit.append("suitablePerson", `${data.suitablePerson}`);
-    formDataEdit.append("numberOfDays", `${data.numberOfDays}`);
-    formDataEdit.append("numberOfNights", `${data.numberOfNights}`);
-    formDataEdit.append("highlight", data.highlight);
-    formDataEdit.append("termsAndCondition", data.termsAndCondition);
-    data?.images?.forEach((item, index) => {
-      formDataEdit.append(`imageFiles${index}`, item);
-    });
-    oldImages?.forEach((item, index) => {
-      formDataEdit.append(`images[]`, item);
-    });
-    imagesDeleted?.forEach((item, index) => {
-      formDataEdit.append(`imagesDeleted[]`, item);
-    });
-
     dispatch(setLoading(true));
     if (itemEdit) {
+      const formDataEdit = new FormData();
+      formDataEdit.append("title", data.title);
+      formDataEdit.append("city[id]", `${data?.city?.id}`);
+      formDataEdit.append("city[name]", data?.city?.name);
+      formDataEdit.append("district[id]", `${data?.district?.id}`);
+      formDataEdit.append("district[name]", data?.district?.name);
+      formDataEdit.append("commune[id]", `${data?.commune?.id}`);
+      formDataEdit.append("commune[name]", data?.commune?.name);
+      formDataEdit.append("moreLocation", data.moreLocation);
+      formDataEdit.append("contact", data.contact);
+      formDataEdit.append("description", data.description);
+      formDataEdit.append("suitablePerson", `${data.suitablePerson}`);
+      formDataEdit.append("numberOfDays", `${data.numberOfDays}`);
+      formDataEdit.append("numberOfNights", `${data.numberOfNights}`);
+      formDataEdit.append("highlight", data.highlight);
+      formDataEdit.append("termsAndCondition", data.termsAndCondition);
+      imagesUpload.forEach((item, index) => {
+        if (typeof item === "object") {
+          formDataEdit.append(`imageFiles${index}`, item);
+        }
+      });
+      oldImages?.forEach((item, index) => {
+        if (typeof item === "string") {
+          formDataEdit.append(`images[]`, item);
+        }
+      });
+      imagesDeleted?.forEach((item, index) => {
+        if (typeof item === "string") {
+          formDataEdit.append(`imagesDeleted[]`, item);
+        }
+      });
       TourService.updateTourInformation(itemEdit?.id, formDataEdit)
         .then(() => {
           dispatch(setSuccessMess("Update tour successfully"));
@@ -305,9 +344,14 @@ const InformationComponent = memo((props: Props) => {
       });
       setOldImages(itemEdit?.images);
       setImagesPreview(itemEdit?.images);
+      setImagesUpload(itemEdit?.images);
     }
   }, [itemEdit, reset]);
 
+  console.log(imagesUpload, "======images upload");
+  console.log(imagesPreview, "===Images review");
+  console.log(imagesDeleted, "iamges delete ====");
+  console.log(oldImages, "iamges old ====");
   useEffect(() => {
     if (!itemEdit) {
       clearForm();
@@ -326,18 +370,6 @@ const InformationComponent = memo((props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchProvince = () => {
-    const _provinces = provinces.map((item) => {
-      return {
-        id: item.province_id,
-        name: item.province_name,
-      };
-    });
-    return _provinces;
-  };
-
-  const watchCity = watch("city");
-
   useEffect(() => {
     ProvinceService.getDistrict(Number(watchCity?.id))
       .then((res) => {
@@ -349,18 +381,6 @@ const InformationComponent = memo((props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchCity?.id]);
 
-  const fetchDistrict = () => {
-    const _districts = districts?.map((item) => {
-      return {
-        id: item.district_id,
-        name: item.district_name,
-      };
-    });
-    return _districts;
-  };
-
-  const watchDistrict = watch("district");
-
   useEffect(() => {
     ProvinceService.getCommune(Number(watchDistrict?.id))
       .then((res) => {
@@ -371,16 +391,6 @@ const InformationComponent = memo((props: Props) => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchDistrict?.id]);
-
-  const fetchCommune = () => {
-    const _communes = communes?.map((item) => {
-      return {
-        id: item.ward_id,
-        name: item.ward_name,
-      };
-    });
-    return _communes;
-  };
 
   return (
     <div
@@ -589,7 +599,7 @@ const InformationComponent = memo((props: Props) => {
                     <Grid key={item} xs={4} className={classes.imgPreview} item>
                       <img src={item} alt="preview" />
                       <div
-                        onClick={() => handleDeleteImage(item)}
+                        onClick={() => handleDeleteImage(item, index)}
                         title="Delete"
                         className={classes.iconDelete}
                       >
