@@ -190,7 +190,9 @@ const InformationComponent = memo((props: Props) => {
   };
 
   const handleDeleteImage = (image, index) => {
-    setImagesDeleted((prevState: any) => [...prevState, image]);
+    if(oldImages.includes(image)){
+      setImagesDeleted((prevState: any) => [...prevState, image]);
+    }
     setOldImages((prevState: any) =>
       prevState?.filter((item) => item !== image)
     );
