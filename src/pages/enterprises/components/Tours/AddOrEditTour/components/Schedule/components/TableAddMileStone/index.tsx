@@ -220,7 +220,7 @@ const PopupAddMileStone = memo((props: Props) => {
     }
   };
 
-  console.log(scheduleEdit, " ====");
+  console.log(scheduleEdit, " ===wsww=");
   console.log(fieldsMileStone, "field ====");
 
   useEffect(() => {
