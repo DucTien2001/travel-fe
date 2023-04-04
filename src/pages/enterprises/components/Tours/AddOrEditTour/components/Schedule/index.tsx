@@ -14,6 +14,9 @@ import { DeleteOutlineOutlined } from "@mui/icons-material";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import _ from "lodash";
 import { useSSR } from "react-i18next";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { useDispatch } from "react-redux";
+import { TourScheduleService } from "services/enterprise/tourSchedule";
 export interface ScheduleForm {
   schedule: {
     day: number;
@@ -24,20 +27,24 @@ interface Props {
   value?: number;
   index?: number;
   itemEdit?: ETour;
+  lang?: string;
   handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const ScheduleComponent = memo((props: Props) => {
-  const { value, index, itemEdit, handleNextStep } = props;
+  const { value, index, itemEdit, lang, handleNextStep } = props;
+  const dispatch = useDispatch();
+
+  const [schedule, setSchedule] = useState([])
 
   const dayCategory = useMemo(() => {
-    return _.groupBy(itemEdit?.tourSchedules, "day");
-  }, [itemEdit]);
+    return _.groupBy(schedule, "day");
+  }, [schedule]);
 
   const dayCategoryArray = useMemo(() => {
     return _.toArray(dayCategory);
-  }, [itemEdit]);
+  }, [schedule]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -84,13 +91,30 @@ const ScheduleComponent = memo((props: Props) => {
 
   useEffect(() => {
     if (itemEdit) {
+      dispatch(setLoading(true));
+      TourScheduleService.findAll({
+        tourId: itemEdit.id,
+        language: lang
+      })
+        .then((res) => {
+          if(res?.success) {
+            setSchedule(res.data)
+          }
+        })
+        .catch((err) => setErrorMess(err))
+        .finally(() => dispatch(setLoading(false)));
+    }
+  }, [itemEdit]);
+
+  useEffect(() => {
+    if (itemEdit) {
       reset({
         schedule: dayCategoryArray?.map((item, index) => ({
           day: index,
         })),
       });
     }
-  }, [itemEdit, handleNextStep]);
+  }, [schedule, handleNextStep]);
 
   return (
     <div
@@ -127,6 +151,7 @@ const ScheduleComponent = memo((props: Props) => {
                   <TableAddMileStone
                     day={index + 1}
                     itemEdit={itemEdit}
+                    lang={lang}
                     scheduleEdit={dayCategoryArray[index]}
                     handleNextStep={handleNextStep}
                   />

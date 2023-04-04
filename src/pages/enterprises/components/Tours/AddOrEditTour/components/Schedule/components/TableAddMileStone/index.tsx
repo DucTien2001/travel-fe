@@ -59,12 +59,13 @@ interface Props {
   day: number;
   scheduleEdit?: ScheduleItem[];
   itemEdit?: ETour;
+  lang?: string;
   handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddMileStone = memo((props: Props) => {
-  const { day, itemEdit, scheduleEdit, handleNextStep } = props;
+  const { day, itemEdit, scheduleEdit, lang, handleNextStep } = props;
   const dispatch = useDispatch();
   const { tourInformation } = useSelector(
     (state: ReducerType) => state.enterprise
@@ -139,6 +140,7 @@ const PopupAddMileStone = memo((props: Props) => {
   } = useFieldArray({
     control,
     name: "schedule",
+    keyName: "fieldID",
   });
 
   const onAddMileStone = () => {
@@ -149,10 +151,11 @@ const PopupAddMileStone = memo((props: Props) => {
     });
   };
 
-  const onDeleteMileStone = (index: number) => () => {
+  const onDeleteMileStone = (schedule ,index: number) => () => {
     removeMileStone(index);
-    if (itemEdit && scheduleEdit) {
-    }
+    // if (schedule?.id) {
+    //   TourService.deleteScheduleItem(schedule.id)
+    // }
   };
 
   const onOpenPopupConfirmDelete = (e, itemAction) => {
@@ -195,6 +198,7 @@ const PopupAddMileStone = memo((props: Props) => {
       TourService.createOrUpdateScheduleTour({
         tourId: tourInformation?.id ? tourInformation?.id : itemEdit?.id,
         day: day,
+        language: lang,
         schedule: data.schedule.map((item) => ({
           id: item?.id,
           description: item.description,
@@ -219,9 +223,6 @@ const PopupAddMileStone = memo((props: Props) => {
         });
     }
   };
-
-  console.log(scheduleEdit, " ===wsww=");
-  console.log(fieldsMileStone, "field ====");
 
   useEffect(() => {
     if (!scheduleEdit) {
@@ -312,7 +313,7 @@ const PopupAddMileStone = memo((props: Props) => {
                   component="th"
                   sx={{ width: "135px" }}
                 >
-                  <IconButton onClick={onDeleteMileStone(index)}>
+                  <IconButton onClick={onDeleteMileStone(field, index)}>
                     <DeleteOutlineOutlined
                       sx={{ marginRight: "0.25rem" }}
                       className={classes.iconDelete}
