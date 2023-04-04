@@ -1,114 +1,106 @@
+
 .root {
-  width: 100%;
+  margin-bottom: 0 !important;
 }
-
-.iconEye {
-  svg {
-    width: 17px;
-    height: 16px;
-  }
+.form {
+  position: relative;
 }
-.title {
-  color: rgba(28, 28, 28, 0.9);
-  font-size: 14px;
-  font-weight: 700 !important;
-  line-height: 140%;
-  letter-spacing: 0.015em;
-  padding-bottom: 5px;
-  margin: 0;
-  font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
-}
-.iconErrorOutline {
-  width: 20px;
-  height: 20px;
-  color: var(--danger-color);
-}
-
-.inputTextfield {
-  &[class~=Mui-disabled] {
-    background: var(--gray-5);
-    fieldset {
-      border-width: 1px !important;
-      border: none;
-      border-bottom: 1px solid var(--gray-20);
-      border-radius: initial;
-      &[class~="MuiOutlinedInput-notchedOutline"] {
-        border-bottom: 1px solid var(--gray-20);
-      }
-    }
-    ::placeholder {
-      color: var(--gray-20);
-      font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
-      font-size: 12px;
-    }
-    .iconErrorOutline {
-      display: none;
-    }
-  }
-  ::placeholder {
-    color: var(--gray-50);
-    font-weight: 400;
-    font-size: 14px; 
-    opacity: 1;
-    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+.danger {
+  [class~="form-control"] {
+    border-color: var(--danger-color);
   }
   
-  :focus {
-    border-color: var(--primary-light-color);
-  }
-  svg {
-    color: var(--primary-color) !important;
-  }
-  input {
-    padding: 8px 16px;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px !important;
-    line-height: 24px;
-    letter-spacing: 0.015em;
-    color: var(--eerie-black);
-    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
-  }
-  padding-left: 9px;
-  padding-bottom: 4px;
-  margin-bottom: 4px;
-  border-radius: initial;
-  fieldset {
-    border-width: 1px !important;
-    border: none;
-    border-bottom: 1px solid var(--gray-20);
-    border-radius: initial;
-  }
 }
-.inputInvalid {
-  fieldset {
-    border: none;
-    border-bottom: 1px solid var(--danger-color) !important;
-    border-width: 1px !important;
-    border-radius: initial;
+.datePickerInput {
+  [class~="form-control"] {
+    padding: 12px 12px 12px 41px !important;
   }
-  &[class~="Mui-error"] {
-    fieldset {
-      &[class~="MuiOutlinedInput-notchedOutline"] {
-        border-bottom: 1px solid var(--danger-color) !important;
+  [class~="form-control"] :disabled  { 
+    
+      background: var(--gray-5) !important;
+      ::placeholder {
+        color: var(--gray-20);
+        font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+        font-size: 12px;
       }
+    
+
+  }
+    input {
+        display: block;
+        width: 100%;
+        min-width: 100px;
+        background-color: transparent;
+        border: 1px solid #e3e3e3;
+        border-radius: 4px;
+        color: #2c2c2c;
+        height: auto;
+        line-height: normal;
+        font-size: 14px !important; 
+        transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out,
+          background-color 0.3s ease-in-out;
+          padding: 10px 12px 12px;
+        box-shadow: none;
+        
+        &:focus {
+          border: 1px solid var(--primary-light-color);
+          box-shadow: none;
+          outline: 0 !important;
+          color: #2c2c2c;
+        }
+        &::placeholder {
+          color: #888888;
+          opacity: 0.8;
+          font-size: 14px !important;
+        }
+        &:-ms-input-placeholder {
+          color: #888888;
+          opacity: 0.8;
+        }
+        &::-ms-input-placeholder {
+          color: #888888;
+          opacity: 0.8;
+        }
+        &:hover {
+          border: 1px solid rgba(33, 33, 33, 1);
+        }
+    }
+    [class~="rdtCounter"]:last-child  [class~="rdtCount"] {
+      color: var(--text-color) !important;
+      border-radius: initial !important;
+      border: none;
+    }
+    [class~="rdtCount"] {
+      height: auto !important;
     }
   }
-}
-.optional {
-  color: var(--green-dark);
-
-}
-.textInfor {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  color: var(--gray-80);
-  margin: 0;
-  margin-top: 5px;
-  padding-left: 9px;
-}
-
-.titleRequired {
-  color: var(--danger-color);
-}
+  .iconLabel {
+    position: absolute;
+    top: 36px;
+    left: 14px;
+    z-index: 10;
+    svg {
+      color: var(--primary-color);
+      font-size: 16px;
+    }
+  }
+  .icon {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    z-index: 10;
+    svg {
+      color: var(--primary-color);
+      font-size: 16px;
+    }
+  }
+  .label {
+    color: rgba(28, 28, 28, 0.9);
+    font-size: 14px;
+    font-weight: 700 !important;
+    line-height: 140%;
+    letter-spacing: 0.015em;
+    padding-bottom: 5px;
+    margin: 0;
+    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  }

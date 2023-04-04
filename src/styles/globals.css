@@ -1,7 +1,7 @@
 html,
 :root {
   --white-color: #ffff;
-  --violet-transparent-color:rgba(54,19,84,.85);
+  --primary-transparent-color:rgba(19, 22, 84, 0.85);
   --primary-color: #25316D;
   --primary-light-color: #4A8BB0;
   --primary-light-color-1: #5BC0F8;

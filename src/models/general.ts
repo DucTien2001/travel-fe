@@ -43,6 +43,11 @@ export const languagesType: OptionItem[] = [
   { id: 2, name: "Vietnamese", value: "Vietnamese" },
 ];
 
+export const currencyType: OptionItem[] = [
+  { id: 1, name: "VND", value: "vi" },
+  { id: 2, name: "USD", value: "en" },
+]
+
 export enum Lang {
   VI = 'vi',
   EN = 'en'

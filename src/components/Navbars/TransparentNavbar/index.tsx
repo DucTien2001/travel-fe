@@ -288,7 +288,7 @@ const WhiteNavbar = memo(() => {
                   <NavItem onClick={logout}>
                     <Link href="/auth/login" passHref>
                       <a>
-                        <Button btnType={BtnType.Secondary}>Sign out</Button>
+                        <Button btnType={BtnType.Secondary}>Log out</Button>
                       </a>
                     </Link>
                   </NavItem>
@@ -298,7 +298,7 @@ const WhiteNavbar = memo(() => {
                   <NavItem className={classes.navMobile}>
                     <Link href="/auth/login" passHref>
                       <a>
-                        <Button btnType={BtnType.Secondary}>Sign in</Button>
+                        <Button btnType={BtnType.Secondary}>Log in</Button>
                       </a>
                     </Link>
                   </NavItem>

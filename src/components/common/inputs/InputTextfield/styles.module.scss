@@ -26,16 +26,20 @@
 
 .inputTextfield {
   &[class~=Mui-disabled] {
-    background: var(--gray-5);
+    background-color: #E3E3E3;
     ::placeholder {
-      color: var(--gray-20);
+      color: #888888 !important;
       font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
       font-size: 12px;
     }
     .iconErrorOutline {
       display: none;
     }
+        [class~=MuiOutlinedInput-notchedOutline] {
+      border-color: transparent !important;
+    }
   }
+
   ::placeholder {
     color: var(--gray-50);
     font-weight: 400;
@@ -51,7 +55,7 @@
     color: var(--primary-color) !important;
   }
   input {
-    padding: 8px 16px;
+    padding: 9px 16px;
     font-style: normal;
     font-weight: 400;
     font-size: 16px !important;
@@ -72,6 +76,7 @@
   fieldset {
     border-width: 1px !important;
     border-color: #e3e3e3;
+
   }
 }
 .inputInvalid {  

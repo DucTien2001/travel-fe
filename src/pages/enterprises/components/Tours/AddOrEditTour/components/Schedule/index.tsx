@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useEffect } from "react";
+import React, { useMemo, memo, useEffect, useState } from "react";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import * as yup from "yup";
@@ -12,6 +12,8 @@ import Button, { BtnType } from "components/common/buttons/Button";
 import TableAddMileStone from "./components/TableAddMileStone";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+import _ from "lodash";
+import { useSSR } from "react-i18next";
 export interface ScheduleForm {
   schedule: {
     day: number;
@@ -26,8 +28,17 @@ interface Props {
 }
 
 // eslint-disable-next-line react/display-name
-const InformationComponent = memo((props: Props) => {
+const ScheduleComponent = memo((props: Props) => {
   const { value, index, itemEdit, handleNextStep } = props;
+
+  const dayCategory = useMemo(() => {
+    return _.groupBy(itemEdit?.tourSchedules, "day");
+  }, [itemEdit]);
+
+  const dayCategoryArray = useMemo(() => {
+    return _.toArray(dayCategory);
+  }, [itemEdit]);
+
   const schema = useMemo(() => {
     return yup.object().shape({
       schedule: yup.array(
@@ -43,7 +54,7 @@ const InformationComponent = memo((props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { control } = useForm<ScheduleForm>({
+  const { reset, control } = useForm<ScheduleForm>({
     resolver: yupResolver(schema),
     mode: "onChange",
   });
@@ -70,6 +81,16 @@ const InformationComponent = memo((props: Props) => {
   useEffect(() => {
     onAddSchedule();
   }, [appendSchedule]);
+
+  useEffect(() => {
+    if (itemEdit) {
+      reset({
+        schedule: dayCategoryArray?.map((item, index) => ({
+          day: index,
+        })),
+      });
+    }
+  }, [itemEdit, handleNextStep]);
 
   return (
     <div
@@ -103,7 +124,12 @@ const InformationComponent = memo((props: Props) => {
                   </IconButton>
                 </Grid>
                 <Grid sx={{ paddingTop: "16px" }}>
-                  <TableAddMileStone day={index + 1} />
+                  <TableAddMileStone
+                    day={index + 1}
+                    itemEdit={itemEdit}
+                    scheduleEdit={dayCategoryArray[index]}
+                    handleNextStep={handleNextStep}
+                  />
                 </Grid>
               </Grid>
             ))}
@@ -124,4 +150,4 @@ const InformationComponent = memo((props: Props) => {
   );
 });
 
-export default InformationComponent;
+export default ScheduleComponent;

@@ -18,12 +18,53 @@ export interface ETour {
   creator: number;
   contact: string;
   isDeleted?: boolean;
-  schedule?: CreateMultipleSchedule[];
-  priceRange?: CreatePrice[];
+  tourSchedules?: ScheduleItem[];
+  tourOnSales?: {
+    tourId?: number;
+    discount: number;
+    quantity: number;
+    startDate: Date;
+    childrenAgeMin: number;
+    childrenAgeMax: number;
+    childrenPrice: number;
+    adultPrice: number;
+    currency: string;
+  }[];
   languages?: ETour[];
   parentLanguage: number,
   language: string;
 }
+
+export interface ScheduleItem {
+  id?: number
+  day?: number;
+  startTime: number;
+  endTime: number;
+  description: string;
+}
+export interface CreateMultipleSchedule {
+  id?: number
+  tourId: number;
+  day: number;
+  schedule: ScheduleItem[];
+}
+
+
+export interface TourPrice {
+  sale: {
+    tourId?: number;
+    discount: number;
+    quantity: number;
+    startDate: Date;
+    childrenAgeMin: number;
+    childrenAgeMax: number;
+    childrenPrice: number;
+    adultPrice: number;
+    currency: string;
+  }[]
+}
+
+
 export interface UpdateTourInformation {
   title: string;
   numberOfDays: number;
@@ -42,32 +83,6 @@ export interface UpdateTourInformation {
   imagesDeleted: string[];
 }
 
-export interface ScheduleItem {
-  id?: number
-  startTime: Date;
-  endTime: Date;
-  description: string;
-}
-export interface CreateMultipleSchedule {
-  id?: number
-  tourId: number;
-  day: number;
-  schedule: ScheduleItem[];
-}
-interface Price {
-  title: string;
-  minOld: number;
-  maxOld: number;
-  price: number;
-}
-
-export interface CreatePrice {
-  tourId: number;
-  discount: number;
-  quantity: number;
-  startDate: Date;
-  prices: Price[];
-}
 export interface EUpdateTour {
   id?: number;
   title: string;

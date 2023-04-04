@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, memo, useState, useEffect } from "react";
 import { Row, Col, Input } from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
@@ -30,9 +30,6 @@ import InputSelect from "components/common/inputs/InputSelect";
 import QueryString from "query-string";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
-interface IQueryString {
-  lang?: string;
-}
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const modules = {
   toolbar: [
@@ -66,17 +63,14 @@ interface Props {
   value?: number;
   index?: number;
   itemEdit?: ETour;
+  lang?: string;
   handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const InformationComponent = memo((props: Props) => {
-  const { value, index, itemEdit, handleNextStep } = props;
+  const { value, index, itemEdit, lang, handleNextStep } = props;
   const dispatch = useDispatch();
-  let lang;
-  if (typeof window !== "undefined") {
-    ({ lang } = QueryString.parse(window.location.search));
-  }
 
   const [imagesPreview, setImagesPreview] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -147,10 +141,8 @@ const InformationComponent = memo((props: Props) => {
     handleSubmit,
     formState: { errors },
     reset,
-    getValues,
     control,
     watch,
-    setValue,
   } = useForm<TourForm>({
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -190,7 +182,7 @@ const InformationComponent = memo((props: Props) => {
   };
 
   const handleDeleteImage = (image, index) => {
-    if(oldImages.includes(image)){
+    if (oldImages.includes(image)) {
       setImagesDeleted((prevState: any) => [...prevState, image]);
     }
     setOldImages((prevState: any) =>
@@ -276,6 +268,9 @@ const InformationComponent = memo((props: Props) => {
       formDataEdit.append("numberOfNights", `${data.numberOfNights}`);
       formDataEdit.append("highlight", data.highlight);
       formDataEdit.append("termsAndCondition", data.termsAndCondition);
+      if (lang) {
+        formDataEdit.append("language", lang);
+      }
       imagesUpload.forEach((item, index) => {
         if (typeof item === "object") {
           formDataEdit.append(`imageFiles${index}`, item);
@@ -350,10 +345,6 @@ const InformationComponent = memo((props: Props) => {
     }
   }, [itemEdit, reset]);
 
-  console.log(imagesUpload, "======images upload");
-  console.log(imagesPreview, "===Images review");
-  console.log(imagesDeleted, "iamges delete ====");
-  console.log(oldImages, "iamges old ====");
   useEffect(() => {
     if (!itemEdit) {
       clearForm();

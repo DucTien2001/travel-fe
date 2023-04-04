@@ -1,112 +1,130 @@
-import {
-  TimePicker as TimePickerMUI,
-  TimePickerProps,
-} from "@mui/x-date-pickers/TimePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { memo } from "react";
 import clsx from "clsx";
+import React, { memo } from "react";
+import {
+  Control,
+  Controller,
+  FieldError,
+  FieldErrors,
+  FieldValues,
+  Merge,
+} from "react-hook-form";
+import { FormGroup } from "reactstrap";
 import classes from "./styles.module.scss";
-import { FormControl, OutlinedInput } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import ErrorMessage from "components/common/texts/ErrorMessage";
-
-interface Props extends Partial<TimePickerProps<moment.Moment, moment.Moment>> {
-  title?: string;
-  titleRequired?: boolean;
+import ReactDatetime from "react-datetime";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
+interface Props {
+  label?: string;
+  labelIcon?: React.ReactNode;
+  className?: string;
   placeholder?: string;
-  showEyes?: boolean;
-  root?: string;
-  className?: any;
-  inputRef?: any;
-  autoComplete?: string;
-  errorMessage?: string | null;
-  optional?: boolean;
-  infor?: string;
-  isShowError?: boolean;
-  tabIndex?: number;
+  errorMessage?: string | FieldError | Merge<FieldError, FieldErrors<any>>;
+  name?: string;
+  control?: any;
+  dateFormat?: string;
+  disabled?: boolean;
+  _onChange?: () => void;
+  [key: string]: any;
 }
 
-const TimePicker = memo(
+// eslint-disable-next-line react/display-name
+const CustomDatePicker = memo(
   ({
-    title,
+    label,
+    labelIcon,
+    className,
     placeholder,
-    root,
-    showEyes,
-    inputRef,
     errorMessage,
-    autoComplete,
-    optional,
-    infor,
-    titleRequired,
-    isShowError,
-    value,
-    tabIndex,
-    onChange,
+    name,
+    handleChange,
+    _onChange,
+    control,
+    dateFormat,
+    disabled,
     ...rest
   }: Props) => {
-    const { t } = useTranslation();
-
     return (
-      <FormControl className={clsx(classes.root, root)}>
-        {title && (
-          <label className={classes.title}>
-            {title}
-            {optional ? (
-              <span className={classes.optional}>
-                {" "}
-                ({t("common_optional")})
-              </span>
-            ) : (
-              ""
-            )}
-            {titleRequired ? (
-              <span className={classes.titleRequired}> *</span>
-            ) : (
-              ""
-            )}
-          </label>
+      <FormGroup
+        className={clsx(
+          classes.root,
+          { [classes.danger]: !!errorMessage },
+          className
         )}
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-          <TimePickerMUI
-            value={value}
-            onChange={onChange}
-            ampmInClock
-            views={["minutes", "seconds"]}
-            inputFormat="hh:mm"
-            mask="__:__"
-            renderInput={({ InputProps, ...params }) => (
-              <OutlinedInput
-                fullWidth
-                classes={{
-                  root: clsx(classes.inputTextfield, {
-                    [classes.inputInvalid]: !!errorMessage,
-                  }),
-                }}
-                onWheel={(e) =>
-                  e.target instanceof HTMLElement &&
-                  (e.target as any).type === "number" &&
-                  e.target.blur()
-                }
-                {...params}
-                inputProps={{
-                  ...(params.inputProps || {}),
-                  tabIndex: tabIndex,
-                }}
-                margin={params.margin as any}
-                onKeyDown={params.onKeyDown as any}
-                onKeyUp={params.onKeyUp as any}
-                placeholder="hh:mm"
-              />
+      >
+        {control ? (
+          <>
+            <Controller
+              name={name}
+              control={control}
+              render={({ field }) => {
+                return (
+                  <div className={classes.form}>
+                    {label && <label className={classes.label}>{label} </label>}
+                    <div className={label ? classes.iconLabel : classes.icon}>
+                      <AccessAlarmIcon />
+                    </div>
+                    <ReactDatetime
+                      {...field}
+                      initialValue={"00:00 a"}
+                      className={classes.datePickerInput}
+                      onChange={(time) => {
+                        _onChange && _onChange();
+                        return field?.onChange(time);
+                      }}
+                      dateFormat={false}
+                      timeFormat="hh:mm a"
+                      timeConstraints={{
+                        minutes: { min: 0, max: 59, step: 5 },
+                      }}
+                      inputProps={{
+                        className: "form-control",
+                        placeholder: `${placeholder}`,
+                        disabled: disabled,
+                      }}
+                      {...rest}
+                    />
+                  </div>
+                );
+              }}
+            />
+          </>
+        ) : (
+          <>
+            {label && (
+              <label className={classes.label}>
+                {labelIcon} {label}
+              </label>
             )}
-            {...rest}
-          />
-        </LocalizationProvider>
-        {infor && <span className={classes.textInfor}>{infor}</span>}
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </FormControl>
+            <div className={label ? classes.iconLabel : classes.icon}>
+              <AccessAlarmIcon />
+            </div>
+            <ReactDatetime
+              initialValue={"00:00"}
+              className={classes.datePickerInput}
+              inputProps={{
+                className: "form-control",
+                placeholder: `${placeholder}`,
+                disabled: disabled,
+              }}
+              dateFormat={false}
+              timeFormat="hh:mm a"
+              onChange={(time) => {
+                _onChange && _onChange();
+              }}
+              timeConstraints={{ minutes: { min: 0, max: 59, step: 5 } }}
+              {...rest}
+            />
+          </>
+        )}
+        {errorMessage && (
+          <span className="text-danger mt-1 d-block">
+            <>{errorMessage}</>
+          </span>
+        )}
+      </FormGroup>
     );
   }
 );
 
-export default TimePicker;
+export default CustomDatePicker;

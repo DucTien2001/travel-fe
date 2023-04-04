@@ -4,7 +4,7 @@ import "aos/dist/aos.css";
 import * as yup from "yup";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useAuth from "hooks/useAuth";
 import {
   setErrorMess,
@@ -20,14 +20,22 @@ import { DeleteOutlineOutlined } from "@mui/icons-material";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import moment from "moment";
 import InputTextfield from "components/common/inputs/InputTextfield";
-import TableAddPriceRange from "./components/TableAddPriceRange";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+import InputSelect from "components/common/inputs/InputSelect";
+import { OptionItem, currencyType } from "models/general";
+import { TourService } from "services/enterprise/tour";
+import { ReducerType } from "redux/reducers";
 
 export interface SaleForm {
   sale: {
     startDate: Date;
     quantity: number;
     discount?: number;
+    childrenAgeMin: number;
+    childrenAgeMax: number;
+    childrenPrice: number;
+    adultPrice: number;
+    currency: OptionItem;
   }[];
 }
 
@@ -42,9 +50,10 @@ interface Props {
 const RangePriceComponent = memo((props: Props) => {
   const { value, index, itemEdit, handleNextStep } = props;
 
-  const [datePrice, setDatePrice] = useState(new Date());
-  const [discount, setDiscount] = useState(null);
-  const [quantity, setQuantity] = useState(null);
+  const dispatch = useDispatch();
+  const { tourInformation } = useSelector(
+    (state: ReducerType) => state.enterprise
+  );
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -59,9 +68,39 @@ const RangePriceComponent = memo((props: Props) => {
             .number()
             .typeError("Discount is required")
             .notRequired(),
+          childrenAgeMin: yup
+            .number()
+            .typeError("Children age min is required.")
+            .positive("Children age min must be a positive number")
+            .required("Children age min is required."),
+          childrenAgeMax: yup
+            .number()
+            .typeError("Children age max is required.")
+            .positive("Children age max  must be a positive number")
+            .min(
+              yup.ref("childrenAgeMin"),
+              "Children age max must be rather than children age min"
+            )
+            .required("Children age max  is required."),
+          childrenPrice: yup
+            .number()
+            .typeError("Children price is required.")
+            .positive("Children price  must be a positive number")
+            .required("Children price  is required."),
+          adultPrice: yup
+            .number()
+            .typeError("Adult price is required.")
+            .positive("Adult price must be a positive number")
+            .required("Adult price is required."),
+          currency: yup
+            .object()
+            .shape({
+              name: yup.string().required("Currency is required"),
+              value: yup.string().required("Currency is required"),
+            })
+            .required(),
         })
       ),
-      dayDate: yup.date().required("Day is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -72,12 +111,15 @@ const RangePriceComponent = memo((props: Props) => {
     formState: { errors },
     reset,
     control,
-    watch,
   } = useForm<SaleForm>({
     resolver: yupResolver(schema),
     mode: "onChange",
   });
 
+  const yesterday = moment().subtract(1, "day");
+  const disablePastDt = (current) => {
+    return current.isAfter(yesterday);
+  };
   const {
     fields: fieldsSale,
     append: appendSale,
@@ -86,80 +128,102 @@ const RangePriceComponent = memo((props: Props) => {
     control,
     name: "sale",
   });
-
+  const clearForm = () => {
+    reset({
+      sale: [],
+    });
+  };
   const onAddSale = () => {
     appendSale({
       startDate: null,
       quantity: null,
       discount: null,
+      childrenAgeMin: null,
+      childrenAgeMax: null,
+      childrenPrice: null,
+      adultPrice: null,
+      currency: currencyType[0],
     });
   };
-
   const onDeleteSale = (index) => () => {
     removeSale(index);
-  };
-
-  const yesterday = moment().subtract(1, "day");
-  const disablePastDt = (current) => {
-    return current.isAfter(yesterday);
-  };
-
-  const clearForm = () => {
-    reset({
-      sale: [],
-    });
   };
 
   useEffect(() => {
     onAddSale();
   }, [appendSale]);
 
+  console.log(itemEdit);
+
+  const _onSubmit = (data: SaleForm) => {
+    // if (itemEdit) {
+    // }
+    dispatch(setLoading(true));
+    TourService.createPriceTour({
+      sale: data.sale.map((item) => ({
+        tourId: tourInformation?.id ? tourInformation?.id : itemEdit?.id,
+        discount: item?.discount,
+        quantity: item?.quantity,
+        startDate: item?.startDate,
+        childrenAgeMin: item?.childrenAgeMin,
+        childrenAgeMax: item?.childrenAgeMax,
+        childrenPrice: item?.childrenPrice,
+        adultPrice: item?.adultPrice,
+        currency: item?.currency.value,
+      })),
+    })
+      .then(() => {
+        dispatch(setSuccessMess("Create price of tour successfully"));
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
+
+  // useEffect(() => {
+  //   if (itemEdit) {
+  //     reset({
+  //       discount: itemEdit?.tourOnSales[0]?.discount,
+  //       quantity: itemEdit?.tourOnSales[0]?.quantity,
+  //       startDate: itemEdit?.tourOnSales[0]?.startDate,
+  //       childrenAgeMin: itemEdit?.tourOnSales[0]?.childrenAgeMin,
+  //       childrenAgeMax: itemEdit?.tourOnSales[0]?.childrenAgeMax,
+  //       childrenPrice: itemEdit?.tourOnSales[0]?.childrenPrice,
+  //       adultPrice: itemEdit?.tourOnSales[0]?.adultPrice,
+  //       // currency: itemEdit?.tourOnSales[0]?.currency,
+  //     });
+  //   }
+  // }, [itemEdit, reset]);
+
   useEffect(() => {
     if (itemEdit) {
       clearForm();
     }
-  });
+  }, [itemEdit]);
 
   return (
-    <div
+    <Grid
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      component="form"
+      onSubmit={handleSubmit(_onSubmit)}
     >
       {value === index && (
         <Grid className={classes.root}>
           <h3 className={classes.title}>Range Price and Date</h3>
           {!!fieldsSale?.length &&
             fieldsSale?.map((field, index) => (
-              <Grid key={index}>
-                <Grid
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Grid>
-                    <Controller
-                      name={`sale.${index}.startDate`}
-                      control={control}
-                      render={({ field }) => (
-                        <InputDatePicker
-                          label="Date"
-                          placeholder="Select date"
-                          timeFormat={false}
-                          errorMessage={
-                            errors.sale?.[index]?.startDate?.message
-                          }
-                          onChange={(date) => {
-                            setDatePrice(date?._d);
-                            field.onChange(date);
-                          }}
-                          isValidDate={disablePastDt}
-                        />
-                      )}
-                    />
+              <Grid key={index} sx={{ paddingTop: "32px" }}>
+                <Grid className={classes.boxTitleItem}>
+                  <Grid className={classes.titleItem}>
+                    <p>Price date available {index + 1}</p>
                   </Grid>
+
                   <IconButton
                     sx={{ marginLeft: "24px" }}
                     onClick={onDeleteSale(index)}
@@ -173,40 +237,117 @@ const RangePriceComponent = memo((props: Props) => {
                     />
                   </IconButton>
                 </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={3}>
+                <Grid
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                  container
+                >
+                  <Grid xs={2} sm={4} md={4} item>
+                    <Controller
+                      name={`sale.${index}.startDate`}
+                      control={control}
+                      render={({ field }) => (
+                        <InputDatePicker
+                          label="Date"
+                          placeholder="Select date"
+                          timeFormat={false}
+                          errorMessage={
+                            errors.sale?.[index]?.startDate?.message
+                          }
+                          onChange={(date) => {
+                            field.onChange(date);
+                          }}
+                          isValidDate={disablePastDt}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid xs={2} sm={4} md={4} item>
+                    <InputSelect
+                      fullWidth
+                      title={"Currency"}
+                      name="currency"
+                      control={control}
+                      selectProps={{
+                        options: currencyType,
+                        placeholder: "--Currency--",
+                      }}
+                      errorMessage={errors.sale?.[index]?.currency?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={2} sm={4} md={4}></Grid>
+                  <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
                       title="Total ticket"
                       placeholder="Enter total ticket"
                       autoComplete="off"
                       name="quantity"
-                      onChange={(e) => {
-                        setQuantity(e.target.value);
-                      }}
+                      type="number"
                       inputRef={register(`sale.${index}.quantity`)}
                       errorMessage={errors.sale?.[index]?.quantity?.message}
                     />
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
                       title="Discount"
                       placeholder="Enter discount"
                       autoComplete="off"
                       name="discount"
-                      onChange={(e) => {
-                        setDiscount(e.target.value);
-                      }}
+                      type="number"
                       inputRef={register(`sale.${index}.discount`)}
                       errorMessage={errors.sale?.[index]?.discount?.message}
                     />
                   </Grid>
-                </Grid>
-                <Grid sx={{ paddingTop: "16px" }}>
-                  <TableAddPriceRange
-                    day={datePrice}
-                    quantity={quantity}
-                    discount={discount}
-                  />
+                  <Grid item xs={2} sm={4} md={4}>
+                    <InputTextfield
+                      title="Price for adult"
+                      placeholder="Enter price of adult"
+                      autoComplete="off"
+                      name="adultPrice"
+                      type="number"
+                      inputRef={register(`sale.${index}.adultPrice`)}
+                      errorMessage={errors.sale?.[index]?.adultPrice?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={2} sm={4} md={4}>
+                    <InputTextfield
+                      title="Children age min"
+                      placeholder="Enter children age min"
+                      autoComplete="off"
+                      name="childrenAgeMin"
+                      type="number"
+                      inputRef={register(`sale.${index}.childrenAgeMin`)}
+                      errorMessage={
+                        errors.sale?.[index]?.childrenAgeMin?.message
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={2} sm={4} md={4}>
+                    <InputTextfield
+                      title="Children age max"
+                      placeholder="Enter children age max"
+                      autoComplete="off"
+                      name="childrenAgeMax"
+                      type="number"
+                      inputRef={register(`sale.${index}.childrenAgeMax`)}
+                      errorMessage={
+                        errors.sale?.[index]?.childrenAgeMax?.message
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={2} sm={4} md={4}>
+                    <InputTextfield
+                      title="Price for children"
+                      placeholder="Enter price of children"
+                      autoComplete="off"
+                      name="childrenPrice"
+                      type="number"
+                      inputRef={register(`sale.${index}.childrenPrice`)}
+                      errorMessage={
+                        errors.sale?.[index]?.childrenPrice?.message
+                      }
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             ))}
@@ -216,14 +357,14 @@ const RangePriceComponent = memo((props: Props) => {
             </Button>
           </Grid>
           <Grid className={classes.boxNextBtn}>
-            <Button btnType={BtnType.Primary} onClick={handleNextStep}>
+            <Button btnType={BtnType.Primary} type="submit">
               Done Set Up
               <ArrowRightAltIcon />
             </Button>
           </Grid>
         </Grid>
       )}
-    </div>
+    </Grid>
   );
 });
 

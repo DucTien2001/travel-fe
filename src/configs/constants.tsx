@@ -98,8 +98,6 @@ export const API = {
     TOUR: {
       DEFAULT: "/v1.0/enterprise/tour",
       CREATE_TOUR: "/v1.0/enterprise/tour",
-      CREATE_SCHEDULE_TOUR: "/v1.0/enterprise/tour-schedule/multi",
-      CREATE_PRICE_TOUR: "/v1.0/enterprise/tour-on-sale",
       GET_ONE_TOUR: "/v1.0/enterprise/tour/:id",
       UPDATE_TOUR: "/v1.0/enterprise/tour/:id",
       DELETE_TOUR: "/v1.0/tour/delete/:id",
@@ -107,6 +105,14 @@ export const API = {
       STOP_WORKING: "/v1.0/tour/temporarily-stop-working/:id",
       WORK_AGAIN: "/v1.0/tour/work-again/:id",
       SEARCH_TOUR: "/v1.0/tour/enterprise-search-tours/user/:userId/tour/:name",
+    },
+    TOUR_SCHEDULE: {
+      DEFAULT: "/v1.0/enterprise/tour-schedule",
+      DELETE_SCHEDULE_ITEM: "/v1.0/enterprise/tour-schedule/:id",
+    },
+    TOUR_ON_SALE: {
+      DEFAULT: "/v1.0/enterprise/tour-on-sale",
+      UPDATE_TOUR_PRICE: "/v1.0/enterprise/tour-on-sale/:id",
     },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",

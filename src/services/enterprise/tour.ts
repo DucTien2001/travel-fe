@@ -1,6 +1,7 @@
+import { enterpriseRoutes } from './../../routes/routers';
 import { API } from "configs/constants";
-import { ETour, EUpdateTour, AdminGetTours, TourInformation, UpdateTourInformation } from "models/enterprise";
-import { CreateMultipleSchedule, CreatePrice } from "models/tour";
+import { ETour, EUpdateTour, AdminGetTours, TourInformation, UpdateTourInformation, TourPrice } from "models/enterprise";
+import { CreateMultipleSchedule } from "models/enterprise";
 import { User } from "models/user";
 import api from "../configApi";
 
@@ -29,9 +30,9 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       });
   }
-  static async createScheduleTour(data: CreateMultipleSchedule): Promise<any> {
+  static async createOrUpdateScheduleTour(data: CreateMultipleSchedule): Promise<any> {
     return await api
-      .post(API.ENTERPRISE.TOUR.CREATE_SCHEDULE_TOUR, data)
+      .put(API.ENTERPRISE.TOUR_SCHEDULE.DEFAULT, data)
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -39,9 +40,32 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       });
   }
-  static async createPriceTour(data: CreatePrice): Promise<any> {
+
+  static async deleteScheduleItem(id: number): Promise<any> {
     return await api
-      .post(API.ENTERPRISE.TOUR.CREATE_PRICE_TOUR, data)
+      .delete(API.ENTERPRISE.TOUR_SCHEDULE.DELETE_SCHEDULE_ITEM.replace(":id", `${id}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async createPriceTour(data: TourPrice): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.TOUR_ON_SALE.DEFAULT, data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async updatePriceTour(id: number, data: TourPrice): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.TOUR_ON_SALE.DEFAULT.replace(":id",`${id}`), data)
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -65,7 +89,7 @@ export class TourService {
       });
   }
 
-  static async updateTourInformation(tourId: number, data: FormData): Promise<any> {
+  static async  updateTourInformation(tourId: number, data: FormData): Promise<any> {
     return await api
       .put(API.ENTERPRISE.TOUR.UPDATE_TOUR.replace(":id", `${tourId}`), data)
       .then((res) => {

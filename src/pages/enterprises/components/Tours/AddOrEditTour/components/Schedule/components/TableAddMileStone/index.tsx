@@ -1,5 +1,5 @@
-import React, { useMemo, memo, useEffect } from "react";
-import { ModalProps } from "reactstrap";
+import React, { useMemo, memo, useEffect, useState } from "react";
+import { Input } from "reactstrap";
 import classes from "./styles.module.scss";
 
 import { useForm, Controller, useFieldArray } from "react-hook-form";
@@ -32,6 +32,12 @@ import {
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
 import { useDispatch } from "react-redux";
+import InputDatePicker from "components/common/inputs/InputDatePicker";
+import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
+import { ETour, ScheduleItem } from "models/enterprise";
+import InputTextfield from "components/common/inputs/InputTextfield";
+import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "From", label: "From", sortable: false },
@@ -41,7 +47,8 @@ const tableHeaders: TableHeaderLabel[] = [
 ];
 
 export interface MileStoneForm {
-  mileStone: {
+  schedule: {
+    id?: number;
     startTime: Date;
     endTime: Date;
     description: string;
@@ -50,23 +57,33 @@ export interface MileStoneForm {
 
 interface Props {
   day: number;
+  scheduleEdit?: ScheduleItem[];
+  itemEdit?: ETour;
+  handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddMileStone = memo((props: Props) => {
-  const { day } = props;
+  const { day, itemEdit, scheduleEdit, handleNextStep } = props;
   const dispatch = useDispatch();
-
   const { tourInformation } = useSelector(
     (state: ReducerType) => state.enterprise
   );
 
+  const [scheduleFormData, setScheduleFormData] = useState<{
+    id: number;
+    startTime: Date;
+    endTime: Date;
+    description: string;
+  }>();
+  const [scheduleItemDelete, setScheduleItemDelete] = useState(null);
+
   const schema = useMemo(() => {
     const min = moment().startOf("day").toDate();
-    const max = moment().startOf("day").toDate();
     return yup.object().shape({
-      mileStone: yup.array(
+      schedule: yup.array(
         yup.object({
+          id: yup.number().empty().notRequired(),
           startTime: yup
             .date()
             .typeError("Start time is required")
@@ -121,7 +138,7 @@ const PopupAddMileStone = memo((props: Props) => {
     remove: removeMileStone,
   } = useFieldArray({
     control,
-    name: "mileStone",
+    name: "schedule",
   });
 
   const onAddMileStone = () => {
@@ -134,18 +151,68 @@ const PopupAddMileStone = memo((props: Props) => {
 
   const onDeleteMileStone = (index: number) => () => {
     removeMileStone(index);
+    if (itemEdit && scheduleEdit) {
+    }
+  };
+
+  const onOpenPopupConfirmDelete = (e, itemAction) => {
+    setScheduleItemDelete(itemAction);
+  };
+
+  const onClosePopupConfirmDelete = () => {
+    if (!scheduleItemDelete) return;
+    setScheduleItemDelete(null);
+  };
+
+  const onYesDelete = () => {
+    if (!scheduleItemDelete) return;
+    onClosePopupConfirmDelete();
+    dispatch(setLoading(true));
+    TourService.deleteScheduleItem(scheduleItemDelete?.id)
+      .then(() => {
+        reset({
+          schedule: scheduleEdit?.map((item) => ({
+            id: item?.id,
+            startTime: moment()
+              .startOf("day")
+              .add(item?.startTime, "seconds")
+              .toDate(),
+            endTime: moment()
+              .startOf("day")
+              .add(item?.endTime, "seconds")
+              .toDate(),
+            description: item?.description,
+          })),
+        });
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
   };
 
   const _onSubmit = (data: MileStoneForm) => {
-    if (tourInformation) {
+    if (tourInformation || itemEdit) {
       dispatch(setLoading(true));
-      TourService.createScheduleTour({
-        tourId: tourInformation?.id,
+      TourService.createOrUpdateScheduleTour({
+        tourId: tourInformation?.id ? tourInformation?.id : itemEdit?.id,
         day: day,
-        schedule: data.mileStone,
+        schedule: data.schedule.map((item) => ({
+          id: item?.id,
+          description: item.description,
+          startTime: moment(item.startTime).diff(
+            moment().startOf("day"),
+            "seconds"
+          ),
+          endTime: moment(item.endTime).diff(
+            moment().startOf("day"),
+            "seconds"
+          ),
+        })),
       })
         .then(() => {
-          dispatch(setSuccessMess("Create schedule tour successfully"));
+          dispatch(setSuccessMess("Successfully"));
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
         })
         .finally(() => {
           dispatch(setLoading(false));
@@ -153,9 +220,33 @@ const PopupAddMileStone = memo((props: Props) => {
     }
   };
 
+  console.log(scheduleEdit, " ====");
+  console.log(fieldsMileStone, "field ====");
+
   useEffect(() => {
-    onAddMileStone();
+    if (!scheduleEdit) {
+      onAddMileStone();
+    }
   }, [appendMileStone]);
+
+  useEffect(() => {
+    if (scheduleEdit) {
+      reset({
+        schedule: scheduleEdit?.map((item) => ({
+          id: item?.id,
+          startTime: moment()
+            .startOf("day")
+            .add(item?.startTime, "seconds")
+            .toDate(),
+          endTime: moment()
+            .startOf("day")
+            .add(item?.endTime, "seconds")
+            .toDate(),
+          description: item?.description,
+        })),
+      });
+    }
+  }, [scheduleEdit, handleNextStep]);
 
   return (
     <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
@@ -168,18 +259,19 @@ const PopupAddMileStone = memo((props: Props) => {
                 <TableCell
                   scope="row"
                   className={classes.tableCell}
-                  sx={{ width: "135px" }}
+                  sx={{ width: "250px" }}
                 >
                   <Controller
-                    name={`mileStone.${index}.startTime`}
+                    name={`schedule.${index}.startTime`}
                     control={control}
                     render={({ field }) => (
                       <InputTimePicker
+                        placeholder="00:00"
                         value={field.value as any}
                         onChange={field.onChange}
-                        inputRef={register(`mileStone.${index}.startTime`)}
+                        inputRef={register(`schedule.${index}.startTime`)}
                         errorMessage={
-                          errors.mileStone?.[index]?.startTime?.message
+                          errors.schedule?.[index]?.startTime?.message
                         }
                       />
                     )}
@@ -188,29 +280,30 @@ const PopupAddMileStone = memo((props: Props) => {
                 <TableCell
                   scope="row"
                   className={classes.tableCell}
-                  sx={{ width: "135px" }}
+                  sx={{ width: "250px" }}
                 >
                   <Controller
-                    name={`mileStone.${index}.endTime`}
+                    name={`schedule.${index}.endTime`}
                     control={control}
                     render={({ field }) => (
                       <InputTimePicker
+                        placeholder="00:00"
                         value={field.value as any}
                         onChange={field.onChange}
-                        inputRef={register(`mileStone.${index}.endTime`)}
+                        inputRef={register(`schedule.${index}.endTime`)}
                         errorMessage={
-                          errors.mileStone?.[index]?.endTime?.message
+                          errors.schedule?.[index]?.endTime?.message
                         }
                       />
                     )}
                   />
                 </TableCell>
                 <TableCell scope="row" className={classes.tableCell}>
-                  <InputLineTextField
+                  <InputTextfield
                     placeholder="Enter description"
-                    inputRef={register(`mileStone.${index}.description`)}
+                    inputRef={register(`schedule.${index}.description`)}
                     errorMessage={
-                      errors.mileStone?.[index]?.description?.message
+                      errors.schedule?.[index]?.description?.message
                     }
                   />
                 </TableCell>
@@ -219,24 +312,21 @@ const PopupAddMileStone = memo((props: Props) => {
                   component="th"
                   sx={{ width: "135px" }}
                 >
-                  <IconButton
-                    onClick={onDeleteMileStone(index)}
-                    disabled={fieldsMileStone?.length !== 1 ? false : true}
-                  >
+                  <IconButton onClick={onDeleteMileStone(index)}>
                     <DeleteOutlineOutlined
                       sx={{ marginRight: "0.25rem" }}
                       className={classes.iconDelete}
+                      fontSize="small"
                       color={
                         fieldsMileStone?.length !== 1 ? "error" : "disabled"
                       }
-                      fontSize="small"
                     />
                   </IconButton>
                 </TableCell>
               </TableRow>
             ))}
           <TableRow
-            // onClick={onShowAddRow}
+            onClick={onAddMileStone}
             className="action-row"
             sx={{ cursor: "pointer" }}
           >
@@ -246,7 +336,6 @@ const PopupAddMileStone = memo((props: Props) => {
               align="center"
               scope="row"
               className={classes.boxAddRow}
-              onClick={onAddMileStone}
             >
               <AddCircle sx={{ fontSize: "16px !important" }} /> Add new
               milestone
@@ -258,8 +347,14 @@ const PopupAddMileStone = memo((props: Props) => {
         <Button btnType={BtnType.Primary} type="submit">
           Save
         </Button>
-        <Button btnType={BtnType.Outlined}>Edit</Button>
       </Grid>
+      <PopupConfirmDelete
+        title="Are you sure delete this comment?"
+        isOpen={!!scheduleItemDelete}
+        onClose={onClosePopupConfirmDelete}
+        toggle={onClosePopupConfirmDelete}
+        onYes={onYesDelete}
+      />
     </Grid>
   );
 });

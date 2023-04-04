@@ -31,8 +31,8 @@ export interface Tour {
 }
 export interface ScheduleItem {
     id?: number
-    startTime: Date;
-    endTime: Date;
+    startTime: number;
+    endTime: number;
     description: string;
   }
   export interface CreateMultipleSchedule {
