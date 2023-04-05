@@ -52,18 +52,16 @@ export interface CreateMultipleSchedule {
 
 
 export interface TourPrice {
-  sale: {
-    id?:number;
-    tourId?: number;
-    discount: number;
-    quantity: number;
-    startDate: Date;
-    childrenAgeMin: number;
-    childrenAgeMax: number;
-    childrenPrice: number;
-    adultPrice: number;
-    currency: string;
-  }[]
+  id?:number;
+  tourId?: number;
+  discount: number;
+  quantity: number;
+  startDate: Date;
+  childrenAgeMin: number;
+  childrenAgeMax: number;
+  childrenPrice: number;
+  adultPrice: number;
+  currency: string;
 }
 
 

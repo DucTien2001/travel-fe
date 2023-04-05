@@ -186,8 +186,8 @@ const RangePriceComponent = memo((props: Props) => {
       "-------"
     );
     dispatch(setLoading(true));
-    TourOnSaleService.createOrUpdatePriceTour({
-      sale: data.sale.map((item) => ({
+    TourOnSaleService.createOrUpdatePriceTour(
+      data.sale.map((item) => ({
         tourId: tourInformation?.id ? tourInformation?.id : tour?.id,
         id: item?.id,
         discount: item?.discount,
@@ -199,7 +199,7 @@ const RangePriceComponent = memo((props: Props) => {
         adultPrice: item?.adultPrice,
         currency: item?.currency?.value,
       })),
-    })
+    )
       .then(() => {
         dispatch(setSuccessMess("Create price of tour successfully"));
       })
