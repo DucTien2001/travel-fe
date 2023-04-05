@@ -17,6 +17,7 @@ import { useSSR } from "react-i18next";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { useDispatch } from "react-redux";
 import { TourScheduleService } from "services/enterprise/tourSchedule";
+import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 export interface ScheduleForm {
   schedule: {
     day: number;
@@ -26,24 +27,21 @@ export interface ScheduleForm {
 interface Props {
   value?: number;
   index?: number;
-  itemEdit?: ETour;
+  tour?: ETour;
   lang?: string;
   handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const ScheduleComponent = memo((props: Props) => {
-  const { value, index, itemEdit, lang, handleNextStep } = props;
+  const { value, index, tour, lang, handleNextStep } = props;
   const dispatch = useDispatch();
 
-  const [schedule, setSchedule] = useState([])
+  const [schedule, setSchedule] = useState([]);
+  const [scheduleDelete, setScheduleDelete] = useState(null);
 
   const dayCategory = useMemo(() => {
-    return _.groupBy(schedule, "day");
-  }, [schedule]);
-
-  const dayCategoryArray = useMemo(() => {
-    return _.toArray(dayCategory);
+    return _.toArray(_.groupBy(schedule, "day"));
   }, [schedule]);
 
   const schema = useMemo(() => {
@@ -81,35 +79,76 @@ const ScheduleComponent = memo((props: Props) => {
     });
   };
 
-  const onDeleteSchedule = (index) => () => {
-    removeSchedule(index);
+  const onGetAllSchedule = () => {
+    TourScheduleService.findAll({
+      tourId: tour.id,
+      language: lang,
+    })
+      .then((res) => {
+        if (res?.success) {
+          setSchedule(res.data);
+        }
+      })
+      .catch((err) => setErrorMess(err))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  const onDeleteSchedule = (schedule, index) => () => {
+    if (schedule?.day) {
+      onOpenPopupConfirmDelete(index, schedule);
+    } else {
+      removeSchedule(index);
+    }
+  };
+
+  const onOpenPopupConfirmDelete = (e, itemAction) => {
+    setScheduleDelete(itemAction);
+  };
+
+  const onClosePopupConfirmDelete = () => {
+    if (!scheduleDelete) return;
+    setScheduleDelete(null);
+  };
+
+  const onYesDeleteSchedule = () => {
+    if (!scheduleDelete) return;
+    dispatch(setLoading(true));
+    TourScheduleService.deleteSchedule(tour?.id, scheduleDelete?.day + 1)
+      .then(() => {
+        onGetAllSchedule();
+        onClosePopupConfirmDelete();
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
   };
 
   useEffect(() => {
     onAddSchedule();
   }, [appendSchedule]);
 
+  console.log(schedule);
+
   useEffect(() => {
-    if (itemEdit) {
+    if (tour) {
       dispatch(setLoading(true));
       TourScheduleService.findAll({
-        tourId: itemEdit.id,
-        language: lang
+        tourId: tour.id,
+        language: lang,
       })
         .then((res) => {
-          if(res?.success) {
-            setSchedule(res.data)
+          if (res?.success) {
+            setSchedule(res.data);
           }
         })
         .catch((err) => setErrorMess(err))
         .finally(() => dispatch(setLoading(false)));
     }
-  }, [itemEdit]);
+  }, [tour]);
 
   useEffect(() => {
-    if (itemEdit) {
+    if (tour) {
       reset({
-        schedule: dayCategoryArray?.map((item, index) => ({
+        schedule: dayCategory?.map((item, index) => ({
           day: index,
         })),
       });
@@ -134,7 +173,7 @@ const ScheduleComponent = memo((props: Props) => {
                     <p>Day {index + 1}</p>
                   </Grid>
                   <IconButton
-                    onClick={onDeleteSchedule(index)}
+                    onClick={onDeleteSchedule(field, index)}
                     disabled={fieldsSchedule?.length !== 1 ? false : true}
                   >
                     <DeleteOutlineOutlined
@@ -150,9 +189,10 @@ const ScheduleComponent = memo((props: Props) => {
                 <Grid sx={{ paddingTop: "16px" }}>
                   <TableAddMileStone
                     day={index + 1}
-                    itemEdit={itemEdit}
+                    tour={tour}
                     lang={lang}
-                    scheduleEdit={dayCategoryArray[index]}
+                    scheduleEdit={dayCategory[index]}
+                    onGetAllSchedule={onGetAllSchedule}
                   />
                 </Grid>
               </Grid>
@@ -168,6 +208,13 @@ const ScheduleComponent = memo((props: Props) => {
               <ArrowRightAltIcon />
             </Button>
           </Grid>
+          <PopupConfirmDelete
+            title="Are you sure delete this schedule?"
+            isOpen={!!scheduleDelete}
+            onClose={onClosePopupConfirmDelete}
+            toggle={onClosePopupConfirmDelete}
+            onYes={onYesDeleteSchedule}
+          />
         </Grid>
       )}
     </div>

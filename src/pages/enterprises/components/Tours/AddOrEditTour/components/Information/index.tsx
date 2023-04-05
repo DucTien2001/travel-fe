@@ -62,14 +62,14 @@ export interface TourForm {
 interface Props {
   value?: number;
   index?: number;
-  itemEdit?: ETour;
+  tour?: ETour;
   lang?: string;
   handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const InformationComponent = memo((props: Props) => {
-  const { value, index, itemEdit, lang, handleNextStep } = props;
+  const { value, index, tour, lang, handleNextStep } = props;
   const dispatch = useDispatch();
 
   const [imagesPreview, setImagesPreview] = useState<any>([]);
@@ -251,7 +251,7 @@ const InformationComponent = memo((props: Props) => {
       formData.append(`imageFiles${index}`, item);
     });
     dispatch(setLoading(true));
-    if (itemEdit) {
+    if (tour) {
       const formDataEdit = new FormData();
       formDataEdit.append("title", data.title);
       formDataEdit.append("city[id]", `${data?.city?.id}`);
@@ -286,7 +286,7 @@ const InformationComponent = memo((props: Props) => {
           formDataEdit.append(`imagesDeleted[]`, item);
         }
       });
-      TourService.updateTourInformation(itemEdit?.id, formDataEdit)
+      TourService.updateTourInformation(tour?.id, formDataEdit)
         .then(() => {
           dispatch(setSuccessMess("Update tour successfully"));
           handleNextStep();
@@ -324,33 +324,33 @@ const InformationComponent = memo((props: Props) => {
   };
 
   useEffect(() => {
-    if (itemEdit) {
+    if (tour) {
       reset({
-        title: itemEdit?.title,
-        city: itemEdit?.city,
-        district: itemEdit?.district,
-        commune: itemEdit?.commune,
-        moreLocation: itemEdit?.moreLocation,
-        contact: itemEdit?.contact,
-        description: itemEdit?.description,
-        highlight: itemEdit?.highlight,
-        suitablePerson: itemEdit?.suitablePerson,
-        numberOfDays: itemEdit?.numberOfDays,
-        numberOfNights: itemEdit?.numberOfNights,
-        termsAndCondition: itemEdit?.termsAndCondition,
+        title: tour?.title,
+        city: tour?.city,
+        district: tour?.district,
+        commune: tour?.commune,
+        moreLocation: tour?.moreLocation,
+        contact: tour?.contact,
+        description: tour?.description,
+        highlight: tour?.highlight,
+        suitablePerson: tour?.suitablePerson,
+        numberOfDays: tour?.numberOfDays,
+        numberOfNights: tour?.numberOfNights,
+        termsAndCondition: tour?.termsAndCondition,
       });
-      setOldImages(itemEdit?.images);
-      setImagesPreview(itemEdit?.images);
-      setImagesUpload(itemEdit?.images);
+      setOldImages(tour?.images);
+      setImagesPreview(tour?.images);
+      setImagesUpload(tour?.images);
     }
-  }, [itemEdit, reset]);
+  }, [tour, reset]);
 
   useEffect(() => {
-    if (!itemEdit) {
+    if (!tour) {
       clearForm();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemEdit]);
+  }, [tour]);
 
   useEffect(() => {
     ProvinceService.getProvince()

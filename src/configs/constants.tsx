@@ -108,6 +108,7 @@ export const API = {
     },
     TOUR_SCHEDULE: {
       DEFAULT: "/v1.0/enterprise/tour-schedule",
+      DELETE_SCHEDULE: "/v1.0/enterprise/tour-schedule//multi/:tourId/:day",
       DELETE_SCHEDULE_ITEM: "/v1.0/enterprise/tour-schedule/:id",
     },
     TOUR_ON_SALE: {

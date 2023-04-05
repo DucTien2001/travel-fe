@@ -25,9 +25,11 @@ import InputSelect from "components/common/inputs/InputSelect";
 import { OptionItem, currencyType } from "models/general";
 import { TourService } from "services/enterprise/tour";
 import { ReducerType } from "redux/reducers";
+import { TourOnSaleService } from "services/enterprise/tourOnSale";
 
 export interface SaleForm {
   sale: {
+    id?: number;
     startDate: Date;
     quantity: number;
     discount?: number;
@@ -35,20 +37,21 @@ export interface SaleForm {
     childrenAgeMax: number;
     childrenPrice: number;
     adultPrice: number;
-    currency: OptionItem;
+    currency?: OptionItem;
   }[];
 }
 
 interface Props {
   value?: number;
   index?: number;
-  itemEdit?: ETour;
+  tour?: ETour;
+  lang?: string;
   handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const RangePriceComponent = memo((props: Props) => {
-  const { value, index, itemEdit, handleNextStep } = props;
+  const { value, index, tour, lang, handleNextStep } = props;
 
   const dispatch = useDispatch();
   const { tourInformation } = useSelector(
@@ -59,6 +62,7 @@ const RangePriceComponent = memo((props: Props) => {
     return yup.object().shape({
       sale: yup.array(
         yup.object({
+          id: yup.number().empty().notRequired(),
           startDate: yup.date().required("Day is required"),
           quantity: yup
             .number()
@@ -110,6 +114,7 @@ const RangePriceComponent = memo((props: Props) => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
     control,
   } = useForm<SaleForm>({
     resolver: yupResolver(schema),
@@ -127,6 +132,7 @@ const RangePriceComponent = memo((props: Props) => {
   } = useFieldArray({
     control,
     name: "sale",
+    keyName: "fieldID",
   });
 
   const initSale = () => {
@@ -164,12 +170,10 @@ const RangePriceComponent = memo((props: Props) => {
   };
 
   const _onSubmit = (data: SaleForm) => {
-    // if (itemEdit) {
-    // }
-    dispatch(setLoading(true));
-    TourService.createPriceTour({
-      sale: data.sale.map((item) => ({
-        tourId: tourInformation?.id ? tourInformation?.id : itemEdit?.id,
+    console.log(
+      data.sale.map((item) => ({
+        tourId: tourInformation?.id ? tourInformation?.id : tour?.id,
+        id: item?.id,
         discount: item?.discount,
         quantity: item?.quantity,
         startDate: item?.startDate,
@@ -177,7 +181,23 @@ const RangePriceComponent = memo((props: Props) => {
         childrenAgeMax: item?.childrenAgeMax,
         childrenPrice: item?.childrenPrice,
         adultPrice: item?.adultPrice,
-        currency: item?.currency.value,
+        currency: item?.currency?.value,
+      })),
+      "-------"
+    );
+    dispatch(setLoading(true));
+    TourOnSaleService.createOrUpdatePriceTour({
+      sale: data.sale.map((item) => ({
+        tourId: tourInformation?.id ? tourInformation?.id : tour?.id,
+        id: item?.id,
+        discount: item?.discount,
+        quantity: item?.quantity,
+        startDate: item?.startDate,
+        childrenAgeMin: item?.childrenAgeMin,
+        childrenAgeMax: item?.childrenAgeMax,
+        childrenPrice: item?.childrenPrice,
+        adultPrice: item?.adultPrice,
+        currency: item?.currency?.value,
       })),
     })
       .then(() => {
@@ -191,32 +211,36 @@ const RangePriceComponent = memo((props: Props) => {
       });
   };
 
+  const watchCurr = watch("currency");
+  console.log(watchCurr, " ------ s");
+
   // useEffect(() => {
-  //   if (itemEdit) {
+  //   if (tour) {
   //     reset({
-  //       discount: itemEdit?.tourOnSales[0]?.discount,
-  //       quantity: itemEdit?.tourOnSales[0]?.quantity,
-  //       startDate: itemEdit?.tourOnSales[0]?.startDate,
-  //       childrenAgeMin: itemEdit?.tourOnSales[0]?.childrenAgeMin,
-  //       childrenAgeMax: itemEdit?.tourOnSales[0]?.childrenAgeMax,
-  //       childrenPrice: itemEdit?.tourOnSales[0]?.childrenPrice,
-  //       adultPrice: itemEdit?.tourOnSales[0]?.adultPrice,
-  //       // currency: itemEdit?.tourOnSales[0]?.currency,
+  //       sale: tour?.tourOnSales?.map((item) => ({
+  //         discount: item.discount,
+  //         quantity: item.quantity,
+  //         startDate: item.startDate,
+  //         childrenAgeMin: item.childrenAgeMax,
+  //         childrenPrice: item.childrenPrice,
+  //         adultPrice: item.adultPrice,
+  //         // currency: itemEdit?.tourOnSales[0]?.currency,
+  //       })),
   //     });
   //   }
-  // }, [itemEdit, reset]);
+  // }, [tour, reset]);
 
   useEffect(() => {
-    if (!itemEdit) {
+    if (!tour) {
       onAddSale();
     }
   }, [appendSale]);
 
   useEffect(() => {
-    if (itemEdit) {
+    if (tour) {
       clearForm();
     }
-  }, [itemEdit]);
+  }, [tour]);
 
   return (
     <Grid

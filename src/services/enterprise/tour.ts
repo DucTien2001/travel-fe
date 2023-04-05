@@ -30,49 +30,6 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       });
   }
-  static async createOrUpdateScheduleTour(data: CreateMultipleSchedule): Promise<any> {
-    return await api
-      .put(API.ENTERPRISE.TOUR_SCHEDULE.DEFAULT, data)
-      .then((res) => {
-        return Promise.resolve(res.data);
-      })
-      .catch((e) => {
-        return Promise.reject(e?.response?.data);
-      });
-  }
-
-  static async deleteScheduleItem(id: number): Promise<any> {
-    return await api
-      .delete(API.ENTERPRISE.TOUR_SCHEDULE.DELETE_SCHEDULE_ITEM.replace(":id", `${id}`))
-      .then((res) => {
-        return Promise.resolve(res.data);
-      })
-      .catch((e) => {
-        return Promise.reject(e?.response?.data);
-      });
-  }
-
-  static async createPriceTour(data: TourPrice): Promise<any> {
-    return await api
-      .post(API.ENTERPRISE.TOUR_ON_SALE.DEFAULT, data)
-      .then((res) => {
-        return Promise.resolve(res.data);
-      })
-      .catch((e) => {
-        return Promise.reject(e?.response?.data);
-      });
-  }
-
-  static async updatePriceTour(id: number, data: TourPrice): Promise<any> {
-    return await api
-      .post(API.ENTERPRISE.TOUR_ON_SALE.DEFAULT.replace(":id",`${id}`), data)
-      .then((res) => {
-        return Promise.resolve(res.data);
-      })
-      .catch((e) => {
-        return Promise.reject(e?.response?.data);
-      });
-  }
 
   static async getOneTour(tourId: number, language?: string): Promise<any> {
     return await api
@@ -102,7 +59,7 @@ export class TourService {
 
 
 
-
+//===========================================================
 
   static async updateTour(tourId: number, data: EUpdateTour): Promise<any> {
     return await api

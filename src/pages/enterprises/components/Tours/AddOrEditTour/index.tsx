@@ -47,7 +47,7 @@ const AddOrEditTour = memo((props: Props) => {
   }
 
   const [activeStep, setActiveStep] = useState<EStep>(EStep.INFORMATION);
-  const [itemEdit, setItemEdit] = useState<ETour>(null);
+  const [tour, setTour] = useState<ETour>(null);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveStep(newValue);
@@ -77,7 +77,7 @@ const AddOrEditTour = memo((props: Props) => {
         dispatch(setLoading(true));
         TourService.getOneTour(Number(tourId), lang)
           .then((res) => {
-            setItemEdit(res?.data);
+            setTour(res?.data);
           })
           .catch((err) => setErrorMess(err))
           .finally(() => dispatch(setLoading(false)));
@@ -144,21 +144,22 @@ const AddOrEditTour = memo((props: Props) => {
           <Information
             value={activeStep}
             index={EStep.INFORMATION}
-            itemEdit={itemEdit}
+            tour={tour}
             lang={lang}
             handleNextStep={() => onNextStep(EStep.SCHEDULE)}
           />
           <Schedule
             value={activeStep}
             index={EStep.SCHEDULE}
-            itemEdit={itemEdit}
+            tour={tour}
             lang={lang}
             handleNextStep={() => onNextStep(EStep.PRICE)}
           />
           <RangePrice
             value={activeStep}
             index={EStep.PRICE}
-            itemEdit={itemEdit}
+            tour={tour}
+            lang={lang}
           />
         </Container>
       </div>

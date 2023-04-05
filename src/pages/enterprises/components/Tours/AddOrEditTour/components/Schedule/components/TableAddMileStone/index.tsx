@@ -38,6 +38,7 @@ import "react-datetime/css/react-datetime.css";
 import { ETour, ScheduleItem } from "models/enterprise";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
+import { TourScheduleService } from "services/enterprise/tourSchedule";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "From", label: "From", sortable: false },
@@ -58,14 +59,14 @@ export interface MileStoneForm {
 interface Props {
   day: number;
   scheduleEdit?: ScheduleItem[];
-  itemEdit?: ETour;
+  tour?: ETour;
   lang?: string;
-  handleNextStep?: () => void;
+  onGetAllSchedule?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddMileStone = memo((props: Props) => {
-  const { day, itemEdit, scheduleEdit, lang, handleNextStep } = props;
+  const { day, tour, scheduleEdit, lang, onGetAllSchedule } = props;
   const dispatch = useDispatch();
   const { tourInformation } = useSelector(
     (state: ReducerType) => state.enterprise
@@ -146,52 +147,40 @@ const PopupAddMileStone = memo((props: Props) => {
     });
   };
 
-  const onDeleteMileStone = (schedule, index: number) => () => {
-    removeMileStone(index);
-    // if (schedule?.id) {
-    //   TourService.deleteScheduleItem(schedule.id)
-    // }
+  const onDeleteMileStone = (scheduleItem, index: number) => () => {
+    if (scheduleItem?.id) {
+      onOpenPopupConfirmDeleteScheduleItem(index, scheduleItem);
+    } else {
+      removeMileStone(index);
+    }
   };
 
-  const onOpenPopupConfirmDelete = (e, itemAction) => {
+  const onOpenPopupConfirmDeleteScheduleItem = (e, itemAction) => {
     setScheduleItemDelete(itemAction);
   };
 
-  const onClosePopupConfirmDelete = () => {
+  const onClosePopupConfirmDeleteScheduleItem = () => {
     if (!scheduleItemDelete) return;
     setScheduleItemDelete(null);
   };
 
-  const onYesDelete = () => {
+  const onYesDeleteScheduleItem = () => {
     if (!scheduleItemDelete) return;
-    onClosePopupConfirmDelete();
+    onClosePopupConfirmDeleteScheduleItem();
     dispatch(setLoading(true));
-    TourService.deleteScheduleItem(scheduleItemDelete?.id)
+    TourScheduleService.deleteScheduleItem(scheduleItemDelete?.id)
       .then(() => {
-        reset({
-          schedule: scheduleEdit?.map((item) => ({
-            id: item?.id,
-            startTime: moment()
-              .startOf("day")
-              .add(item?.startTime, "seconds")
-              .toDate(),
-            endTime: moment()
-              .startOf("day")
-              .add(item?.endTime, "seconds")
-              .toDate(),
-            description: item?.description,
-          })),
-        });
+        onGetAllSchedule();
       })
       .catch((e) => dispatch(setErrorMess(e)))
       .finally(() => dispatch(setLoading(false)));
   };
 
   const _onSubmit = (data: MileStoneForm) => {
-    if (tourInformation || itemEdit) {
+    if (tourInformation || tour) {
       dispatch(setLoading(true));
-      TourService.createOrUpdateScheduleTour({
-        tourId: tourInformation?.id ? tourInformation?.id : itemEdit?.id,
+      TourScheduleService.createOrUpdateScheduleTour({
+        tourId: tourInformation?.id ? tourInformation?.id : tour?.id,
         day: day,
         language: lang,
         schedule: data.schedule.map((item) => ({
@@ -209,6 +198,7 @@ const PopupAddMileStone = memo((props: Props) => {
       })
         .then(() => {
           dispatch(setSuccessMess("Successfully"));
+          onGetAllSchedule();
         })
         .catch((e) => {
           dispatch(setErrorMess(e));
@@ -308,7 +298,10 @@ const PopupAddMileStone = memo((props: Props) => {
                   component="th"
                   sx={{ width: "135px" }}
                 >
-                  <IconButton onClick={onDeleteMileStone(field, index)}>
+                  <IconButton
+                    onClick={onDeleteMileStone(field, index)}
+                    disabled={fieldsMileStone?.length !== 1 ? false : true}
+                  >
                     <DeleteOutlineOutlined
                       sx={{ marginRight: "0.25rem" }}
                       className={classes.iconDelete}
@@ -345,11 +338,11 @@ const PopupAddMileStone = memo((props: Props) => {
         </Button>
       </Grid>
       <PopupConfirmDelete
-        title="Are you sure delete this comment?"
+        title="Are you sure delete this schedule?"
         isOpen={!!scheduleItemDelete}
-        onClose={onClosePopupConfirmDelete}
-        toggle={onClosePopupConfirmDelete}
-        onYes={onYesDelete}
+        onClose={onClosePopupConfirmDeleteScheduleItem}
+        toggle={onClosePopupConfirmDeleteScheduleItem}
+        onYes={onYesDeleteScheduleItem}
       />
     </Grid>
   );

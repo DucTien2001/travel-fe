@@ -18,8 +18,8 @@ export interface ETour {
   creator: number;
   contact: string;
   isDeleted?: boolean;
-  tourSchedules?: ScheduleItem[];
   tourOnSales?: {
+    id?:number;
     tourId?: number;
     discount: number;
     quantity: number;
@@ -53,6 +53,7 @@ export interface CreateMultipleSchedule {
 
 export interface TourPrice {
   sale: {
+    id?:number;
     tourId?: number;
     discount: number;
     quantity: number;
