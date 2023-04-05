@@ -99,6 +99,7 @@ const RangePriceComponent = memo((props: Props) => {
           currency: yup
             .object()
             .shape({
+              id: yup.number().required("Currency is required"),
               name: yup.string().required("Currency is required"),
               value: yup.string().required("Currency is required"),
             })
@@ -210,6 +211,11 @@ const RangePriceComponent = memo((props: Props) => {
         dispatch(setLoading(false));
       });
   };
+
+  fieldsSale.forEach((item, index) => {
+    const watch22 = watch(`sale.${index}.currency`);
+    console.log(watch22);
+  });
 
   // useEffect(() => {
   //   if (tour) {
