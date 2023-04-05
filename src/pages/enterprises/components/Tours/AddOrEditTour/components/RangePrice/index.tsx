@@ -128,10 +128,24 @@ const RangePriceComponent = memo((props: Props) => {
     control,
     name: "sale",
   });
+
+  const initSale = () => {
+    appendSale({
+      startDate: null,
+      quantity: null,
+      discount: null,
+      childrenAgeMin: null,
+      childrenAgeMax: null,
+      childrenPrice: null,
+      adultPrice: null,
+      currency: currencyType[0],
+    });
+  };
   const clearForm = () => {
     reset({
       sale: [],
     });
+    initSale();
   };
   const onAddSale = () => {
     appendSale({
@@ -148,12 +162,6 @@ const RangePriceComponent = memo((props: Props) => {
   const onDeleteSale = (index) => () => {
     removeSale(index);
   };
-
-  useEffect(() => {
-    onAddSale();
-  }, [appendSale]);
-
-  console.log(itemEdit);
 
   const _onSubmit = (data: SaleForm) => {
     // if (itemEdit) {
@@ -197,6 +205,12 @@ const RangePriceComponent = memo((props: Props) => {
   //     });
   //   }
   // }, [itemEdit, reset]);
+
+  useEffect(() => {
+    if (!itemEdit) {
+      onAddSale();
+    }
+  }, [appendSale]);
 
   useEffect(() => {
     if (itemEdit) {

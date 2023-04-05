@@ -59,23 +59,16 @@ interface Props {
   day: number;
   scheduleEdit?: ScheduleItem[];
   itemEdit?: ETour;
-  handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddMileStone = memo((props: Props) => {
-  const { day, itemEdit, scheduleEdit, handleNextStep } = props;
+  const { day, itemEdit, scheduleEdit } = props;
   const dispatch = useDispatch();
   const { tourInformation } = useSelector(
     (state: ReducerType) => state.enterprise
   );
 
-  const [scheduleFormData, setScheduleFormData] = useState<{
-    id: number;
-    startTime: Date;
-    endTime: Date;
-    description: string;
-  }>();
   const [scheduleItemDelete, setScheduleItemDelete] = useState(null);
 
   const schema = useMemo(() => {
@@ -125,6 +118,7 @@ const PopupAddMileStone = memo((props: Props) => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
     control,
@@ -149,10 +143,8 @@ const PopupAddMileStone = memo((props: Props) => {
     });
   };
 
-  const onDeleteMileStone = (index: number) => () => {
+  const onDeleteMileStone = (index) => () => {
     removeMileStone(index);
-    if (itemEdit && scheduleEdit) {
-    }
   };
 
   const onOpenPopupConfirmDelete = (e, itemAction) => {
@@ -190,38 +182,39 @@ const PopupAddMileStone = memo((props: Props) => {
   };
 
   const _onSubmit = (data: MileStoneForm) => {
-    if (tourInformation || itemEdit) {
-      dispatch(setLoading(true));
-      TourService.createOrUpdateScheduleTour({
-        tourId: tourInformation?.id ? tourInformation?.id : itemEdit?.id,
-        day: day,
-        schedule: data.schedule.map((item) => ({
-          id: item?.id,
-          description: item.description,
-          startTime: moment(item.startTime).diff(
-            moment().startOf("day"),
-            "seconds"
-          ),
-          endTime: moment(item.endTime).diff(
-            moment().startOf("day"),
-            "seconds"
-          ),
-        })),
-      })
-        .then(() => {
-          dispatch(setSuccessMess("Successfully"));
-        })
-        .catch((e) => {
-          dispatch(setErrorMess(e));
-        })
-        .finally(() => {
-          dispatch(setLoading(false));
-        });
-    }
+    // if (tourInformation || itemEdit) {
+    //   dispatch(setLoading(true));
+    //   TourService.createOrUpdateScheduleTour({
+    //     tourId: tourInformation?.id ? tourInformation?.id : itemEdit?.id,
+    //     day: day,
+    //     schedule: data.schedule.map((item) => ({
+    //       id: item?.id,
+    //       description: item.description,
+    //       startTime: moment(item.startTime).diff(
+    //         moment().startOf("day"),
+    //         "seconds"
+    //       ),
+    //       endTime: moment(item.endTime).diff(
+    //         moment().startOf("day"),
+    //         "seconds"
+    //       ),
+    //     })),
+    //   })
+    //     .then(() => {
+    //       dispatch(setSuccessMess("Successfully"));
+    //     })
+    //     .catch((e) => {
+    //       dispatch(setErrorMess(e));
+    //     })
+    //     .finally(() => {
+    //       dispatch(setLoading(false));
+    //     });
+    // }
+    console.log(data, " ===wsww=");
   };
 
-  console.log(scheduleEdit, " ===wsww=");
-  console.log(fieldsMileStone, "field ====");
+  // console.log(scheduleEdit, " ===wsww=");
+  // console.log(fieldsMileStone, "field ====");
 
   useEffect(() => {
     if (!scheduleEdit) {
@@ -246,7 +239,7 @@ const PopupAddMileStone = memo((props: Props) => {
         })),
       });
     }
-  }, [scheduleEdit, handleNextStep]);
+  }, [scheduleEdit]);
 
   return (
     <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>

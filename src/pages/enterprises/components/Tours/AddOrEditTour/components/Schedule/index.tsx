@@ -128,7 +128,6 @@ const ScheduleComponent = memo((props: Props) => {
                     day={index + 1}
                     itemEdit={itemEdit}
                     scheduleEdit={dayCategoryArray[index]}
-                    handleNextStep={handleNextStep}
                   />
                 </Grid>
               </Grid>
