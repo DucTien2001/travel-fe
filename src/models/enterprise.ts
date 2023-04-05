@@ -46,6 +46,7 @@ export interface CreateMultipleSchedule {
   id?: number
   tourId: number;
   day: number;
+  language?: string;
   schedule: ScheduleItem[];
 }
 

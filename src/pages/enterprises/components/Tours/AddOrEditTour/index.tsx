@@ -152,6 +152,7 @@ const AddOrEditTour = memo((props: Props) => {
             value={activeStep}
             index={EStep.SCHEDULE}
             itemEdit={itemEdit}
+            lang={lang}
             handleNextStep={() => onNextStep(EStep.PRICE)}
           />
           <RangePrice
