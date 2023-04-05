@@ -4,7 +4,7 @@ import api from "../configApi";
 import { TourPrice } from "models/enterprise";
 
 export class TourOnSaleService {
-    static async createOrUpdatePriceTour(data: TourPrice): Promise<any> {
+    static async createOrUpdatePriceTour(data: TourPrice[]): Promise<any> {
         return await api
           .put(API.ENTERPRISE.TOUR_ON_SALE.DEFAULT, data)
           .then((res) => {
