@@ -211,9 +211,6 @@ const RangePriceComponent = memo((props: Props) => {
       });
   };
 
-  const watchCurr = watch("currency");
-  console.log(watchCurr, " ------ s");
-
   // useEffect(() => {
   //   if (tour) {
   //     reset({
