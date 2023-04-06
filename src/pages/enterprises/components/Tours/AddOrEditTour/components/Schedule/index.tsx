@@ -19,6 +19,9 @@ import { useDispatch } from "react-redux";
 import { TourScheduleService } from "services/enterprise/tourSchedule";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 
+function containsArray(memberArray, member) {
+  return memberArray.find((m) => m.day === member.day);
+}
 export interface ScheduleForm {
   test?: Date;
   schedule: {
@@ -53,25 +56,9 @@ const ScheduleComponent = memo((props: Props) => {
       .value();
   }, [schedule]);
 
-  console.log(dayCategory, `--CDATE`);
-
-  console.log(_dayCategoryObject, `----cap nhat mang____`);
-
-  useEffect(() => {
-    const dayMax = (dayCategory[dayCategory.length - 1] || [])[0]?.day;
-    for (var i = 0; i < dayMax - 1; i++) {
-      if (dayCategory?.length < dayMax) {
-        if ((dayCategory[i] || [])[0]?.day !== i + 1) {
-          _dayCategoryObject.push({ day: i + 1, schedule: [] });
-        }
-      }
-    }
-    console.log(
-      _dayCategoryObject.sort((a, b) => a.day - b.day),
-      `----cap nhat mang`
-    );
-    // scheduleSort = _dayCategory.sort((a, b) => a.day - b.day)
-  }, [dayCategory, _dayCategoryObject, schedule]);
+  const uniqueSchedule = useMemo(() => {
+    return [];
+  }, [schedule]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -179,13 +166,28 @@ const ScheduleComponent = memo((props: Props) => {
   }, [tour]);
 
   useEffect(() => {
+    const dayMax = (dayCategory[dayCategory.length - 1] || [])[0]?.day;
+    for (var i = 0; i < dayMax - 1; i++) {
+      if (dayCategory?.length < dayMax) {
+        if ((dayCategory[i] || [])[0]?.day !== i + 1) {
+          _dayCategoryObject.push({ day: i + 1, schedule: [] });
+        }
+      }
+    }
+    _dayCategoryObject.sort((a, b) => a.day - b.day);
+    for (const item of _dayCategoryObject.sort((a, b) => a.day - b.day)) {
+      if (!containsArray(uniqueSchedule, item)) {
+        uniqueSchedule.push(item);
+      }
+    }
+  }, [dayCategory, _dayCategoryObject, schedule]);
+
+  useEffect(() => {
     if (tour) {
       reset({
-        schedule: _dayCategoryObject
-          .sort((a, b) => a.day - b.day)
-          ?.map((item, index) => ({
-            day: index,
-          })),
+        schedule: uniqueSchedule?.map((item, index) => ({
+          day: index,
+        })),
       });
     }
   }, [schedule, handleNextStep]);
@@ -209,13 +211,23 @@ const ScheduleComponent = memo((props: Props) => {
                   </Grid>
                   <IconButton
                     onClick={onDeleteSchedule(field, index)}
-                    disabled={fieldsSchedule?.length !== 1 ? false : true}
+                    disabled={
+                      !(uniqueSchedule || [])[index]?.schedule?.length
+                        ? true
+                        : false || fieldsSchedule?.length !== 1
+                        ? false
+                        : true
+                    }
                   >
                     <DeleteOutlineOutlined
                       sx={{ marginRight: "0.25rem" }}
                       className={classes.iconDelete}
                       color={
-                        fieldsSchedule?.length !== 1 ? "error" : "disabled"
+                        !(uniqueSchedule || [])[index]?.schedule?.length
+                          ? "disabled"
+                          : "error" || fieldsSchedule?.length !== 1
+                          ? "error"
+                          : "disabled"
                       }
                       fontSize="small"
                     />
@@ -226,11 +238,7 @@ const ScheduleComponent = memo((props: Props) => {
                     day={index + 1}
                     tour={tour}
                     lang={lang}
-                    scheduleEdit={
-                      (_dayCategoryObject.sort((a, b) => a.day - b.day) || [])[
-                        index
-                      ]?.schedule
-                    }
+                    scheduleEdit={(uniqueSchedule || [])[index]?.schedule}
                     onGetAllSchedule={onGetAllSchedule}
                   />
                 </Grid>
