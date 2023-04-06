@@ -18,18 +18,7 @@ export interface ETour {
   creator: number;
   contact: string;
   isDeleted?: boolean;
-  tourOnSales?: {
-    id?:number;
-    tourId?: number;
-    discount: number;
-    quantity: number;
-    startDate: Date;
-    childrenAgeMin: number;
-    childrenAgeMax: number;
-    childrenPrice: number;
-    adultPrice: number;
-    currency: string;
-  }[];
+  tourOnSales?: TourPrice[];
   languages?: ETour[];
   parentLanguage: number,
   language: string;

@@ -21,7 +21,7 @@ import clsx from "clsx";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
-import { Grid } from "@mui/material";
+import { Grid, OutlinedInput } from "@mui/material";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { setTourReducer } from "redux/reducers/Enterprise/actionTypes";
@@ -384,6 +384,8 @@ const InformationComponent = memo((props: Props) => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchDistrict?.id]);
+
+  const [time, setTime] = useState(null);
 
   return (
     <div
