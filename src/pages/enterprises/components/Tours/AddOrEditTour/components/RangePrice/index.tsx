@@ -26,6 +26,7 @@ import { OptionItem, currencyType } from "models/general";
 import { TourService } from "services/enterprise/tour";
 import { ReducerType } from "redux/reducers";
 import { TourOnSaleService } from "services/enterprise/tourOnSale";
+import { getCurrency } from "utils/getCurrency";
 
 export interface SaleForm {
   sale: {
@@ -99,6 +100,7 @@ const RangePriceComponent = memo((props: Props) => {
           currency: yup
             .object()
             .shape({
+              id: yup.number().required("Currency is required"),
               name: yup.string().required("Currency is required"),
               value: yup.string().required("Currency is required"),
             })
@@ -144,7 +146,6 @@ const RangePriceComponent = memo((props: Props) => {
       childrenAgeMax: null,
       childrenPrice: null,
       adultPrice: null,
-      currency: currencyType[0],
     });
   };
   const clearForm = () => {
@@ -170,21 +171,6 @@ const RangePriceComponent = memo((props: Props) => {
   };
 
   const _onSubmit = (data: SaleForm) => {
-    console.log(
-      data.sale.map((item) => ({
-        tourId: tourInformation?.id ? tourInformation?.id : tour?.id,
-        id: item?.id,
-        discount: item?.discount,
-        quantity: item?.quantity,
-        startDate: item?.startDate,
-        childrenAgeMin: item?.childrenAgeMin,
-        childrenAgeMax: item?.childrenAgeMax,
-        childrenPrice: item?.childrenPrice,
-        adultPrice: item?.adultPrice,
-        currency: item?.currency?.value,
-      })),
-      "-------"
-    );
     dispatch(setLoading(true));
     TourOnSaleService.createOrUpdatePriceTour(
       data.sale.map((item) => ({
@@ -198,7 +184,7 @@ const RangePriceComponent = memo((props: Props) => {
         childrenPrice: item?.childrenPrice,
         adultPrice: item?.adultPrice,
         currency: item?.currency?.value,
-      })),
+      }))
     )
       .then(() => {
         dispatch(setSuccessMess("Create price of tour successfully"));
@@ -211,21 +197,22 @@ const RangePriceComponent = memo((props: Props) => {
       });
   };
 
-  // useEffect(() => {
-  //   if (tour) {
-  //     reset({
-  //       sale: tour?.tourOnSales?.map((item) => ({
-  //         discount: item.discount,
-  //         quantity: item.quantity,
-  //         startDate: item.startDate,
-  //         childrenAgeMin: item.childrenAgeMax,
-  //         childrenPrice: item.childrenPrice,
-  //         adultPrice: item.adultPrice,
-  //         // currency: itemEdit?.tourOnSales[0]?.currency,
-  //       })),
-  //     });
-  //   }
-  // }, [tour, reset]);
+  useEffect(() => {
+    if (tour)
+      reset({
+        sale: tour?.tourOnSales?.map((item) => ({
+          id: item.id,
+          discount: item.discount,
+          quantity: item.quantity,
+          startDate: new Date(item.startDate),
+          childrenAgeMin: item.childrenAgeMin,
+          childrenAgeMax: item.childrenAgeMax,
+          childrenPrice: item.childrenPrice,
+          adultPrice: item.adultPrice,
+          currency: getCurrency(item?.currency),
+        })),
+      });
+  }, [tour]);
 
   useEffect(() => {
     if (!tour) {
@@ -234,7 +221,7 @@ const RangePriceComponent = memo((props: Props) => {
   }, [appendSale]);
 
   useEffect(() => {
-    if (tour) {
+    if (!tour) {
       clearForm();
     }
   }, [tour]);
@@ -278,30 +265,21 @@ const RangePriceComponent = memo((props: Props) => {
                   container
                 >
                   <Grid xs={2} sm={4} md={4} item>
-                    <Controller
+                    <InputDatePicker
                       name={`sale.${index}.startDate`}
                       control={control}
-                      render={({ field }) => (
-                        <InputDatePicker
-                          label="Date"
-                          placeholder="Select date"
-                          timeFormat={false}
-                          errorMessage={
-                            errors.sale?.[index]?.startDate?.message
-                          }
-                          onChange={(date) => {
-                            field.onChange(date);
-                          }}
-                          isValidDate={disablePastDt}
-                        />
-                      )}
+                      label="Date"
+                      placeholder="Select date"
+                      timeFormat={false}
+                      errorMessage={errors.sale?.[index]?.startDate?.message}
+                      isValidDate={disablePastDt}
                     />
                   </Grid>
                   <Grid xs={2} sm={4} md={4} item>
                     <InputSelect
                       fullWidth
                       title={"Currency"}
-                      name="currency"
+                      name={`sale.${index}.currency`}
                       control={control}
                       selectProps={{
                         options: currencyType,

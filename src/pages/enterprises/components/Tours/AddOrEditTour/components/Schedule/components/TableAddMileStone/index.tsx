@@ -1,4 +1,10 @@
-import React, { useMemo, memo, useEffect, useState } from "react";
+import React, {
+  useMemo,
+  memo,
+  useEffect,
+  useState,
+  JSXElementConstructor,
+} from "react";
 import { Input } from "reactstrap";
 import classes from "./styles.module.scss";
 
@@ -8,14 +14,17 @@ import {
   Box,
   Grid,
   IconButton,
+  OutlinedInput,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
 } from "@mui/material";
-import InputTimePicker from "components/common/inputs/TimePicker";
+import TimePicker from "components/common/inputs/TimePicker";
+import InputTimePicker from "components/common/inputs/InputTimePicker";
 import Button, { BtnType } from "components/common/buttons/Button";
 import TableHeader from "components/Table/TableHeader";
 import { TableHeaderLabel } from "models/general";
@@ -25,20 +34,17 @@ import moment from "moment";
 import yup from "configs/yup.custom";
 import { useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
-import { TourService } from "services/enterprise/tour";
 import {
   setErrorMess,
   setLoading,
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
 import { useDispatch } from "react-redux";
-import InputDatePicker from "components/common/inputs/InputDatePicker";
-import Datetime from "react-datetime";
-import "react-datetime/css/react-datetime.css";
 import { ETour, ScheduleItem } from "models/enterprise";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import { TourScheduleService } from "services/enterprise/tourSchedule";
+import clsx from "clsx";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "From", label: "From", sortable: false },
@@ -252,7 +258,6 @@ const PopupAddMileStone = memo((props: Props) => {
                     control={control}
                     render={({ field }) => (
                       <InputTimePicker
-                        placeholder="00:00"
                         value={field.value as any}
                         onChange={field.onChange}
                         inputRef={register(`schedule.${index}.startTime`)}
@@ -273,7 +278,6 @@ const PopupAddMileStone = memo((props: Props) => {
                     control={control}
                     render={({ field }) => (
                       <InputTimePicker
-                        placeholder="00:00"
                         value={field.value as any}
                         onChange={field.onChange}
                         inputRef={register(`schedule.${index}.endTime`)}

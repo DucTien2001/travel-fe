@@ -117,6 +117,7 @@ export const API = {
     TOUR_ON_SALE: {
       DEFAULT: "/v1.0/enterprise/tour-on-sale",
       UPDATE_TOUR_PRICE: "/v1.0/enterprise/tour-on-sale/:id",
+      DELETE_TOUR_PRICE: "/v1.0/enterprise/tour-on-sale/:id",
     },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",
