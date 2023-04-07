@@ -5,6 +5,9 @@ export const API = {
   CONFIG: {
     DEFAULT: "/v1.0/config",
   },
+  TRANSLATION: {
+    DEFAULT: '/v1.0/translation/{{lng}}/{{ns}}',
+  },
   AUTH: {
     ME: "/v1.0/user/me",
     LOGIN: "/v1.0/user/login",
