@@ -26,7 +26,7 @@ import { OptionItem, currencyType } from "models/general";
 import { TourService } from "services/enterprise/tour";
 import { ReducerType } from "redux/reducers";
 import { TourOnSaleService } from "services/enterprise/tourOnSale";
-import { getCurrency } from "utils/getCurrency";
+import { getCurrency } from "utils/getOption";
 
 export interface SaleForm {
   sale: {
@@ -201,7 +201,7 @@ const RangePriceComponent = memo((props: Props) => {
   };
 
   useEffect(() => {
-    if (tour)
+    if (tour) {
       reset({
         sale: tour?.tourOnSales?.map((item) => ({
           id: item.id,
@@ -215,6 +215,9 @@ const RangePriceComponent = memo((props: Props) => {
           currency: getCurrency(item?.currency),
         })),
       });
+
+      console.log(tour, "======");
+    }
   }, [tour]);
 
   useEffect(() => {

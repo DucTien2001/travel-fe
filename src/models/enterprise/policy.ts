@@ -1,6 +1,6 @@
 export interface FindAll {
     serviceId: number;
-    serviceType: EServiceType;
+    serviceType: number;
   }
 export interface Policy {
     id?: number;

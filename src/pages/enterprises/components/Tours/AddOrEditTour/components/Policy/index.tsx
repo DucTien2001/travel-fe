@@ -22,15 +22,23 @@ import moment from "moment";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import InputSelect from "components/common/inputs/InputSelect";
-import { EServiceType, OptionItem, policyType } from "models/general";
+import {
+  EServicePolicyType,
+  EServiceType,
+  OptionItem,
+  policyType,
+} from "models/general";
 import { ReducerType } from "redux/reducers";
 import { PolicyService } from "services/enterprise/policy";
+import { getPolicyType } from "utils/getOption";
+import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
+// import { getPolicyType } from "utils/getOption";
 
 export interface PolicyForm {
   policy: {
     id?: number;
     serviceType: number;
-    policyType: { id: number; name: string };
+    policyType: { id: number; name: string; value: number };
     dayRange: number;
     moneyRate: number;
   }[];
@@ -52,6 +60,8 @@ const PolicyComponent = memo((props: Props) => {
   const { tourInformation } = useSelector(
     (state: ReducerType) => state.enterprise
   );
+
+  const [policyItemDelete, setPolicyItemDelete] = useState(null);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -79,6 +89,7 @@ const PolicyComponent = memo((props: Props) => {
             .shape({
               id: yup.number().required("Policy type is required"),
               name: yup.string().required("Policy type is required"),
+              value: yup.number().required("Policy type is required"),
             })
             .required("Policy type is required"),
         })
@@ -131,8 +142,34 @@ const PolicyComponent = memo((props: Props) => {
       policyType: policyType[0],
     });
   };
-  const onDeletePolicy = (index) => () => {
-    removePolicy(index);
+
+  const onDeletePolicy = (policy, index) => () => {
+    if (policy?.id) {
+      onOpenPopupConfirmDeletePolicy(index, policy);
+    } else {
+      removePolicy(index);
+    }
+  };
+
+  const onOpenPopupConfirmDeletePolicy = (e, itemAction) => {
+    setPolicyItemDelete(itemAction);
+  };
+
+  const onClosePopupConfirmDeletePolicy = () => {
+    if (!policyItemDelete) return;
+    setPolicyItemDelete(null);
+  };
+
+  const onYesDeletePolicy = () => {
+    if (!policyItemDelete) return;
+    onClosePopupConfirmDeletePolicy();
+    dispatch(setLoading(true));
+    PolicyService.deletePolicy(policyItemDelete?.id)
+      .then(() => {
+        onGetAllPolicy();
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
   };
 
   const onGetAllPolicy = () => {
@@ -148,7 +185,7 @@ const PolicyComponent = memo((props: Props) => {
               serviceType: item?.serviceType,
               dayRange: item?.dayRange,
               moneyRate: item?.moneyRate,
-              policyType: item?.policyType?.id,
+              policyType: getPolicyType(item?.policyType),
             })),
           });
         }
@@ -194,7 +231,7 @@ const PolicyComponent = memo((props: Props) => {
                 serviceType: item?.serviceType,
                 dayRange: item?.dayRange,
                 moneyRate: item?.moneyRate,
-                policyType: item?.policyType?.id,
+                policyType: getPolicyType(item?.policyType),
               })),
             });
           }
@@ -202,20 +239,7 @@ const PolicyComponent = memo((props: Props) => {
         .catch((err) => setErrorMess(err))
         .finally(() => dispatch(setLoading(false)));
     }
-    // reset({
-    //   policy: tour?.tourOnSales?.map((item) => ({
-    //     id: item.id,
-    //     discount: item.discount,
-    //     quantity: item.quantity,
-    //     startDate: new Date(item.startDate),
-    //     childrenAgeMin: item.childrenAgeMin,
-    //     childrenAgeMax: item.childrenAgeMax,
-    //     childrenPrice: item.childrenPrice,
-    //     adultPrice: item.adultPrice,
-    //     currency: getCurrency(item?.currency),
-    //   })),
-    // });
-  }, [tour]);
+  }, [tour, reset]);
 
   useEffect(() => {
     if (!tour) {
@@ -251,7 +275,7 @@ const PolicyComponent = memo((props: Props) => {
 
                   <IconButton
                     sx={{ marginLeft: "24px" }}
-                    onClick={onDeletePolicy(index)}
+                    onClick={onDeletePolicy(field, index)}
                     disabled={fieldsPolicy?.length !== 1 ? false : true}
                   >
                     <DeleteOutlineOutlined
@@ -316,6 +340,13 @@ const PolicyComponent = memo((props: Props) => {
           </Grid>
         </Grid>
       )}
+      <PopupConfirmDelete
+        title="Are you sure delete this policy?"
+        isOpen={!!policyItemDelete}
+        onClose={onClosePopupConfirmDeletePolicy}
+        toggle={onClosePopupConfirmDeletePolicy}
+        onYes={onYesDeletePolicy}
+      />
     </Grid>
   );
 });
