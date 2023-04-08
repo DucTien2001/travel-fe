@@ -48,6 +48,12 @@ export const currencyType: OptionItem[] = [
   { id: 2, name: "USD", value: "en" },
 ]
 
+export const policyType = [
+  { id: 1, name: "RESCHEDULE" },
+  { id: 2, name: "REFUND"},
+]
+
+
 export enum Lang {
   VI = 'vi',
   EN = 'en'
@@ -98,4 +104,14 @@ export interface TableHeaderLabel {
   | 'justify'
   | 'left'
   | 'right'
+}
+
+export enum EServiceType {
+  TOUR = 1,
+  HOTEL = 2
+}
+
+export enum EServicePolicyType {
+  RESCHEDULE = 1,
+  REFUND = 2
 }

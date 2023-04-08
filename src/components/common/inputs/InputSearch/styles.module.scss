@@ -8,6 +8,27 @@
     }
 }
 .inputTextfield {
+  input {
+    padding: 9px 16px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px !important;
+    line-height: 24px;
+    letter-spacing: 0.015em;
+    color: var(--eerie-black);
+    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+  }
+  :focus {
+    border-color: var(--primary-light-color);
+  }
+  svg {
+    color: var(--primary-color) !important;
+  }
+  fieldset {
+    border-width: 1px !important;
+    border-color: #e3e3e3;
+
+  }
   &.placeholder {
     opacity: 1;
     color: rgba(28, 28, 28, 0.4);    

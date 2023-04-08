@@ -1,17 +1,21 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Row } from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
-import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
+
 import { AdminGetTours, ETour } from "models/enterprise";
 import { useDispatch } from "react-redux";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/enterprise/tour";
 import SearchNotFound from "components/SearchNotFound";
-import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
+
 import {
   Box,
   IconButton,
@@ -41,6 +45,7 @@ import {
 import { useRouter } from "next/router";
 import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
+import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "id", label: "Id", sortable: false },
@@ -58,6 +63,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
   const router = useRouter();
 
   const [itemAction, setItemAction] = useState<ETour>();
+  const [itemDelete, setItemDelete] = useState<ETour>(null);
   const [keyword, setKeyword] = useState<string>("");
   const [data, setData] = useState<DataPagination<ETour>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
@@ -155,6 +161,35 @@ const Tour = memo(({ handleTourEdit }: Props) => {
       pathname: `/enterprises/tours/${item.id}`,
       search: lang && `?lang=${lang.key}`,
     });
+  };
+
+  const onShowConfirm = () => {
+    if (!itemAction) return;
+    setItemDelete(itemAction);
+    onCloseActionMenu();
+  };
+
+  const onClosePopupConfirmDelete = () => {
+    if (!itemDelete) return;
+    setItemDelete(null);
+    onCloseActionMenu();
+  };
+
+  const onYesDelete = () => {
+    if (!itemDelete) return;
+    onClosePopupConfirmDelete();
+    dispatch(setLoading(true));
+    TourService.delete(itemDelete?.id)
+      .then(() => {
+        dispatch(setSuccessMess("Delete successfully"));
+        fetchData();
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
   };
 
   useEffect(() => {
@@ -259,7 +294,11 @@ const Tour = memo(({ handleTourEdit }: Props) => {
               <span>Edit Languages</span>
             </Box>
           </MenuItem>
-          <MenuItem sx={{ fontSize: "0.875rem" }} className={classes.menuItem}>
+          <MenuItem
+            sx={{ fontSize: "0.875rem" }}
+            className={classes.menuItem}
+            onClick={onShowConfirm}
+          >
             <Box display="flex" alignItems={"center"}>
               <DeleteOutlineOutlined
                 sx={{ marginRight: "0.25rem" }}
@@ -302,20 +341,13 @@ const Tour = memo(({ handleTourEdit }: Props) => {
             </MenuItem>
           ))}
         </Menu>
-        {/* <PopupConfirmDelete
+        <PopupConfirmDelete
           title="Are you sure delete this tour ?"
-          isOpen={!!tourDelete}
+          isOpen={!!itemDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}
           onYes={onYesDelete}
         />
-        <PopupConfirmWarning
-          title="Are you sure stop working ?"
-          isOpen={openPopupConfirmStop}
-          onClose={onToggleConfirmStop}
-          toggle={onToggleConfirmStop}
-          onYes={onYesStopWorking}
-        /> */}
       </div>
     </>
   );

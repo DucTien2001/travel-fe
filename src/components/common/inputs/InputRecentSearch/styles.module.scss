@@ -1,6 +1,10 @@
 .root {
     width: 100%;
     position: relative;
+    fieldset {
+      border-width: 1px !important;
+      border-color: var(--primary-light-color);
+    }
   }
   .title {
     color: rgba(28, 28, 28, 0.9);
@@ -42,16 +46,16 @@
       font-weight: 400;
       font-size: 14px; 
       opacity: 1;
-      font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+      font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
     }
     
-    :focus {
-      border-color: var(--primary-light-color);
+    &:focus {
+      border: var(--primary-light-color) !important;
     }
     svg {
       color: var(--primary-color) !important;
     }
-    input {
+
       padding: 8px 16px;
       font-style: normal;
       font-weight: 400;
@@ -60,13 +64,10 @@
       letter-spacing: 0.015em;
       color: var(--eerie-black);
       font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
-    }
-  
-    fieldset {
-      border-width: 1px !important;
-      border-color: #e3e3e3;
-    }
+
+
   }
+
   .inputInvalid {  
     fieldset {
       border: 1px solid var(--danger-color);

@@ -400,6 +400,8 @@ const InformationComponent = memo((props: Props) => {
           onSubmit={handleSubmit(_onSubmit)}
           className={classes.form}
         >
+          <h3 className={classes.title}>Set up Tour</h3>
+
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <InputTextfield

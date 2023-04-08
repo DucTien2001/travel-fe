@@ -68,10 +68,12 @@ const RangePriceComponent = memo((props: Props) => {
           quantity: yup
             .number()
             .typeError("Quantity is required")
+            .positive("Quantity must be a positive number")
             .required("Quantity is required"),
           discount: yup
             .number()
             .typeError("Discount is required")
+            .positive("Discount  must be a positive number")
             .notRequired(),
           childrenAgeMin: yup
             .number()
@@ -146,6 +148,7 @@ const RangePriceComponent = memo((props: Props) => {
       childrenAgeMax: null,
       childrenPrice: null,
       adultPrice: null,
+      currency: currencyType[0],
     });
   };
   const clearForm = () => {
@@ -294,7 +297,6 @@ const RangePriceComponent = memo((props: Props) => {
                       title="Total ticket"
                       placeholder="Enter total ticket"
                       autoComplete="off"
-                      name="quantity"
                       type="number"
                       inputRef={register(`sale.${index}.quantity`)}
                       errorMessage={errors.sale?.[index]?.quantity?.message}
@@ -305,7 +307,6 @@ const RangePriceComponent = memo((props: Props) => {
                       title="Discount"
                       placeholder="Enter discount"
                       autoComplete="off"
-                      name="discount"
                       type="number"
                       inputRef={register(`sale.${index}.discount`)}
                       errorMessage={errors.sale?.[index]?.discount?.message}
@@ -316,7 +317,6 @@ const RangePriceComponent = memo((props: Props) => {
                       title="Price for adult"
                       placeholder="Enter price of adult"
                       autoComplete="off"
-                      name="adultPrice"
                       type="number"
                       inputRef={register(`sale.${index}.adultPrice`)}
                       errorMessage={errors.sale?.[index]?.adultPrice?.message}
@@ -327,7 +327,6 @@ const RangePriceComponent = memo((props: Props) => {
                       title="Children age min"
                       placeholder="Enter children age min"
                       autoComplete="off"
-                      name="childrenAgeMin"
                       type="number"
                       inputRef={register(`sale.${index}.childrenAgeMin`)}
                       errorMessage={
@@ -340,7 +339,6 @@ const RangePriceComponent = memo((props: Props) => {
                       title="Children age max"
                       placeholder="Enter children age max"
                       autoComplete="off"
-                      name="childrenAgeMax"
                       type="number"
                       inputRef={register(`sale.${index}.childrenAgeMax`)}
                       errorMessage={
@@ -353,7 +351,6 @@ const RangePriceComponent = memo((props: Props) => {
                       title="Price for children"
                       placeholder="Enter price of children"
                       autoComplete="off"
-                      name="childrenPrice"
                       type="number"
                       inputRef={register(`sale.${index}.childrenPrice`)}
                       errorMessage={

@@ -14,7 +14,7 @@ import {
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
 import Link from "next/link";
-import { Tour } from "models/tour";
+import { Schedule, Tour } from "models/tour";
 import { fCurrency2 } from "utils/formatNumber";
 import clsx from "clsx";
 import useAuth from "hooks/useAuth";
@@ -30,44 +30,44 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import StepContent from "@mui/material/StepContent";
-// import Button from '@mui/material/Button';
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
+
 import PopupModalImages from "components/Popup/PopupModalImages";
-import { Grid } from "@mui/material";
+import { Grid, Tab, Tabs } from "@mui/material";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputSelect from "components/common/inputs/InputSelect";
 import InputCounter from "components/common/inputs/InputCounter";
-import Map from "../../../../../components/common/Map";
 
-const steps = [
-  {
-    label: "9:00 pick up",
-  },
-  {
-    label: "Visit phu quoc",
-  },
-  {
-    label: "End of tour",
-  },
-];
+import TourSchedule from "../TourSchedule";
+import _ from "lodash";
+import { TabContext, TabList } from "@material-ui/lab";
+import GoogleMapReact from "google-map-react";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
+import moment from "moment";
+import Geocode from "react-geocode";
+
+const AnyReactComponent = ({ text, lat, lng }) => <div>{text}</div>;
 export interface FormData {
   startDate: Date;
-  startTime: string;
   language: any;
   numberOfAdult?: number;
   numberOfChild?: number;
 }
+
+interface PriceAndAge {
+  childrenAgeMin: number;
+  childrenAgeMax: number;
+  priceChildren: number;
+  adultPrice: number;
+  discount: number;
+  quantity: number;
+}
 interface Props {
   tour: Tour;
-  listRates: number[];
+  tourSchedule?: any[];
 }
 
 const languageOptions = [
@@ -76,13 +76,36 @@ const languageOptions = [
 ];
 
 // eslint-disable-next-line react/display-name
-const SectionTour = memo(({ tour, listRates }: Props) => {
+const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   const { user } = useAuth();
+  Geocode.setApiKey("AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k");
+  const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
+  const [tab, setTab] = React.useState("1");
+  const [coords, setCoords] = useState(null);
+  const [priceAndAge, setPriceAndAge] = useState<PriceAndAge>({
+    childrenAgeMin: tour?.tourOnSales[0]?.childrenAgeMin,
+    childrenAgeMax: tour?.tourOnSales[0]?.childrenAgeMax,
+    priceChildren: tour?.tourOnSales[0]?.childrenPrice,
+    adultPrice: tour?.tourOnSales[0]?.adultPrice,
+    discount: tour?.tourOnSales[0]?.discount,
+    quantity: tour?.tourOnSales[0]?.quantity,
+  });
+
+  const dayCategory = useMemo(() => {
+    return _.chain(tourSchedule)
+      .groupBy((item) => item?.day)
+      .map((value) => ({ day: value[0].day, schedule: value }))
+      .value();
+  }, [tourSchedule]);
+
+  const dayValid = useMemo(() => {
+    return [];
+  }, [tour]);
+
   const schema = useMemo(() => {
     return yup.object().shape({
-      startDate: yup.date().required("Start datetime is required"),
-      startTime: yup.string().required("Start time is required"),
-      language: yup.string().required("Start time is required"),
+      startDate: yup.date().required("Please choose start time"),
+      language: yup.string().required("Please choose language"),
       numberOfAdult: yup
         .number()
         .transform((value) => (isNaN(value) ? undefined : value))
@@ -103,50 +126,79 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
     watch,
     formState: { errors },
     reset,
-    setValue,
     control,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     mode: "onChange",
     defaultValues: {
-      startDate: new Date(),
       numberOfAdult: 1,
       numberOfChild: 0,
       language: languageOptions[0],
     },
   });
 
-  const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
-  const [verticalTabs, setVerticalTabs] = useState(1);
-
   const onOpenPopupModalImages = () =>
     setOpenPopupModalImages(!openPopupModalImages);
 
-  const onChangeTab = (numberOfDate: number) => {
-    switch (numberOfDate) {
-      case 1:
-        setVerticalTabs(numberOfDate);
-        break;
-      case 2:
-        setVerticalTabs(numberOfDate);
-        break;
-      default:
-        break;
-    }
+  const handleChangeDaySchedule = (event: any, newValue: string) => {
+    setTab(newValue);
   };
 
-  const _numberOfAdult = watch("numberOfAdult");
-  const _numberOfChild = watch("numberOfChild");
+  const disableCustomDt = (current) => {
+    return dayValid.includes(current.format("DD/MM/YYYY"));
+  };
 
-  const [coords, setCoords] = useState(null);
+  const _numberOfChild = watch("numberOfChild");
+  const _numberOfAdult = watch("numberOfAdult");
+
+  const handleChangeStartDate = (e) => {
+    tour?.tourOnSales.forEach((item) => {
+      if (
+        moment(item.startDate).format("DD/MM/YYYY") ===
+        moment(e._d).format("DD/MM/YYYY")
+      ) {
+        setPriceAndAge({
+          childrenAgeMin: item.childrenAgeMin,
+          childrenAgeMax: item.childrenAgeMax,
+          priceChildren: item.childrenPrice,
+          adultPrice: item.adultPrice,
+          discount: item.discount,
+          quantity: item.quantity,
+        });
+      }
+    });
+  };
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      ({ coords: { longitude, latitude } }) => {
-        setCoords({ lat: latitude, lng: longitude });
+    setPriceAndAge({
+      childrenAgeMin: tour?.tourOnSales[0]?.childrenAgeMin,
+      childrenAgeMax: tour?.tourOnSales[0]?.childrenAgeMax,
+      priceChildren: tour?.tourOnSales[0]?.childrenPrice,
+      adultPrice: tour?.tourOnSales[0]?.adultPrice,
+      discount: tour?.tourOnSales[0]?.discount,
+      quantity: tour?.tourOnSales[0]?.quantity,
+    });
+  }, [tour]);
+
+  useEffect(() => {
+    tour?.tourOnSales.forEach((item) => {
+      dayValid.push(moment(item.startDate).format("DD/MM/YYYY"));
+    });
+  }, [tour]);
+
+  useEffect(() => {
+    Geocode.fromAddress(
+      `${tour?.moreLocation}, ${tour?.commune.name}, ${tour?.district.name}, ${tour?.city.name}`
+    ).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+        setCoords({ lat, lng });
+      },
+      (error) => {
+        console.error(error);
       }
     );
-  }, []);
+  }, [tour]);
 
   return (
     <>
@@ -155,7 +207,7 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
           <Row>
             <Col>
               <h2 className={`title ${classes.nameTour}`}>
-                {tour?.title} - {tour?.location}
+                {tour?.title} - {tour?.city.name}
               </h2>
               <div className={classes.subProduct}>
                 <div className={classes.tags}>
@@ -165,7 +217,10 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                 </div>
                 <div className={classes.locationRate}>
                   <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
-                  <p>{tour?.location}</p>
+                  <p>
+                    {tour?.commune.name}, {tour?.district.name},{" "}
+                    {tour?.city.name}
+                  </p>
                   {tour?.rate !== 0 && (
                     <Stars
                       numberOfStars={Math.floor(tour?.rate)}
@@ -208,64 +263,48 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
             <Col xs={8} className={classes.leftContent}>
               <h2 className={classes.leftTextTitle}>Product Details</h2>
               <h5 className={classes.leftTextPanel}>Highlight</h5>
-              <ul className={classes.highlightContent}>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-                <li>oak in the idyllic sunset of Phu Quoc island</li>
-              </ul>
+              <div className={classes.highlightContent}>
+                <p dangerouslySetInnerHTML={{ __html: tour?.highlight }}></p>
+              </div>
               <div className={classes.goodWrapper}>
                 <FontAwesomeIcon icon={faFaceSmile}></FontAwesomeIcon>
                 <p>
-                  <span>Good for:</span> Tasty Dinners, Adventure Junkies,
-                  Relaxation, Nature Enthusiasts, Sightseeing, Asian Cuisine
+                  <span>Good for:</span> {tour?.suitablePerson}
                 </p>
               </div>
               <div className={classes.itineraryBox}>
                 <h5 className={classes.leftTextPanel}>Tour Itinerary</h5>
-                <Nav className={classes.boxTabControl} nav>
-                  <NavItem
-                    className={classes.navItem}
-                    onClick={() => onChangeTab(1)}
-                  >
-                    <Grid
-                      sx={{
-                        padding: "10px 16px",
-                        backgroundColor: "var(--primary-color)",
-                        borderRadius: "8px",
-                        color: "var(--white-color)",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Day 1
-                    </Grid>
-                  </NavItem>
-                </Nav>
-                <TabContent activeTab={"verticalTabs" + verticalTabs}>
-                  <TabPane tabId="verticalTabs1">
-                    <Box sx={{ maxWidth: 400 }} className={classes.boxStep}>
-                      <Stepper
-                        orientation="vertical"
-                        className={classes.stepper}
-                      >
-                        {steps.map((step, index) => (
-                          <Step key={step.label} className={classes.step}>
-                            <StepLabel>
-                              <p>{step.label}</p>
-                            </StepLabel>
-                          </Step>
+                <Box sx={{ width: "100%" }}>
+                  <TabContext value={tab}>
+                    <Box>
+                      <TabList onChange={handleChangeDaySchedule}>
+                        {dayCategory?.map((item, index) => (
+                          <Tab
+                            key={index}
+                            label={`Day ${item?.day}`}
+                            value={`${item?.day}`}
+                          />
                         ))}
-                      </Stepper>
+                      </TabList>
                     </Box>
-                  </TabPane>
-                </TabContent>
+                    {dayCategory?.map((item, index) => (
+                      <TourSchedule
+                        key={index}
+                        tourSchedule={(dayCategory || [])[index]?.schedule}
+                        value={`${index + 1}`}
+                      />
+                    ))}
+                  </TabContext>
+                </Box>
               </div>
               <Grid sx={{ marginBottom: "24px" }}>
                 <h5 className={classes.leftTextPanel}>
                   What You’ll Experience
                 </h5>
-                <p className={classes.textDescription}>{tour?.description}</p>
+                <p
+                  className={classes.textDescription}
+                  dangerouslySetInnerHTML={{ __html: tour?.description }}
+                ></p>
               </Grid>
               <div className={classes.mapBox}>
                 <h5 className={classes.leftTextPanel}> Location Detail</h5>
@@ -278,10 +317,29 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                   }}
                 >
                   <p className={classes.locationDetail}>
-                    143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh
-                    Kiên Giang, Vietnam
+                    {tour?.moreLocation}, {tour?.commune.name},
+                    {tour?.district.name}, {tour?.city.name}
                   </p>
-                  <Map coords={coords} className={classes.map} />
+                  <div style={{ height: "30vh", width: "100%" }}>
+                    <GoogleMapReact
+                      bootstrapURLKeys={{
+                        key: "AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k",
+                      }}
+                      defaultCenter={coords}
+                      defaultZoom={11}
+                      center={coords}
+                    >
+                      <AnyReactComponent
+                        lat={coords?.lat}
+                        lng={coords?.lng}
+                        text={
+                          <LocationOnIcon
+                            sx={{ color: "var(--danger-color)" }}
+                          />
+                        }
+                      />
+                    </GoogleMapReact>
+                  </div>
                   <div className={classes.contactBox}>
                     <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
                     <p>Contact Partner: </p>
@@ -289,13 +347,13 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                   </div>
                 </Grid>
               </div>
-              <div className="mt-4">
+              {/* <div className="mt-4">
                 <h5 className={classes.leftTextPanel}>
                   {" "}
                   Additional Information
                 </h5>
-                <p className={classes.textDescription}>{tour?.description}</p>
-              </div>
+                <p className={classes.textDescription} dangerouslySetInnerHTML={{ __html: tour?. }}></p>
+              </div> */}
             </Col>
             <Col xs={4} className={classes.rightContent}>
               <Grid className={classes.boxSelect}>
@@ -304,19 +362,24 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                   <InputDatePicker
                     name="startDate"
                     control={control}
+                    initialValue={moment(
+                      tour?.tourOnSales[0]?.startDate
+                    ).format("DD/MM/YYYY")}
                     placeholder="Check-out"
                     dateFormat="DD/MM/YYYY"
                     timeFormat={false}
+                    isValidDate={disableCustomDt}
                     inputRef={register("startDate")}
+                    onChange={(e) => handleChangeStartDate(e)}
                     errorMessage={errors.startDate?.message}
                   />
                 </Grid>
-                <Grid className={classes.boxTime}>
+                {/* <Grid className={classes.boxTime}>
                   <FontAwesomeIcon icon={faClock}></FontAwesomeIcon>
                   <p>7:30</p>
-                </Grid>
+                </Grid> */}
               </Grid>
-              <Grid className={classes.boxSelect}>
+              <Grid className={classes.boxSelect} sx={{ paddingTop: "14px" }}>
                 <p>Language options?</p>
                 <InputSelect
                   className={classes.inputSelect}
@@ -331,8 +394,8 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                 <p>How many tickets?</p>
                 <Grid className={classes.boxNumberTickets}>
                   <Grid>
-                    <p>Adult (age 10-99)</p>
-                    <span>220,000 VND</span>
+                    <p>Adult (age &gt; {priceAndAge?.childrenAgeMax})</p>
+                    <span>{fCurrency2(priceAndAge?.adultPrice)} VND</span>
                   </Grid>
                   <Grid>
                     <Controller
@@ -352,8 +415,11 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                 </Grid>
                 <Grid className={classes.boxNumberTickets}>
                   <Grid>
-                    <p>Child (age 3-9)</p>
-                    <span>220,000 VND</span>
+                    <p>
+                      Child (age {priceAndAge?.childrenAgeMin}-
+                      {priceAndAge?.childrenAgeMin})
+                    </p>
+                    <span>{fCurrency2(priceAndAge?.priceChildren)} VND</span>
                   </Grid>
                   <Grid>
                     <Controller
@@ -373,22 +439,27 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                 </Grid>
               </Grid>
               <div className={classes.priceWrapper}>
-                {tour?.discount !== 0 && (
+                {priceAndAge?.discount !== 0 && (
                   <p className={classes.discount}>
-                    Discount: <span>{tour?.discount} %</span>
+                    Discount: <span>{priceAndAge?.discount} %</span>
                   </p>
                 )}
-
-                <p>Total Price</p>
-                <h2 className={classes.price}>
-                  {fCurrency2(
-                    (tour?.price * _numberOfAdult * (100 - tour?.discount)) /
-                      100 +
-                      (tour?.price * _numberOfChild * (100 - tour?.discount)) /
-                        100
-                  )}{" "}
-                  VND
-                </h2>
+                <Grid sx={{ display: "flex" }}>
+                  <p>Total Price &nbsp;</p>
+                  <h2 className={classes.price}>
+                    {fCurrency2(
+                      (priceAndAge?.adultPrice *
+                        _numberOfAdult *
+                        (100 - priceAndAge?.discount)) /
+                        100 +
+                        (priceAndAge?.priceChildren *
+                          _numberOfChild *
+                          (100 - priceAndAge?.discount)) /
+                          100
+                    )}{" "}
+                    VND
+                  </h2>
+                </Grid>
               </div>
               {user ? (
                 <Link href={`/book/tour/:${tour?.id}`}>
@@ -421,7 +492,10 @@ const SectionTour = memo(({ tour, listRates }: Props) => {
                 <div className={classes.serviceTip}>
                   <FontAwesomeIcon icon={faClock}></FontAwesomeIcon>
                   <p>
-                    Tour duration: <span>{tour?.businessHours}</span>
+                    Tour duration:{" "}
+                    <span>
+                      {tour?.numberOfDays} days - {tour?.numberOfNights} nights
+                    </span>
                   </p>
                 </div>
                 <div className={classes.serviceTip}>

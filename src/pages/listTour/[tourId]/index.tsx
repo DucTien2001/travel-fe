@@ -14,32 +14,34 @@ import { Container } from "reactstrap";
 import { faFaceFrown } from "@fortawesome/free-regular-svg-icons";
 import { CommentService } from "services/normal/comment";
 import { formatStar } from "utils/formatStar";
+import { TourScheduleService } from "services/normal/tourSchedule";
 
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(() => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [tour, setTour] = useState<any>();
-  const [listComment, setListComment] = useState([]);
+  const [tourSchedule, setTourSchedule] = useState([]);
+  // const [listComment, setListComment] = useState([]);
   const tourId = Number(router.query.tourId.slice(1));
 
-  const listRates = [];
-  listComment.forEach((item) => {
-    listRates.push(item.rate);
-  });
+  // const listRates = [];
+  // listComment.forEach((item) => {
+  //   listRates.push(item.rate);
+  // });
 
-  const getTourComments = () => {
-    CommentService.getTourComments(tourId)
-      .then((res) => {
-        setListComment(res.data);
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
-  };
+  // const getTourComments = () => {
+  //   CommentService.getTourComments(tourId)
+  //     .then((res) => {
+  //       setListComment(res.data);
+  //     })
+  //     .catch((e) => {
+  //       dispatch(setErrorMess(e));
+  //     })
+  //     .finally(() => {
+  //       dispatch(setLoading(false));
+  //     });
+  // };
 
   useEffect(() => {
     if (router) {
@@ -58,24 +60,40 @@ const ProductPage = memo(() => {
   }, [router]);
 
   useEffect(() => {
-    dispatch(setLoading(true));
-    CommentService.getTourComments(tourId)
-      .then((res) => {
-        setListComment(res.data);
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
+    if (router) {
+      TourScheduleService.getTourSchedule(Number(router.query.tourId.slice(1)))
+        .then((res) => {
+          setTourSchedule(res.data);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [router]);
 
-  useEffect(() => {
-    getTourComments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setLoading(true));
+  //   CommentService.getTourComments(tourId)
+  //     .then((res) => {
+  //       setListComment(res.data);
+  //     })
+  //     .catch((e) => {
+  //       dispatch(setErrorMess(e));
+  //     })
+  //     .finally(() => {
+  //       dispatch(setLoading(false));
+  //     });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   getTourComments();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch]);
 
   return (
     <>
@@ -96,14 +114,14 @@ const ProductPage = memo(() => {
           </Container>
         ) : (
           <>
-            <SectionTour tour={tour} listRates={listRates} />
-            <div className={classes.containerComment}>
+            <SectionTour tour={tour} tourSchedule={tourSchedule} />
+            {/* <div className={classes.containerComment}>
               <Comment
                 comments={listComment}
                 onGetTourComments={getTourComments}
                 tour={tour}
               />
-            </div>
+            </div> */}
             {/* 
           <RelatedTour/>  */}
           </>

@@ -3,30 +3,31 @@ import clsx from "clsx";
 import GoogleMapReact from "google-map-react";
 
 import { Grid } from "@mui/material";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 interface Props {
-  lat: any;
-  lng: any;
+  coords: any;
   className?: string;
 }
 
 // eslint-disable-next-line react/display-name
-const Map = memo(({ lat, lng, className }: Props) => {
+const Map = memo(({ coords, className }: Props) => {
   return (
-    <Grid className={className}>
+    <Grid className={className} sx={{ height: "135px" }}>
       <GoogleMapReact
         bootstrapURLKeys={{
-          key: "AIzaSyCe3Vka8IIYYbTKEzyV3x0Ay6HNAV8g6z8&libraries",
+          key: "AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k",
         }}
-        defaultCenter={{ lat, lng }}
+        defaultCenter={coords}
         defaultZoom={11}
-        center={{ lat, lng }}
+        center={coords}
       >
         {" "}
         {/* <AnyReactComponent
-                lat={coords.lat}
-                lng={coords.lng}
-                text={<FontAwesomeIcon icon={faLocationDot} />}
-              /> */}
+          lat={lat}
+          lng={lng}
+          text={<FontAwesomeIcon icon={faLocationDot} />}
+        /> */}
       </GoogleMapReact>
     </Grid>
   );

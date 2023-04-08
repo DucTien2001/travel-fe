@@ -98,8 +98,9 @@
     .highlightContent {
         padding-left: 28px;
         margin-bottom: 24px;
-        li {
+        p {
             font-size: 16px;
+            margin: 0;
         }
     }
     .goodWrapper {
@@ -125,41 +126,21 @@
         }
     }
     .itineraryBox {
-        padding: 0px 0px 24px 0;
-        .navItem {
-            padding-left: 10px;
-            cursor: pointer;
+        [class~="MuiButtonBase-root"] {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            border-radius: 4px;
+            font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+            margin-right: 10px;
+            opacity: 1;
         }
-        .boxStep {
-            padding-left: 10px;
-        }
-        .stepper {
-            [class~="MuiStepConnector-root"] {
-                margin-left: 4px !important;
-            }
-        }
-        .step {
-            [class~="MuiSvgIcon-root"] {
-                color: var(--primary-color);
-            }
-            p {
-                font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
-                margin-bottom: 0;
-                font-weight: 500;
-                color: rgba(0, 0, 0, 0.87);
-            }
-            svg {
-                width: 10px;
-                height: 10px;
-            }
-            text {
-                display: none;
-            }
-
+        [class~="Mui-selected"] {
+            border-bottom: 1px solid var(--primary-color)!important;
         }
     }
     .textDescription {
         font-size: 16px;
+        font-weight: 300 !important;
         text-align: justify;
         margin: 0 24px;
     }
@@ -177,6 +158,7 @@
             font-size: 16px;
             align-items: center;
             font-weight:600;
+            margin-top: 14px;
             p {
                 margin: 0;
                 margin-left:  8px;

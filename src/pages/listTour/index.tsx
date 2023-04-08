@@ -44,8 +44,10 @@ import FilterPanel from "../../components/FilterPanel";
 import ReactPaginate from "react-paginate";
 import CustomSelect from "components/common/CustomSelect";
 import InputSelect from "components/common/inputs/InputSelect";
-import { sortType } from "models/general";
+import { DataPagination, sortType } from "models/general";
 import { Grid } from "@mui/material";
+import { NormalGetTours, Tour } from "models/tour";
+import useDebounce from "hooks/useDebounce";
 
 interface SearchData {
   location?: string;
@@ -60,6 +62,8 @@ const ListTours: NextPage = () => {
   const [listTours, setListTours] = useState([]);
   const [selectedPrice, setSelectedPrice] = useState([10000, 3000000]);
   const [selectedRating, setSelectedRating] = useState(null);
+  const [data, setData] = useState<DataPagination<Tour>>();
+  const [keyword, setKeyword] = useState<string>("");
 
   const [tags, setTags] = useState([
     { id: 1, checked: false, label: "Shopping" },
@@ -104,165 +108,144 @@ const ListTours: NextPage = () => {
     });
   };
 
-  const onClearOption = () => {
-    clearForm();
-    getAllToursDefault();
-    setTags([
-      { id: 1, checked: false, label: "Shopping" },
-      { id: 2, checked: false, label: "Sea" },
-      { id: 3, checked: false, label: "Family" },
-      { id: 4, checked: false, label: "Mountain" },
-      { id: 5, checked: false, label: "Trekking" },
-      { id: 6, checked: false, label: "Music" },
-      { id: 7, checked: false, label: "Chill" },
-      { id: 8, checked: false, label: "Eat" },
-    ]);
-    setSelectedRating(null);
-    setSelectedPrice([10000, 3000000]);
-  };
+  // const onClearOption = () => {
+  //   clearForm();
+  //   setTags([
+  //     { id: 1, checked: false, label: "Shopping" },
+  //     { id: 2, checked: false, label: "Sea" },
+  //     { id: 3, checked: false, label: "Family" },
+  //     { id: 4, checked: false, label: "Mountain" },
+  //     { id: 5, checked: false, label: "Trekking" },
+  //     { id: 6, checked: false, label: "Music" },
+  //     { id: 7, checked: false, label: "Chill" },
+  //     { id: 8, checked: false, label: "Eat" },
+  //   ]);
+  //   setSelectedRating(null);
+  //   setSelectedPrice([10000, 3000000]);
+  // };
 
   const onChangeViewLayout = () => {
     setChangeViewLayout(!changeViewLayout);
   };
 
-  const handleSearch = () => {
-    dispatch(setLoading(true));
-    TourService.searchLocationTours(getValues("location"))
-      .then((res) => {
-        setListTours(res?.data);
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
-  };
+  // const handleSelectRating = (event, value) =>
+  //   !value ? null : setSelectedRating(value);
 
-  const getAllToursDefault = () => {
-    dispatch(setLoading(true));
-    TourService.getAllToursByPage(1)
-      .then((res) => {
-        setListTours(res?.data);
-      })
-      .catch((err) => {
-        dispatch(setErrorMess(err));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
-  };
+  // const handleChangeChecked = (id) => {
+  //   const tagStateList = tags;
+  //   const changeCheckedTags = tagStateList.map((item) =>
+  //     item.id === id ? { ...item, checked: !item.checked } : item
+  //   );
+  //   setTags(changeCheckedTags);
+  // };
 
-  const handleKeyPress = (e) => {
-    var code = e.keyCode || e.which;
-    if (code === 13) {
-      handleSearch();
+  // const handleChangePrice = (event, value) => {
+  //   setSelectedPrice(value);
+  // };
+
+  // const applyFilters = () => {
+  //   let updatedList = allTours;
+  //   // Rating Filter
+  //   if (selectedRating) {
+  //     updatedList = updatedList.filter(
+  //       (item) => Math.floor(item?.rate) === parseInt(selectedRating)
+  //     );
+  //   }
+  //   //Tag filter
+  //   const tagsChecked = tags
+  //     .filter((item) => item.checked)
+  //     .map((item) => item.label.toLowerCase());
+  //   if (tagsChecked.length) {
+  //     updatedList = updatedList.filter((item) =>
+  //       tagsChecked.every((filterTag) =>
+  //         item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
+  //       )
+  //     );
+  //   }
+
+  //   // Price Filter
+  //   const minPrice = selectedPrice[0];
+  //   const maxPrice = selectedPrice[1];
+
+  //   updatedList = updatedList.filter(
+  //     (item) => item.price >= minPrice && item.price <= maxPrice
+  //   );
+  //   setListTours(updatedList);
+  // };
+
+  const fetchData = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+  }) => {
+    const params: NormalGetTours = {
+      take: value?.take || data?.meta?.take || 10,
+      page: value?.page || data?.meta?.page || 1,
+      keyword: keyword,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
     }
-  };
-
-  const handleSelectRating = (event, value) =>
-    !value ? null : setSelectedRating(value);
-
-  const handleChangeChecked = (id) => {
-    const tagStateList = tags;
-    const changeCheckedTags = tagStateList.map((item) =>
-      item.id === id ? { ...item, checked: !item.checked } : item
-    );
-    setTags(changeCheckedTags);
-  };
-
-  const handleChangePrice = (event, value) => {
-    setSelectedPrice(value);
-  };
-
-  const applyFilters = () => {
-    let updatedList = allTours;
-    // Rating Filter
-    if (selectedRating) {
-      updatedList = updatedList.filter(
-        (item) => Math.floor(item?.rate) === parseInt(selectedRating)
-      );
-    }
-    //Tag filter
-    const tagsChecked = tags
-      .filter((item) => item.checked)
-      .map((item) => item.label.toLowerCase());
-    if (tagsChecked.length) {
-      updatedList = updatedList.filter((item) =>
-        tagsChecked.every((filterTag) =>
-          item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
-        )
-      );
-    }
-
-    // Price Filter
-    const minPrice = selectedPrice[0];
-    const maxPrice = selectedPrice[1];
-
-    updatedList = updatedList.filter(
-      (item) => item.price >= minPrice && item.price <= maxPrice
-    );
-    setListTours(updatedList);
-  };
-
-  // pagination
-  const handleChangePage = (e, page: number) => {
     dispatch(setLoading(true));
-    TourService.getAllToursByPage(page + 1)
+    TourService.getAllTours(params)
       .then((res) => {
-        setListTours(res?.data);
+        setData({
+          data: res.data,
+          meta: res.meta,
+        });
       })
-      .catch((err) => {
-        dispatch(setErrorMess(err));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
   };
 
-  useEffect(() => {
-    applyFilters();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tags, selectedPrice, selectedRating]);
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    _onSearch(e.target.value);
+  };
 
-  useEffect(() => {
-    TourService.getAllToursByPage(1)
-      .then((res) => {
-        setListTours(res?.data);
-      })
-      .catch((err) => {
-        dispatch(setErrorMess(err));
-      })
-      .finally(() => {});
-  }, [dispatch]);
+  const _onSearch = useDebounce(
+    (keyword: string) => fetchData({ keyword, page: 1 }),
+    500
+  );
+
+  // useEffect(() => {
+  //   applyFilters();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [tags, selectedPrice, selectedRating]);
 
   useEffect(() => {
     Aos.init({ duration: 500 });
   }, []);
 
-  const numberOfPage = Math.ceil(allTours.length / 9);
-
   //sort by
-  const watchSortType = watch("sortType");
+  // const watchSortType = watch("sortType");
+  // useEffect(() => {
+  //   const items = [...listTours];
+  //   if (watchSortType?.id === 1) {
+  //     const listSortLowPrice = items?.sort(function (a, b) {
+  //       return a?.price - b?.price;
+  //     });
+  //     setListTours(listSortLowPrice);
+  //   } else if (watchSortType?.id === 2) {
+  //     const listSortHighPrice = items?.sort(function (a, b) {
+  //       return b?.price - a?.price;
+  //     });
+  //     setListTours(listSortHighPrice);
+  //   } else if (watchSortType?.id === 3) {
+  //     const listSortHighRate = items?.sort(function (a, b) {
+  //       return b?.rate - a?.rate;
+  //     });
+  //     setListTours(listSortHighRate);
+  //   }
+  // }, [watchSortType]);
+
   useEffect(() => {
-    const items = [...listTours];
-    if (watchSortType?.id === 1) {
-      const listSortLowPrice = items?.sort(function (a, b) {
-        return a?.price - b?.price;
-      });
-      setListTours(listSortLowPrice);
-    } else if (watchSortType?.id === 2) {
-      const listSortHighPrice = items?.sort(function (a, b) {
-        return b?.price - a?.price;
-      });
-      setListTours(listSortHighPrice);
-    } else if (watchSortType?.id === 3) {
-      const listSortHighRate = items?.sort(function (a, b) {
-        return b?.rate - a?.rate;
-      });
-      setListTours(listSortHighRate);
-    }
-  }, [watchSortType]);
+    fetchData();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  console.log(data?.data);
   return (
     <>
       <SectionHeader
@@ -294,12 +277,10 @@ const ListTours: NextPage = () => {
               </div>
               <div>
                 <InputRecentSearch
-                  placeholder="Search tour or destination"
-                  name="search"
+                  placeholder="Search tour"
                   autoComplete="off"
-                  startAdornment={
-                    <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-                  }
+                  value={keyword || ""}
+                  onChange={onSearch}
                 />
               </div>
             </div>
@@ -360,7 +341,6 @@ const ListTours: NextPage = () => {
               <Button
                 btnType={BtnType.Primary}
                 className={classes.btnResetOption}
-                onClick={onClearOption}
               >
                 <FontAwesomeIcon icon={faArrowsRotate} /> reset filter
               </Button>
@@ -382,45 +362,51 @@ const ListTours: NextPage = () => {
                   Search
                 </Button>
               </BoxSmallLeft> */}
-              <FilterPanel
+              {/* <FilterPanel
                 selectedRating={selectedRating}
                 selectedPrice={selectedPrice}
                 selectRating={handleSelectRating}
                 tags={tags}
                 changeChecked={handleChangeChecked}
                 changePrice={handleChangePrice}
-              />
+              /> */}
             </Col>
             <Col xs={10} className={classes.listTours}>
               <div className={classes.containerListTour}>
                 {/* ==================== Grid view ===================== */}
                 {!changeViewLayout && (
                   <Row className={classes.rowGridView}>
-                    {listTours?.map((tour, index) => (
+                    {data?.data?.map((tour, index) => (
                       <CardItemGrid
                         linkView="listTour"
                         linkBook="book/tour"
                         key={index}
-                        id={tour.id}
+                        id={tour?.id}
                         src={tour?.images[0]}
                         title={tour.title}
                         description={tour.description}
-                        businessHours={tour.businessHours}
-                        location={tour.location}
                         contact={tour.contact}
-                        price={tour.price}
-                        discount={tour.discount}
-                        tags={tour.tags}
-                        rate={Math.floor(tour?.rate)}
-                        creator={tour.creator}
-                        isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
-                        isDelete={tour.isDeleted}
-                        numberOfReviewers={tour?.numberOfReviewer}
-                        className={
-                          tour.isTemporarilyStopWorking
-                            ? classes.stopWorking
-                            : ""
+                        price={
+                          tour?.tourOnSales.length
+                            ? Math.min(
+                                ...tour?.tourOnSales?.map(
+                                  (price) => price?.adultPrice
+                                )
+                              )
+                            : 0
                         }
+                        discount={
+                          tour?.tourOnSales.length
+                            ? Math.min(
+                                ...tour?.tourOnSales?.map(
+                                  (price) => price?.discount
+                                )
+                              )
+                            : 0
+                        }
+                        rate={Math.floor(tour?.rate)}
+                        numberOfReviewers={tour?.numberOfReviewer}
+                        isDelete={tour.isDeleted}
                       />
                     ))}
                   </Row>
@@ -456,13 +442,13 @@ const ListTours: NextPage = () => {
                     ))}
                   </div>
                 )}
-                {!listTours?.length && (
+                {!data?.data?.length && (
                   <div>
                     <SearchNotFound mess="No tour found" />
                   </div>
                 )}
               </div>
-              <Row className={classes.pigination}>
+              {/* <Row className={classes.pigination}>
                 <Pagination>
                   <PaginationItem>
                     <PaginationLink>
@@ -489,7 +475,7 @@ const ListTours: NextPage = () => {
                     </PaginationLink>
                   </PaginationItem>
                 </Pagination>
-              </Row>
+              </Row> */}
             </Col>
           </Row>
         </Container>

@@ -22,15 +22,21 @@
             color: #5E5B5B;
         }
         div {
-            color: #5E5B5B;
-            font-weight: 500;
-            font-size: 12px;
-            max-width: 100%;
+            p {
+                margin: 0;
+                color: #5E5B5B;
+                font-weight: 500;
+                font-size: 12px;
+                text-overflow: ellipsis !important;
+                max-width: 100%;
+                overflow-x: hidden;
+                overflow-y: hidden;
+                text-overflow: ellipsis !important;
+                white-space: nowrap;
+                word-wrap: break-word;
+            }
             overflow-x: hidden;
             overflow-y: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            word-wrap: break-word;
         }
     }
     .boxTitle {

@@ -6,7 +6,7 @@ export const API = {
     DEFAULT: "/v1.0/config",
   },
   TRANSLATION: {
-    DEFAULT: '/v1.0/translation/{{lng}}/{{ns}}',
+    DEFAULT: "/v1.0/translation/{{lng}}/{{ns}}",
   },
   AUTH: {
     ME: "/v1.0/user/me",
@@ -35,10 +35,14 @@ export const API = {
     TOUR: {
       DEFAULT: "/v1.0/tour",
       ALL_TOURS: "/v1.0/tour/get-all-tours",
-      DETAIL_TOUR: "/v1.0/tour/get-tour/:id",
+      DETAIL_TOUR: "/v1.0/tour/:id",
       SEARCH_TOURS: "/v1.0/tour/search-tours/:name",
       SEARCH_LOCATION_TOURS: "/v1.0/tour/search-by-location/:location",
       GET_ALL_TOURS_BY_PAGE: "/v1.0/tour/get-all-tours-by-page/:page",
+    },
+    TOUR_SCHEDULE: {
+      DEFAULT: "/v1.0/tour-schedule",
+      GET_TOUR_SCHEDULE: "/v1.0/tour-schedule/:tourId",
     },
     COMMENT: {
       TOUR_COMMENT: {
@@ -103,7 +107,7 @@ export const API = {
       CREATE_TOUR: "/v1.0/enterprise/tour",
       GET_ONE_TOUR: "/v1.0/enterprise/tour/:id",
       UPDATE_TOUR: "/v1.0/enterprise/tour/:id",
-      DELETE_TOUR: "/v1.0/tour/delete/:id",
+      DELETE_TOUR: "/v1.0/enterprise/tour/:id",
       GET_TOURS: "/v1.0/tour/get-tours/:id",
       STOP_WORKING: "/v1.0/tour/temporarily-stop-working/:id",
       WORK_AGAIN: "/v1.0/tour/work-again/:id",
@@ -118,6 +122,10 @@ export const API = {
       DEFAULT: "/v1.0/enterprise/tour-on-sale",
       UPDATE_TOUR_PRICE: "/v1.0/enterprise/tour-on-sale/:id",
       DELETE_TOUR_PRICE: "/v1.0/enterprise/tour-on-sale/:id",
+    },
+    POLICY: {
+      DEFAULT: "/v1.0/enterprise/policy",
+      GET_ALL_POLICY: "/v1.0/enterprise/policy",
     },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",

@@ -57,6 +57,17 @@ export class TourService {
       });
   }
 
+  static async delete(tourId: number): Promise<any> {
+    return await api
+      .delete(API.ENTERPRISE.TOUR.DELETE_TOUR.replace(":id", `${tourId}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
 
 
 //===========================================================
@@ -72,16 +83,7 @@ export class TourService {
       });
   }
 
-  static async delete(tourId: number): Promise<any> {
-    return await api
-      .put(API.ENTERPRISE.TOUR.DELETE_TOUR.replace(":id", `${tourId}`))
-      .then((res) => {
-        return Promise.resolve(res.data);
-      })
-      .catch((e) => {
-        return Promise.reject(e?.response?.data);
-      });
-  }
+
 
   // static async getTours(userId: number): Promise<any> {
   //   return await api

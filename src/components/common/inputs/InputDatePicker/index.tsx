@@ -23,6 +23,7 @@ interface Props {
   name?: string;
   control?: any;
   dateFormat?: string;
+  initialValue?: string;
   _onChange?: () => void;
   [key: string]: any;
 }
@@ -40,6 +41,7 @@ const CustomDatePicker = memo(
     _onChange,
     control,
     dateFormat,
+    initialValue,
     ...rest
   }: Props) => {
     return (
@@ -69,6 +71,9 @@ const CustomDatePicker = memo(
                         _onChange && _onChange();
                         return field?.onChange(date);
                       }}
+                      initialValue={initialValue}
+                      closeOnClickOutside={true}
+                      closeOnSelect={true}
                       dateFormat={"D/M/YYYY"}
                       inputProps={{
                         className: "form-control",
@@ -97,6 +102,9 @@ const CustomDatePicker = memo(
                 className: "form-control",
                 placeholder: `${placeholder}`,
               }}
+              initialValue={initialValue}
+              closeOnClickOutside={true}
+              closeOnSelect={true}
               dateFormat={"D/M/YYYY"}
               onChange={(date) => {
                 _onChange && _onChange();

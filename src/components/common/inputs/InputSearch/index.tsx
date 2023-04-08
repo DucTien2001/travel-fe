@@ -7,8 +7,7 @@ import {
 } from "@mui/material";
 
 import classes from "./styles.module.scss";
-import { images } from "configs/images";
-
+import SearchIcon from "@mui/icons-material/Search";
 interface InputSearchProps extends OutlinedInputProps {
   type?: string;
   placeholder?: string;
@@ -57,7 +56,7 @@ const InputSearch = memo(
           autoComplete={autoComplete}
           endAdornment={
             <InputAdornment position="end">
-              <img src={images.icSearch.src} alt="eye-close" />
+              <SearchIcon />
             </InputAdornment>
           }
           {...inputProps}

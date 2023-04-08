@@ -15,11 +15,13 @@ import { useDispatch } from "react-redux";
 import QueryString from "query-string";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/enterprise/tour";
+import Policy from "./components/Policy";
 
 export enum EStep {
   INFORMATION,
   SCHEDULE,
   PRICE,
+  POLICY,
 }
 
 function controlProps(index: number) {
@@ -138,6 +140,14 @@ const AddOrEditTour = memo((props: Props) => {
                 </Box>
               }
             />
+            <Tab
+              {...controlProps(EStep.POLICY)}
+              label={
+                <Box display="flex" alignItems="center">
+                  <span className={classes.tabItemTitle}>Policy</span>
+                </Box>
+              }
+            />
           </Tabs>
         </Container>
         <Container className={classes.tabContent}>
@@ -158,6 +168,12 @@ const AddOrEditTour = memo((props: Props) => {
           <RangePrice
             value={activeStep}
             index={EStep.PRICE}
+            tour={tour}
+            lang={lang}
+          />
+          <Policy
+            value={activeStep}
+            index={EStep.POLICY}
             tour={tour}
             lang={lang}
           />

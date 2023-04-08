@@ -1,11 +1,11 @@
 import { API } from "configs/constants";
-import { Tour } from "models/tour";
+import { NormalGetTours } from "models/tour";
 import api from "services/configApi";
 
 export class TourService {
-  static async getAllTours(): Promise<any> {
+  static async getAllTours(data: NormalGetTours): Promise<any> {
     return await api
-      .get(API.NORMAL.TOUR.ALL_TOURS)
+      .get(API.NORMAL.TOUR.DEFAULT, { params: data })
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -23,6 +23,11 @@ export class TourService {
         return Promise.reject(e?.response?.data);
       });
   }
+
+//==============================================
+
+
+
   static async searchTours(name: string): Promise<any> {
     return await api
       .get(API.NORMAL.TOUR.SEARCH_TOURS.replace(":name", `${name}`))
