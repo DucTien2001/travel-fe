@@ -110,6 +110,15 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
               Hotels
             </NavLink>
           </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("events")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("events")}>
+              <FontAwesomeIcon icon={faBuilding} />
+              Events
+            </NavLink>
+          </NavItem>
         </Nav>
       </Col>
       {renderComponent()}
