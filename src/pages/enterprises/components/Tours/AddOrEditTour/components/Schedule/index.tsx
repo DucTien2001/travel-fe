@@ -214,9 +214,7 @@ const ScheduleComponent = memo((props: Props) => {
                     disabled={
                       !(uniqueSchedule || [])[index]?.schedule?.length
                         ? true
-                        : false || fieldsSchedule?.length !== 1
-                        ? false
-                        : true
+                        : false
                     }
                   >
                     <DeleteOutlineOutlined
@@ -225,9 +223,7 @@ const ScheduleComponent = memo((props: Props) => {
                       color={
                         !(uniqueSchedule || [])[index]?.schedule?.length
                           ? "disabled"
-                          : "error" || fieldsSchedule?.length !== 1
-                          ? "error"
-                          : "disabled"
+                          : "error"
                       }
                       fontSize="small"
                     />

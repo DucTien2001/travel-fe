@@ -129,6 +129,7 @@ export const API = {
     POLICY: {
       DEFAULT: "/v1.0/enterprise/policy",
       GET_ALL_POLICY: "/v1.0/enterprise/policy",
+      DELETE_POLICY: "/v1.0/enterprise/policy/:id",
     },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",

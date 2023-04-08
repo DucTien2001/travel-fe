@@ -48,9 +48,14 @@ export const currencyType: OptionItem[] = [
   { id: 2, name: "USD", value: "en" },
 ]
 
+export enum EServicePolicyType {
+  RESCHEDULE = 1,
+  REFUND = 2
+}
+
 export const policyType = [
-  { id: 1, name: "RESCHEDULE" },
-  { id: 2, name: "REFUND"},
+  { id: 1, name: "RESCHEDULE", value: EServicePolicyType.RESCHEDULE },
+  { id: 2, name: "REFUND", value: EServicePolicyType.REFUND},
 ]
 
 
@@ -111,7 +116,3 @@ export enum EServiceType {
   HOTEL = 2
 }
 
-export enum EServicePolicyType {
-  RESCHEDULE = 1,
-  REFUND = 2
-}

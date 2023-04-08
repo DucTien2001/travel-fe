@@ -417,7 +417,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                   <Grid>
                     <p>
                       Child (age {priceAndAge?.childrenAgeMin}-
-                      {priceAndAge?.childrenAgeMin})
+                      {priceAndAge?.childrenAgeMax})
                     </p>
                     <span>{fCurrency2(priceAndAge?.priceChildren)} VND</span>
                   </Grid>

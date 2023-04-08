@@ -24,4 +24,15 @@ export class PolicyService {
             return Promise.reject(e?.response?.data);
           });
       }
+
+      static async deletePolicy(id: number): Promise<any> {
+        return await api
+          .delete(API.ENTERPRISE.POLICY.DELETE_POLICY.replace(":id", `${id}`))
+          .then((res) => {
+            return Promise.resolve(res.data);
+          })
+          .catch((e) => {
+            return Promise.reject(e?.response?.data);
+          });
+      }
 }

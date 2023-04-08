@@ -23,7 +23,7 @@ interface Props {
   name?: string;
   control?: any;
   dateFormat?: string;
-  initialValue?: string;
+  initialValue?: string | Date | moment.Moment;
   _onChange?: () => void;
   [key: string]: any;
 }
