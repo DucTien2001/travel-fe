@@ -123,6 +123,9 @@ export const API = {
       UPDATE_TOUR_PRICE: "/v1.0/enterprise/tour-on-sale/:id",
       DELETE_TOUR_PRICE: "/v1.0/enterprise/tour-on-sale/:id",
     },
+    EVENT: {
+      DEFAULT: "/v1.0/enterprise/event",
+    },
     POLICY: {
       DEFAULT: "/v1.0/enterprise/policy",
       GET_ALL_POLICY: "/v1.0/enterprise/policy",
