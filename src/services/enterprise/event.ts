@@ -51,14 +51,14 @@ export class EventService {
       });
   }
 
-  // static async delete(tourId: number, day: number): Promise<any> {
-  //   return await api
-  //     .delete(`${API.ENTERPRISE.EVENT.DEFAULT}/multi/${tourId}/${day}`)
-  //     .then((res) => {
-  //       return Promise.resolve(res.data);
-  //     })
-  //     .catch((e) => {
-  //       return Promise.reject(e?.response?.data);
-  //     });
-  // }
+  static async delete(id: number): Promise<any> {
+    return await api
+      .delete(API.ENTERPRISE.EVENT.DELETE_EVENT.replace(":id", `${id}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 }

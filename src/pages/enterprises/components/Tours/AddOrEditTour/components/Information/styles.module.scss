@@ -40,18 +40,27 @@
     margin: 0 !important;
   }
   .containerUploadImg {
-    width: 100%;
     display: flex;
     justify-content: center;
+    max-height: 326px;    
     .boxUpload {
-      width: 100%;
-      height: 200px;
-      border-radius: 12px;
-      border: 1px dashed var(--gray-40);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      overflow: hidden;
+      position: relative;
       cursor: pointer;
+      background: rgba(28, 28, 28, 0.05);
+      border-radius: 5px;
+      max-height: 326px;
+      max-width: 326px;
+      border: 1px dashed;
+      height: 100%;
+      width: 100%;
+      display: grid;
+      justify-items: center;
+      align-items: center;
+      align-content: center;
+      @media only screen and (max-width: 767px) {
+        padding: 15px;
+      }
       div {
         display: flex;
         flex-direction: column;
@@ -60,11 +69,13 @@
           font-weight: 600;
         }
       }
-      svg {
-        font-size: 40px;
-        color: var(--blue-color);
-        
-      }
+    }
+  }
+  .selectImgTitle {
+    text-decoration: underline;
+    margin-top:24px;
+    @media only screen and (max-width: 767px) {
+      margin-top: 10px;
     }
   }
   .imgPreview {
@@ -90,7 +101,15 @@
       color: #cccc;
     }
   }
-  
+  .imgAddPhoto {
+    width: 100px;
+    height:  100px;
+    color: var(--gray-40);
+    @media only screen and (max-width: 767px) {
+      width: 62px;
+      height:  60px;
+    }
+  }
   .noImg {
     display: flex;
     justify-content: center;

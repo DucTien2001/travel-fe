@@ -191,6 +191,7 @@ const RangePriceComponent = memo((props: Props) => {
     )
       .then(() => {
         dispatch(setSuccessMess("Create price of tour successfully"));
+        handleNextStep();
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
@@ -371,7 +372,7 @@ const RangePriceComponent = memo((props: Props) => {
           </Grid>
           <Grid className={classes.boxNextBtn}>
             <Button btnType={BtnType.Primary} type="submit">
-              Done Set Up
+              Next Policy
               <ArrowRightAltIcon />
             </Button>
           </Grid>

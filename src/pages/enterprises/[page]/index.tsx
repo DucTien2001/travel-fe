@@ -7,6 +7,7 @@ import classes from "./styles.module.scss";
 import { images } from "configs/images";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import AttractionsIcon from "@mui/icons-material/Attractions";
+import EventIcon from "@mui/icons-material/Event";
 
 const Tours = dynamic(() => import("pages/enterprises/components/Tours"));
 const Hotels = dynamic(() => import("pages/enterprises/components/Hotels"));
@@ -55,7 +56,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           </Col>
         );
       case "events":
-        hotelsRef &&
+        eventsRef &&
           eventsRef.current &&
           eventsRef.current?.scrollIntoView({
             behavior: "smooth",
@@ -90,21 +91,30 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
         </div>
         <Nav tabs className={classes.nav}>
           <span>Dashboard</span>
-          <NavItem onClick={() => gotoMenu("tours")} className={classes.navItem}>
+          <NavItem
+            onClick={() => gotoMenu("tours")}
+            className={classes.navItem}
+          >
             <NavLink className={renderClass("tours")}>
               <AttractionsIcon />
               <span ref={toursRef}>Tours</span>
             </NavLink>
           </NavItem>
-          <NavItem onClick={() => gotoMenu("hotels")} className={classes.navItem}>
+          <NavItem
+            onClick={() => gotoMenu("hotels")}
+            className={classes.navItem}
+          >
             <NavLink className={renderClass("hotels")}>
               <ApartmentIcon />
               <span ref={hotelsRef}>Hotels</span>
             </NavLink>
           </NavItem>
-          <NavItem onClick={() => gotoMenu("events")} className={classes.navItem}>
+          <NavItem
+            onClick={() => gotoMenu("events")}
+            className={classes.navItem}
+          >
             <NavLink className={renderClass("events")}>
-              <ApartmentIcon />
+              <EventIcon />
               <span ref={eventsRef}>Events</span>
             </NavLink>
           </NavItem>

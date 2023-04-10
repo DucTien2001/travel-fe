@@ -38,6 +38,7 @@ import deal3 from "assets/img/deal3.webp";
 import bgbook from "assets/img/employer_login.jpg";
 import imgChecking from "assets/img/checking.svg";
 import icSearch from "assets/img/icon/ic-search.svg";
+import icAddPhoto from "assets/img/icon/ic-add-photo.png";
 import pannerCoupon from "assets/img/coupon.jpg";
 
 // import pricing1 from 'assets/img/pricing1.jpg'
@@ -84,4 +85,5 @@ export const images = {
   imgChecking,
   icSearch,
   pannerCoupon,
+  icAddPhoto,
 };

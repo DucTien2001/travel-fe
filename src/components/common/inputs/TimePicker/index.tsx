@@ -74,30 +74,6 @@ const CustomDatePicker = memo(
                         return field?.onChange(time);
                       }}
                       dateFormat={false}
-                      renderInput={({ InputProps, ...params }) => (
-                        <OutlinedInput
-                          fullWidth
-                          variant="standard"
-                          classes={{
-                            root: clsx(classes.inputTextfield, {
-                              [classes.inputInvalid]: !!errorMessage,
-                            }),
-                          }}
-                          onWheel={(e) =>
-                            e.target instanceof HTMLElement &&
-                            (e.target as any).type === "number" &&
-                            e.target.blur()
-                          }
-                          {...params}
-                          inputProps={{
-                            ...(params.inputProps || {}),
-                          }}
-                          margin={params.margin as any}
-                          onKeyDown={params.onKeyDown as any}
-                          onKeyUp={params.onKeyUp as any}
-                          placeholder="mm:ss"
-                        />
-                      )}
                       timeFormat="hh:mm a"
                       timeConstraints={{
                         minutes: { min: 0, max: 59, step: 5 },

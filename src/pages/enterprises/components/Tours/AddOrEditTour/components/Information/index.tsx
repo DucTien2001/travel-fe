@@ -21,14 +21,14 @@ import clsx from "clsx";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
-import { Grid, OutlinedInput } from "@mui/material";
+import { Grid } from "@mui/material";
 import InputTextfield from "components/common/inputs/InputTextfield";
-import { faCamera, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { setTourReducer } from "redux/reducers/Enterprise/actionTypes";
 import { ProvinceService } from "services/address";
 import InputSelect from "components/common/inputs/InputSelect";
-import QueryString from "query-string";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const modules = {
@@ -385,8 +385,6 @@ const InformationComponent = memo((props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchDistrict?.id]);
 
-  const [time, setTime] = useState(null);
-
   return (
     <div
       role="tabpanel"
@@ -574,8 +572,14 @@ const InformationComponent = memo((props: Props) => {
               <div className={classes.containerUploadImg}>
                 <label htmlFor="file" className={classes.boxUpload}>
                   <div>
-                    <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon>
-                    {isLoading ? <h4>Uploading...</h4> : <h4>Upload images</h4>}
+                    <AddPhotoAlternateOutlinedIcon
+                      className={classes.imgAddPhoto}
+                    />
+                    {isLoading ? (
+                      <p className={classes.selectImgTitle}>Uploading...</p>
+                    ) : (
+                      <p className={classes.selectImgTitle}>Upload images</p>
+                    )}
                   </div>
                 </label>
                 <Input

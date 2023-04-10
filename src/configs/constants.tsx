@@ -125,6 +125,7 @@ export const API = {
     },
     EVENT: {
       DEFAULT: "/v1.0/enterprise/event",
+      DELETE_EVENT: "/v1.0/enterprise/event/:id",
     },
     POLICY: {
       DEFAULT: "/v1.0/enterprise/policy",

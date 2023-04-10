@@ -1,0 +1,442 @@
+.root {
+    display: block !important;
+    padding: 65px 24px 0 0px;
+    width: 100%;
+    height: 100%;
+    .title {
+      margin-bottom: 0;
+  }
+    [class~=table-responsive] {
+        max-height: 650px !important;
+        min-height: 400px;
+        padding-right: 60px;
+        @media only screen and (max-width: 768px) {
+            padding-right: 0;
+        }
+    }
+    @media only screen and (max-width: 768px) {
+        padding: 48px 24px 24px 32px; 
+    }
+  }
+  
+  .rootTabs {
+    [class~="MuiTab-root"] {
+      padding: 16px 24px;
+      min-width: unset;
+      text-transform: unset;
+      font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-color);
+      .tabItemIcon {
+        margin-right: 10px;
+        color: var(--gray-80);
+      }
+      &[class~="Mui-selected"] {
+        .tabItemIcon {
+          color: var(--primary-color);
+        }
+        .tabItemTitle {
+          color: var(--primary-color);
+          margin: 0 !important;
+  
+        }
+      }
+      &:not(:last-child) {
+        position: relative;
+        overflow: unset;
+        margin-right: 16px;
+        &::before {
+          content: "";
+          // background: url("../../../../../assets/img/ic-keyboard_arrow_right.svg") center no-repeat;
+          background-size: 16px;
+          width: 16px;
+          height: 16px;
+          position: absolute;
+          right: -16px;
+          top: 50%;
+          transform: translate(0px, -50%);
+        }
+      }
+      &:hover {
+        background-color: #e8f1fb;
+        .tabItemIcon {
+          color: var(--success-color);
+        }
+        .tabItemTitle {
+          color: var(--primary-color);
+        }
+        &:not([class~="Mui-selected"]) {
+          position: relative;
+          &::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            border-radius: 5px;
+            background-color: var(--primary-light-color);
+          }
+        }
+      }
+    }
+    @media only screen and (max-width: 767px) {
+      [class~="MuiTab-root"] {
+        padding: 16px 8px;
+      }
+    }
+  }
+  
+  .indicatorTabs {
+    border-radius: 5px;
+    background-color: var(--primary-color);
+  }
+  .editor {
+    width: 100%;
+    > * {
+      font-family: 'Montserrat' !important;
+    }
+    [class~="ql-toolbar"] {
+      border-radius: 5px 5px 0px 0px;
+      [class~="ql-formats"] {
+        [class~="ql-size"] {
+          [class~="ql-picker-item"] {
+            &::before {
+              font-size: 14px;
+            }
+            &[data-value=small] {
+              &::before {
+                font-size: 12px !important;
+              }
+            }
+            &[data-value=large] {
+              &::before {
+                font-size: 16px !important;
+              }
+            }
+            &[data-value=huge] {
+              &::before {
+                font-size: 18px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+    [class~="ql-container"] {
+      border-radius: 0px 0px 5px 5px;
+    }
+    [class~="ql-editor"] {
+      min-height: 150px;
+      > * {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 0.015em;
+        color: #1c1c1c;
+      }
+      
+      [class~="ql-size-small"] {
+        font-size: 12px;
+        line-height: unset;
+      }
+      [class~="ql-size-large"] {
+        font-size: 16px;
+        line-height: 20px;
+      }
+      [class~="ql-size-huge"] {
+        font-size: 18px;
+        line-height: unset;
+      }
+      ul, ol {
+        padding: 0;
+      }
+      ul {
+        li::before {
+          text-align: center;
+        }
+      }
+    }
+  }
+  .editorError {
+    [class~="ql-toolbar"] {
+      border-color: var(--danger-color) !important;
+    }
+    [class~="ql-container"] {
+      border-color: var(--danger-color) !important;
+    }
+  }
+  
+  
+  .rootStepper {
+    padding: 30px 0px 48px 0px;
+    width: 624px;
+    margin: auto;
+    min-width: 624px;
+    @media only screen and (max-width: 767px) {
+      min-width: 340px;
+      width: auto;
+      padding: 30px 0px 30px 0px;
+    }
+  }
+  .rootStepLabel {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-color) !important;
+    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+    &[class~="MuiStepLabel-label"] {
+        margin-top: 8px !important;
+    }
+    @media only screen and (max-width: 767px) {
+      font-size: 14px;
+    }
+  }
+  .rootStepLabelCompleted {
+    color: var(--text-color) !important;
+    font-weight: 600 !important;
+    font-size: 16px;
+    @media only screen and (max-width: 767px) {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+  .rootStepLabelActive {
+    color: var(--text-color) !important;
+    font-weight: 600 !important;
+    font-size: 16px;
+    @media only screen and (max-width: 767px) {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+  .rootConnector {
+    top: 16px !important;
+    margin: 0px 7px !important;
+  }
+  .activeConnector {
+    span {
+      border-color: var(--cimigo-green-dark);
+    }
+  }
+  .tabsBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e8e8e8;
+    border-top: 1px solid #e8e8e8;
+    .statusBox {
+      padding-right: 48px;
+    }
+    @media only screen and (max-width: 767px) {
+      .statusBox {
+        display: none;
+      }
+    }
+  }
+  .tabContent {
+    padding: 0;
+    padding-top: 32px;
+  }
+  .title {
+    h3 {
+        font-size: 24px;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin: 0;
+    }
+    @media only screen and (max-width: 768px) {
+        h3 {
+            margin-bottom: 8px;
+        } 
+    }
+  }
+  .rowHeaderBox {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 24px; 
+    @media only screen and (max-width: 768px) {
+        flex-direction: column;
+        align-items: inherit !important;
+        .boxInputSearch {
+            width: 100%;
+        }
+        button {
+            width: 100%;
+            margin-bottom: 24px;
+        }
+    }
+  }
+.titleSelect {
+  color: rgba(28, 28, 28, 0.9);
+  font-size: 14px;
+  font-weight: 700 !important;
+  line-height: 140%;
+  letter-spacing: 0.015em;
+  padding-bottom: 5px;
+  margin: 0;
+  width: 100% !important;
+}
+  .selectTourBtn {
+    width: 100% !important;
+    border-radius: 8px;
+    background-color: var(--white-color) !important;
+    border: 1px solid var(--gray-20) !important;
+    color: var(--text-color) !important;
+    svg {
+      color: var(--text-color) !important;
+    }
+  }
+  .selectTourBtn:hover {
+    background-color: var(--white-color) !important;
+  }
+  .menuChooseTour {
+    margin-top: 6px;
+    max-height: 224px;
+    width: 100%;
+    overflow: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { 
+      display: none;
+    }
+  }
+  .menuItemFlex {
+    display: flex;
+    align-items: center;
+  }
+  .rootMenuCheckbox {
+    padding: 0 16px 0 0;
+  }
+  .menuChooseTourAction {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #dddddd;
+    padding: 16px 16px 8px;
+  }
+
+  
+.rootList {
+  margin-left: 24px;
+  @media only screen and (max-width: 767px) {
+    display: none;
+  }
+}
+
+.notDisplayed {
+  display: none;
+}
+.rootListItem {
+  border-bottom: 1px solid #dddddd;
+  .btnAction {
+    width: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    visibility: hidden;
+    .iconAction {
+      width: 32px;
+      height: 32px;
+      margin-left: 10px;
+      &:hover {
+        background-color: var(--gray-10) !important;
+      }
+    }
+  }
+  .iconEditSquareWrapper {
+    margin-right: 9px;
+    width: 16px;
+    display: flex;
+    align-items: center;
+  }
+  &:hover {
+    background: rgba(28, 28, 28, 0.05);
+    cursor: default;
+    .btnAction {
+      visibility: visible !important;
+    }
+  }
+}
+
+.listTextLeft {
+  flex: 1;
+  font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+  p {
+    margin: 0;
+  }
+}
+  .imgAddPhoto {
+    width: 100px;
+    height:  100px;
+    color: var(--gray-40);
+    @media only screen and (max-width: 767px) {
+      width: 62px;
+      height:  60px;
+    }
+  }
+  .imgUp {
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    background: rgba(28, 28, 28, 0.05);
+    border-radius: 5px;
+    max-height: 326px;
+    max-width: 326px;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    align-content: center;
+    @media only screen and (max-width: 767px) {
+      padding: 15px;
+    }
+  }
+  
+  .selectImgTitle {
+    text-decoration: underline;
+    margin-top:24px;
+    @media only screen and (max-width: 767px) {
+      margin-top: 10px;
+    }
+  }
+  .btnUpload {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    background: #eef0f2;
+    &:hover {
+      background: #eef0f2;
+    }
+  }
+  .imgPreview {
+    position: absolute;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    border-radius: 5px;
+    background: #fff;
+    cursor: unset;
+    @media only screen and (max-width: 767px) {
+    }
+  }
+  .titleInput {
+    color: rgba(28, 28, 28, 0.9);
+    font-size: 14px;
+    font-weight: 700 !important;
+    line-height: 140%;
+    letter-spacing: 0.015em;
+    padding-bottom: 5px;
+    margin: 0 !important;
+  }
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    margin: 24px 0;
+    .btnSave {
+      padding: 16px 48px !important;
+      font-size: 16px;
+    }
+  }
+  

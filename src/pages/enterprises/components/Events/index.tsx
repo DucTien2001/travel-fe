@@ -8,7 +8,11 @@ import Button, { BtnType } from "components/common/buttons/Button";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import { AdminGetTours, ETour } from "models/enterprise";
 import { useDispatch } from "react-redux";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/enterprise/tour";
 import SearchNotFound from "components/SearchNotFound";
 import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
@@ -41,6 +45,8 @@ import {
 import { useRouter } from "next/router";
 import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
+import { FindAll, IEvent } from "models/enterprise/event";
+import { EventService } from "services/enterprise/event";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "id", label: "Id", sortable: false },
@@ -57,9 +63,10 @@ const Event = memo(({ handleTourEdit }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [itemAction, setItemAction] = useState<ETour>();
+  const [itemAction, setItemAction] = useState<IEvent>();
+  const [eventDelete, setEventDelete] = useState<IEvent>(null);
   const [keyword, setKeyword] = useState<string>("");
-  const [data, setData] = useState<DataPagination<ETour>>();
+  const [data, setData] = useState<DataPagination<IEvent>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [languageAnchor, setLanguageAnchor] = useState<null | HTMLElement>(
     null
@@ -67,7 +74,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
 
   const handleAction = (
     event: React.MouseEvent<HTMLButtonElement>,
-    item: ETour
+    item: IEvent
   ) => {
     setItemAction(item);
     setActionAnchor(event.currentTarget);
@@ -101,7 +108,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
     page?: number;
     keyword?: string;
   }) => {
-    const params: AdminGetTours = {
+    const params: FindAll = {
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
       keyword: keyword,
@@ -110,7 +117,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
       params.keyword = value.keyword || undefined;
     }
     dispatch(setLoading(true));
-    TourService.getTours(params)
+    EventService.findAll(params)
       .then((res) => {
         setData({
           data: res.data,
@@ -127,7 +134,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
   );
 
   const onCreateTour = () => {
-    router.push("/enterprises/tours/create-tour");
+    router.push("/enterprises/events/create-event");
   };
 
   const onCloseActionMenu = () => {
@@ -150,11 +157,40 @@ const Event = memo(({ handleTourEdit }: Props) => {
     onCloseActionMenu();
   };
 
-  const onRedirectEdit = (item: ETour, lang?: LangSupport) => {
+  const onRedirectEdit = (item: IEvent, lang?: LangSupport) => {
     router.push({
-      pathname: `/enterprises/tours/${item.id}`,
+      pathname: `/enterprises/events/${item.id}`,
       search: lang && `?lang=${lang.key}`,
     });
+  };
+
+  const onShowConfirmDelete = () => {
+    if (!itemAction) return;
+    setEventDelete(itemAction);
+    onCloseActionMenu();
+  };
+
+  const onClosePopupConfirmDelete = () => {
+    if (!eventDelete) return;
+    setEventDelete(null);
+    onCloseActionMenu();
+  };
+
+  const onYesDelete = () => {
+    if (!eventDelete) return;
+    onClosePopupConfirmDelete();
+    dispatch(setLoading(true));
+    EventService.delete(eventDelete?.id)
+      .then(() => {
+        dispatch(setSuccessMess("Delete successfully"));
+        fetchData();
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
   };
 
   useEffect(() => {
@@ -166,7 +202,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Tours</h3>
+          <h3>Events</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
@@ -200,7 +236,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
                           rel="noreferrer"
                           className={classes.tourName}
                         >
-                          {item?.title}
+                          {item?.name}
                         </a>
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
@@ -259,7 +295,11 @@ const Event = memo(({ handleTourEdit }: Props) => {
               <span>Edit Languages</span>
             </Box>
           </MenuItem>
-          <MenuItem sx={{ fontSize: "0.875rem" }} className={classes.menuItem}>
+          <MenuItem
+            sx={{ fontSize: "0.875rem" }}
+            className={classes.menuItem}
+            onClick={onShowConfirmDelete}
+          >
             <Box display="flex" alignItems={"center"}>
               <DeleteOutlineOutlined
                 sx={{ marginRight: "0.25rem" }}
@@ -302,20 +342,13 @@ const Event = memo(({ handleTourEdit }: Props) => {
             </MenuItem>
           ))}
         </Menu>
-        {/* <PopupConfirmDelete
+        <PopupConfirmDelete
           title="Are you sure delete this tour ?"
-          isOpen={!!tourDelete}
+          isOpen={!!eventDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}
           onYes={onYesDelete}
         />
-        <PopupConfirmWarning
-          title="Are you sure stop working ?"
-          isOpen={openPopupConfirmStop}
-          onClose={onToggleConfirmStop}
-          toggle={onToggleConfirmStop}
-          onYes={onYesStopWorking}
-        /> */}
       </div>
     </>
   );

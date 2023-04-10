@@ -24,17 +24,17 @@ interface Props {
   id: number;
   src?: string;
   title: string;
-  description: string;
+  description?: string;
   businessHours?: string[];
   checkInTime?: string;
   checkOutTime?: string;
-  location: string;
   contact?: string;
+  city?: string;
+  district?: string;
+  commune?: string;
   price?: number;
   discount?: number;
-  tags?: string[];
   rate?: number;
-  creator: number;
   isTemporarilyStopWorking?: boolean;
   isDelete?: boolean;
   roomNumber?: string;
@@ -54,15 +54,15 @@ const ListServices = memo(
     title,
     description,
     businessHours,
-    location,
     contact,
     price,
     discount,
     checkInTime,
     checkOutTime,
-    tags,
+    city,
+    district,
+    commune,
     rate,
-    creator,
     isTemporarilyStopWorking,
     isDelete,
     roomNumber,
@@ -96,10 +96,9 @@ const ListServices = memo(
               </Grid>
               <Grid
                 sx={{
+                  flex: "1",
                   padding: "24px 14px 14px 14px",
-                  flexGrow: "1",
                   justifyContent: "space-between",
-                  flexShrink: "1",
                   borderTopRightRadius: "10px",
                   borderBottomRightRadius: "10px",
                   backgroundColor: "var(--white-color)",
@@ -108,7 +107,7 @@ const ListServices = memo(
               >
                 <Grid className={classes.boxLocation}>
                   <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
-                  <div>Ganh Day Commue Phu Quoc Vinwonder</div>
+                  <div dangerouslySetInnerHTML={{ __html: description }}></div>
                 </Grid>
                 <Grid className={classes.boxTitle}>
                   <p>{title}</p>

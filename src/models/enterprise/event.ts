@@ -13,9 +13,11 @@ export interface IEvent {
   numberOfCodesUsed: number;
   creator: number;
   owner: number;
+  image: string;
   isDeleted: boolean;
   parentLanguage: number;
   language: string;
+  languages?: IEvent[];
 }
 
 export interface FindAll {
@@ -23,6 +25,7 @@ export interface FindAll {
   page: number;
   keyword?: string;
 }
+
 
 export interface Create {
   name: string;

@@ -26,6 +26,8 @@ interface Props {
   initialValue?: string | Date | moment.Moment;
   _onChange?: () => void;
   [key: string]: any;
+  closeOnClickOutside?: boolean;
+  closeOnSelect?: boolean;
 }
 
 // eslint-disable-next-line react/display-name
@@ -42,6 +44,8 @@ const CustomDatePicker = memo(
     control,
     dateFormat,
     initialValue,
+    closeOnClickOutside,
+    closeOnSelect,
     ...rest
   }: Props) => {
     return (
@@ -72,8 +76,8 @@ const CustomDatePicker = memo(
                         return field?.onChange(date);
                       }}
                       initialValue={initialValue}
-                      closeOnClickOutside={true}
-                      closeOnSelect={true}
+                      closeOnClickOutside={closeOnClickOutside}
+                      closeOnSelect={closeOnSelect}
                       dateFormat={"D/M/YYYY"}
                       inputProps={{
                         className: "form-control",
@@ -103,8 +107,8 @@ const CustomDatePicker = memo(
                 placeholder: `${placeholder}`,
               }}
               initialValue={initialValue}
-              closeOnClickOutside={true}
-              closeOnSelect={true}
+              closeOnClickOutside={closeOnClickOutside}
+              closeOnSelect={closeOnSelect}
               dateFormat={"D/M/YYYY"}
               onChange={(date) => {
                 _onChange && _onChange();

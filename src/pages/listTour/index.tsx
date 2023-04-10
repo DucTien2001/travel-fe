@@ -1,22 +1,11 @@
 import React, { useEffect, useState, useMemo } from "react";
 // reactstrap components
-import {
-  Container,
-  Row,
-  Col,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-} from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGrip,
   faList,
-  faXmark,
-  faSearch,
-  faChevronLeft,
-  faChevronRight,
   faArrowsRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
@@ -45,7 +34,7 @@ import ReactPaginate from "react-paginate";
 import CustomSelect from "components/common/CustomSelect";
 import InputSelect from "components/common/inputs/InputSelect";
 import { DataPagination, sortType } from "models/general";
-import { Grid } from "@mui/material";
+import { Grid, Pagination } from "@mui/material";
 import { NormalGetTours, Tour } from "models/tour";
 import useDebounce from "hooks/useDebounce";
 
@@ -57,9 +46,7 @@ interface SearchData {
 
 const ListTours: NextPage = () => {
   const dispatch = useDispatch();
-  const { allTours } = useSelector((state: ReducerType) => state.normal);
   const [changeViewLayout, setChangeViewLayout] = useState(false);
-  const [listTours, setListTours] = useState([]);
   const [selectedPrice, setSelectedPrice] = useState([10000, 3000000]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [data, setData] = useState<DataPagination<Tour>>();
@@ -208,6 +195,12 @@ const ListTours: NextPage = () => {
     500
   );
 
+  const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
+    fetchData({
+      page: newPage + 1,
+    });
+  };
+
   // useEffect(() => {
   //   applyFilters();
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -245,7 +238,7 @@ const ListTours: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(data?.data);
+  console.log(data?.meta);
   return (
     <>
       <SectionHeader
@@ -330,7 +323,7 @@ const ListTours: NextPage = () => {
                 </Grid>
                 <Grid>
                   <h5>
-                    RESULTS-FOUND: <span>{listTours?.length}</span>
+                    RESULTS-FOUND: <span>{data?.data?.length}</span>
                   </h5>
                 </Grid>
               </Grid>
@@ -414,7 +407,7 @@ const ListTours: NextPage = () => {
                 {/* ==================== List view ===================== */}
                 {changeViewLayout && (
                   <div>
-                    {listTours?.map((tour, index) => (
+                    {data?.data.map((tour, index) => (
                       <CardItemList
                         linkView="listTour"
                         linkBook="book/tour"
@@ -423,21 +416,26 @@ const ListTours: NextPage = () => {
                         src={tour?.images[0]}
                         title={tour.title}
                         description={tour.description}
-                        businessHours={tour.businessHours}
-                        location={tour.location}
-                        contact={tour.contact}
-                        price={tour.price}
-                        discount={tour.discount}
-                        tags={tour.tags}
-                        rate={Math.floor(tour?.rate)}
-                        creator={tour.creator}
-                        isTemporarilyStopWorking={tour.isTemporarilyStopWorking}
-                        numberOfReviewers={tour?.numberOfReviewer}
-                        className={
-                          tour.isTemporarilyStopWorking
-                            ? classes.stopWorking
-                            : ""
+                        price={
+                          tour?.tourOnSales.length
+                            ? Math.min(
+                                ...tour?.tourOnSales?.map(
+                                  (price) => price?.adultPrice
+                                )
+                              )
+                            : 0
                         }
+                        discount={
+                          tour?.tourOnSales.length
+                            ? Math.min(
+                                ...tour?.tourOnSales?.map(
+                                  (price) => price?.discount
+                                )
+                              )
+                            : 0
+                        }
+                        rate={Math.floor(tour?.rate)}
+                        numberOfReviewers={tour?.numberOfReviewer}
                       />
                     ))}
                   </div>
@@ -448,34 +446,13 @@ const ListTours: NextPage = () => {
                   </div>
                 )}
               </div>
-              {/* <Row className={classes.pigination}>
-                <Pagination>
-                  <PaginationItem>
-                    <PaginationLink>
-                      <span aria-hidden={true}>
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                      </span>
-                    </PaginationLink>
-                  </PaginationItem>
-                  {[...Array(numberOfPage)].map((page, index) => {
-                    return (
-                      <PaginationItem
-                        key={index}
-                        onClick={(e) => handleChangePage(e, index)}
-                      >
-                        <PaginationLink>{index + 1}</PaginationLink>
-                      </PaginationItem>
-                    );
-                  })}
-                  <PaginationItem>
-                    <PaginationLink>
-                      <span aria-hidden={true}>
-                        <FontAwesomeIcon icon={faChevronRight} />
-                      </span>
-                    </PaginationLink>
-                  </PaginationItem>
-                </Pagination>
-              </Row> */}
+              <Row className={classes.pigination}>
+                <Pagination
+                  count={data?.meta?.pageCount || 0}
+                  page={data?.meta?.page ? data?.meta?.page - 1 : 0}
+                  onChange={handleChangePage}
+                />
+              </Row>
             </Col>
           </Row>
         </Container>

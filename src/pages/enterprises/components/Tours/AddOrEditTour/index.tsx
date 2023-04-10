@@ -30,9 +30,7 @@ function controlProps(index: number) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-interface IQueryString {
-  lang?: string;
-}
+
 interface Props {
   tourId?: number;
 }
@@ -65,6 +63,9 @@ const AddOrEditTour = memo((props: Props) => {
         break;
       case EStep.PRICE:
         setActiveStep(EStep.PRICE);
+        break;
+      case EStep.POLICY:
+        setActiveStep(EStep.POLICY);
         break;
     }
   };
@@ -170,6 +171,7 @@ const AddOrEditTour = memo((props: Props) => {
             index={EStep.PRICE}
             tour={tour}
             lang={lang}
+            handleNextStep={() => onNextStep(EStep.POLICY)}
           />
           <Policy
             value={activeStep}
