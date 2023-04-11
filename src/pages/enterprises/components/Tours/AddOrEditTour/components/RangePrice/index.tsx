@@ -216,8 +216,6 @@ const RangePriceComponent = memo((props: Props) => {
           currency: getCurrency(item?.currency),
         })),
       });
-
-      console.log(tour, "======");
     }
   }, [tour]);
 
@@ -277,6 +275,7 @@ const RangePriceComponent = memo((props: Props) => {
                       control={control}
                       label="Date"
                       placeholder="Select date"
+                      closeOnSelect={true}
                       timeFormat={false}
                       errorMessage={errors.sale?.[index]?.startDate?.message}
                       isValidDate={disablePastDt}
@@ -309,7 +308,7 @@ const RangePriceComponent = memo((props: Props) => {
                   <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
                       title="Discount"
-                      placeholder="Enter discount"
+                      placeholder="Ex: 15%"
                       autoComplete="off"
                       type="number"
                       inputRef={register(`sale.${index}.discount`)}

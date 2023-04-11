@@ -173,12 +173,7 @@ const AddOrEditTour = memo((props: Props) => {
             lang={lang}
             handleNextStep={() => onNextStep(EStep.POLICY)}
           />
-          <Policy
-            value={activeStep}
-            index={EStep.POLICY}
-            tour={tour}
-            lang={lang}
-          />
+          <Policy value={activeStep} index={EStep.POLICY} tour={tour} />
         </Container>
       </div>
     </>

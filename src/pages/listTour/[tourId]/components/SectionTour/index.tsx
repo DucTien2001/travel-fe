@@ -83,13 +83,17 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   const [tab, setTab] = React.useState("1");
   const [coords, setCoords] = useState(null);
   const [priceAndAge, setPriceAndAge] = useState<PriceAndAge>({
-    childrenAgeMin: tour?.tourOnSales[0]?.childrenAgeMin,
-    childrenAgeMax: tour?.tourOnSales[0]?.childrenAgeMax,
-    priceChildren: tour?.tourOnSales[0]?.childrenPrice,
-    adultPrice: tour?.tourOnSales[0]?.adultPrice,
-    discount: tour?.tourOnSales[0]?.discount,
-    quantity: tour?.tourOnSales[0]?.quantity,
+    childrenAgeMin: null,
+    childrenAgeMax: null,
+    priceChildren: null,
+    adultPrice: null,
+    discount: null,
+    quantity: null,
   });
+
+  const [totalPrice, setTotalPrice] = useState(null);
+
+  const [dateDefault, setDateDefault] = useState(null);
 
   const dayCategory = useMemo(() => {
     return _.chain(tourSchedule)
@@ -143,9 +147,13 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   const handleChangeDaySchedule = (event: any, newValue: string) => {
     setTab(newValue);
   };
+  const yesterday = moment().subtract(1, "day");
 
   const disableCustomDt = (current) => {
-    return dayValid.includes(current.format("DD/MM/YYYY"));
+    return (
+      dayValid.includes(current.format("DD/MM/YYYY")) &&
+      current.isAfter(yesterday)
+    );
   };
 
   const _numberOfChild = watch("numberOfChild");
@@ -167,18 +175,41 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
         });
       }
     });
+    setDateDefault(e._d);
   };
 
   useEffect(() => {
-    setPriceAndAge({
-      childrenAgeMin: tour?.tourOnSales[0]?.childrenAgeMin,
-      childrenAgeMax: tour?.tourOnSales[0]?.childrenAgeMax,
-      priceChildren: tour?.tourOnSales[0]?.childrenPrice,
-      adultPrice: tour?.tourOnSales[0]?.adultPrice,
-      discount: tour?.tourOnSales[0]?.discount,
-      quantity: tour?.tourOnSales[0]?.quantity,
-    });
+    for (var i = 0; i < tour?.tourOnSales?.length; i++) {
+      if (moment(tour?.tourOnSales[i]?.startDate) > yesterday) {
+        // reset({
+        //   startDate: new Date(tour?.tourOnSales[i]?.startDate),
+        // });
+        setDateDefault(new Date(tour?.tourOnSales[i]?.startDate));
+        setPriceAndAge({
+          childrenAgeMin: tour?.tourOnSales[i]?.childrenAgeMin,
+          childrenAgeMax: tour?.tourOnSales[i]?.childrenAgeMax,
+          priceChildren: tour?.tourOnSales[i]?.childrenPrice,
+          adultPrice: tour?.tourOnSales[i]?.adultPrice,
+          discount: tour?.tourOnSales[i]?.discount,
+          quantity: tour?.tourOnSales[i]?.quantity,
+        });
+        break;
+      }
+    }
   }, [tour]);
+
+  useEffect(() => {
+    setTotalPrice(
+      (priceAndAge?.adultPrice *
+        _numberOfAdult *
+        (100 - priceAndAge?.discount)) /
+        100 +
+        (priceAndAge?.priceChildren *
+          _numberOfChild *
+          (100 - priceAndAge?.discount)) /
+          100
+    );
+  }, [priceAndAge, _numberOfAdult, _numberOfChild]);
 
   useEffect(() => {
     tour?.tourOnSales.forEach((item) => {
@@ -359,19 +390,21 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
               <Grid className={classes.boxSelect}>
                 <p>When are you going?</p>
                 <Grid sx={{ paddingTop: "14px" }}>
-                  <InputDatePicker
+                  <Controller
                     name="startDate"
                     control={control}
-                    initialValue={moment(
-                      tour?.tourOnSales[0]?.startDate
-                    ).format("DD/MM/YYYY")}
-                    placeholder="Check-out"
-                    dateFormat="DD/MM/YYYY"
-                    timeFormat={false}
-                    isValidDate={disableCustomDt}
-                    inputRef={register("startDate")}
-                    onChange={(e) => handleChangeStartDate(e)}
-                    errorMessage={errors.startDate?.message}
+                    render={({ field }) => (
+                      <InputDatePicker
+                        value={dateDefault}
+                        placeholder="Check-out"
+                        closeOnSelect={true}
+                        timeFormat={false}
+                        isValidDate={disableCustomDt}
+                        inputRef={register("startDate")}
+                        onChange={(e) => handleChangeStartDate(e)}
+                        errorMessage={errors.startDate?.message}
+                      />
+                    )}
                   />
                 </Grid>
                 {/* <Grid className={classes.boxTime}>
@@ -439,26 +472,32 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                 </Grid>
               </Grid>
               <div className={classes.priceWrapper}>
-                {priceAndAge?.discount !== 0 && (
+                <Grid>
                   <p className={classes.discount}>
-                    Discount: <span>{priceAndAge?.discount} %</span>
+                    Number of tickets left:{" "}
+                    <span>{priceAndAge?.quantity} </span>tickets
                   </p>
-                )}
-                <Grid sx={{ display: "flex" }}>
+                </Grid>
+                <Grid
+                  sx={{
+                    paddingTop: "10px",
+                  }}
+                >
+                  {priceAndAge?.discount !== 0 && (
+                    <p className={classes.discount}>
+                      Discount: <span>{priceAndAge?.discount} %</span>
+                    </p>
+                  )}
+                </Grid>
+                <Grid
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    paddingTop: "10px",
+                  }}
+                >
                   <p>Total Price &nbsp;</p>
-                  <h2 className={classes.price}>
-                    {fCurrency2(
-                      (priceAndAge?.adultPrice *
-                        _numberOfAdult *
-                        (100 - priceAndAge?.discount)) /
-                        100 +
-                        (priceAndAge?.priceChildren *
-                          _numberOfChild *
-                          (100 - priceAndAge?.discount)) /
-                          100
-                    )}{" "}
-                    VND
-                  </h2>
+                  <p className={classes.price}>{fCurrency2(totalPrice)} VND</p>
                 </Grid>
               </div>
               {user ? (

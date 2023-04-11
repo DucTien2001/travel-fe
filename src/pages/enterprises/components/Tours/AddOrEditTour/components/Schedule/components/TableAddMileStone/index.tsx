@@ -290,7 +290,7 @@ const PopupAddMileStone = memo((props: Props) => {
                 </TableCell>
                 <TableCell scope="row" className={classes.tableCell}>
                   <InputTextfield
-                    placeholder="Enter description"
+                    placeholder="Ex: Wake up"
                     inputRef={register(`schedule.${index}.description`)}
                     errorMessage={
                       errors.schedule?.[index]?.description?.message
@@ -302,17 +302,12 @@ const PopupAddMileStone = memo((props: Props) => {
                   component="th"
                   sx={{ width: "135px" }}
                 >
-                  <IconButton
-                    onClick={onDeleteMileStone(field, index)}
-                    disabled={fieldsMileStone?.length !== 1 ? false : true}
-                  >
+                  <IconButton onClick={onDeleteMileStone(field, index)}>
                     <DeleteOutlineOutlined
                       sx={{ marginRight: "0.25rem" }}
                       className={classes.iconDelete}
                       fontSize="small"
-                      color={
-                        fieldsMileStone?.length !== 1 ? "error" : "disabled"
-                      }
+                      color={"error"}
                     />
                   </IconButton>
                 </TableCell>

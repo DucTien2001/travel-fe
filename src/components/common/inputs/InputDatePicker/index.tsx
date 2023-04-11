@@ -24,6 +24,7 @@ interface Props {
   control?: any;
   dateFormat?: string;
   initialValue?: string | Date | moment.Moment;
+  value?: string | Date | moment.Moment;
   _onChange?: () => void;
   [key: string]: any;
   closeOnClickOutside?: boolean;
@@ -44,6 +45,7 @@ const CustomDatePicker = memo(
     control,
     dateFormat,
     initialValue,
+    value,
     closeOnClickOutside,
     closeOnSelect,
     ...rest
@@ -75,6 +77,7 @@ const CustomDatePicker = memo(
                         _onChange && _onChange();
                         return field?.onChange(date);
                       }}
+                      // value={value}
                       initialValue={initialValue}
                       closeOnClickOutside={closeOnClickOutside}
                       closeOnSelect={closeOnSelect}
@@ -107,6 +110,7 @@ const CustomDatePicker = memo(
                 placeholder: `${placeholder}`,
               }}
               initialValue={initialValue}
+              value={value}
               closeOnClickOutside={closeOnClickOutside}
               closeOnSelect={closeOnSelect}
               dateFormat={"D/M/YYYY"}

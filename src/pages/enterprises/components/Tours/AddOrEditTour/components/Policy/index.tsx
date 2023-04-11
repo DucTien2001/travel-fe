@@ -32,6 +32,7 @@ import { ReducerType } from "redux/reducers";
 import { PolicyService } from "services/enterprise/policy";
 import { getPolicyType } from "utils/getOption";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
+import { useRouter } from "next/router";
 // import { getPolicyType } from "utils/getOption";
 
 export interface PolicyForm {
@@ -48,15 +49,14 @@ interface Props {
   value?: number;
   index?: number;
   tour?: ETour;
-  lang?: string;
-  handleNextStep?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const PolicyComponent = memo((props: Props) => {
-  const { value, index, tour, lang, handleNextStep } = props;
+  const { value, index, tour } = props;
 
   const dispatch = useDispatch();
+  const router = useRouter();
   const { tourInformation } = useSelector(
     (state: ReducerType) => state.enterprise
   );
@@ -208,6 +208,7 @@ const PolicyComponent = memo((props: Props) => {
     )
       .then(() => {
         dispatch(setSuccessMess("Create policy successfully"));
+        router.push("/enterprises/tours");
       })
       .catch((e) => {
         dispatch(setErrorMess(e));

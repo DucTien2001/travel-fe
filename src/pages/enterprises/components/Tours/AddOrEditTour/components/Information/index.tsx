@@ -414,7 +414,7 @@ const InformationComponent = memo((props: Props) => {
             <Grid item xs={6}>
               <InputTextfield
                 title="Contact"
-                placeholder="Enter contact"
+                placeholder="Enter contact phone number"
                 autoComplete="off"
                 name="contact"
                 inputRef={register("contact")}
@@ -463,7 +463,7 @@ const InformationComponent = memo((props: Props) => {
             <Grid item xs={6}>
               <InputTextfield
                 title="Detail address"
-                placeholder="Enter detail address"
+                placeholder="Ex: 147 street 10"
                 autoComplete="off"
                 name="moreLocation"
                 inputRef={register("moreLocation")}
@@ -494,7 +494,7 @@ const InformationComponent = memo((props: Props) => {
             <Grid item xs={12}>
               <InputTextfield
                 title="Suitable person"
-                placeholder="Enter Suitable person"
+                placeholder="Ex: Sea, Family, Trekking"
                 autoComplete="off"
                 name="suitablePerson"
                 multiline
@@ -514,6 +514,7 @@ const InformationComponent = memo((props: Props) => {
                     className={clsx(classes.editor, {
                       [classes.editorError]: !!errors.description?.message,
                     })}
+                    placeholder="Enter tour's description"
                     value={field.value || ""}
                     onBlur={() => field.onBlur()}
                     onChange={(value) => field.onChange(value)}
@@ -525,7 +526,7 @@ const InformationComponent = memo((props: Props) => {
               )}
             </Grid>
             <Grid xs={12} item>
-              <p className={classes.titleInput}>Highlight</p>
+              <p className={classes.titleInput}>Highlights</p>
               <Controller
                 name="highlight"
                 control={control}
@@ -535,6 +536,7 @@ const InformationComponent = memo((props: Props) => {
                     className={clsx(classes.editor, {
                       [classes.editorError]: !!errors.highlight?.message,
                     })}
+                    placeholder="Enter tour's highlights"
                     value={field.value || ""}
                     onBlur={() => field.onBlur()}
                     onChange={(value) => field.onChange(value)}
@@ -557,6 +559,7 @@ const InformationComponent = memo((props: Props) => {
                       [classes.editorError]:
                         !!errors.termsAndCondition?.message,
                     })}
+                    placeholder="Enter tour's terms and condition"
                     value={field.value || ""}
                     onBlur={() => field.onBlur()}
                     onChange={(value) => field.onChange(value)}

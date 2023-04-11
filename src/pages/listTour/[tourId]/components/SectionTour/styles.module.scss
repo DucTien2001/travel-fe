@@ -238,12 +238,15 @@
             font-weight: 600;
             font-size: 16px;
             margin: 0;
+            line-height: 20px;
+
         }
         .price {
             color: var(--orange-color);
             font-weight: 700;
             margin-bottom: 0;
             font-size: 20px;
+            line-height: 16px;
             span {
                 font-size: 14px;
             }

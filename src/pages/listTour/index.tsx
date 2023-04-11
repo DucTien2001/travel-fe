@@ -379,6 +379,9 @@ const ListTours: NextPage = () => {
                         title={tour.title}
                         description={tour.description}
                         contact={tour.contact}
+                        commune={tour?.commune?.name}
+                        district={tour?.district?.name}
+                        city={tour?.city?.name}
                         price={
                           tour?.tourOnSales.length
                             ? Math.min(
@@ -416,6 +419,9 @@ const ListTours: NextPage = () => {
                         src={tour?.images[0]}
                         title={tour.title}
                         description={tour.description}
+                        commune={tour?.commune?.name}
+                        district={tour?.district?.name}
+                        city={tour?.city?.name}
                         price={
                           tour?.tourOnSales.length
                             ? Math.min(

@@ -53,6 +53,9 @@ const ListServices = memo(
     contact,
     checkInTime,
     checkOutTime,
+    city,
+    district,
+    commune,
     rate,
     price,
     discount,
@@ -90,7 +93,11 @@ const ListServices = memo(
               >
                 <Grid className={classes.boxLocation}>
                   <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
-                  <div dangerouslySetInnerHTML={{ __html: description }}></div>
+                  <div>
+                    <p>
+                      {commune}, {district}, {city}
+                    </p>
+                  </div>
                 </Grid>
                 <Grid className={classes.boxTitle}>
                   <p>{title}</p>

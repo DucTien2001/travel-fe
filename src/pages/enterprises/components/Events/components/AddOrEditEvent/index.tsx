@@ -39,7 +39,17 @@ const PHOTO_SIZE = 10 * 1000000; // bytes
 const FILE_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-
+const modules = {
+  toolbar: [
+    [{ size: ["small", false, "large", "huge"] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ indent: "-1" }, { indent: "+1" }],
+    ["link", "image"],
+    ["clean"],
+    [{ color: [] }, { background: [] }],
+  ],
+};
 export interface EventForm {
   name: string;
   description: string;
@@ -512,7 +522,7 @@ const AddOrEditEvent = memo((props: Props) => {
               <Grid item xs={6}>
                 <InputTextfield
                   title="Code"
-                  placeholder="Enter code "
+                  placeholder="Ex: ENJOY NHA TRANG"
                   autoComplete="off"
                   name="code"
                   inputRef={register("code")}
@@ -537,10 +547,11 @@ const AddOrEditEvent = memo((props: Props) => {
                   control={control}
                   render={({ field }) => (
                     <ReactQuill
-                      modules={reactQuillModules}
+                      modules={modules}
                       className={clsx(classes.editor, {
                         [classes.editorError]: !!errors.description?.message,
                       })}
+                      placeholder="Enter tour's description"
                       value={field.value || ""}
                       onBlur={() => field.onBlur()}
                       onChange={(value) => field.onChange(value)}
@@ -558,10 +569,11 @@ const AddOrEditEvent = memo((props: Props) => {
                   control={control}
                   render={({ field }) => (
                     <ReactQuill
-                      modules={reactQuillModules}
+                      modules={modules}
                       className={clsx(classes.editor, {
                         [classes.editorError]: !!errors.policy?.message,
                       })}
+                      placeholder="Enter tour's policy"
                       value={field.value || ""}
                       onBlur={() => field.onBlur()}
                       onChange={(value) => field.onChange(value)}
@@ -575,41 +587,52 @@ const AddOrEditEvent = memo((props: Props) => {
               <Grid
                 xs={12}
                 item
-                sx={{ display: "flex", justifyContent: "center" }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
+                <p className={classes.titleInput}>Upload banner</p>
                 <Grid
-                  className={classes.imgUp}
-                  style={{
-                    border: fileReview
-                      ? "1px solid rgba(28, 28, 28, 0.2)"
-                      : "1px dashed rgba(28, 28, 28, 0.2)",
-                    minHeight: fileReview ? 200 : "unset",
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
                   }}
-                  {...getRootProps()}
                 >
-                  <input {...getInputProps()} />
-                  {fileReview ? (
-                    <>
-                      <img
-                        src={fileReview}
-                        className={classes.imgPreview}
-                        alt="preview"
-                      />
-                      <IconButton
-                        aria-label="upload"
-                        className={classes.btnUpload}
-                      >
-                        <CameraAlt />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      <AddPhotoAlternateOutlinedIcon
-                        className={classes.imgAddPhoto}
-                      />
-                      <p className={classes.selectImgTitle}>Select banner</p>
-                    </>
-                  )}
+                  <Grid
+                    className={classes.imgUp}
+                    style={{
+                      border: fileReview
+                        ? "1px solid rgba(28, 28, 28, 0.2)"
+                        : "1px dashed rgba(28, 28, 28, 0.2)",
+                      minHeight: fileReview ? 200 : "unset",
+                    }}
+                    {...getRootProps()}
+                  >
+                    <input {...getInputProps()} />
+                    {fileReview ? (
+                      <>
+                        <img
+                          src={fileReview}
+                          className={classes.imgPreview}
+                          alt="preview"
+                        />
+                        <IconButton
+                          aria-label="upload"
+                          className={classes.btnUpload}
+                        >
+                          <CameraAlt />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <>
+                        <AddPhotoAlternateOutlinedIcon
+                          className={classes.imgAddPhoto}
+                        />
+                        <p className={classes.selectImgTitle}>Select banner</p>
+                      </>
+                    )}
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
