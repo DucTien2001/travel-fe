@@ -399,6 +399,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                         placeholder="Check-out"
                         closeOnSelect={true}
                         timeFormat={false}
+                        className={classes.inputStartDate}
                         isValidDate={disableCustomDt}
                         inputRef={register("startDate")}
                         onChange={(e) => handleChangeStartDate(e)}

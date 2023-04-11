@@ -192,6 +192,12 @@
             margin: 0;
         }
     }
+    .inputStartDate {
+        tbody > tr :not([class~="rdtDisabled"]) {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+    }
     .boxTime {
         display: flex;
         align-items: center;
