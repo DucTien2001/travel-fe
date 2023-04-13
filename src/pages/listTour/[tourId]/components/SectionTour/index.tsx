@@ -78,7 +78,7 @@ const languageOptions = [
 // eslint-disable-next-line react/display-name
 const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   const { user } = useAuth();
-  Geocode.setApiKey("AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k");
+  // Geocode.setApiKey("AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k");
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
   const [tab, setTab] = React.useState("1");
   const [coords, setCoords] = useState(null);
@@ -226,7 +226,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
         setCoords({ lat, lng });
       },
       (error) => {
-        console.error(error);
+        // console.error(error);
       }
     );
   }, [tour]);

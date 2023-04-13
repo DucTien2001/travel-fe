@@ -58,6 +58,14 @@ export const policyType = [
   { id: 2, name: "REFUND", value: EServicePolicyType.REFUND},
 ]
 
+export const userType = [
+  { id: 1, name: "Super Admin" },
+  { id: 2, name: "Admin" },
+  { id: 3, name: "Enterprise" },
+  { id: 4, name: "Staff" },
+  { id: 5, name: "User" },
+]
+
 
 export enum Lang {
   VI = 'vi',

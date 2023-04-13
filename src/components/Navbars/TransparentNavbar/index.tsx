@@ -123,37 +123,6 @@ const WhiteNavbar = memo(() => {
               id="ceva"
               navbar
             >
-              {/* <UncontrolledDropdown nav>
-                <DropdownToggle
-                  caret
-                  color="default"
-                  data-toggle="dropdown"
-                  id="navbarDropdownMenuLink1"
-                  nav
-                  onClick={(e) => e.preventDefault()}
-                >
-                 <FontAwesomeIcon icon={faLocationDot} className={classes.iconNav}/>
-                  <p>Services</p>
-                </DropdownToggle>
-                <DropdownMenu aria-labelledby="navbarDropdownMenuLink1">
-                  <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/listTour" passHref>
-                      <a>
-                        <FontAwesomeIcon icon={faPlane} className={classes.iconNav}/>
-                        Tour
-                      </a>
-                    </Link>
-                  </DropdownItem>
-                  <DropdownItem className={classes.dropdownItem}>
-                    <Link href="/listHotel" passHref>
-                      <a>
-                        <FontAwesomeIcon icon={faHotel} className={classes.iconNav}/>
-                        Hotel
-                      </a>
-                    </Link>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown> */}
               <NavItem className={classes.navItem}>
                 <Link href="/listTour" passHref>
                   <a>
@@ -270,19 +239,20 @@ const WhiteNavbar = memo(() => {
                           </Link>
                         </DropdownItem>
                       )}
-                      {user?.role === EUserType.ADMIN && (
-                        <DropdownItem className={classes.dropdownItem}>
-                          <Link href="/admin" passHref>
-                            <a>
-                              <FontAwesomeIcon
-                                icon={faBarsProgress}
-                                className={classes.iconNav}
-                              />
-                              Management
-                            </a>
-                          </Link>
-                        </DropdownItem>
-                      )}
+                      {user?.role === EUserType.ADMIN ||
+                        (user?.role === EUserType.SUPER_ADMIN && (
+                          <DropdownItem className={classes.dropdownItem}>
+                            <Link href="/admin/users" passHref>
+                              <a>
+                                <FontAwesomeIcon
+                                  icon={faBarsProgress}
+                                  className={classes.iconNav}
+                                />
+                                Management
+                              </a>
+                            </Link>
+                          </DropdownItem>
+                        ))}
                     </DropdownMenu>
                   </UncontrolledDropdown>
                   <NavItem onClick={logout}>

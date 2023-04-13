@@ -1,14 +1,29 @@
 import type { NextPage } from "next";
-import { Row, Col, Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
+import {
+  Row,
+  Col,
+  Nav,
+  NavItem,
+  NavLink,
+  TabContent,
+  TabPane,
+} from "reactstrap";
 import { useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faChartSimple, faCircleArrowRight, faCircleArrowLeft, faPlaneDeparture, faBuilding } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faChartSimple,
+  faCircleArrowRight,
+  faCircleArrowLeft,
+  faPlaneDeparture,
+  faBuilding,
+} from "@fortawesome/free-solid-svg-icons";
 import { images } from "configs/images";
-import Users from "./Users";
+import Users from "./components/Users";
 import Sales from "./Sales";
 import HotelFeedbacks from "./HotelFeedbacks";
 import TourFeedbacks from "./TourFeedbacks";
@@ -21,7 +36,9 @@ export enum EActiveNav {
 }
 
 const Enterprise: NextPage = () => {
-  const [verticalTabs, setVerticalTabs] = React.useState(EActiveNav.User_Active);
+  const [verticalTabs, setVerticalTabs] = React.useState(
+    EActiveNav.User_Active
+  );
   const [activeSideBarMobile, setActiveSideBarMobile] = useState(false);
   const onChangeTab = (type: EActiveNav) => {
     switch (type) {
@@ -31,12 +48,12 @@ const Enterprise: NextPage = () => {
       case EActiveNav.Sales_Active:
         setVerticalTabs(EActiveNav.Sales_Active);
         break;
-        case EActiveNav.HotelFeedbacks_Active:
-          setVerticalTabs(EActiveNav.HotelFeedbacks_Active);
-          break;
-          case EActiveNav.TourFeedbacks_Active:
-            setVerticalTabs(EActiveNav.TourFeedbacks_Active);
-            break;
+      case EActiveNav.HotelFeedbacks_Active:
+        setVerticalTabs(EActiveNav.HotelFeedbacks_Active);
+        break;
+      case EActiveNav.TourFeedbacks_Active:
+        setVerticalTabs(EActiveNav.TourFeedbacks_Active);
+        break;
       default:
         break;
     }
@@ -47,9 +64,18 @@ const Enterprise: NextPage = () => {
   return (
     <>
       <div className={classes.root}>
-        <Col xs={2} className={activeSideBarMobile ? classes.sideBarActive : classes.sideBar}>
+        <Col
+          xs={2}
+          className={
+            activeSideBarMobile ? classes.sideBarActive : classes.sideBar
+          }
+        >
           <div className={classes.menuBarsMobile} onClick={handleSideBarMobile}>
-            <FontAwesomeIcon icon={activeSideBarMobile ? faCircleArrowLeft : faCircleArrowRight} />
+            <FontAwesomeIcon
+              icon={
+                activeSideBarMobile ? faCircleArrowLeft : faCircleArrowRight
+              }
+            />
           </div>
           <div className={classes.headerSidebar}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -61,7 +87,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.User_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.User_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.User_Active)}
               >
                 <FontAwesomeIcon icon={faUser} />
@@ -84,7 +114,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.TourFeedbacks_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.TourFeedbacks_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.TourFeedbacks_Active)}
               >
                 <FontAwesomeIcon icon={faPlaneDeparture} />
@@ -94,7 +128,11 @@ const Enterprise: NextPage = () => {
             <NavItem>
               <NavLink
                 href="#"
-                className={verticalTabs === EActiveNav.HotelFeedbacks_Active ? classes.active : classes.navLink}
+                className={
+                  verticalTabs === EActiveNav.HotelFeedbacks_Active
+                    ? classes.active
+                    : classes.navLink
+                }
                 onClick={() => onChangeTab(EActiveNav.HotelFeedbacks_Active)}
               >
                 <FontAwesomeIcon icon={faBuilding} />
@@ -104,7 +142,10 @@ const Enterprise: NextPage = () => {
           </Nav>
         </Col>
         <Col xs={10} className={classes.content}>
-          <TabContent activeTab={"verticalTabs" + verticalTabs} className={classes.tabContent}>
+          <TabContent
+            activeTab={"verticalTabs" + verticalTabs}
+            className={classes.tabContent}
+          >
             <TabPane tabId="verticalTabs1" className={classes.tabPane}>
               <Users />
             </TabPane>

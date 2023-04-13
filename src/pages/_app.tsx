@@ -74,13 +74,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   let allowed = true;
   const router = useRouter();
   if (
-    router.pathname.startsWith("/enterprises/tours") &&
-    router.pathname.startsWith("/enterprises/hotels") &&
-    user?.role === EUserType.USER
+    router.pathname.startsWith("/enterprises") &&
+    user?.role !== EUserType.ENTERPRISE &&
+    user?.role !== EUserType.STAFF
   ) {
     allowed = false;
   }
-  if (router.pathname.startsWith("/admin") && user?.role !== EUserType.ADMIN) {
+  if (
+    router.pathname.startsWith("/admin") &&
+    user?.role !== EUserType.SUPER_ADMIN &&
+    user?.role !== EUserType.ADMIN
+  ) {
     allowed = false;
   }
 

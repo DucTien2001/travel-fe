@@ -170,7 +170,9 @@ export const API = {
   },
   ADMIN: {
     USER: {
-      ALL_PROFILES: "/v1.0/user/all-profiles",
+      DEFAULT: "/v1.0/admin/user",
+      CHANGE_ROLE: "/v1.0/admin/user/change-role",
+      DELETE: "/v1.0/admin/user/delete/:id",
     },
     COMMENT: {
       HOTEL_COMMENT: {

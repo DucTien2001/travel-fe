@@ -101,7 +101,6 @@ const Login: NextPage = () => {
   }, [user]);
 
   const _onSubmit = (data: LoginForm) => {
-    console.log(data);
     dispatch(setLoading(true));
     UserService.login({
       username: data?.email,
