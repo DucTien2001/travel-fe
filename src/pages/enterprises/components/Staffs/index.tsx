@@ -162,6 +162,7 @@ const Staff = memo(({ handleTourEdit }: Props) => {
 
   useEffect(() => {
     fetchData();
+    console.log(fetchData());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

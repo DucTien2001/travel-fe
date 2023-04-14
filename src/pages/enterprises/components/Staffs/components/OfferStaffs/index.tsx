@@ -66,22 +66,9 @@ const Staff = memo(({ handleTourEdit }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [itemAction, setItemAction] = useState<any>();
-  const [eventDelete, setEventDelete] = useState<any>(null);
+  const [offerDelete, setOfferDelete] = useState<any>(null);
   const [keyword, setKeyword] = useState<string>("");
   const [data, setData] = useState<DataPagination<any>>();
-  const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
-  const [languageAnchor, setLanguageAnchor] = useState<null | HTMLElement>(
-    null
-  );
-
-  const handleAction = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    item: any
-  ) => {
-    setItemAction(item);
-    setActionAnchor(event.currentTarget);
-  };
 
   const handleChangePage = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -126,6 +113,7 @@ const Staff = memo(({ handleTourEdit }: Props) => {
           data: res.data,
           meta: res.meta,
         });
+        console.log(res);
       })
       .catch((e) => dispatch(setErrorMess(e)))
       .finally(() => dispatch(setLoading(false)));
@@ -136,68 +124,41 @@ const Staff = memo(({ handleTourEdit }: Props) => {
     500
   );
 
-  const onCloseActionMenu = () => {
-    setItemAction(null);
-    setActionAnchor(null);
-    setLanguageAnchor(null);
-  };
-
-  const onShowLangAction = (event: React.MouseEvent<HTMLElement>) => {
-    setLanguageAnchor(event.currentTarget);
-  };
-
-  const onCloseLangAction = () => {
-    setLanguageAnchor(null);
-  };
-
-  const handleLanguageRedirect = (lang?: LangSupport) => {
-    if (!itemAction) return;
-    onRedirectEdit(itemAction, lang);
-    onCloseActionMenu();
-  };
-
-  const onRedirectEdit = (item: any, lang?: LangSupport) => {
-    router.push({
-      pathname: `/enterprises/events/${item.id}`,
-      search: lang && `?lang=${lang.key}`,
-    });
-  };
-
   const onBack = () => {
     router.push("/enterprises/staffs");
   };
 
-  const onShowConfirmDelete = () => {
-    if (!itemAction) return;
-    setEventDelete(itemAction);
-    onCloseActionMenu();
+  const onShowConfirmDelete = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    item: IStaff
+  ) => {
+    setOfferDelete(item);
   };
-
   const onClosePopupConfirmDelete = () => {
-    if (!eventDelete) return;
-    setEventDelete(null);
-    onCloseActionMenu();
+    if (!offerDelete) return;
+    setOfferDelete(null);
   };
 
   const onYesDelete = () => {
-    // if (!eventDelete) return;
-    // onClosePopupConfirmDelete();
-    // dispatch(setLoading(true));
-    // Service.delete(eventDelete?.id)
-    //   .then(() => {
-    //     dispatch(setSuccessMess("Delete successfully"));
-    //     fetchData();
-    //   })
-    //   .catch((e) => {
-    //     dispatch(setErrorMess(e));
-    //   })
-    //   .finally(() => {
-    //     dispatch(setLoading(false));
-    //   });
+    if (!offerDelete) return;
+    onClosePopupConfirmDelete();
+    dispatch(setLoading(true));
+    StaffService.cancelOffer(offerDelete?.id)
+      .then(() => {
+        dispatch(setSuccessMess("Delete successfully"));
+        fetchData();
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
   };
 
   useEffect(() => {
     fetchData();
+    console.log(fetchData(), "-------------------------");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -252,10 +213,14 @@ const Staff = memo(({ handleTourEdit }: Props) => {
                           className={clsx(classes.actionButton)}
                           color="primary"
                           onClick={(event) => {
-                            handleAction(event, item);
+                            onShowConfirmDelete(event, item);
                           }}
                         >
-                          <ExpandMoreOutlined />
+                          <DeleteOutlineOutlined
+                            sx={{ marginRight: "0.25rem" }}
+                            color="error"
+                            fontSize="small"
+                          />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -280,76 +245,9 @@ const Staff = memo(({ handleTourEdit }: Props) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </TableContainer>
-        <Menu
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          anchorEl={actionAnchor}
-          keepMounted
-          open={Boolean(actionAnchor)}
-          onClose={onCloseActionMenu}
-        >
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            onClick={onShowLangAction}
-            className={classes.menuItem}
-          >
-            <Box display="flex" alignItems={"center"}>
-              <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>Edit Languages</span>
-            </Box>
-          </MenuItem>
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            className={classes.menuItem}
-            onClick={onShowConfirmDelete}
-          >
-            <Box display="flex" alignItems={"center"}>
-              <DeleteOutlineOutlined
-                sx={{ marginRight: "0.25rem" }}
-                color="error"
-                fontSize="small"
-              />
-              <span>Delete</span>
-            </Box>
-          </MenuItem>
-        </Menu>
-        <Menu
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          anchorEl={languageAnchor}
-          keepMounted
-          open={Boolean(languageAnchor)}
-          onClose={onCloseLangAction}
-        >
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            className={classes.menuItem}
-            onClick={() => {
-              handleLanguageRedirect();
-            }}
-          >
-            <span>Default</span>
-          </MenuItem>
-          {langSupports.map((item, index) => (
-            <MenuItem
-              key={index}
-              sx={{ fontSize: "0.875rem" }}
-              className={classes.menuItem}
-              onClick={() => {
-                handleLanguageRedirect(item);
-              }}
-            >
-              <span>{item.name}</span>
-            </MenuItem>
-          ))}
-        </Menu>
         <PopupConfirmDelete
           title="Are you sure delete this tour ?"
-          isOpen={!!eventDelete}
+          isOpen={!!offerDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}
           onYes={onYesDelete}

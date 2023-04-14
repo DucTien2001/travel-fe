@@ -22,7 +22,12 @@ import { images } from "configs/images";
 import Hotels from "pages/enterprises/components/Hotels";
 import AddOrEditEvent from "pages/enterprises/components/Events/components/AddOrEditEvent";
 import OfferStaffs from "pages/enterprises/components/Staffs/components/OfferStaffs";
-
+import { EUserType } from "models/user";
+import useAuth from "hooks/useAuth";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import AttractionsIcon from "@mui/icons-material/Attractions";
+import EventIcon from "@mui/icons-material/Event";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 const AddOrEditTour = dynamic(
   () => import("pages/enterprises/components/Tours/AddOrEditTour")
 );
@@ -31,11 +36,13 @@ interface PropTypes {}
 
 const Enterprise = memo(({ ...props }: PropTypes) => {
   const router = useRouter();
+  const { user } = useAuth();
   const { page, action, type } = router.query;
 
   const toursRef = useRef<HTMLDivElement>(null);
-  const eventRef = useRef<HTMLDivElement>(null);
-  const staffRef = useRef<HTMLDivElement>(null);
+  const hotelsRef = useRef<HTMLDivElement>(null);
+  const eventsRef = useRef<HTMLDivElement>(null);
+  const staffsRef = useRef<HTMLDivElement>(null);
 
   const renderComponent = () => {
     switch (page) {
@@ -74,9 +81,9 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           </Col>
         );
       case "events":
-        eventRef &&
-          eventRef.current &&
-          eventRef.current?.scrollIntoView({
+        eventsRef &&
+          eventsRef.current &&
+          eventsRef.current?.scrollIntoView({
             behavior: "smooth",
             block: "nearest",
             inline: "center",
@@ -100,9 +107,9 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           );
         }
       case "staffs":
-        staffRef &&
-          staffRef.current &&
-          staffRef.current?.scrollIntoView({
+        staffsRef &&
+          staffsRef.current &&
+          staffsRef.current?.scrollIntoView({
             behavior: "smooth",
             block: "nearest",
             inline: "center",
@@ -142,7 +149,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             className={classes.navItem}
           >
             <NavLink className={renderClass("tours")}>
-              <FontAwesomeIcon icon={faPlaneDeparture} />
+              <AttractionsIcon />
               <span ref={toursRef}>Tours</span>
             </NavLink>
           </NavItem>
@@ -151,8 +158,8 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             className={classes.navItem}
           >
             <NavLink className={renderClass("hotels")}>
-              <FontAwesomeIcon icon={faBuilding} />
-              Hotels
+              <ApartmentIcon />
+              <span ref={hotelsRef}>Hotels</span>
             </NavLink>
           </NavItem>
           <NavItem
@@ -160,10 +167,21 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             className={classes.navItem}
           >
             <NavLink className={renderClass("events")}>
-              <FontAwesomeIcon icon={faBuilding} />
-              Events
+              <EventIcon />
+              <span ref={staffsRef}>Events</span>
             </NavLink>
           </NavItem>
+          {user.role === EUserType.ENTERPRISE && (
+            <NavItem
+              onClick={() => gotoMenu("staffs")}
+              className={classes.navItem}
+            >
+              <NavLink className={renderClass("staffs")}>
+                <PeopleAltIcon />
+                <span ref={staffsRef}>Staffs</span>
+              </NavLink>
+            </NavItem>
+          )}
         </Nav>
       </Col>
       {renderComponent()}
