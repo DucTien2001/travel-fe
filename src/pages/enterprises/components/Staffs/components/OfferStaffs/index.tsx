@@ -53,8 +53,6 @@ import StatusChip from "components/StatusChip";
 const tableHeaders: TableHeaderLabel[] = [
   { name: "id", label: "Id", sortable: false },
   { name: "name", label: "Name", sortable: false },
-  { name: "role", label: "Role", sortable: false },
-  { name: "status", label: "Status", sortable: false },
   { name: "actions", label: "Actions", sortable: false },
 ];
 
@@ -199,14 +197,8 @@ const Staff = memo(({ handleTourEdit }: Props) => {
                           rel="noreferrer"
                           className={classes.tourName}
                         >
-                          {item?.username}
+                          #Code {item?.id}
                         </a>
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {getRoleUser(item?.role)}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        <StatusChip status={!item.isDeleted} />
                       </TableCell>
                       <TableCell className="text-center" component="th">
                         <IconButton
