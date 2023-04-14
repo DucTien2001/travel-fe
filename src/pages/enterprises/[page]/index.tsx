@@ -9,6 +9,8 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import EventIcon from "@mui/icons-material/Event";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import { EUserType } from "models/user";
+import useAuth from "hooks/useAuth";
 
 const Tours = dynamic(() => import("pages/enterprises/components/Tours"));
 const Hotels = dynamic(() => import("pages/enterprises/components/Hotels"));
@@ -20,6 +22,7 @@ interface PropTypes {}
 const Enterprise = memo(({ ...props }: PropTypes) => {
   const router = useRouter();
   const { page } = router.query;
+  const { user } = useAuth();
 
   const toursRef = useRef<HTMLDivElement>(null);
   const hotelsRef = useRef<HTMLDivElement>(null);
@@ -136,15 +139,17 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
               <span ref={eventsRef}>Events</span>
             </NavLink>
           </NavItem>
-          <NavItem
-            onClick={() => gotoMenu("staffs")}
-            className={classes.navItem}
-          >
-            <NavLink className={renderClass("staffs")}>
-              <PeopleAltIcon />
-              <span ref={eventsRef}>Staffs</span>
-            </NavLink>
-          </NavItem>
+          {user.role === EUserType.ENTERPRISE && (
+            <NavItem
+              onClick={() => gotoMenu("staffs")}
+              className={classes.navItem}
+            >
+              <NavLink className={renderClass("staffs")}>
+                <PeopleAltIcon />
+                <span ref={eventsRef}>Staffs</span>
+              </NavLink>
+            </NavItem>
+          )}
         </Nav>
       </Col>
       {renderComponent()}

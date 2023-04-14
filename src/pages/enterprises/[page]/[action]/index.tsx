@@ -21,6 +21,7 @@ import classes from "./styles.module.scss";
 import { images } from "configs/images";
 import Hotels from "pages/enterprises/components/Hotels";
 import AddOrEditEvent from "pages/enterprises/components/Events/components/AddOrEditEvent";
+import OfferStaffs from "pages/enterprises/components/Staffs/components/OfferStaffs";
 
 const AddOrEditTour = dynamic(
   () => import("pages/enterprises/components/Tours/AddOrEditTour")
@@ -34,6 +35,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
 
   const toursRef = useRef<HTMLDivElement>(null);
   const eventRef = useRef<HTMLDivElement>(null);
+  const staffRef = useRef<HTMLDivElement>(null);
 
   const renderComponent = () => {
     switch (page) {
@@ -93,6 +95,23 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             <Col xs={10} className={classes.content}>
               <TabContent className={classes.tabContent}>
                 <AddOrEditEvent eventId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
+      case "staffs":
+        staffRef &&
+          staffRef.current &&
+          staffRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+          });
+        if (action === "list-offers") {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <OfferStaffs />
               </TabContent>
             </Col>
           );

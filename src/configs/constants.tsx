@@ -135,6 +135,10 @@ export const API = {
     STAFF: {
       DEFAULT: "/v1.0/enterprise/staff",
       SEND_OFFER: "/v1.0/enterprise/staff/send-offer",
+      ACCEPT_OFFER: "/v1.0/enterprise/staff/accept-offer/:id",
+      CANCEL_OFFER: "/v1.0/enterprise/staff/cancel-offer/:id",
+      GET_OFFERS: "/v1.0/enterprise/staff/get-offers",
+      DELETE_STAFF: "/v1.0/enterprise/staff/delete/:id",
     },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",

@@ -209,6 +209,15 @@ const Login: NextPage = () => {
                                       }}
                                     />
                                   </Grid>
+                                  <Grid>
+                                    <InputCheckbox
+                                      content="Staff"
+                                      checked={field.value === EUserType.STAFF}
+                                      onChange={() => {
+                                        setValue("role", EUserType.STAFF);
+                                      }}
+                                    />
+                                  </Grid>
                                 </>
                               )}
                             />

@@ -73,8 +73,7 @@ const PopupConfirmDeleteTour = memo((props: Props) => {
 
   const _onSubmit = (data: SendOfferForm) => {
     dispatch(setLoading(true));
-
-    StaffService.sendOffer(data?.email)
+    StaffService.sendOffer({ email: data?.email })
       .then(() => {
         dispatch(setSuccessMess("Send offer successfully"));
         onClose();

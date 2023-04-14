@@ -226,7 +226,8 @@ const WhiteNavbar = memo(() => {
                           </a>
                         </Link>
                       </DropdownItem>
-                      {user?.role === EUserType.ENTERPRISE && (
+                      {(user?.role === EUserType.ENTERPRISE ||
+                        user?.role === EUserType.STAFF) && (
                         <DropdownItem className={classes.dropdownItem}>
                           <Link href="/enterprises/tours" passHref>
                             <a>
