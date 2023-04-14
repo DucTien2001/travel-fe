@@ -132,6 +132,10 @@ export const API = {
       GET_ALL_POLICY: "/v1.0/enterprise/policy",
       DELETE_POLICY: "/v1.0/enterprise/policy/:id",
     },
+    STAFF: {
+      DEFAULT: "/v1.0/enterprise/staff",
+      SEND_OFFER: "/v1.0/enterprise/staff/send-offer",
+    },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",
       UPDATE_HOTEL: "/v1.0/hotel/update/:id",

@@ -8,10 +8,12 @@ import { images } from "configs/images";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import EventIcon from "@mui/icons-material/Event";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
 const Tours = dynamic(() => import("pages/enterprises/components/Tours"));
 const Hotels = dynamic(() => import("pages/enterprises/components/Hotels"));
 const Events = dynamic(() => import("pages/enterprises/components/Events"));
+const Staffs = dynamic(() => import("pages/enterprises/components/Staffs"));
 
 interface PropTypes {}
 
@@ -22,6 +24,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
   const toursRef = useRef<HTMLDivElement>(null);
   const hotelsRef = useRef<HTMLDivElement>(null);
   const eventsRef = useRef<HTMLDivElement>(null);
+  const staffsRef = useRef<HTMLDivElement>(null);
 
   const renderComponent = () => {
     switch (page) {
@@ -67,6 +70,21 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
               <Events />
+            </TabContent>
+          </Col>
+        );
+      case "staffs":
+        staffsRef &&
+          staffsRef.current &&
+          staffsRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+          });
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <Staffs />
             </TabContent>
           </Col>
         );
@@ -116,6 +134,15 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             <NavLink className={renderClass("events")}>
               <EventIcon />
               <span ref={eventsRef}>Events</span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("staffs")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("staffs")}>
+              <PeopleAltIcon />
+              <span ref={eventsRef}>Staffs</span>
             </NavLink>
           </NavItem>
         </Nav>
