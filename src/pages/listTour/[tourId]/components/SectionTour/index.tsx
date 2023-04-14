@@ -1,14 +1,5 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Badge,
-  Nav,
-  NavItem,
-  TabContent,
-  TabPane,
-} from "reactstrap";
+import { Container, Row, Col, Badge } from "reactstrap";
 // import { Carousel } from 'react-responsive-carousel'
 // import {images} from "configs/images";
 import classes from "./styles.module.scss";
@@ -40,7 +31,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import InputSelect from "components/common/inputs/InputSelect";
 import InputCounter from "components/common/inputs/InputCounter";
 
-import TourSchedule from "../TourSchedule";
+import TourSchedule from "./components/TourSchedule";
 import _ from "lodash";
 import { TabContext, TabList } from "@material-ui/lab";
 import GoogleMapReact from "google-map-react";
@@ -48,6 +39,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
 import moment from "moment";
 import Geocode from "react-geocode";
+import PopupDetailTour from "./components/PopupDetailTour";
 
 const AnyReactComponent = ({ text, lat, lng }) => <div>{text}</div>;
 export interface FormData {
@@ -80,6 +72,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   const { user } = useAuth();
   // Geocode.setApiKey("AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k");
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
+  const [openPopupDetailTour, setOpenPopupDetailTour] = useState(false);
   const [tab, setTab] = React.useState("1");
   const [coords, setCoords] = useState(null);
   const [priceAndAge, setPriceAndAge] = useState<PriceAndAge>({
@@ -143,6 +136,9 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
 
   const onOpenPopupModalImages = () =>
     setOpenPopupModalImages(!openPopupModalImages);
+
+  const onOpenPopupDetailTour = () =>
+    setOpenPopupDetailTour(!openPopupDetailTour);
 
   const handleChangeDaySchedule = (event: any, newValue: string) => {
     setTab(newValue);
@@ -549,10 +545,13 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
               </div>
               <div className={classes.featureWrapper}>
                 <p className={classes.featureTitle}>Features</p>
-                <div>
-                  <FontAwesomeIcon icon={faWallet}></FontAwesomeIcon>
-                  <p>Free cancellation</p>
-                </div>
+                <Button
+                  btnType={BtnType.Outlined}
+                  onClick={onOpenPopupDetailTour}
+                  className={classes.btnSeeDetail}
+                >
+                  See detail
+                </Button>
               </div>
             </Col>
           </Row>
@@ -561,6 +560,11 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
           isOpen={openPopupModalImages}
           toggle={onOpenPopupModalImages}
           images={tour?.images}
+        />
+        <PopupDetailTour
+          isOpen={openPopupDetailTour}
+          toggle={onOpenPopupDetailTour}
+          tour={tour}
         />
       </Grid>
     </>

@@ -25,13 +25,6 @@ import { Link } from "react-scroll";
 import styled from "styled-components";
 import { Tabs, useMediaQuery, useTheme } from "@mui/material";
 
-export enum ENavBar {
-  Overview = 1,
-  Location = 2,
-  Rooms = 3,
-  Reviews = 4,
-  Facilities = 5,
-}
 const NavLink = styled(Link)`
   color: blue;
   &.active {

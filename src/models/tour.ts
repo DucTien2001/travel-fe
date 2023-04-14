@@ -69,4 +69,10 @@ export interface HistoryBookTour {
     date: Date;
     tourId: number;
   }
+
   
+export enum DETAIL_SECTION {
+  section_overview = 'section_overview',
+  section_term_condition = 'section_term_condition',
+  section_reschedule_refund = 'section_reschedule_refund',
+}
