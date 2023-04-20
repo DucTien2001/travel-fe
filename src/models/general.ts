@@ -23,7 +23,7 @@ export interface OptionItem<T = number> {
   name: string;
   translation?: string;
   img?: string;
-  value?: string;
+  value?: string | T;
 }
 
 export interface OptionItemT<T> {
@@ -58,6 +58,9 @@ export const policyType = [
   { id: 2, name: "REFUND", value: EServicePolicyType.REFUND},
 ]
 
+
+
+
 export const userType = [
   { id: 1, name: "Super Admin" },
   { id: 2, name: "Admin" },
@@ -66,6 +69,15 @@ export const userType = [
   { id: 5, name: "User" },
 ]
 
+export enum EDiscountType {
+  MONEY = 1,
+  PERCENT = 2
+}
+
+export const discountType = [
+  { id: 1, name: "MONEY", value: EDiscountType.MONEY },
+  { id: 2, name: "PERCENT", value: EDiscountType.PERCENT},
+]
 
 export enum Lang {
   VI = 'vi',

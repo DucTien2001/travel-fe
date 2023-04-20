@@ -240,20 +240,20 @@ const WhiteNavbar = memo(() => {
                           </Link>
                         </DropdownItem>
                       )}
-                      {user?.role === EUserType.ADMIN ||
-                        (user?.role === EUserType.SUPER_ADMIN && (
-                          <DropdownItem className={classes.dropdownItem}>
-                            <Link href="/admin/users" passHref>
-                              <a>
-                                <FontAwesomeIcon
-                                  icon={faBarsProgress}
-                                  className={classes.iconNav}
-                                />
-                                Management
-                              </a>
-                            </Link>
-                          </DropdownItem>
-                        ))}
+                      {(user?.role === EUserType.ADMIN ||
+                        user?.role === EUserType.SUPER_ADMIN) && (
+                        <DropdownItem className={classes.dropdownItem}>
+                          <Link href="/admin/users" passHref>
+                            <a>
+                              <FontAwesomeIcon
+                                icon={faBarsProgress}
+                                className={classes.iconNav}
+                              />
+                              Management
+                            </a>
+                          </Link>
+                        </DropdownItem>
+                      )}
                     </DropdownMenu>
                   </UncontrolledDropdown>
                   <NavItem onClick={logout}>

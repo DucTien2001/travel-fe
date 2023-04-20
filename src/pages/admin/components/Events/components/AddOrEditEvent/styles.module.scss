@@ -244,6 +244,16 @@
     padding-bottom: 5px;
     margin: 0 !important;
   }
+  .checkBoxQuantity {
+    margin-bottom: 0;
+    span {
+      font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+
+    }
+    [class~="Mui-checked"] {
+      color: var(--primary-color);
+    }
+  }
   .footer {
     display: flex;
     justify-content: flex-end;

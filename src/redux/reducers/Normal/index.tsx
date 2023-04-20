@@ -58,16 +58,30 @@ export interface IRoomBillConfirm {
   endDate: string;
 }
 export interface IConfirmBookTour {
-  userId: number;
-  userMail: string;
   tourId: number;
-  amount: number;
-  price: number;
+  amountAdult: number;
+  amountChildren: number;
+  startDate: Date;
+  language: string;
+  totalPrice: number;
+  priceAdult: number;
+  priceChildren: number;
   discount: number;
-  email: string;
-  phoneNumber: string;
+  owner: number;
+}
+
+export interface IConfirmBookTourReview {
   firstName: string;
   lastName: string;
+  email: string;
+  phoneNumber: string;
+  price: number;
+  numberOfAdult: number;
+  numberOfChild: number;
+  startDate: Date;
+  specialRequest?: number;
+  priceOfChild: number;
+  priceOfAdult: number;
 }
 export interface IConfirmBookRoom {
   userId: number;
@@ -143,6 +157,7 @@ export interface NormalState {
   allTourBills: ITourBill[];
   allRoomBills: ICreateRoomBill[];
   confirmBookTour: IConfirmBookTour;
+  confirmBookTourReview: IConfirmBookTourReview;
   confirmBookRoom: IConfirmBookRoom;
   getUserInformationBookRoom: IUserInformationBookRoom;
 }
@@ -154,6 +169,7 @@ const initial: NormalState = {
   allTourBills: [],
   allRoomBills: [],
   confirmBookTour: null,
+  confirmBookTourReview: null,
   confirmBookRoom: null,
   getUserInformationBookRoom: null,
 };
@@ -178,6 +194,9 @@ export const normalReducer = (state = initial, action: any) =>
         break;
       case types.SET_CONFIRM_BOOK_TOUR_REDUCER:
         draft.confirmBookTour = action.data;
+        break;
+      case types.SET_CONFIRM_BOOK_TOUR_REVIEW_REDUCER:
+        draft.confirmBookTourReview = action.data;
         break;
       case types.SET_CONFIRM_BOOK_ROOM_REDUCER:
         draft.confirmBookRoom = action.data;

@@ -34,15 +34,19 @@ export const API = {
   NORMAL: {
     TOUR: {
       DEFAULT: "/v1.0/tour",
-      ALL_TOURS: "/v1.0/tour/get-all-tours",
       DETAIL_TOUR: "/v1.0/tour/:id",
-      SEARCH_TOURS: "/v1.0/tour/search-tours/:name",
-      SEARCH_LOCATION_TOURS: "/v1.0/tour/search-by-location/:location",
-      GET_ALL_TOURS_BY_PAGE: "/v1.0/tour/get-all-tours-by-page/:page",
     },
     TOUR_SCHEDULE: {
       DEFAULT: "/v1.0/tour-schedule",
       GET_TOUR_SCHEDULE: "/v1.0/tour-schedule/:tourId",
+    },
+    EVENT: {
+      DEFAULT: "/v1.0/event",
+      DETAIL_EVENT: "/v1.0/event/:id",
+    },
+    VOUCHER: {
+      DEFAULT: "/v1.0/voucher",
+      DETAIL_VOUCHER: "/v1.0/voucher/:id",
     },
     COMMENT: {
       TOUR_COMMENT: {
@@ -123,9 +127,9 @@ export const API = {
       UPDATE_TOUR_PRICE: "/v1.0/enterprise/tour-on-sale/:id",
       DELETE_TOUR_PRICE: "/v1.0/enterprise/tour-on-sale/:id",
     },
-    EVENT: {
-      DEFAULT: "/v1.0/enterprise/event",
-      DELETE_EVENT: "/v1.0/enterprise/event/:id",
+    VOUCHER: {
+      DEFAULT: "/v1.0/enterprise/voucher",
+      DELETE_VOUCHER: "/v1.0/enterprise/voucher/:id",
     },
     POLICY: {
       DEFAULT: "/v1.0/enterprise/policy",
@@ -181,6 +185,10 @@ export const API = {
       DEFAULT: "/v1.0/admin/user",
       CHANGE_ROLE: "/v1.0/admin/user/change-role",
       DELETE: "/v1.0/admin/user/delete/:id",
+    },
+    EVENT: {
+      DEFAULT: "/v1.0/admin/event",
+      DELETE_EVENT: "/v1.0/admin/event/:id",
     },
     COMMENT: {
       HOTEL_COMMENT: {

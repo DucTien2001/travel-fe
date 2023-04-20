@@ -39,6 +39,7 @@ const ProductPage = memo((Props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down(1024));
   const router = useRouter();
 
+  const [changeTab, setChangeTab] = useState(false);
   const [hotel, setHotel] = useState<any>();
   const hotelId = Number(router.query.hotelId.slice(1));
   const [listComment, setListComment] = useState([]);
@@ -120,7 +121,6 @@ const ProductPage = memo((Props) => {
     }
   }
 
-  const [changeTab, setChangeTab] = useState(false);
   const closeMenu = () => setChangeTab(false);
 
   return (

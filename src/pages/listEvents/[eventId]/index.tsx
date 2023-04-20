@@ -1,79 +1,57 @@
-import React, { useEffect, useState, useMemo, memo, useRef } from "react";
-// reactstrap components
-import {
-  Container,
-  Row,
-  Col,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-} from "reactstrap";
-
+import React, { useEffect, useState, memo } from "react";
+import { Container, Row } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faGrip,
-  faList,
-  faXmark,
-  faSearch,
-  faChevronLeft,
-  faChevronRight,
-  faArrowsRotate,
-  faSignInAlt,
-  faSignHanging,
-  faSignsPost,
-} from "@fortawesome/free-solid-svg-icons";
-import { NextPage } from "next";
+import { faSignsPost } from "@fortawesome/free-solid-svg-icons";
 import { images } from "configs/images";
-import clsx from "clsx";
 import classes from "./styles.module.scss";
-import Social from "components/Social";
-import Aos from "aos";
 import "aos/dist/aos.css";
-import InputRecentSearch from "components/common/inputs/InputRecentSearch";
 import Button, { BtnType } from "components/common/buttons/Button";
 import SectionHeader from "components/Header/SectionHeader";
-import CardItemGrid from "components/CardItemGrid";
-import CardItemList from "components/CardItemList";
-import BoxSmallLeft from "components/BoxSmallLeft";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
-import { ReducerType } from "redux/reducers";
+import { useDispatch } from "react-redux";
 import {
   setErrorMess,
   setLoading,
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
-import { TourService } from "services/normal/tour";
-import SearchNotFound from "components/SearchNotFound";
-
-import ReactPaginate from "react-paginate";
-import CustomSelect from "components/common/CustomSelect";
-import InputSelect from "components/common/inputs/InputSelect";
-import { sortType } from "models/general";
 import { Grid } from "@mui/material";
 import InputTextfield from "components/common/inputs/InputTextfield";
-
-interface CodeForm {
-  code: string;
-}
+import { EventService } from "services/normal/event";
+import { useRouter } from "next/router";
+import { IEvent } from "models/event";
+import PopupTermAndCondition from "./components/PopupTermAndCondition";
 
 const EventPage = memo(() => {
   const dispatch = useDispatch();
-  const inputRef = useRef(null);
-
+  const router = useRouter();
+  const [event, setEvent] = useState<IEvent>();
   const [copyCode, setCopyCode] = useState("ENJOY NHA TRANG");
+  const [openPopupTermAndCondition, setOpenPopupTermAndCondition] =
+    useState(false);
 
-  //   const watchCode = watch("code");
-  //   setValue("code", "ENJOY NHA TRANG");
-
-  //   console.log("watchCode", watchCode);
+  const onOpenPopupTermAndCondition = () => {
+    setOpenPopupTermAndCondition(!openPopupTermAndCondition);
+  };
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(copyCode);
     dispatch(setSuccessMess("Copy to clipboard"));
   };
+
+  useEffect(() => {
+    if (router) {
+      EventService.getEvent(Number(router.query.eventId.slice(1)))
+        .then((res) => {
+          setEvent(res.data);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
   return (
     <>
       <SectionHeader
@@ -103,7 +81,7 @@ const EventPage = memo(() => {
             <Grid className={classes.boxTicket}>
               <Grid className={classes.titleTicket}>
                 <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
-                <p>Coupon Nha Trang 300K</p>
+                <p>{event?.name}</p>
               </Grid>
               <Grid sx={{ paddingBottom: "10px" }}>
                 <InputTextfield
@@ -122,12 +100,16 @@ const EventPage = memo(() => {
                 />
               </Grid>
               <Grid className={classes.description}>
-                <p>
-                  Discount 4% up to 300,000 VND for hotel booking in Thailand
-                  from 3,000,000 VND.
-                </p>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: event?.description,
+                  }}
+                ></p>
               </Grid>
-              <Grid className={classes.footTicket}>
+              <Grid
+                className={classes.footTicket}
+                onClick={onOpenPopupTermAndCondition}
+              >
                 <p>Read Terms and Conditions</p>
               </Grid>
             </Grid>
@@ -159,6 +141,11 @@ const EventPage = memo(() => {
             </Grid>
           </Grid>
         </Container>
+        <PopupTermAndCondition
+          isOpen={openPopupTermAndCondition}
+          toggle={onOpenPopupTermAndCondition}
+          event={event}
+        />
       </Row>
     </>
   );

@@ -1,20 +1,20 @@
 import React, { memo, useRef } from "react";
 import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
 import { Col, Nav, NavItem, NavLink, TabContent } from "reactstrap";
 import classes from "./styles.module.scss";
 import { images } from "configs/images";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import useAuth from "hooks/useAuth";
 import EventIcon from "@mui/icons-material/Event";
-
-const Users = dynamic(() => import("pages/admin/components/Users"));
-const Events = dynamic(() => import("pages/admin/components/Events"));
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import Users from "pages/admin/components/Users";
+import AddOrEditEvent from "pages/admin/components/Events/components/AddOrEditEvent";
 
 interface PropTypes {}
 
 const Admin = memo(({ ...props }: PropTypes) => {
   const router = useRouter();
-  const { page } = router.query;
+
+  const { page, action } = router.query;
 
   const usersRef = useRef<HTMLDivElement>(null);
   const eventsRef = useRef<HTMLDivElement>(null);
@@ -44,13 +44,24 @@ const Admin = memo(({ ...props }: PropTypes) => {
             block: "nearest",
             inline: "center",
           });
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <Events />
-            </TabContent>
-          </Col>
-        );
+        if (action === "create-event") {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <AddOrEditEvent />
+              </TabContent>
+            </Col>
+          );
+        }
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <AddOrEditEvent eventId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
     }
   };
 

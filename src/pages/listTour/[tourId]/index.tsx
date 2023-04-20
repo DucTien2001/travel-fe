@@ -23,8 +23,6 @@ const ProductPage = memo(() => {
   const [tour, setTour] = useState<any>();
   const [tourSchedule, setTourSchedule] = useState([]);
   // const [listComment, setListComment] = useState([]);
-  const tourId = Number(router.query.tourId.slice(1));
-
   // const listRates = [];
   // listComment.forEach((item) => {
   //   listRates.push(item.rate);

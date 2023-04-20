@@ -11,10 +11,11 @@ import EventIcon from "@mui/icons-material/Event";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { EUserType } from "models/user";
 import useAuth from "hooks/useAuth";
+import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 
 const Tours = dynamic(() => import("pages/enterprises/components/Tours"));
 const Hotels = dynamic(() => import("pages/enterprises/components/Hotels"));
-const Events = dynamic(() => import("pages/enterprises/components/Events"));
+const Vouchers = dynamic(() => import("pages/enterprises/components/Vouchers"));
 const Staffs = dynamic(() => import("pages/enterprises/components/Staffs"));
 
 interface PropTypes {}
@@ -26,7 +27,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
 
   const toursRef = useRef<HTMLDivElement>(null);
   const hotelsRef = useRef<HTMLDivElement>(null);
-  const eventsRef = useRef<HTMLDivElement>(null);
+  const vouchersRef = useRef<HTMLDivElement>(null);
   const staffsRef = useRef<HTMLDivElement>(null);
 
   const renderComponent = () => {
@@ -61,10 +62,10 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
-      case "events":
-        eventsRef &&
-          eventsRef.current &&
-          eventsRef.current?.scrollIntoView({
+      case "vouchers":
+        vouchersRef &&
+          vouchersRef.current &&
+          vouchersRef.current?.scrollIntoView({
             behavior: "smooth",
             block: "nearest",
             inline: "center",
@@ -72,7 +73,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
         return (
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
-              <Events />
+              <Vouchers />
             </TabContent>
           </Col>
         );
@@ -131,12 +132,12 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </NavLink>
           </NavItem>
           <NavItem
-            onClick={() => gotoMenu("events")}
+            onClick={() => gotoMenu("vouchers")}
             className={classes.navItem}
           >
-            <NavLink className={renderClass("events")}>
-              <EventIcon />
-              <span ref={eventsRef}>Events</span>
+            <NavLink className={renderClass("vouchers")}>
+              <AirplaneTicketIcon />
+              <span ref={vouchersRef}>Vouchers</span>
             </NavLink>
           </NavItem>
           {user.role === EUserType.ENTERPRISE && (
@@ -146,7 +147,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             >
               <NavLink className={renderClass("staffs")}>
                 <PeopleAltIcon />
-                <span ref={eventsRef}>Staffs</span>
+                <span ref={staffsRef}>Staffs</span>
               </NavLink>
             </NavItem>
           )}

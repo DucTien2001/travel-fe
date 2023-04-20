@@ -10,8 +10,10 @@
 .modalBody {
     height: 70vh;
     overflow-y: auto;
+    padding-top: 0 !important;
 }
 .title {
+    padding-bottom: 24px !important;
     h5 {
         font-weight: 700!important;
         color: var(--text-color);
@@ -69,7 +71,7 @@
 }
 
 .rootOverview {
-    padding-top: 16px;
+    padding-bottom: 24px;
     .titleDetail {
         font-weight: 700;
     }

@@ -198,6 +198,15 @@ const Login: NextPage = () => {
                                       }}
                                     />
                                   </Grid>
+                                  <Grid sx={{ paddingRight: "14px" }}>
+                                    <InputCheckbox
+                                      content="Admin"
+                                      checked={field.value === EUserType.ADMIN}
+                                      onChange={() => {
+                                        setValue("role", EUserType.ADMIN);
+                                      }}
+                                    />
+                                  </Grid>
                                   <Grid>
                                     <InputCheckbox
                                       content="Enterprise"

@@ -40,11 +40,15 @@ import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
 import moment from "moment";
 import Geocode from "react-geocode";
 import PopupDetailTour from "./components/PopupDetailTour";
+import { setConfirmBookTourReducer } from "redux/reducers/Normal/actionTypes";
+import { useRouter } from "next/router";
+import { OptionItem } from "models/general";
+import { useDispatch } from "react-redux";
 
 const AnyReactComponent = ({ text, lat, lng }) => <div>{text}</div>;
-export interface FormData {
+export interface FormBookData {
   startDate: Date;
-  language: any;
+  language: OptionItem;
   numberOfAdult?: number;
   numberOfChild?: number;
 }
@@ -70,7 +74,33 @@ const languageOptions = [
 // eslint-disable-next-line react/display-name
 const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   const { user } = useAuth();
+  const router = useRouter();
+  const dispatch = useDispatch();
+
   // Geocode.setApiKey("AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k");
+
+  const dayCategory = useMemo(() => {
+    return _.chain(tourSchedule)
+      .groupBy((item) => item?.day)
+      .map((value) => ({ day: value[0].day, schedule: value }))
+      .value();
+  }, [tourSchedule]);
+
+  const dayValid = useMemo(() => {
+    return [];
+  }, [tour]);
+
+  const yesterday = moment().subtract(1, "day");
+
+  const _dateDefault = useMemo(() => {
+    for (var i = 0; i < tour?.tourOnSales?.length; i++) {
+      if (moment(tour?.tourOnSales[i]?.startDate) > yesterday) {
+        return new Date(tour?.tourOnSales[i]?.startDate);
+      }
+    }
+  }, [tour]);
+
+  const [dateDefault, setDateDefault] = useState(new Date(_dateDefault));
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
   const [openPopupDetailTour, setOpenPopupDetailTour] = useState(false);
   const [tab, setTab] = React.useState("1");
@@ -86,23 +116,17 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
 
   const [totalPrice, setTotalPrice] = useState(null);
 
-  const [dateDefault, setDateDefault] = useState(null);
-
-  const dayCategory = useMemo(() => {
-    return _.chain(tourSchedule)
-      .groupBy((item) => item?.day)
-      .map((value) => ({ day: value[0].day, schedule: value }))
-      .value();
-  }, [tourSchedule]);
-
-  const dayValid = useMemo(() => {
-    return [];
-  }, [tour]);
-
   const schema = useMemo(() => {
     return yup.object().shape({
-      startDate: yup.date().required("Please choose start time"),
-      language: yup.string().required("Please choose language"),
+      language: yup
+        .object()
+        .typeError("Language is required.")
+        .shape({
+          id: yup.number().required("Language is required"),
+          name: yup.string().required(),
+          value: yup.string().required(),
+        })
+        .required(),
       numberOfAdult: yup
         .number()
         .transform((value) => (isNaN(value) ? undefined : value))
@@ -124,12 +148,13 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
     formState: { errors },
     reset,
     control,
-  } = useForm<FormData>({
+  } = useForm<FormBookData>({
     resolver: yupResolver(schema),
     mode: "onChange",
     defaultValues: {
       numberOfAdult: 1,
       numberOfChild: 0,
+      startDate: dateDefault,
       language: languageOptions[0],
     },
   });
@@ -143,7 +168,6 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   const handleChangeDaySchedule = (event: any, newValue: string) => {
     setTab(newValue);
   };
-  const yesterday = moment().subtract(1, "day");
 
   const disableCustomDt = (current) => {
     return (
@@ -174,12 +198,27 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
     setDateDefault(e._d);
   };
 
+  const _onSubmit = (data: FormBookData) => {
+    dispatch(
+      setConfirmBookTourReducer({
+        tourId: tour?.id,
+        amountAdult: data?.numberOfAdult,
+        amountChildren: data?.numberOfChild,
+        startDate: dateDefault,
+        totalPrice: totalPrice,
+        language: data?.language.name,
+        priceAdult: priceAndAge.adultPrice,
+        priceChildren: priceAndAge.priceChildren,
+        discount: priceAndAge?.discount,
+        owner: tour?.owner,
+      })
+    );
+    router.push(`/book/tour/:${tour?.id}/booking`);
+  };
+
   useEffect(() => {
     for (var i = 0; i < tour?.tourOnSales?.length; i++) {
       if (moment(tour?.tourOnSales[i]?.startDate) > yesterday) {
-        // reset({
-        //   startDate: new Date(tour?.tourOnSales[i]?.startDate),
-        // });
         setDateDefault(new Date(tour?.tourOnSales[i]?.startDate));
         setPriceAndAge({
           childrenAgeMin: tour?.tourOnSales[i]?.childrenAgeMin,
@@ -229,7 +268,11 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
 
   return (
     <>
-      <Grid component="form" className={clsx("section", classes.root)}>
+      <Grid
+        component="form"
+        className={clsx("section", classes.root)}
+        onSubmit={handleSubmit(_onSubmit)}
+      >
         <Container className={classes.container}>
           <Row>
             <Col>
@@ -498,18 +541,14 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                 </Grid>
               </div>
               {user ? (
-                <Link href={`/book/tour/:${tour?.id}`}>
-                  <a>
-                    <Button
-                      btnType={BtnType.Primary}
-                      isDot={true}
-                      className={classes.btnBookNow}
-                      type="submit"
-                    >
-                      Book Now
-                    </Button>
-                  </a>
-                </Link>
+                <Button
+                  btnType={BtnType.Primary}
+                  isDot={true}
+                  className={classes.btnBookNow}
+                  type="submit"
+                >
+                  Book Now
+                </Button>
               ) : (
                 <Link href={"/auth/login"}>
                   <a>
@@ -556,17 +595,17 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
             </Col>
           </Row>
         </Container>
-        <PopupModalImages
-          isOpen={openPopupModalImages}
-          toggle={onOpenPopupModalImages}
-          images={tour?.images}
-        />
-        <PopupDetailTour
-          isOpen={openPopupDetailTour}
-          toggle={onOpenPopupDetailTour}
-          tour={tour}
-        />
       </Grid>
+      <PopupModalImages
+        isOpen={openPopupModalImages}
+        toggle={onOpenPopupModalImages}
+        images={tour?.images}
+      />
+      <PopupDetailTour
+        isOpen={openPopupDetailTour}
+        toggle={onOpenPopupDetailTour}
+        tour={tour}
+      />
     </>
   );
 });

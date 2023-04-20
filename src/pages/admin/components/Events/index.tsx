@@ -1,21 +1,20 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Row } from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
-import { AdminGetTours, ETour } from "models/enterprise";
+
 import { useDispatch } from "react-redux";
 import {
   setErrorMess,
   setLoading,
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
-import { TourService } from "services/enterprise/tour";
+
 import SearchNotFound from "components/SearchNotFound";
-import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
 import {
   Box,
   IconButton,
@@ -45,8 +44,8 @@ import {
 import { useRouter } from "next/router";
 import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
-import { FindAll, IEvent } from "models/enterprise/event";
-import { EventService } from "services/enterprise/event";
+import { IEvent, FindAll } from "models/admin/event";
+import { EventService } from "services/admin/event";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "id", label: "Id", sortable: false },
@@ -55,11 +54,9 @@ const tableHeaders: TableHeaderLabel[] = [
   { name: "actions", label: "Actions", sortable: false },
 ];
 
-interface Props {
-  handleTourEdit?: () => void;
-}
+interface Props {}
 // eslint-disable-next-line react/display-name
-const Event = memo(({ handleTourEdit }: Props) => {
+const EventComponent = memo(({}: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -133,8 +130,8 @@ const Event = memo(({ handleTourEdit }: Props) => {
     500
   );
 
-  const onCreateTour = () => {
-    router.push("/enterprises/events/create-event");
+  const onCreateEvent = () => {
+    router.push("/admin/events/create-event");
   };
 
   const onCloseActionMenu = () => {
@@ -159,7 +156,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
 
   const onRedirectEdit = (item: IEvent, lang?: LangSupport) => {
     router.push({
-      pathname: `/enterprises/events/${item.id}`,
+      pathname: `/admin/events/${item.id}`,
       search: lang && `?lang=${lang.key}`,
     });
   };
@@ -213,7 +210,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
               onChange={onSearch}
             />
           </div>
-          <Button btnType={BtnType.Primary} onClick={onCreateTour}>
+          <Button btnType={BtnType.Primary} onClick={onCreateEvent}>
             <FontAwesomeIcon icon={faPlus} />
             Create
           </Button>
@@ -230,14 +227,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
                         {item.id}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <a
-                          href={`/listTour/:${item?.id}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={classes.tourName}
-                        >
-                          {item?.name}
-                        </a>
+                        {item?.name}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {item?.languages?.map((it) => it.language).join(", ")}
@@ -343,7 +333,7 @@ const Event = memo(({ handleTourEdit }: Props) => {
           ))}
         </Menu>
         <PopupConfirmDelete
-          title="Are you sure delete this tour ?"
+          title="Are you sure delete this event ?"
           isOpen={!!eventDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}
@@ -354,4 +344,4 @@ const Event = memo(({ handleTourEdit }: Props) => {
   );
 });
 
-export default Event;
+export default EventComponent;

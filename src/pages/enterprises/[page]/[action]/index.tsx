@@ -1,35 +1,24 @@
-import React, {
-  Fragment,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { memo, useRef } from "react";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import Head from "next/head";
-import { useTranslation } from "react-i18next";
 import dynamic from "next/dynamic";
 import { Col, Nav, NavItem, NavLink, TabContent } from "reactstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBuilding,
-  faPlaneDeparture,
-} from "@fortawesome/free-solid-svg-icons";
 import classes from "./styles.module.scss";
 import { images } from "configs/images";
 import Hotels from "pages/enterprises/components/Hotels";
-import AddOrEditEvent from "pages/enterprises/components/Events/components/AddOrEditEvent";
+
 import OfferStaffs from "pages/enterprises/components/Staffs/components/OfferStaffs";
 import { EUserType } from "models/user";
 import useAuth from "hooks/useAuth";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import AttractionsIcon from "@mui/icons-material/Attractions";
-import EventIcon from "@mui/icons-material/Event";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 const AddOrEditTour = dynamic(
   () => import("pages/enterprises/components/Tours/AddOrEditTour")
+);
+const AddOrEditVoucher = dynamic(
+  () =>
+    import("pages/enterprises/components/Vouchers/components/AddOrEditVoucher")
 );
 
 interface PropTypes {}
@@ -41,7 +30,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
 
   const toursRef = useRef<HTMLDivElement>(null);
   const hotelsRef = useRef<HTMLDivElement>(null);
-  const eventsRef = useRef<HTMLDivElement>(null);
+  const vouchersRef = useRef<HTMLDivElement>(null);
   const staffsRef = useRef<HTMLDivElement>(null);
 
   const renderComponent = () => {
@@ -80,19 +69,19 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
-      case "events":
-        eventsRef &&
-          eventsRef.current &&
-          eventsRef.current?.scrollIntoView({
+      case "vouchers":
+        vouchersRef &&
+          vouchersRef.current &&
+          vouchersRef.current?.scrollIntoView({
             behavior: "smooth",
             block: "nearest",
             inline: "center",
           });
-        if (action === "create-event") {
+        if (action === "create-voucher") {
           return (
             <Col xs={10} className={classes.content}>
               <TabContent className={classes.tabContent}>
-                <AddOrEditEvent />
+                <AddOrEditVoucher />
               </TabContent>
             </Col>
           );
@@ -101,7 +90,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           return (
             <Col xs={10} className={classes.content}>
               <TabContent className={classes.tabContent}>
-                <AddOrEditEvent eventId={Number(action)} />
+                <AddOrEditVoucher voucherId={Number(action)} />
               </TabContent>
             </Col>
           );
@@ -163,12 +152,12 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </NavLink>
           </NavItem>
           <NavItem
-            onClick={() => gotoMenu("events")}
+            onClick={() => gotoMenu("vouchers")}
             className={classes.navItem}
           >
-            <NavLink className={renderClass("events")}>
-              <EventIcon />
-              <span ref={staffsRef}>Events</span>
+            <NavLink className={renderClass("vouchers")}>
+              <AirplaneTicketIcon />
+              <span ref={staffsRef}>Vouchers</span>
             </NavLink>
           </NavItem>
           {user.role === EUserType.ENTERPRISE && (

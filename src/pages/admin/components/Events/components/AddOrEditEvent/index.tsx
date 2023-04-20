@@ -5,7 +5,15 @@ import "aos/dist/aos.css";
 import Button, { BtnType } from "components/common/buttons/Button";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import clsx from "clsx";
-import { Grid, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
@@ -16,18 +24,23 @@ import {
   setLoading,
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
-import { TourService } from "services/enterprise/tour";
-import { EventService } from "services/enterprise/event";
-import { IEvent } from "models/enterprise/event";
+
+import { EventService } from "services/admin/event";
+import { FindAll, IEvent } from "models/admin/event";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import { Controller, useForm } from "react-hook-form";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import { yupResolver } from "@hookform/resolvers/yup";
 import dynamic from "next/dynamic";
-import { reactQuillModules } from "common/general";
+
 import InputCreatableSelect from "components/common/inputs/InputCreatableSelect";
 import { AdminGetTours, ETour } from "models/enterprise";
-import { DataPagination, OptionItem } from "models/general";
+import {
+  DataPagination,
+  EDiscountType,
+  OptionItem,
+  discountType,
+} from "models/general";
 import { useDropzone } from "react-dropzone";
 import useIsMountedRef from "hooks/useIsMountedRef";
 import { fData } from "utils/formatNumber";
@@ -35,6 +48,9 @@ import { CameraAlt, KeyboardArrowDown } from "@mui/icons-material";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import moment from "moment";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
+import InputSelect from "components/common/inputs/InputSelect";
+import { TourService } from "services/normal/tour";
+import { getDiscountType } from "utils/getOption";
 const PHOTO_SIZE = 10 * 1000000; // bytes
 const FILE_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
@@ -56,11 +72,15 @@ export interface EventForm {
   startTime: Date;
   endTime: Date;
   code: string;
-  policy: string;
   hotelIds: OptionItem<number>[];
   tourIds: OptionItem<number>[];
   numberOfCodes: number;
-  image: string | File;
+  discountType?: OptionItem;
+  discountValue?: number;
+  minOrder?: number;
+  maxDiscount?: number;
+  isQuantityLimit?: boolean;
+  banner: string | File;
 }
 
 interface Props {
@@ -80,12 +100,13 @@ const AddOrEditEvent = memo((props: Props) => {
   }
 
   const [fileReview, setFileReview] = useState<string>("");
-  const [keywordTour, setKeywordTour] = useState<string>("");
   const [dataTour, setDataTour] = useState<DataPagination<ETour>>();
   const [event, setEvent] = useState<IEvent>(null);
+  const [dataEvent, setDataEvent] = useState<DataPagination<IEvent>>();
   const [anchorElMenuChooseTour, setAnchorElMenuChooseTour] =
     useState<null | HTMLElement>(null);
   const [tourSelected, setTourSelected] = useState<number[]>([]);
+  const [isEmptyTourSelect, setIsEmptyTourSelect] = useState(false);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -97,35 +118,45 @@ const AddOrEditEvent = memo((props: Props) => {
         .min(yup.ref("startTime"), "End time can't be before start time")
         .required("End time is required"),
       code: yup.string().required("Code is required"),
-      policy: yup.string().required("Policy is required"),
-      // hotelIds: yup
-      //   .array(
-      //     yup
-      //       .object()
-      //       .typeError("Select hotel is required.")
-      //       .shape({
-      //         id: yup.number().required("Select hotel is required"),
-      //         name: yup.string().required(),
-      //       })
-      //   )
-      //   .required(),
-      // tourIds: yup
-      //   .array(
-      //     yup
-      //       .object()
-      //       .typeError("Select tour is required.")
-      //       .shape({
-      //         id: yup.number().required("Select tour is required"),
-      //         name: yup.string().required(),
-      //       })
-      //   )
-      //   .required(),
-      numberOfCodes: yup
+
+      discountType: yup
+        .object()
+        .typeError("Discount type is required.")
+        .shape({
+          id: yup.number().required("Discount type is required"),
+          name: yup.string().required(),
+        })
+        .required(),
+      discountValue: yup
         .number()
-        .typeError("Number of codes is required.")
-        .positive("Number of codes must be a positive number")
-        .required("Number of codes is required."),
-      image: yup.mixed().required("Image is required"),
+        .typeError("Discount value is required.")
+        .positive("Discount value must be a positive number")
+        .required("Discount value is required."),
+      minOder: yup
+        .number()
+        .typeError("Min order is required.")
+        .positive("Min order must be a positive number")
+        .notRequired(),
+      maxDiscount: yup.number().when("discountType", {
+        is: (type: OptionItem) => type?.id === EDiscountType.PERCENT,
+        then: yup
+          .number()
+          .typeError("Max discount is required.")
+          .positive("Max discount must be a positive number")
+          .required("Max discount is required."),
+        otherwise: yup.number().nullable().notRequired().default(0),
+      }),
+      numberOfCodes: yup.number().when(["isQuantityLimit"], {
+        is: (isQuantityLimit: boolean) => !!isQuantityLimit,
+        then: yup
+          .number()
+          .typeError("Number of codes must be number")
+          .positive("Number of codes  must be a integer number")
+          .required("Number of codes  is required."),
+        otherwise: yup.number().nullable().notRequired().default(0),
+      }),
+      isQuantityLimit: yup.boolean().required("Quantity limit is required"),
+      banner: yup.mixed().required("Image is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -143,6 +174,10 @@ const AddOrEditEvent = memo((props: Props) => {
   } = useForm<EventForm>({
     resolver: yupResolver(schema),
     mode: "onChange",
+    defaultValues: {
+      discountType: discountType[0],
+      isQuantityLimit: false,
+    },
   });
 
   const isValidSize = async (file: File) => {
@@ -174,13 +209,13 @@ const AddOrEditEvent = memo((props: Props) => {
       const checkType = FILE_FORMATS.includes(file.type);
       const validSize = await isValidSize(file);
       if (!validSize) {
-        setError("image", {
+        setError("banner", {
           message: t("setup_survey_packs_popup_image_size"),
         });
         return;
       }
       if (!checkSize) {
-        setError("image", {
+        setError("banner", {
           message: t("setup_survey_packs_popup_image_file_size", {
             size: fData(PHOTO_SIZE),
           }),
@@ -188,12 +223,12 @@ const AddOrEditEvent = memo((props: Props) => {
         return;
       }
       if (!checkType) {
-        setError("image", {
+        setError("banner", {
           message: t("setup_survey_packs_popup_image_type"),
         });
         return;
       }
-      setValue("image", file);
+      setValue("banner", file);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isMountedRef]
@@ -211,11 +246,15 @@ const AddOrEditEvent = memo((props: Props) => {
       startTime: new Date(),
       endTime: new Date(),
       code: "",
-      policy: "",
       hotelIds: [],
       tourIds: [],
+      discountType: discountType[0],
+      discountValue: null,
+      minOrder: null,
+      maxDiscount: null,
       numberOfCodes: null,
-      image: undefined,
+      banner: undefined,
+      isQuantityLimit: false,
     });
   };
 
@@ -225,7 +264,7 @@ const AddOrEditEvent = memo((props: Props) => {
   };
 
   const onBack = () => {
-    router.push("/enterprises/events");
+    router.push("/admin/events");
     clearForm();
   };
 
@@ -246,6 +285,31 @@ const AddOrEditEvent = memo((props: Props) => {
       .finally(() => dispatch(setLoading(false)));
   };
 
+  const fetchEvent = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+  }) => {
+    const params: FindAll = {
+      take: value?.take || dataEvent?.meta?.take || 10,
+      page: value?.page || dataEvent?.meta?.page || 1,
+      keyword: null,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
+    }
+    dispatch(setLoading(true));
+    EventService.findAll(params)
+      .then((res) => {
+        setDataEvent({
+          data: res.data,
+          meta: res.meta,
+        });
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
   const fetchTour = (value?: {
     take?: number;
     page?: number;
@@ -254,13 +318,13 @@ const AddOrEditEvent = memo((props: Props) => {
     const params: AdminGetTours = {
       take: value?.take || dataTour?.meta?.take || 10,
       page: value?.page || dataTour?.meta?.page || 1,
-      keyword: keywordTour,
+      keyword: null,
     };
     if (value?.keyword !== undefined) {
       params.keyword = value.keyword || undefined;
     }
     dispatch(setLoading(true));
-    TourService.getTours(params)
+    TourService.getAllTours(params)
       .then((res) => {
         setDataTour({
           data: res.data,
@@ -296,7 +360,16 @@ const AddOrEditEvent = memo((props: Props) => {
     setTourSelected(_tourSelected);
   };
 
-  const [isEmptyTourSelect, setIsEmptyTourSelect] = useState(false);
+  const watchCode = watch("code");
+
+  const handleCheckCode = () => {
+    for (var i = 0; i < dataEvent?.data?.length; i++) {
+      if (watchCode.trim() === dataEvent?.data[i].name) {
+        setError("code", { message: "This code already exists" });
+        break;
+      }
+    }
+  };
 
   const onSubmit = (data: EventForm) => {
     dispatch(setLoading(true));
@@ -306,8 +379,20 @@ const AddOrEditEvent = memo((props: Props) => {
     formData.append("startTime", `${data.startTime}`);
     formData.append("endTime", `${data.endTime}`);
     formData.append("code", data.code);
-    formData.append("policy", `${data.policy}`);
-    formData.append("numberOfCodes", `${data.numberOfCodes}`);
+    formData.append("discountType", `${data.discountType.value}`);
+    formData.append("discountValue", `${data.discountValue}`);
+    if (data?.minOrder) {
+      formData.append("minOrder", `${data.minOrder}`);
+    } else {
+      formData.append("minOrder", `${0}`);
+    }
+    formData.append("isQuantityLimit", `${data.isQuantityLimit}`);
+    if (data?.isQuantityLimit) {
+      formData.append("numberOfCodes", `${data.numberOfCodes}`);
+    }
+    if (data?.discountType.value === EDiscountType.PERCENT) {
+      formData.append("maxDiscount", `${data.maxDiscount}`);
+    }
     if (tourSelected.length === 0) {
       setIsEmptyTourSelect(true);
     } else {
@@ -318,8 +403,8 @@ const AddOrEditEvent = memo((props: Props) => {
     data.hotelIds?.forEach((item) => {
       formData.append(`hotelIds[]`, `1`);
     });
-    if (data.image && typeof data.image === "object")
-      formData.append("banner", data.image);
+    if (data.banner && typeof data.banner === "object")
+      formData.append("banner", data.banner);
     if (event) {
       if (lang) {
         formData.append("language", lang);
@@ -343,33 +428,37 @@ const AddOrEditEvent = memo((props: Props) => {
     }
   };
 
-  const image = watch("image");
+  const banner = watch("banner");
 
   useEffect(() => {
-    if (image) {
-      if (typeof image === "object") {
+    if (banner) {
+      if (typeof banner === "object") {
         const reader = new FileReader();
-        reader.readAsDataURL(image);
+        reader.readAsDataURL(banner);
         reader.onload = () => setFileReview(reader.result as string);
       } else {
-        setFileReview(image as string);
+        setFileReview(banner as string);
       }
-      clearErrors("image");
+      clearErrors("banner");
     } else setFileReview("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [image]);
+  }, [banner]);
 
   useEffect(() => {
     if (event) {
       reset({
-        image: event.banner,
-        name: event.name,
-        description: event.description,
-        startTime: new Date(event.startTime),
-        endTime: new Date(event.endTime),
-        code: event.code,
-        policy: event.policy,
-        numberOfCodes: event.numberOfCodes,
+        banner: event?.banner,
+        name: event?.name,
+        description: event?.description,
+        startTime: new Date(event?.startTime),
+        endTime: new Date(event?.endTime),
+        code: event?.code,
+        discountType: getDiscountType(event?.discountType),
+        discountValue: event?.discountValue,
+        minOrder: event?.minOrder,
+        isQuantityLimit: event?.isQuantityLimit,
+        numberOfCodes: event?.numberOfCodes,
+        maxDiscount: event?.maxDiscount,
       });
       setTourSelected(event.tourIds);
     }
@@ -378,6 +467,7 @@ const AddOrEditEvent = memo((props: Props) => {
 
   useEffect(() => {
     fetchTour();
+    fetchEvent();
   }, []);
 
   return (
@@ -407,7 +497,7 @@ const AddOrEditEvent = memo((props: Props) => {
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <InputDatePicker
                   name={`startTime`}
                   control={control}
@@ -420,7 +510,7 @@ const AddOrEditEvent = memo((props: Props) => {
                   isValidDate={disablePastDt}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <InputDatePicker
                   name={`endTime`}
                   control={control}
@@ -433,7 +523,7 @@ const AddOrEditEvent = memo((props: Props) => {
                   isValidDate={disablePastDt}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <p className={classes.titleSelect}>Select tours</p>
                 <Button
                   sx={{ width: { xs: "100%", sm: "auto" }, maxHeight: "36px" }}
@@ -506,7 +596,7 @@ const AddOrEditEvent = memo((props: Props) => {
                   </Grid>
                 </Menu>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <InputCreatableSelect
                   fullWidth
                   title="Select hotels"
@@ -519,26 +609,100 @@ const AddOrEditEvent = memo((props: Props) => {
                   errorMessage={(errors.hotelIds as any)?.message}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
+                <InputSelect
+                  fullWidth
+                  title="Discount Type"
+                  name="discountType"
+                  control={control}
+                  selectProps={{
+                    options: discountType,
+                    placeholder: "-- Discount type --",
+                  }}
+                  errorMessage={(errors.discountType as any)?.message}
+                />
+              </Grid>
+              {watch("discountType")?.value === EDiscountType.PERCENT && (
+                <Grid item xs={12} sm={6}>
+                  <InputTextfield
+                    title="Max discount"
+                    placeholder="Ex: 100 000 VND"
+                    autoComplete="off"
+                    name="maxDiscount"
+                    optional
+                    type="number"
+                    inputRef={register("maxDiscount")}
+                    errorMessage={errors.maxDiscount?.message}
+                  />
+                </Grid>
+              )}
+              <Grid item xs={12} sm={6}>
+                <InputTextfield
+                  title="Discount value"
+                  placeholder="Enter discount value"
+                  autoComplete="off"
+                  name="discountValue"
+                  type="number"
+                  inputRef={register("discountValue")}
+                  errorMessage={errors.discountValue?.message}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <InputTextfield
+                  title="Min Order"
+                  placeholder="Ex: 3 order"
+                  autoComplete="off"
+                  name="minOrder"
+                  optional
+                  type="number"
+                  inputRef={register("minOrder")}
+                  errorMessage={errors.minOrder?.message}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
                 <InputTextfield
                   title="Code"
                   placeholder="Ex: ENJOY NHA TRANG"
                   autoComplete="off"
                   name="code"
+                  onBlur={handleCheckCode}
                   inputRef={register("code")}
                   errorMessage={errors.code?.message}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <InputTextfield
-                  title="Number of Codes"
-                  placeholder="Enter number of code"
-                  autoComplete="off"
-                  name="code"
-                  type="number"
-                  inputRef={register("numberOfCodes")}
-                  errorMessage={errors.numberOfCodes?.message}
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  className={classes.checkBoxQuantity}
+                  control={
+                    <Controller
+                      name="isQuantityLimit"
+                      control={control}
+                      render={({ field }) => (
+                        <Checkbox checked={field.value} {...field} />
+                      )}
+                    />
+                  }
+                  label="Enable Limit Quantity Code"
                 />
+              </Grid>
+              {watch("isQuantityLimit") && (
+                <Grid item xs={12} sm={6}>
+                  <InputTextfield
+                    title="Number of Codes"
+                    placeholder="Enter number of code"
+                    autoComplete="off"
+                    name="code"
+                    type="number"
+                    inputRef={register("numberOfCodes")}
+                    errorMessage={errors.numberOfCodes?.message}
+                  />
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                <Divider />
               </Grid>
               <Grid xs={12} item>
                 <p className={classes.titleInput}>Description</p>
@@ -562,28 +726,7 @@ const AddOrEditEvent = memo((props: Props) => {
                   <ErrorMessage>{errors.description?.message}</ErrorMessage>
                 )}
               </Grid>
-              <Grid xs={12} item>
-                <p className={classes.titleInput}>Policy</p>
-                <Controller
-                  name="policy"
-                  control={control}
-                  render={({ field }) => (
-                    <ReactQuill
-                      modules={modules}
-                      className={clsx(classes.editor, {
-                        [classes.editorError]: !!errors.policy?.message,
-                      })}
-                      placeholder="Enter tour's policy"
-                      value={field.value || ""}
-                      onBlur={() => field.onBlur()}
-                      onChange={(value) => field.onChange(value)}
-                    />
-                  )}
-                />
-                {errors.policy?.message && (
-                  <ErrorMessage>{errors.policy?.message}</ErrorMessage>
-                )}
-              </Grid>
+
               <Grid
                 xs={12}
                 item
@@ -597,6 +740,8 @@ const AddOrEditEvent = memo((props: Props) => {
                   sx={{
                     display: "flex",
                     justifyContent: "center",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
                 >
                   <Grid
@@ -633,6 +778,7 @@ const AddOrEditEvent = memo((props: Props) => {
                       </>
                     )}
                   </Grid>
+                  <ErrorMessage>{errors?.banner?.message}</ErrorMessage>
                 </Grid>
               </Grid>
             </Grid>

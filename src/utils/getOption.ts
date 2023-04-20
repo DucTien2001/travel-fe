@@ -1,4 +1,4 @@
-import { EServicePolicyType } from "models/general";
+import { EDiscountType, EServicePolicyType } from "models/general";
 import { EUserType } from "models/user";
 
 export const getCurrency = (currency) => {
@@ -46,5 +46,15 @@ export const getCurrency = (currency) => {
         return { id: 4, name: "Staff", value: 4 };;
       case EUserType.USER:
         return { id: 5, name: "User", value: 5 };;
+    }
+  };
+
+
+  export const getDiscountType = (type) => {
+    switch (type) {
+      case EDiscountType.MONEY:
+        return { id: 1, name: "MONEY", value:  EDiscountType.MONEY};
+      case EDiscountType.PERCENT:
+        return { id: 2, name: "PERCENT", value: EDiscountType.PERCENT };
     }
   };

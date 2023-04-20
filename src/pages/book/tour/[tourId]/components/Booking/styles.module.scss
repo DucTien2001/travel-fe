@@ -37,6 +37,81 @@
         color: var(--orange-color);
     }
 }
+.containerVoucher {
+    margin-top: 14px;
+    background-color: rgb(236, 248, 255);
+    display: flex;
+    padding: 8px 16px;
+    flex-direction: column;
+}
+.titleVoucher {
+    display: flex;
+    align-items: center;
+    p {
+        margin: 0;
+        color: var(--primary-light-color);
+        font-weight: 700;
+    }
+    svg {
+        color: var(--orange-color);
+        margin-right: 10px;
+    }
+}
+.btnChooseVoucher {
+    margin: 14px 0 0 auto;
+     p {
+        color: var(--orange-color);
+        font-weight: 700;
+        margin: 0;
+     }
+     &:hover {
+        text-decoration: underline var(--orange-color);
+     }
+}
+.boxVoucher { 
+    position: relative;
+    margin-left: 0.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    background: rgba(208,1,27,.08);
+    padding: 3px 7px;
+    border: 0;
+    white-space: nowrap;
+    color: #ee4d2d;
+}
+.boxVoucherInValid {
+    display: none;
+}
+.boxVoucher::before {
+    left: -3px;
+    content: "";
+    width: 6px;
+    height: calc(100% - 5px);
+    position: absolute;
+    top: 2.5px;
+    background-image: radial-gradient(#fff 2px,transparent 0);
+    background-size: 6px 6px;
+    background-position-x: -6px;
+}
+
+.boxVoucher::after {
+    right: -3px;
+    content: "";
+    width: 6px;
+    height: calc(100% - 5px);
+    position: absolute;
+    top: 2.5px;
+    background-image: radial-gradient(#fff 2px,transparent 0);
+    background-size: 6px 6px;
+    background-position-x: -6px;
+}
+
+.boxVoucher:last-child {
+    margin-right: 0;
+}
 .boxPriceDetail {
     padding-top: 14px;
     p {
@@ -81,11 +156,14 @@
             height: 90px;
             border-radius: 10px;
         }
-        a {
+        p {
             padding-left: 16px;
             font-size: 14px;
             color: var(--primary-light-color-1);
             font-weight: 600;
+            margin: 0;
+            text-decoration: underline;
+            cursor: pointer;
         }
     }
 }
@@ -124,6 +202,9 @@
             font-size: 14px;
             font-weight: 600;
             margin: 0;
+        }
+        .tipBold {
+            font-weight: 700;
         }
     }
     .tipRequest {

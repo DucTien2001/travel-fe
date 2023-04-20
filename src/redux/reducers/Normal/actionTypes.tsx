@@ -23,6 +23,11 @@ export const SET_TOUR_COMMENT_REDUCER = "SET_TOUR_COMMENT_REDUCER";
 //CONFIRM BOOK TOUR
 export const GET_CONFIRM_BOOK_TOUR_REQUEST = "GET_CONFIRM_BOOK_TOUR_REQUEST";
 export const SET_CONFIRM_BOOK_TOUR_REDUCER = "SET_CONFIRM_BOOK_TOUR_REDUCER";
+//CONFIRM BOOK TOUR REVIEW
+export const GET_CONFIRM_BOOK_TOUR_REVIEW_REQUEST =
+  "GET_CONFIRM_BOOK_TOUR_REVIEW_REQUEST";
+export const SET_CONFIRM_BOOK_TOUR_REVIEW_REDUCER =
+  "SET_CONFIRM_BOOK_TOUR_REVIEW_REDUCER";
 //CONFIRM BOOK ROOM
 export const GET_CONFIRM_BOOK_ROOM_REQUEST = "GET_CONFIRM_BOOK_ROOM_REQUEST";
 export const SET_CONFIRM_BOOK_ROOM_REDUCER = "SET_CONFIRM_BOOK_ROOM_REDUCER";
@@ -114,6 +119,21 @@ export const setConfirmBookTourReducer = (data: any) => {
     data: data,
   };
 };
+
+//****** confirm book tour reivew */
+export const getConfirmBookTourReview = () => {
+  return {
+    type: GET_CONFIRM_BOOK_TOUR_REVIEW_REQUEST,
+  };
+};
+
+export const setConfirmBookTourReviewReducer = (data: any) => {
+  return {
+    type: SET_CONFIRM_BOOK_TOUR_REVIEW_REDUCER,
+    data: data,
+  };
+};
+
 // ********** confirm book room **********
 export const getConfirmBookRoom = () => {
   return {
@@ -127,6 +147,7 @@ export const setConfirmBookRoomReducer = (data: any) => {
     data: data,
   };
 };
+
 //****** get information user */
 export const getUserInformationBookRoom = () => {
   return {

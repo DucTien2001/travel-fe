@@ -1,11 +1,11 @@
 import { API } from "configs/constants";
 import api from "../configApi";
-import { Create, FindAll, Update } from "models/enterprise/event";
+import { FindAll } from "models/admin/event";
 
 export class EventService {
   static async findAll(data: FindAll): Promise<any> {
     return await api
-      .get(API.ENTERPRISE.EVENT.DEFAULT, { params: data })
+      .get(API.ADMIN.EVENT.DEFAULT, { params: data })
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -16,7 +16,7 @@ export class EventService {
   
   static async findOne(id: number, language?: string): Promise<any> {
     return await api
-      .get(`${API.ENTERPRISE.EVENT.DEFAULT}/${id}`, {
+      .get(`${API.ADMIN.EVENT.DEFAULT}/${id}`, {
         params: {
           language
         }
@@ -31,7 +31,7 @@ export class EventService {
 
   static async create(data: FormData): Promise<any> {
     return await api
-      .post(API.ENTERPRISE.EVENT.DEFAULT, data)
+      .post(API.ADMIN.EVENT.DEFAULT, data)
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -42,7 +42,7 @@ export class EventService {
 
   static async update(id: number, data: FormData): Promise<any> {
     return await api
-      .put(`${API.ENTERPRISE.EVENT.DEFAULT}/${id}`, data)
+      .put(`${API.ADMIN.EVENT.DEFAULT}/${id}`, data)
       .then((res) => {
         return Promise.resolve(res.data);
       })
@@ -53,7 +53,7 @@ export class EventService {
 
   static async delete(id: number): Promise<any> {
     return await api
-      .delete(API.ENTERPRISE.EVENT.DELETE_EVENT.replace(":id", `${id}`))
+      .delete(API.ADMIN.EVENT.DELETE_EVENT.replace(":id", `${id}`))
       .then((res) => {
         return Promise.resolve(res.data);
       })

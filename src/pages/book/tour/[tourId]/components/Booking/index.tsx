@@ -7,7 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
-import { Grid, Link, useMediaQuery, useTheme, Collapse } from "@mui/material";
+import {
+  Collapse,
+  Grid,
+  Link,
+  Popover,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { useForm } from "react-hook-form";
@@ -19,31 +26,33 @@ import {
   faCircleCheck,
   faCalendarDays,
   faRotateLeft,
-  faHotel,
-  faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputTextField from "components/common/inputs/InputTextfield";
 import { VALIDATION } from "configs/constants";
 import UseAuth from "hooks/useAuth";
-import {
-  setConfirmBookTourReducer,
-  setUserInformationBookRoomReducer,
-} from "redux/reducers/Normal/actionTypes";
+import { setConfirmBookTourReducer } from "redux/reducers/Normal/actionTypes";
 import { UserService } from "services/user";
 import * as yup from "yup";
-import { HotelService } from "services/normal/hotel";
-import { Restaurant, Wifi } from "@mui/icons-material";
+import { ITour } from "redux/reducers/Normal";
+import PopupDetailTour from "pages/listTour/[tourId]/components/SectionTour/components/PopupDetailTour";
+import { BookTourReview, Tour } from "models/tour";
+import { ReducerType } from "redux/reducers";
 import moment from "moment";
+import { fCurrency2VND, fPercent, fShortenNumber } from "utils/formatNumber";
+import _ from "lodash";
+import {
+  DataPagination,
+  EDiscountType,
+  EServicePolicyType,
+} from "models/general";
+import { FindAll, GetVoucherValue, Voucher } from "models/voucher";
+import { VoucherService } from "services/normal/voucher";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import PopupVoucher from "../PopopVoucher";
 import InputTextfield from "components/common/inputs/InputTextfield";
-import { fCurrency2VND } from "utils/formatNumber";
-import { sumPrice } from "utils/totalPrice";
-import { ReducerType } from "redux/reducers";
-import { IUserInformationBookRoom } from "redux/reducers/Normal";
-import PopupCheckReview from "components/Popup/PopupCheckReview";
-import { PAYMENT_HOTEL_SECTION } from "models/payment";
 
 const CHARACTER_LIMIT = 100;
 
@@ -57,26 +66,40 @@ export interface BookForm {
   lastName: string;
   email: string;
   phoneNumber: string;
+  price: number;
+  numberOfAdult: number;
+  numberOfChild: number;
+  priceOfChild: number;
+  priceOfAdult: number;
+  startDate: Date;
   specialRequest?: string;
 }
 interface Props {
-  onSubmit?: (data: IUserInformationBookRoom) => void;
-  handleChangeStep?: () => void;
+  onSubmit?: (data: BookTourReview) => void;
 }
 // eslint-disable-next-line react/display-name
-const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
+const BookingComponent = memo(({ onSubmit }: Props) => {
   const dispatch = useDispatch();
-  const { roomBillConfirm } = useSelector((state: ReducerType) => state.normal);
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down(600));
   const { user } = UseAuth();
   const router = useRouter();
   const { t, i18n } = useTranslation();
+  const { confirmBookTour } = useSelector((state: ReducerType) => state.normal);
 
-  const [open, setOpen] = useState(true);
-  const [hotel, setHotel] = useState<any>();
-  const [modal, setModal] = useState(false);
+  const [tour, setTour] = useState<Tour>();
+  const [openPopupDetailTour, setOpenPopupDetailTour] = useState(false);
+  const [openPopupVoucher, setOpenPopupVoucher] = useState(false);
+  const [voucher, setVoucher] = useState<DataPagination<Voucher>>();
+  const [openCollapse, setOpenCollapse] = useState(false);
+  const [voucherChoose, setVoucherChoose] = useState({
+    discountType: null,
+    voucherValue: null,
+  });
+
+  const policyRefund = useMemo(() => {
+    return [];
+  }, [tour]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -110,24 +133,11 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
     mode: "onChange",
   });
 
-  const toggle = () => setModal(!modal);
-
-  const specialRequest = watch("specialRequest");
-  const totalPrice = [];
-
-  roomBillConfirm?.rooms.forEach((room) => {
-    room?.priceDetail.map((price) => {
-      const _price =
-        (price?.price * room?.amount * (100 - room?.discount)) / 100;
-      totalPrice.push(_price);
-    });
-  });
-
   useEffect(() => {
     if (router) {
-      HotelService.getHotel(Number(router.query.hotelId.slice(1)))
+      TourService.getTour(Number(router.query.tourId.slice(1)))
         .then((res) => {
-          setHotel(res.data);
+          setTour(res.data);
         })
         .catch((e) => {
           dispatch(setErrorMess(e));
@@ -139,57 +149,88 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
-  const _onSubmit = (data: BookForm) => {
-    if (user) {
-      onSubmit({
-        userId: user?.id,
-        email: data?.email,
-        phoneNumber: data?.phoneNumber,
-        firstName: data?.firstName,
-        lastName: data?.lastName,
-        specialRequest: data?.specialRequest,
-      });
-    }
+  const onOpenPopupDetailTour = () =>
+    setOpenPopupDetailTour(!openPopupDetailTour);
 
-    // dispatch(setLoading(true));
-    //   if(user) {
-    //     TourBillService.create({
-    //       userId: user?.id,
-    //       userMail: data?.email,
-    //       tourId: tour?.id,
-    //       amount: data.amount,
-    //       price: tour?.price,
-    //       discount: tour?.discount,
-    //       email: data?.email,
-    //       phoneNumber: data?.phoneNumber,
-    //       firstName: data?.firstName,
-    //       lastName: data?.lastName,
-    //     })
-    //     .then(() => {
-    //       dispatch(setSuccessMess("Book tour successfully"));
-    //     })
-    //     .catch((e) => {
-    //       dispatch(setErrorMess(e));
-    //     })
-    //     .finally(() => {
-    //       toggle();
-    //       dispatch(setLoading(false));
-    //     });
-    //   }
-    // dispatch(
-    //   setConfirmBookTourReducer({
-    //     userId: user?.id,
-    //     userMail: data?.email,
-    //     tourId: tour?.id,
-    //     amount: data.amount,
-    //     price: tour?.price,
-    //     discount: tour?.discount,
-    //     email: data?.email,
-    //     phoneNumber: data?.phoneNumber,
-    //     firstName: data?.firstName,
-    //     lastName: data?.lastName,
-    //   })
-    // );
+  const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
+
+  const _onSubmit = (data: BookForm) => {
+    onSubmit({
+      firstName: data?.firstName,
+      lastName: data?.lastName,
+      email: data?.email,
+      phoneNumber: data?.phoneNumber,
+      price:
+        voucherChoose?.discountType === EDiscountType.PERCENT
+          ? (confirmBookTour?.totalPrice * (100 - voucherChoose.voucherValue)) /
+            100
+          : confirmBookTour?.totalPrice - voucherChoose.voucherValue,
+      numberOfAdult: confirmBookTour?.amountAdult,
+      numberOfChild: confirmBookTour?.amountChildren,
+      startDate: confirmBookTour?.startDate,
+      specialRequest: data?.specialRequest,
+      priceOfChild: confirmBookTour?.priceChildren,
+      priceOfAdult: confirmBookTour?.priceAdult,
+    });
+  };
+
+  const specialRequest = watch("specialRequest");
+
+  useEffect(() => {
+    tour?.tourPolicies.forEach((item) => {
+      if (item.policyType === EServicePolicyType.REFUND)
+        policyRefund.push(item.dayRange);
+    });
+  }, [tour]);
+
+  const maxDateRefund = Math.max.apply(Math, policyRefund);
+
+  const dateBookTour = new Date();
+  dateBookTour.setDate(dateBookTour.getDate() + maxDateRefund);
+
+  const fetchVoucher = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+    owner?: number;
+  }) => {
+    const params: FindAll = {
+      take: value?.take || voucher?.meta?.take || 10,
+      page: value?.page || voucher?.meta?.page || 1,
+      keyword: undefined,
+      owner: confirmBookTour?.owner,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
+    }
+    dispatch(setLoading(true));
+    VoucherService.getAllVouchers(params)
+      .then((res) => {
+        setVoucher({
+          data: res.data,
+          meta: res.meta,
+        });
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  const onGetVoucher = (data: GetVoucherValue) => {
+    setVoucherChoose({
+      discountType: data?.discountType,
+      voucherValue: data?.voucherValue,
+    });
+  };
+
+  const handleValidVoucher = (startTime) => {
+    var bookDate = new Date();
+    let isValid = false;
+    if (bookDate < new Date(startTime)) {
+      isValid = true;
+    } else {
+      isValid = false;
+    }
+    return isValid;
   };
 
   useEffect(() => {
@@ -210,13 +251,13 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, dispatch]);
 
+  useEffect(() => {
+    fetchVoucher();
+  }, []);
+
   return (
     <>
-      <Grid
-        component="form"
-        onSubmit={handleSubmit(_onSubmit)}
-        id={PAYMENT_HOTEL_SECTION.BOOKING}
-      >
+      <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
         <Container>
           <Grid container spacing={2} className={classes.rootContent}>
             <Grid xs={7} item className={classes.leftPanel}>
@@ -312,21 +353,6 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>Cancellation Policy</h4>
-                  <Grid
-                    sx={{
-                      backgroundColor: "var(--white-color)",
-                      padding: "24px 16px",
-                      boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25);",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    <p>
-                      This reservation is non-refundable & non-reschedulable.
-                    </p>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12}>
                   <h4 className={classes.title}>Location Detail</h4>
                   <Grid
                     sx={{
@@ -337,13 +363,12 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                     }}
                   >
                     <p>
-                      143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh
-                      Kiên Giang, Vietnam{" "}
+                      {tour?.moreLocation}, {tour?.commune.name},
+                      {tour?.district.name}, {tour?.city.name}
                     </p>
                     <Grid className={classes.mabBox}></Grid>
                   </Grid>
                 </Grid>
-
                 <Grid item xs={12}>
                   <h4 className={classes.title}>Price Detail</h4>
                   <Grid
@@ -352,100 +377,133 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                       padding: "24px 16px",
                       boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25);",
                       borderRadius: "10px",
+                      cursor: "pointer",
                     }}
                   >
                     <Grid
                       className={classes.boxPrice}
                       sx={{ borderBottom: "1px solid Var(--gray-10)" }}
-                      onClick={() => setOpen(!open)}
+                      onClick={() => setOpenCollapse(!openCollapse)}
                     >
                       <Grid>
                         {" "}
                         <p className={classes.titlePrice}>Price you pay</p>
                       </Grid>
-                      <Grid className={classes.priceTotal}>
+                      <Grid sx={{ display: "flex", alignItems: "center" }}>
                         <h4 className={classes.price}>
-                          {fCurrency2VND(sumPrice(totalPrice))} VND
+                          {voucherChoose?.discountType === EDiscountType.PERCENT
+                            ? fCurrency2VND(
+                                (confirmBookTour?.totalPrice *
+                                  (100 - voucherChoose.voucherValue)) /
+                                  100
+                              )
+                            : fCurrency2VND(
+                                confirmBookTour?.totalPrice -
+                                  voucherChoose.voucherValue
+                              )}
+                          VND
                         </h4>
-                        {open ? (
+                        {openCollapse ? (
                           <KeyboardArrowUpIcon />
                         ) : (
                           <KeyboardArrowDownIcon />
                         )}
                       </Grid>
                     </Grid>
-                    <Grid className={classes.boxInforPrice}>
-                      <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>
-                      <p>
-                        Taxes and fees, are recovery charges which Traveloka
-                        pays to the property. If you have any questions
-                        regarding tax and invoice, please refer to Traveloka
-                        Terms and Condition
-                      </p>
-                    </Grid>
-
-                    <Collapse in={open} timeout="auto" unmountOnExit>
+                    <Collapse in={openCollapse} timeout="auto" unmountOnExit>
                       <Grid className={classes.boxPriceDetail}>
-                        {roomBillConfirm?.rooms.map((room, index) => (
-                          <Grid sx={{ padding: "0 0 14px 0" }} key={index}>
-                            <Grid
-                              sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                              }}
-                            >
-                              <p>Room name: </p> <p>{room?.title}</p>
-                            </Grid>{" "}
-                            <Grid
-                              sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                              }}
-                            >
-                              <p>Price: </p>
-                              {room?.priceDetail.map((price, index) => (
-                                <p key={index}>
-                                  {fCurrency2VND(
-                                    (price?.price *
-                                      room?.amount *
-                                      (100 - room?.discount)) /
-                                      100
-                                  )}{" "}
-                                  VND
-                                </p>
-                              ))}
-                            </Grid>
-                            {room?.discount !== 0 && (
-                              <Grid
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <p>Discount: </p> <p>{room?.discount}%</p>
-                              </Grid>
-                            )}
-                            <Grid
-                              sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                              }}
-                            >
-                              <p>Amount: </p> <p>{room?.amount}</p>
-                            </Grid>
+                        {confirmBookTour?.discount !== 0 && (
+                          <Grid
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <p>Discount</p>
+                            <p> {fCurrency2VND(confirmBookTour?.discount)} %</p>
                           </Grid>
-                        ))}
+                        )}
+                        <Grid
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <p>Adult ({confirmBookTour?.amountAdult}x)</p>
+                          <p>
+                            {" "}
+                            {fCurrency2VND(confirmBookTour?.priceAdult)} VND
+                          </p>
+                        </Grid>
+                        {confirmBookTour?.amountChildren !== 0 && (
+                          <Grid
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <p>Child ({confirmBookTour?.amountChildren}x)</p>
+                            <p>
+                              {" "}
+                              {fCurrency2VND(
+                                confirmBookTour?.priceChildren
+                              )}{" "}
+                              VND
+                            </p>
+                          </Grid>
+                        )}
                       </Grid>
                     </Collapse>
+                    <Grid className={classes.containerVoucher}>
+                      <Grid className={classes.titleVoucher}>
+                        <MonetizationOnIcon />
+                        <p>Our discount code</p>
+                      </Grid>
+                      <Grid sx={{ display: "flex", paddingTop: "14px" }}>
+                        {voucher?.data?.length &&
+                          voucher?.data?.map((item, index) => (
+                            <Grid key={index}>
+                              {item?.discountType === EDiscountType.PERCENT ? (
+                                <Grid
+                                  className={clsx(classes.boxVoucher, {
+                                    [classes.boxVoucherInValid]:
+                                      handleValidVoucher(item?.startTime),
+                                  })}
+                                >
+                                  Deal {fPercent(item?.discountValue)}
+                                </Grid>
+                              ) : (
+                                <Grid
+                                  className={clsx(classes.boxVoucher, {
+                                    [classes.boxVoucherInValid]:
+                                      handleValidVoucher(item?.startTime),
+                                  })}
+                                >
+                                  Deal {fShortenNumber(item?.discountValue)} VND
+                                </Grid>
+                              )}
+                            </Grid>
+                          ))}
+                      </Grid>
+                      <Grid
+                        className={classes.btnChooseVoucher}
+                        onClick={onOpenPopupVoucher}
+                      >
+                        <p>Choose the voucher</p>
+                      </Grid>
+                    </Grid>
                     <Grid
-                      sx={{ display: "flex", justifyContent: "flex-end" }}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        paddingTop: "14px",
+                      }}
                       className={classes.btnContinue}
                     >
-                      <Button btnType={BtnType.Secondary} type="submit">
+                      <Button btnType={BtnType.Primary} type="submit">
                         Continue to Review
                       </Button>
                     </Grid>
@@ -461,81 +519,52 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
             >
               <Grid className={classes.rootPanelRight}>
                 <Grid className={classes.boxTitle}>
-                  <FontAwesomeIcon icon={faHotel}></FontAwesomeIcon>
-                  <p>{hotel?.name}</p>
+                  <FontAwesomeIcon icon={faCircleCheck}></FontAwesomeIcon>
+                  <p>Booking summary</p>
+                </Grid>
+                <Grid className={classes.boxProduct}>
+                  <Grid>
+                    <p>{tour?.title}</p>
+                  </Grid>
+                  <Grid className={classes.product}>
+                    <img src={tour?.images[0]} alt="anh"></img>
+                    <p onClick={onOpenPopupDetailTour}>View detail</p>
+                  </Grid>
                 </Grid>
                 <Grid className={classes.boxInfoPerson}>
                   <Grid className={classes.information}>
                     <Grid>
-                      <span>Check-in</span>
+                      <span>Visit date</span>
                     </Grid>
                     <Grid>
                       <p>
-                        {moment(roomBillConfirm?.startDate).format(
-                          "DD/MM/YYYY"
+                        {moment(confirmBookTour?.startDate).format(
+                          "dddd, MMMM Do YYYY"
                         )}
                       </p>
                     </Grid>
                   </Grid>
                   <Grid className={classes.information}>
                     <Grid>
-                      <span>Check-out</span>
+                      <span>Total visitors</span>
                     </Grid>
                     <Grid>
-                      <p>
-                        {moment(roomBillConfirm?.endDate).format("DD/MM/YYYY")}
-                      </p>
+                      <p>Adult: {confirmBookTour?.amountAdult}</p>
+                      <p>Child: {confirmBookTour?.amountChildren}</p>
                     </Grid>
                   </Grid>
                 </Grid>
-                {roomBillConfirm?.rooms.map((room, index) => (
-                  <Grid className={classes.boxProduct} key={index}>
-                    <Grid>
-                      <p className={classes.nameProduct}>{room?.title}</p>
-                    </Grid>
-                    <Grid
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        paddingBottom: "8px",
-                      }}
-                    >
-                      <p>Number of bed</p> <span>{room?.numberOfBed}</span>
-                    </Grid>
-                    <Grid
-                      sx={{ display: "flex", justifyContent: "space-between" }}
-                    >
-                      <p>Guest per room</p> <span>4</span>
-                    </Grid>
-                    <Grid className={classes.product}>
-                      <img src={images.bgUser.src} alt="anh"></img>
-                      <Grid
-                        sx={{
-                          paddingLeft: "12px",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        <Grid className={classes.boxConvenient}>
-                          <Restaurant /> Free breakfast
-                        </Grid>
-                        <Grid className={classes.boxConvenient}>
-                          <Wifi /> Free wifi
-                        </Grid>
-
-                        <Link href={`/listTour/:${hotel?.id}`}>
-                          View detail
-                        </Link>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                ))}
-
                 <Grid className={classes.boxTip}>
                   <Grid className={classes.tip}>
                     <FontAwesomeIcon icon={faCalendarDays}></FontAwesomeIcon>
-                    <p>Valid on 05 Apr 2023</p>
+                    <p>
+                      Valid on{" "}
+                      <span className={classes.tipBold}>
+                        {moment(confirmBookTour?.startDate).format(
+                          "MMMM Do YY"
+                        )}
+                      </span>
+                    </p>
                   </Grid>
                   <Grid className={clsx(classes.tipRequest, classes.tip)}>
                     <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
@@ -543,7 +572,12 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                   </Grid>
                   <Grid className={clsx(classes.tipRequest, classes.tip)}>
                     <FontAwesomeIcon icon={faRotateLeft}></FontAwesomeIcon>
-                    <p>Refundable until 3 Apr 2023</p>
+                    <p>
+                      Refundable until{" "}
+                      <span className={classes.tipBold}>
+                        {moment(dateBookTour).format("MMM Do YY")}
+                      </span>
+                    </p>
                   </Grid>
                 </Grid>
               </Grid>
@@ -555,13 +589,18 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
             </Grid>
           </Grid>
         </Container>
-        {/* <PopupCheckReview
-        isOpen={modal}
-        onClose={toggle}
-        toggle={toggle}
-        onClick={handleChangeStep}
-      /> */}
       </Grid>
+      <PopupDetailTour
+        isOpen={openPopupDetailTour}
+        toggle={onOpenPopupDetailTour}
+        tour={tour}
+      />
+      <PopupVoucher
+        isOpen={openPopupVoucher}
+        toggle={onOpenPopupVoucher}
+        voucher={voucher?.data}
+        onGetVoucher={onGetVoucher}
+      />
     </>
   );
 });

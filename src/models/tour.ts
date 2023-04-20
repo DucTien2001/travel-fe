@@ -1,4 +1,4 @@
-import { OptionItem } from "./general";
+import { EServicePolicyType, EServiceType, OptionItem } from "./general";
 import {User} from "./user";
 
 export interface Tour {
@@ -18,8 +18,10 @@ export interface Tour {
   images: string[];
   creator: number;
   contact: string;
+  owner?:number;
   isDeleted?: boolean;
   tourOnSales?: TourPrice[];
+  tourPolicies?: TourPolicies[];
   languages?: Tour[];
   parentLanguage: number,
   language: string;
@@ -37,6 +39,15 @@ export interface TourPrice {
   childrenPrice: number;
   adultPrice: number;
   currency: string;
+}
+
+export interface TourPolicies {
+  id: number;
+  dayRange: number;
+  moneyRate: number;
+  policyType: EServicePolicyType;
+  serviceId: number;
+  serviceType: EServiceType;
 }
 
 export interface ScheduleItem {
@@ -69,7 +80,19 @@ export interface HistoryBookTour {
     date: Date;
     tourId: number;
   }
-
+  export interface BookTourReview {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    price: number;
+    numberOfAdult: number;
+    numberOfChild: number;
+    startDate: Date;
+    specialRequest?: string;
+    priceOfChild: number;
+    priceOfAdult: number;
+  }
   
 export enum DETAIL_SECTION {
   section_overview = 'section_overview',

@@ -1,7 +1,10 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Row } from "reactstrap";
+import Button, { BtnType } from "components/common/buttons/Button";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import { useDispatch } from "react-redux";
 import {
@@ -22,81 +25,51 @@ import {
   TableRow,
   TableCell,
   Paper,
-  Grid,
 } from "@mui/material";
 import TableHeader from "components/Table/TableHeader";
-import { DataPagination, TableHeaderLabel } from "models/general";
+import {
+  DataPagination,
+  LangSupport,
+  langSupports,
+  TableHeaderLabel,
+} from "models/general";
 import {
   EditOutlined,
   DeleteOutlineOutlined,
   ExpandMoreOutlined,
 } from "@mui/icons-material";
-import { FindAll, User } from "models/admin/user";
+
+import { useRouter } from "next/router";
 import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
-import { UserService } from "services/admin/user";
-import { getRoleUser } from "utils/getOption";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import EditRoleForm from "./EditRoleForm";
-import StatusChip from "components/StatusChip";
+import { FindAll, Voucher } from "models/enterprise/voucher";
+import { VoucherService } from "services/enterprise/voucher";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "id", label: "Id", sortable: false },
-  { name: "name", label: "User Name", sortable: false },
-  { name: "role", label: "Role", sortable: false },
-  { name: "status", label: "Status", sortable: false },
+  { name: "name", label: "Name", sortable: false },
+  { name: "languages", label: "Languages", sortable: false },
   { name: "actions", label: "Actions", sortable: false },
 ];
 
-interface RoleForm {
-  role: {
-    id: number;
-    name: string;
-    value: number;
-  };
-}
-
 interface Props {}
 // eslint-disable-next-line react/display-name
-const User = memo(({}: Props) => {
+const Event = memo(({}: Props) => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
-  const [itemAction, setItemAction] = useState<User>();
-  const [userEdit, setUserEdit] = useState<User>();
-  const [userDelete, setUserDelete] = useState<User>(null);
+  const [itemAction, setItemAction] = useState<Voucher>();
+  const [eventDelete, setEventDelete] = useState<Voucher>(null);
   const [keyword, setKeyword] = useState<string>("");
-  const [dataUser, setDataUser] = useState<DataPagination<User>>();
+  const [data, setData] = useState<DataPagination<Voucher>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
-  const [role, setRole] = useState(null);
 
-  const [languageAnchor, setLanguageAnchor] = useState<null | HTMLElement>(
-    null
-  );
-
-  const schema = useMemo(() => {
-    return yup.object().shape({
-      role: yup
-        .object()
-        .typeError("Role is required.")
-        .shape({
-          id: yup.number().required("Role is required"),
-          name: yup.string().required(),
-        })
-        .required(),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const {} = useForm<RoleForm>({
-    resolver: yupResolver(schema),
-    mode: "onChange",
-  });
-
-  const handleAction = (e: React.MouseEvent<HTMLButtonElement>, item: User) => {
+  const handleAction = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    item: Voucher
+  ) => {
     setItemAction(item);
-    setActionAnchor(e.currentTarget);
+    setActionAnchor(event.currentTarget);
   };
 
   const handleChangePage = (
@@ -108,9 +81,11 @@ const User = memo(({}: Props) => {
     });
   };
 
-  const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     fetchData({
-      take: Number(e.target.value),
+      take: Number(event.target.value),
       page: 1,
     });
   };
@@ -126,17 +101,17 @@ const User = memo(({}: Props) => {
     keyword?: string;
   }) => {
     const params: FindAll = {
-      take: value?.take || dataUser?.meta?.take || 10,
-      page: value?.page || dataUser?.meta?.page || 1,
+      take: value?.take || data?.meta?.take || 10,
+      page: value?.page || data?.meta?.page || 1,
       keyword: keyword,
     };
     if (value?.keyword !== undefined) {
       params.keyword = value.keyword || undefined;
     }
     dispatch(setLoading(true));
-    UserService.getAllUsers(params)
+    VoucherService.findAll(params)
       .then((res) => {
-        setDataUser({
+        setData({
           data: res.data,
           meta: res.meta,
         });
@@ -150,39 +125,44 @@ const User = memo(({}: Props) => {
     500
   );
 
+  const onCreateTour = () => {
+    router.push("/enterprises/vouchers/create-voucher");
+  };
+
   const onCloseActionMenu = () => {
     setItemAction(null);
     setActionAnchor(null);
-    setLanguageAnchor(null);
   };
 
-  const onActionEditRole = () => {
-    setUserEdit(itemAction);
-    setRole(userEdit?.role);
+  const handleRedirect = () => {
+    if (!itemAction) return;
+    onRedirectEdit(itemAction);
     onCloseActionMenu();
+  };
+
+  const onRedirectEdit = (item: Voucher) => {
+    router.push({
+      pathname: `/enterprises/vouchers/${item.id}`,
+    });
   };
 
   const onShowConfirmDelete = () => {
     if (!itemAction) return;
-    setUserDelete(itemAction);
+    setEventDelete(itemAction);
     onCloseActionMenu();
   };
 
   const onClosePopupConfirmDelete = () => {
-    if (!userDelete) return;
-    setUserDelete(null);
+    if (!eventDelete) return;
+    setEventDelete(null);
     onCloseActionMenu();
   };
 
-  const onCloseEditUser = () => {
-    setUserEdit(null);
-  };
-
   const onYesDelete = () => {
-    if (!userDelete) return;
+    if (!eventDelete) return;
     onClosePopupConfirmDelete();
     dispatch(setLoading(true));
-    UserService.delete(userDelete?.id)
+    VoucherService.delete(eventDelete?.id)
       .then(() => {
         dispatch(setSuccessMess("Delete successfully"));
         fetchData();
@@ -197,7 +177,6 @@ const User = memo(({}: Props) => {
 
   useEffect(() => {
     fetchData();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -205,7 +184,7 @@ const User = memo(({}: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Users</h3>
+          <h3>Vouchers</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
@@ -216,47 +195,41 @@ const User = memo(({}: Props) => {
               onChange={onSearch}
             />
           </div>
+          <Button btnType={BtnType.Primary} onClick={onCreateTour}>
+            <FontAwesomeIcon icon={faPlus} />
+            Create
+          </Button>
         </Row>
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
           <Table className={classes.table}>
             <TableHeader headers={tableHeaders} />
             <TableBody>
-              {dataUser?.data?.length ? (
-                dataUser.data?.map((item, index) => {
+              {data?.data?.length ? (
+                data.data?.map((item, index) => {
                   return (
                     <TableRow key={index}>
                       <TableCell scope="row" className={classes.tableCell}>
                         {item.id}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.username}
+                        <a
+                          href={`/listTour/:${item?.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={classes.tourName}
+                        >
+                          lllll
+                        </a>
                       </TableCell>
-                      {userEdit?.id === item?.id ? (
-                        <TableCell className={classes.tableCell} component="th">
-                          <Grid
-                            sx={{ display: "flex", justifyContent: "center" }}
-                          >
-                            <EditRoleForm
-                              userEdit={userEdit}
-                              fetchData={fetchData}
-                              onCloseEditUser={onCloseEditUser}
-                            />
-                          </Grid>
-                        </TableCell>
-                      ) : (
-                        <TableCell className={classes.tableCell} component="th">
-                          {getRoleUser(item?.role)}
-                        </TableCell>
-                      )}
                       <TableCell className={classes.tableCell} component="th">
-                        <StatusChip status={!item.isDeleted} />
+                        {/* {item?.languages?.map((it) => it.language).join(", ")} */}
                       </TableCell>
                       <TableCell className="text-center" component="th">
                         <IconButton
                           className={clsx(classes.actionButton)}
                           color="primary"
-                          onClick={(e) => {
-                            handleAction(e, item);
+                          onClick={(event) => {
+                            handleAction(event, item);
                           }}
                         >
                           <ExpandMoreOutlined />
@@ -267,7 +240,7 @@ const User = memo(({}: Props) => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={3}>
+                  <TableCell align="center" colSpan={6}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>
@@ -277,9 +250,9 @@ const User = memo(({}: Props) => {
           <TablePagination
             component="div"
             className={classes.pagination}
-            count={dataUser?.meta?.itemCount || 0}
-            rowsPerPage={dataUser?.meta?.take || 10}
-            page={dataUser?.meta?.page ? dataUser?.meta?.page - 1 : 0}
+            count={data?.meta?.itemCount || 0}
+            rowsPerPage={data?.meta?.take || 10}
+            page={data?.meta?.page ? data?.meta?.page - 1 : 0}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
@@ -296,12 +269,12 @@ const User = memo(({}: Props) => {
         >
           <MenuItem
             sx={{ fontSize: "0.875rem" }}
-            onClick={onActionEditRole}
+            onClick={handleRedirect}
             className={classes.menuItem}
           >
             <Box display="flex" alignItems={"center"}>
               <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>Edit role</span>
+              <span>Edit</span>
             </Box>
           </MenuItem>
           <MenuItem
@@ -320,8 +293,8 @@ const User = memo(({}: Props) => {
           </MenuItem>
         </Menu>
         <PopupConfirmDelete
-          title="Are you sure delete this user ?"
-          isOpen={!!userDelete}
+          title="Are you sure delete this voucher ?"
+          isOpen={!!eventDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}
           onYes={onYesDelete}
@@ -331,4 +304,4 @@ const User = memo(({}: Props) => {
   );
 });
 
-export default User;
+export default Event;

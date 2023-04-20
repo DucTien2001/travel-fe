@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useMemo, useRef, useState } from "react";
 import {
   Modal,
   ModalProps,
@@ -17,12 +17,7 @@ import styled from "styled-components";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
-const NavLink = styled(Link)`
-  color: blue;
-  &.active {
-    border-bottom: 5px solid var(--primary-color);
-  }
-`;
+import _ from "lodash";
 
 interface Props extends ModalProps {
   isOpen: boolean;
@@ -32,13 +27,12 @@ interface Props extends ModalProps {
 }
 
 // eslint-disable-next-line react/display-name
-const PopupConfirmDeleteTour = memo((props: Props) => {
+const PopupDetailTour = memo((props: Props) => {
   const { isOpen, toggle, onClose, tour } = props;
 
-  const [changeTab, setChangeTab] = useState(false);
-  const closeMenu = () => setChangeTab(false);
-
-  console.log(tour);
+  const policyType = useMemo(() => {
+    return _.toArray(_.groupBy(tour?.tourPolicies, "policyType"));
+  }, [tour]);
 
   return (
     <>
@@ -46,52 +40,8 @@ const PopupConfirmDeleteTour = memo((props: Props) => {
         <ModalHeader toggle={toggle} className={classes.title}>
           {tour?.title}
         </ModalHeader>
+
         <ModalBody className={classes.modalBody}>
-          <Container className={classes.containerNav}>
-            <Tabs variant="scrollable" value={0} className={classes.rootTabs}>
-              <div className={classes.listNav}>
-                <div className={classes.navItem}>
-                  <NavLink
-                    to={`${DETAIL_SECTION.section_overview}`}
-                    spy={true}
-                    smooth={true}
-                    offset={-90}
-                    duration={500}
-                    activeClass="active"
-                    onClick={closeMenu}
-                  >
-                    Overview
-                  </NavLink>
-                </div>
-                <div className={classes.navItem}>
-                  <NavLink
-                    to={`${DETAIL_SECTION.section_term_condition}`}
-                    spy={true}
-                    smooth={true}
-                    offset={-90}
-                    duration={500}
-                    activeClass="active"
-                    onClick={closeMenu}
-                  >
-                    Terms and Condition
-                  </NavLink>
-                </div>
-                <div className={classes.navItem}>
-                  <NavLink
-                    to={`${DETAIL_SECTION.section_reschedule_refund}`}
-                    spy={true}
-                    smooth={true}
-                    offset={-90}
-                    duration={500}
-                    activeClass="active"
-                    onClick={closeMenu}
-                  >
-                    Reschedule & Refund
-                  </NavLink>
-                </div>
-              </div>
-            </Tabs>
-          </Container>
           <Container>
             <Grid
               id={DETAIL_SECTION.section_overview}
@@ -137,9 +87,46 @@ const PopupConfirmDeleteTour = memo((props: Props) => {
               </Grid>
               <Grid className={classes.boxDuration}>
                 <p className={classes.titleDetail}>- Reschedule Policy: </p>
-                <p
-                  dangerouslySetInnerHTML={{ __html: tour?.termsAndCondition }}
-                ></p>
+                {policyType[0]?.length ? (
+                  <ul>
+                    {policyType[0]?.map((item, index) => (
+                      <li key={index}>
+                        Request a refund at the latest{" "}
+                        <span className={classes.titleDetail}>
+                          {item?.dayRange} day(s)
+                        </span>{" "}
+                        before your selected visit date to get up to{" "}
+                        <span className={classes.titleDetail}>
+                          {item?.moneyRate}%{" "}
+                        </span>{" "}
+                        refund.
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>This booking cannot be rescheduled.</p>
+                )}
+
+                <p className={classes.titleDetail}>- Refund Policy: </p>
+                {policyType[1]?.length ? (
+                  <ul>
+                    {policyType[1]?.map((item, index) => (
+                      <li key={index}>
+                        Request a refund at the latest{" "}
+                        <span className={classes.titleDetail}>
+                          {item?.dayRange} day(s)
+                        </span>{" "}
+                        before your selected visit date to get up to{" "}
+                        <span className={classes.titleDetail}>
+                          {item?.moneyRate}%{" "}
+                        </span>{" "}
+                        refund.
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>This booking cannot be rescheduled.</p>
+                )}
               </Grid>
             </Grid>
           </Container>
@@ -149,4 +136,4 @@ const PopupConfirmDeleteTour = memo((props: Props) => {
   );
 });
 
-export default PopupConfirmDeleteTour;
+export default PopupDetailTour;
