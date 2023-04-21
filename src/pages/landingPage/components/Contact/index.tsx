@@ -30,6 +30,7 @@ import InputTextArea from "components/common/inputs/InputTextArea";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import clsx from "clsx";
+import { Grid } from "@mui/material";
 export interface EmailForm {
   firstName: string;
   lastName: string;
@@ -81,138 +82,130 @@ const Contact = memo(() => {
 
   return (
     <>
-      <div className={classes.root}>
-        <Container>
-          <Row>
-            <Col md="5">
-              <h2 className={clsx("title", classes.title)} data-aos="fade-up">
-                Get in Touch
-              </h2>
-              <h4 className="description" data-aos="fade-up">
-                You need more information? Check what other persons are saying
-                about our product. They are very happy with their purchase.
-              </h4>
-              <div className="info info-horizontal" data-aos="fade-up">
-                <img alt="anh" src={images.man.src} />
-              </div>
-            </Col>
-            <Col className="ml-auto mr-auto" md="5">
-              <Card className="card-contact card-raised" data-aos="zoom-in">
-                <Form
-                  id="contact-form1"
-                  method="post"
-                  role="form"
-                  onSubmit={handleSubmit(_onSubmit)}
-                >
-                  <CardHeader className="text-center">
-                    <CardTitle tag="h4">Contact Us</CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <Row>
-                      <Col className="pr-2" md="6">
-                        <InputTextFieldBorder
-                          label="First name"
-                          startIcon={
-                            <i className="now-ui-icons users_circle-08"></i>
-                          }
-                          placeholder="First Name..."
-                          aria-label="First Name..."
-                          autoComplete="family-name"
-                          type="text"
-                          inputRef={register("firstName")}
-                          errorMessage={errors.firstName?.message}
-                        />
-                      </Col>
-                      <Col className="pl-2" md="6">
-                        <InputTextFieldBorder
-                          label="Last name"
-                          startIcon={
-                            <i className="now-ui-icons text_caps-small"></i>
-                          }
-                          placeholder="Last Name..."
-                          aria-label="Last Name..."
-                          autoComplete="family-name"
-                          type="text"
-                          inputRef={register("lastName")}
-                          errorMessage={errors.lastName?.message}
-                        />
-                      </Col>
-                    </Row>
-                    <FormGroup>
+      <Grid className={classes.root}>
+        <Row>
+          <Col md="5">
+            <h2 className={clsx("title", classes.title)}>Get in Touch</h2>
+            <h4 className="description">
+              You need more information? Check what other persons are saying
+              about our product. They are very happy with their purchase.
+            </h4>
+            <div className="info info-horizontal">
+              <img alt="anh" src={images.man.src} />
+            </div>
+          </Col>
+          <Col className="ml-auto mr-auto" md="5">
+            <Card className="card-contact card-raised">
+              <Form
+                id="contact-form1"
+                method="post"
+                role="form"
+                onSubmit={handleSubmit(_onSubmit)}
+              >
+                <CardHeader className="text-center">
+                  <CardTitle tag="h4">Contact Us</CardTitle>
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    <Col className="pr-2" md="6">
                       <InputTextFieldBorder
-                        label="Email address"
+                        label="First name"
                         startIcon={
-                          <i className="now-ui-icons ui-1_email-85"></i>
+                          <i className="now-ui-icons users_circle-08"></i>
                         }
-                        placeholder="Email Here..."
-                        aria-label="Email Here..."
+                        placeholder="First Name..."
+                        aria-label="First Name..."
                         autoComplete="family-name"
                         type="text"
-                        inputRef={register("email")}
-                        errorMessage={errors.email?.message}
+                        inputRef={register("firstName")}
+                        errorMessage={errors.firstName?.message}
                       />
-                    </FormGroup>
-                    <FormGroup>
-                      <InputTextArea
-                        label="Your message"
-                        placeholder="Message Here..."
+                    </Col>
+                    <Col className="pl-2" md="6">
+                      <InputTextFieldBorder
+                        label="Last name"
+                        startIcon={
+                          <i className="now-ui-icons text_caps-small"></i>
+                        }
+                        placeholder="Last Name..."
+                        aria-label="Last Name..."
                         autoComplete="family-name"
-                        inputRef={register("message")}
-                        errorMessage={errors.message?.message}
+                        type="text"
+                        inputRef={register("lastName")}
+                        errorMessage={errors.lastName?.message}
                       />
-                    </FormGroup>
-                    <Row>
-                      <Col md="12">
-                        <Button
-                          className="btn-round pull-right"
-                          btnType={BtnType.Primary}
-                          type="submit"
-                        >
-                          Send Message
-                        </Button>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Form>
-              </Card>
-              <Row>
-                <ul className={classes.infoBodyListContact}>
-                  <li className={classes.infoContact} data-aos="fade-left">
-                    <FontAwesomeIcon icon={faMapLocation}></FontAwesomeIcon>
-                    <p>4127 Raoul Wallenber 45b-c Gibraltar</p>
-                  </li>
-                  <li className={classes.infoContact} data-aos="fade-left">
-                    <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
-                    <a
-                      href="tel:+84 954 000 917"
-                      className={classes.contactLinkInfo}
-                    >
-                      <p>84 954 000 917</p>
-                    </a>
-                  </li>
-                  <li className={classes.infoContact} data-aos="fade-left">
-                    <FontAwesomeIcon
-                      icon={faEnvelopeOpenText}
-                    ></FontAwesomeIcon>
-                    <a
-                      href="mailto:mail@mail.com"
-                      className={classes.contactLinkInfo}
-                    >
-                      <p>travelix@gmail.com</p>
-                    </a>
-                  </li>
-                  <li className={classes.infoContact} data-aos="fade-left">
-                    <FontAwesomeIcon icon={faEarthAmerica}></FontAwesomeIcon>
-                    <Link href="/" className={classes.contactLinkInfo}>
-                      <p>www.colorlib.com</p>
-                    </Link>
-                  </li>
-                </ul>
-              </Row>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+                    </Col>
+                  </Row>
+                  <FormGroup>
+                    <InputTextFieldBorder
+                      label="Email address"
+                      startIcon={<i className="now-ui-icons ui-1_email-85"></i>}
+                      placeholder="Email Here..."
+                      aria-label="Email Here..."
+                      autoComplete="family-name"
+                      type="text"
+                      inputRef={register("email")}
+                      errorMessage={errors.email?.message}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <InputTextArea
+                      label="Your message"
+                      placeholder="Message Here..."
+                      autoComplete="family-name"
+                      inputRef={register("message")}
+                      errorMessage={errors.message?.message}
+                    />
+                  </FormGroup>
+                  <Row>
+                    <Col md="12">
+                      <Button
+                        className="btn-round pull-right"
+                        btnType={BtnType.Primary}
+                        type="submit"
+                      >
+                        Send Message
+                      </Button>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Form>
+            </Card>
+            <Row>
+              <ul className={classes.infoBodyListContact}>
+                <li className={classes.infoContact}>
+                  <FontAwesomeIcon icon={faMapLocation}></FontAwesomeIcon>
+                  <p>4127 Raoul Wallenber 45b-c Gibraltar</p>
+                </li>
+                <li className={classes.infoContact}>
+                  <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
+                  <a
+                    href="tel:+84 954 000 917"
+                    className={classes.contactLinkInfo}
+                  >
+                    <p>84 954 000 917</p>
+                  </a>
+                </li>
+                <li className={classes.infoContact}>
+                  <FontAwesomeIcon icon={faEnvelopeOpenText}></FontAwesomeIcon>
+                  <a
+                    href="mailto:mail@mail.com"
+                    className={classes.contactLinkInfo}
+                  >
+                    <p>travelix@gmail.com</p>
+                  </a>
+                </li>
+                <li className={classes.infoContact}>
+                  <FontAwesomeIcon icon={faEarthAmerica}></FontAwesomeIcon>
+                  <Link href="/" className={classes.contactLinkInfo}>
+                    <p>www.colorlib.com</p>
+                  </Link>
+                </li>
+              </ul>
+            </Row>
+          </Col>
+        </Row>
+      </Grid>
     </>
   );
 });

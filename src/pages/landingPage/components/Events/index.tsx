@@ -24,161 +24,50 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import { clsx } from "clsx";
 import { Col, Container } from "reactstrap";
 import Link from "next/link";
-interface FormSearch {
-  tour?: string;
-}
+import Button, { BtnType } from "components/common/buttons/Button";
 
 // eslint-disable-next-line react/display-name
 const TourSearch = memo(() => {
-  const schema = useMemo(() => {
-    return yup.object().shape({
-      tour: yup.string().required("Content search is required"),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    control,
-    getValues,
-    watch,
-  } = useForm<FormSearch>({
-    resolver: yupResolver(schema),
-    mode: "onChange",
-  });
-
-  const [recentSearch, setRecentSearch] = useState([]);
-
-  const addRecentSearch = (contentSearch) => {
-    setRecentSearch((prev) => {
-      const newRecentSearch = [...prev, contentSearch];
-      return newRecentSearch;
-    });
-  };
-
-  const watchSearch = watch("tour");
-
-  const handleKeyPress = (e) => {
-    var code = e.keyCode || e.which;
-    if (code === 13) {
-      //   const data = window.localStorage.setItem("")
-      if (getValues("tour") !== "" || getValues("tour") !== " ") {
-        addRecentSearch(getValues("tour"));
-      }
-    }
-  };
-
-  const [focus, setFocus] = useState(false);
-
-  const onFocus = () => {
-    setFocus(true);
-  };
-  const onBlur = () => {
-    setFocus(false);
-  };
-
-  const _onSubmit = () => {
-    // console.log(getValues("tour"));
-  };
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
     <>
-      <Container className={classes.root}>
-        <h3 className={classes.title}>POPULAR DEALS</h3>
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
-          className={classes.boxEvents}
-        >
-          <Grid
-            item
-            xs={2}
-            sm={4}
-            md={4}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
-          >
-            <img src={images.deal1.src} alt="anh"></img>
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            sm={4}
-            md={4}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
-          >
-            <img src={images.deal1.src} alt="anh"></img>
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            sm={4}
-            md={4}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
-          >
-            <img src={images.deal1.src} alt="anh"></img>
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            sm={4}
-            md={4}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
-          >
-            <img src={images.deal1.src} alt="anh"></img>
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            sm={4}
-            md={4}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
-          >
-            <img src={images.deal1.src} alt="anh"></img>
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            sm={4}
-            md={4}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
-          >
-            <img src={images.deal1.src} alt="anh"></img>
-          </Grid>
-        </Grid>
-        <Grid className={classes.boxSeeMore}>
-          <Link href="/listEvent">
-            <a>See More</a>
+      <Grid className={classes.root} container>
+        <Grid item xs={6}>
+          <h3 className={classes.titleEvent}>Find The Perfect Place</h3>
+          <p className={classes.subTitleEvent}>
+            A list of the top event apply for your tour in world for a perfect
+            holiday or a trip
+          </p>
+          <Link href="/listEvents">
+            <Button btnType={BtnType.Primary}>View More</Button>
           </Link>
         </Grid>
-      </Container>
+        <Grid item xs={6}>
+          <Swiper
+            slidesPerView={isMobile ? 1 : 3}
+            spaceBetween={30}
+            slidesPerGroup={isMobile ? 1 : 3}
+            initialSlide={0}
+            loop={true}
+            // onSlideChange={(e) => console.log(e.realIndex)}
+            // loopFillGroupWithBlank={true}
+            pagination={{
+              clickable: true,
+            }}
+            navigation={true}
+            modules={[Pagination, Navigation]}
+            className={clsx("mySwiper", classes.swiper)}
+          >
+            <SwiperSlide>
+              <Grid>
+                <img src={images.deal1.src} alt="anh"></img>
+              </Grid>
+            </SwiperSlide>
+          </Swiper>
+        </Grid>
+      </Grid>
     </>
   );
 });

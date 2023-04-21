@@ -23,8 +23,11 @@ import "aos/dist/aos.css";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { clsx } from "clsx";
 import { Col } from "reactstrap";
+import InputDatePicker from "components/common/inputs/InputDatePicker";
+import Button, { BtnType } from "components/common/buttons/Button";
 interface FormSearch {
   tour?: string;
+  startTime?: Date;
 }
 
 // eslint-disable-next-line react/display-name
@@ -34,6 +37,7 @@ const TourSearch = memo(() => {
   const schema = useMemo(() => {
     return yup.object().shape({
       tour: yup.string().required("Content search is required"),
+      startTime: yup.date().required("Date search is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -87,18 +91,39 @@ const TourSearch = memo(() => {
   return (
     <>
       <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
-        <InputTextfield
-          className={classes.inputSearch}
-          placeholder="Search tour or destination"
-          name="tour"
-          title="Destination"
-          startAdornment={<FontAwesomeIcon icon={faSearch} />}
-          inputRef={register("tour")}
-          onKeyPress={handleKeyPress}
-          autoComplete="off"
-          onFocus={onFocus}
-          onBlur={onBlur}
-        />
+        <Grid container className={classes.root}>
+          <Grid item xs={6} className={classes.boxItem}>
+            <p className={classes.titleInput}>Location</p>
+            <InputTextfield
+              className={classes.inputSearch}
+              placeholder="Search tour or destination"
+              name="tour"
+              startAdornment={<FontAwesomeIcon icon={faSearch} />}
+              inputRef={register("tour")}
+              onKeyPress={handleKeyPress}
+              autoComplete="off"
+              onFocus={onFocus}
+              onBlur={onBlur}
+            />
+          </Grid>
+          <Grid xs={6} item className={classes.boxItem}>
+            <p className={classes.titleInput}>Start Time</p>
+            <InputDatePicker
+              className={classes.inputSearchDate}
+              placeholder="Start time"
+              name="startTime"
+              dateFormat="DD/MM/YYYY"
+              timeFormat={false}
+              inputRef={"startTime"}
+              errorMessage={errors.startTime?.message}
+            />
+          </Grid>
+        </Grid>
+        <Grid className={classes.boxItemButton}>
+          <Button btnType={BtnType.Secondary} type="submit">
+            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>Search hotel
+          </Button>
+        </Grid>
         {focus && (
           <Grid className={classes.recentSearchBox}>
             <Grid
@@ -122,7 +147,7 @@ const TourSearch = memo(() => {
             </Grid>
           </Grid>
         )}
-        <Grid className={classes.boxSuggest}>
+        {/* <Grid className={classes.boxSuggest}>
           <h4>Local Destinations to Explore</h4>
           <p>Get ready to discover the best places on our radar</p>
           <Swiper
@@ -183,14 +208,14 @@ const TourSearch = memo(() => {
               </Col>
             </SwiperSlide>
           </Swiper>
-          {/* <Grid className={classes.itemSuggest}>
+          <Grid className={classes.itemSuggest}>
             <div>
               <img src={images.bgUser.src} alt="anh"></img>
             </div>
 
             <p>Nha Trang</p>
-          </Grid> */}
-        </Grid>
+          </Grid>
+        </Grid> */}
       </Grid>
     </>
   );

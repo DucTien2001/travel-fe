@@ -36,11 +36,16 @@ const LandingPage: NextPage = () => {
               <Row>
                 <Col
                   className="ml-auto mr-auto text-center"
-                  md="8"
+                  md="12"
                   data-aos="fade-up"
                 >
-                  <h1 className={clsx("title", classes.titleHome)}>Discover</h1>
-                  <h1 className={classes.titleHero}>Viet Nam</h1>
+                  <h1 className={clsx("title", classes.titleHome)}>
+                    Where do you want to go?
+                  </h1>
+                  <h4 className={classes.subTitle}>
+                    It time for new adventures, escapes thrills & experiences
+                  </h4>
+                  <Search />
                 </Col>
               </Row>
               <Row></Row>
@@ -48,11 +53,11 @@ const LandingPage: NextPage = () => {
           </div>
         </div>
       </div>
-      <Search />
+
       <Events />
       <Offer />
       <About />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Contact />
       <Social />
     </>

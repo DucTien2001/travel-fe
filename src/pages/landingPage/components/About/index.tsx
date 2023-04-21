@@ -4,6 +4,7 @@ import { images } from "configs/images";
 import classes from "./styles.module.scss";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import { Card, Grid } from "@mui/material";
 
 // eslint-disable-next-line react/display-name
 const About = memo(() => {
@@ -12,8 +13,8 @@ const About = memo(() => {
   }, []);
   return (
     <>
-      <div className="features-5">
-        <Container>
+      <Grid className={classes.root}>
+        {/* <Container>
           <Row className={classes.titleWrapper}>
             <h3 className={"title"} data-aos="fade-up">
               About us
@@ -68,8 +69,52 @@ const About = memo(() => {
               </div>
             </Col>
           </Row>
-        </Container>
-      </div>
+        </Container> */}
+        <h3 className={classes.title}>Latest stories from Travelix</h3>
+        <Grid container spacing={2} className={classes.containerBoxCard}>
+          <Grid item xs={6}>
+            <Card className={classes.card}>
+              <p>
+                {" "}
+                🌍 Help me, LP! I’m planning a week-long trip to the Viet Nam
+                this summer. Where do I start?
+              </p>
+              <span>
+                {" "}
+                Can’t decide which glorious Viet Nam to include on your
+                week-long itinerary? We have some tips to help you plan.
+              </span>
+            </Card>
+          </Grid>
+          <Grid item xs={6} container spacing={2}>
+            <Grid item xs={6} container className={classes.aboutCard}>
+              <Grid item xs={8} className={classes.col8}>
+                <Card className={classes.card1}></Card>
+              </Grid>
+              <Grid item xs={4} className={classes.col4}>
+                <p className={classes.titleCard}>
+                  <h3>13 things you need to know before visiting Greece</h3>
+                  Weve got everything you need to know before your next trip to
+                  Viet Nam.
+                </p>
+              </Grid>
+            </Grid>
+            <Grid item xs={6} container className={classes.aboutCard}>
+              <Grid item xs={8} className={classes.col8}>
+                <Card className={classes.card2}></Card>
+              </Grid>
+              <Grid item xs={4} className={classes.col4}>
+                <p className={classes.titleCard}>
+                  <h3>Here&apos;s how you can visit Viet Nam on a budget</h3>
+                  How to save money on a trip to Greece with cheap flights,
+                  ferries, trains and buses plus how to get the best deal on
+                  hotels, food and drinks.
+                </p>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </>
   );
 });

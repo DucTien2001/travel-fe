@@ -4,7 +4,7 @@ import { images } from "configs/images";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { Container } from "reactstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
@@ -13,11 +13,9 @@ import Step from "@mui/material/Step";
 import { Grid, StepConnector, StepLabel } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import QontoStepIcon from "components/QontoStepIcon";
-
 import PopupCheckReview from "components/Popup/PopupCheckReview";
 import Booking from "../components/Booking";
 import Review from "../components/Review";
-import { ReducerType } from "redux/reducers";
 import { BookTourReview } from "models/tour";
 import { setConfirmBookTourReviewReducer } from "redux/reducers/Normal/actionTypes";
 
@@ -32,12 +30,10 @@ const BookTour = memo(() => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { page } = router.query;
-
   const { t, i18n } = useTranslation();
 
   const [modal, setModal] = useState(false);
   const [tour, setTour] = useState<any>();
-  const [showContinueInfor, setShowContinueInfor] = useState<FormData>();
   const [activeStep, setActiveStep] = useState<EStep>(EStep.BOOKING);
 
   const steps = useMemo(() => {
@@ -60,17 +56,11 @@ const BookTour = memo(() => {
 
   const toggle = () => setModal(!modal);
 
-  // const handleGetInfor = (data: FormData) => {
-  //   setShowContinueInfor(data);
-  //   toggle();
-  // };
-
-  // const handleChangeStep = () => {
-  //   if (!showContinueInfor) return;
-
-  //   onSubmit(showContinueInfor);
-  //   toggle();
-  // };
+  const handleChangeStep = () => {
+    setActiveStep(EStep.REVIEW);
+    router.push(`/book/tour/:${tour?.id}/review`);
+    toggle();
+  };
 
   const onSubmitTourToReview = (data: BookTourReview) => {
     dispatch(
@@ -88,9 +78,7 @@ const BookTour = memo(() => {
         priceOfChild: data?.priceOfChild,
       })
     );
-    setActiveStep(EStep.REVIEW);
-    router.push(`/book/tour/:${tour?.id}/review`);
-    console.log(data);
+    toggle();
   };
 
   useEffect(() => {
@@ -164,12 +152,12 @@ const BookTour = memo(() => {
             <Grid>{renderComponent()}</Grid>
           </Container>
         </Grid>
-        {/* <PopupCheckReview
+        <PopupCheckReview
           isOpen={modal}
           onClose={toggle}
           toggle={toggle}
           onClick={handleChangeStep}
-        /> */}
+        />
       </div>
     </>
   );

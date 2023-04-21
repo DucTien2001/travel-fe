@@ -2,52 +2,51 @@
     display: flex;
     justify-content: center;
     position: relative;
-    margin-top: -44px;
+    width: 1110px;  
+    // margin-top: -44px;
     @media only screen and (max-width: 768px) {
+        max-width: 350px;  
         margin-top: 0;
-        padding: 16px;
+        padding-right: 16px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
 .boxSearch {
-    display: flex;
-    width: 1024px;  
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-    background-color: var(--white-color);
+    background: rgba(0,0,0,0.3);
     .boxTabControl {
-        width: 230px;
         border-right: 1px solid var(--gray-6);
         display: flex;
-        flex-direction: column;
+        justify-content: center;
         .navItem {
             cursor: pointer;
+            color: var(--white-color);
             svg {
-                color: var(--primary-color);
+                color: var(--white-color);
                 margin-right: 4px;
             }
             div:first-child {
                 font-size: 14px;
-                font-weight: 600;
-                padding: 10px 24px;
-                border-top-left-radius: 10px;
+                font-weight: 700;
+                padding: 16px 24px;
                 @media only screen and (max-width: 768px) {
                     border-top-left-radius: 0;
                 }
             }
         }
         .active {
-            border-right: 5px solid var(--orange-color);
-            background-color: var(--gray-10);
+            border-bottom: 5px solid var(--white-color);
             @media only screen and (max-width: 768px) {
                 border-right: none;
-                border-bottom: 5px solid var(--orange-color);
+                border-bottom: 5px solid var(--white-color);
             }
         }
     }
     .boxTabContent {
-        padding: 14px;
-        width: calc(100% - 230px);
+        padding: 24px;
     }
     @media only screen and (max-width: 768px) {
         width: 100%;

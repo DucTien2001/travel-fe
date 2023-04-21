@@ -1,54 +1,24 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 // reactstrap components
-import { Container, Row, Col } from "reactstrap";
-import { NextPage } from "next";
-import { images } from "configs/images";
-import clsx from "clsx";
+import { Container } from "reactstrap";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
-import SectionHeader from "components/Header/SectionHeader";
 import { ReducerType } from "redux/reducers";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { HotelService } from "services/normal/hotel";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
-import PopupCheckReview from "components/Popup/PopupCheckReview";
-import {
-  Collapse,
-  Grid,
-  Step,
-  StepConnector,
-  StepLabel,
-  Stepper,
-} from "@mui/material";
-import QontoStepIcon from "components/QontoStepIcon";
-import { useTranslation } from "react-i18next";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHotel, faSignsPost } from "@fortawesome/free-solid-svg-icons";
-import {
-  Restaurant,
-  Wifi,
-  ReceiptLong,
-  AccessTime,
-  Receipt,
-  Person,
-  Email,
-  Phone,
-} from "@mui/icons-material";
+import { Collapse, Grid } from "@mui/material";
+import { ReceiptLong, Person, Email, Phone } from "@mui/icons-material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { fCurrency2VND } from "utils/formatNumber";
-import { IUserInformationBookRoom } from "redux/reducers/Normal";
-import { sumPrice } from "utils/totalPrice";
 import moment from "moment";
 import { PAYMENT_HOTEL_SECTION } from "models/payment";
 import { TourService } from "services/normal/tour";
 import { Tour } from "models/tour";
 import AttractionsIcon from "@mui/icons-material/Attractions";
-
 import _ from "lodash";
-
 interface Props {}
 const Review = memo(({}: Props) => {
   const router = useRouter();
@@ -59,8 +29,8 @@ const Review = memo(({}: Props) => {
   );
 
   const [open, setOpen] = useState(false);
-  const [readMore, setReadMore] = useState(false);
   const [tour, setTour] = useState<Tour>();
+  const [successPayPal, setSuccessPayPal] = useState(false);
 
   const policyType = useMemo(() => {
     return _.toArray(_.groupBy(tour?.tourPolicies, "policyType"));
@@ -272,7 +242,6 @@ const Review = memo(({}: Props) => {
                   <Grid
                     className={classes.boxPrice}
                     sx={{ borderBottom: "1px solid Var(--gray-10)" }}
-                    onClick={() => setOpen(!open)}
                   >
                     <Grid>
                       {" "}
@@ -322,9 +291,16 @@ const Review = memo(({}: Props) => {
                     }}
                     className={classes.btnContinue}
                   >
-                    <Button btnType={BtnType.Secondary} type="submit">
+                    {/* <Button btnType={BtnType.Secondary} type="submit">
                       Continue to Pay
-                    </Button>
+                    </Button> */}
+
+                    {/* <Button
+                      btnType={BtnType.Secondary}
+                      onClick={() => setSuccessPayPal(true)}
+                    >
+                      Continue to Pay
+                    </Button> */}
                   </Grid>
                 </Grid>
               </Grid>

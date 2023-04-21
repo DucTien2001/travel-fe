@@ -68,21 +68,22 @@ const HotelSearch = memo(() => {
   return (
     <>
       <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
-        <Grid>
+        <Grid className={classes.boxItem}>
+          <p className={classes.titleInput}>Hotel</p>
           <InputTextfield
+            className={classes.inputSearchLocation}
             placeholder="Search tour"
             name="location"
-            title="Location"
             startAdornment={<FontAwesomeIcon icon={faLocationDot} />}
             inputRef={"location"}
             errorMessage={errors.location?.message}
           />
         </Grid>
-        <Grid container sx={{ paddingTop: "14px" }}>
-          <Grid xs={6} item>
+        <Grid container className={classes.boxDate}>
+          <Grid xs={5} item className={classes.boxItem}>
+            <p className={classes.titleInput}>Start Time</p>
             <InputDatePicker
               className={classes.inputSearchDate}
-              label="Check-in"
               placeholder="Check-in"
               name="startDate"
               dateFormat="DD/MM/YYYY"
@@ -91,10 +92,10 @@ const HotelSearch = memo(() => {
               errorMessage={errors.startDate?.message}
             />
           </Grid>
-          <Grid xs={6} item sx={{ paddingLeft: "16px" }}>
+          <Grid xs={5} item className={classes.boxItem}>
+            <p className={classes.titleInput}>Start Time</p>
             <InputDatePicker
               className={classes.inputSearchDate}
-              label="Check-out"
               placeholder="Check-out"
               name="endDate"
               dateFormat="DD/MM/YYYY"
@@ -103,12 +104,13 @@ const HotelSearch = memo(() => {
               errorMessage={errors.endDate?.message}
             />
           </Grid>
+          <Grid xs={2} item className={classes.boxItem}>
+            <Button btnType={BtnType.Secondary} type="submit">
+              <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>Search hotel
+            </Button>
+          </Grid>
         </Grid>
-        <Grid sx={{ paddingTop: "14px" }}>
-          <Button btnType={BtnType.Secondary} type="submit">
-            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>Search hotel
-          </Button>
-        </Grid>
+        <Grid sx={{ paddingTop: "14px" }}></Grid>
       </Grid>
     </>
   );

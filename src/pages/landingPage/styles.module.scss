@@ -1,12 +1,21 @@
 .pageHeader {
-  background-image: url("../../assets/img/home_slider.jpg");
-  height: 400px !important;
+  background-image: url("../../assets/img/homehero.jpg");
+  height: 900px !important;
+  @media only screen and (max-width: 768px) {
+    height: 950px !important;
+  }
 }
 .pageHeadBox {
-  min-height: 400px !important;
+  min-height: 900px !important;
+  @media only screen and (max-width: 768px) {
+    height: 950px !important;
+  }
 }
 .pageHeadBox::after {
-  height: 400px !important;
+  height: 900px !important;
+  @media only screen and (max-width: 768px) {
+    height: 950px !important;
+  }
 }
 
 .titleHome {
@@ -18,14 +27,19 @@
 }
 
 .titleHero {
-  font-size: 4rem;
+  font-size: 7rem;
   font-family: 'Ms Madi', cursive;
   font-weight: 600;
   @media only screen and (max-width: 500px) {
     font-size: 3rem;
   }
 }
-
+.subTitle {
+  font-size: 2rem;
+  @media only screen and (max-width: 500px) {
+    font-size: 2rem;
+  }
+}
 .btnContainerWrapper {
   display: flex;
   justify-content: center;

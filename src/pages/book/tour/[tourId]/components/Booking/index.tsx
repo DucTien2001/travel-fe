@@ -53,6 +53,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PopupVoucher from "../PopopVoucher";
 import InputTextfield from "components/common/inputs/InputTextfield";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const CHARACTER_LIMIT = 100;
 
@@ -133,22 +134,6 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
     mode: "onChange",
   });
 
-  useEffect(() => {
-    if (router) {
-      TourService.getTour(Number(router.query.tourId.slice(1)))
-        .then((res) => {
-          setTour(res.data);
-        })
-        .catch((e) => {
-          dispatch(setErrorMess(e));
-        })
-        .finally(() => {
-          dispatch(setLoading(false));
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]);
-
   const onOpenPopupDetailTour = () =>
     setOpenPopupDetailTour(!openPopupDetailTour);
 
@@ -174,14 +159,25 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
     });
   };
 
-  const specialRequest = watch("specialRequest");
-
-  useEffect(() => {
-    tour?.tourPolicies.forEach((item) => {
-      if (item.policyType === EServicePolicyType.REFUND)
-        policyRefund.push(item.dayRange);
+  const createOrder = (data, actions) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: "1.99",
+          },
+        },
+      ],
     });
-  }, [tour]);
+  };
+  const onApprove = (data, actions) => {
+    return actions.order.capture().then((details) => {
+      const name = details.payer.name.given_name;
+      alert(`Transaction completed by ${name}`);
+    });
+  };
+
+  const specialRequest = watch("specialRequest");
 
   const maxDateRefund = Math.max.apply(Math, policyRefund);
 
@@ -232,6 +228,29 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
     }
     return isValid;
   };
+
+  useEffect(() => {
+    tour?.tourPolicies.forEach((item) => {
+      if (item.policyType === EServicePolicyType.REFUND)
+        policyRefund.push(item.dayRange);
+    });
+  }, [tour]);
+
+  useEffect(() => {
+    if (router) {
+      TourService.getTour(Number(router.query.tourId.slice(1)))
+        .then((res) => {
+          setTour(res.data);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
 
   useEffect(() => {
     if (user) {
@@ -344,7 +363,9 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                       optional
                       multiline
                       rows={3}
-                      infor={`${specialRequest?.length}/${CHARACTER_LIMIT}`}
+                      infor={`${
+                        specialRequest?.length || 0
+                      }/${CHARACTER_LIMIT}`}
                       inputRef={register("specialRequest")}
                       inputProps={{
                         maxLength: CHARACTER_LIMIT,
@@ -506,6 +527,17 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                       <Button btnType={BtnType.Primary} type="submit">
                         Continue to Review
                       </Button>
+                      <PayPalScriptProvider
+                        options={{
+                          "client-id":
+                            "ATwisFU2Z4zvz8wCMpqWRplHmFBGrOYkVr4-0mET7MNhuDOSE-YiJVmyrT5oglK57pbrJes7ubbwjMsl",
+                        }}
+                      >
+                        <PayPalButtons
+                          createOrder={createOrder}
+                          onApprove={onApprove}
+                        />
+                      </PayPalScriptProvider>
                     </Grid>
                   </Grid>
                 </Grid>

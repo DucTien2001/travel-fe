@@ -3,7 +3,6 @@ import {
   Container,
   Row,
   Col,
-  Card,
   CardBody,
   CardTitle,
   CardFooter,
@@ -24,7 +23,7 @@ import "swiper/css/navigation";
 import Stars from "components/Stars";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { Grid, useMediaQuery, useTheme } from "@mui/material";
+import { Card, Grid, useMediaQuery, useTheme } from "@mui/material";
 
 // eslint-disable-next-line react/display-name
 const OfferComponent = memo(() => {
@@ -48,244 +47,88 @@ const OfferComponent = memo(() => {
   return (
     <>
       <Grid className={classes.root}>
-        <Container>
-          <Row>
-            <Col md="8" data-aos="fade-up">
-              <h3 className={clsx("title", classes.titleSection)}>
-                THE BEST OFFERS WITH YOU
-              </h3>
-            </Col>
-          </Row>
-          <div data-aos="fade-right" className={classes.divider}></div>
-        </Container>
-        <div className={classes.containerBestSeller}>
-          <Container>
-            <h3
-              className={clsx(classes.titleSwiper, "mt-5")}
-              data-aos="fade-right"
+        <Grid>
+          <h3 className={classes.title}>Best Places on Viet Nam</h3>
+          <Grid container spacing={1} className={classes.containerBoxCard}>
+            <Grid item xs={5} sx={{ height: "100%", paddingBottom: "8px" }}>
+              <Card className={clsx(classes.card6)}>Phu Quoc Island</Card>
+            </Grid>
+            <Grid item xs={7} container spacing={1} sx={{ height: "100%" }}>
+              <Grid xs={4} className={classes.col4} item container spacing={1}>
+                <Grid xs={8} item className={classes.col4Long}>
+                  <Card className={clsx(classes.card4Long)}>Da Nang</Card>
+                </Grid>
+                <Grid xs={4} item className={classes.col4Short}>
+                  <Card className={clsx(classes.card4Short)}>Nha Trang</Card>
+                </Grid>
+              </Grid>
+              <Grid xs={4} className={classes.col4} item container spacing={1}>
+                <Grid xs={6} item className={classes.col4Long}>
+                  <Card className={clsx(classes.card41Equal)}>Ha Long Bay</Card>
+                </Grid>
+                <Grid xs={6} item className={classes.col4Short}>
+                  <Card className={clsx(classes.card42Equal)}>Da Lat</Card>
+                </Grid>
+              </Grid>
+              <Grid xs={4} className={classes.col4} item container spacing={1}>
+                <Grid xs={4} item className={classes.col4Long}>
+                  <Card className={clsx(classes.card41Short)}>Sa Pa</Card>
+                </Grid>
+                <Grid xs={8} item className={classes.col4Short}>
+                  <Card className={clsx(classes.card41Long)}>Hue</Card>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid sx={{ paddingTop: "64px" }}>
+          <h3 className={classes.title}>Favorite place in Viet Nam</h3>
+          <Grid container spacing={1} className={classes.containerBoxCard}>
+            <Grid
+              item
+              xs={8}
+              sx={{ height: "100%", paddingBottom: "8px" }}
+              container
+              className={classes.col8}
+              spacing={1}
             >
-              Best seller
-            </h3>
-            <Swiper
-              slidesPerView={isMobile ? 1 : 4}
-              spaceBetween={30}
-              slidesPerGroup={isMobile ? 1 : 4}
-              initialSlide={0}
-              loop={true}
-              data-aos="fade-right"
-              // onSlideChange={(e) => console.log(e.realIndex)}
-              // loopFillGroupWithBlank={true}
-              pagination={{
-                clickable: true,
-              }}
-              navigation={true}
-              modules={[Pagination, Navigation]}
-              className={clsx("mySwiper", classes.swiperBestSeller)}
-            >
-              {listBestSeller?.map((item, index) => {
-                return (
-                  <SwiperSlide key={index}>
-                    <Card className={clsx("card-blog", classes.card)}>
-                      <div className="card-image">
-                        <a href={`/listTour/:${item?.id}`}>
-                          <img
-                            alt="..."
-                            className="img rounded"
-                            src={item?.images[0]}
-                          ></img>
-                        </a>
-                      </div>
-                      <CardBody>
-                        <div className={classes.locationBox}>
-                          <FontAwesomeIcon icon={faLocationDot} />
-                          <h6 className={clsx("category", classes.location)}>
-                            {item?.location}
-                          </h6>
-                        </div>
-
-                        <CardTitle tag="h5" className={classes.titleCard}>
-                          {item?.title}
-                        </CardTitle>
-                        <Stars numberOfStars={item?.rate} />
-                        <div className={classes.priceWrapper}>
-                          <h6
-                            className={
-                              item?.discount
-                                ? classes.price
-                                : classes.priceDiscount
-                            }
-                          >
-                            {fCurrency2(item?.price)} VND{" "}
-                            {!item?.discount && <span>/ person</span>}
-                          </h6>
-                          {item?.discount !== 0 && (
-                            <h6 className={classes.priceDiscount}>
-                              {fCurrency2(
-                                (item?.price * (100 - item?.discount)) / 100
-                              )}{" "}
-                              VND<span>/ person</span>
-                            </h6>
-                          )}
-                        </div>
-                        <p
-                          className={clsx("card-description", classes.textDesc)}
-                        >
-                          {item?.description}
-                        </p>
-                      </CardBody>
-                    </Card>
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
-          </Container>
-        </div>
-        <Container>
-          <h3 className={classes.titleSwiper} data-aos="fade-right">
-            Browse by property type
-          </h3>
-          <Swiper
-            data-aos="fade-left"
-            slidesPerView={isMobile ? 1 : 4}
-            spaceBetween={30}
-            slidesPerGroup={isMobile ? 1 : 4}
-            loop={true}
-            loopFillGroupWithBlank={true}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            modules={[Pagination, Navigation]}
-            className={clsx("mySwiper", classes.swiper)}
-          >
-            <SwiperSlide>
-              <Col>
-                <Card>
-                  <div className="card-image">
-                    <img
-                      alt="..."
-                      className="rounded"
-                      src={allTours[5]?.images[0]}
-                    ></img>
-                  </div>
-                  <div className="text-center">
-                    <h4 className="info-title">Reply detection</h4>
-                    <p className="description">1000 rooms</p>
-                  </div>
+              <Grid
+                xs={6}
+                item
+                className={classes.col6}
+                sx={{ paddingRight: "8px" }}
+              >
+                <Card className={clsx(classes.cardPhuYen)}>
+                  <p>Phu Yen</p> <span>100 hotels</span>
                 </Card>
-              </Col>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Col>
-                <Card>
-                  <div className="card-image">
-                    <img
-                      alt="..."
-                      className="rounded"
-                      src={allTours[5]?.images[0]}
-                    ></img>
-                  </div>
-                  <div className="text-center">
-                    <h4 className="info-title">Reply detection</h4>
-                    <p className="description">1000 rooms</p>
-                  </div>
-                </Card>
-              </Col>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Col>
-                <Card>
-                  <div className="card-image">
-                    <img
-                      alt="..."
-                      className="rounded"
-                      src={allTours[5]?.images[0]}
-                    ></img>
-                  </div>
-                  <div className="text-center">
-                    <h4 className="info-title">Reply detection</h4>
-                    <p className="description">1000 rooms</p>
-                  </div>
-                </Card>
-              </Col>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Col>
-                <Card>
-                  <div className="card-image">
-                    <img
-                      alt="..."
-                      className="rounded"
-                      src={allTours[5]?.images[0]}
-                    ></img>
-                  </div>
-                  <div className="text-center">
-                    <h4 className="info-title">Reply detection</h4>
-                    <p className="description">1000 rooms</p>
-                  </div>
-                </Card>
-              </Col>
-            </SwiperSlide>
-          </Swiper>
-        </Container>
-        <Container>
-          <h3 className={classes.titleSwiper} data-aos="fade-right">
-            Home guests love
-          </h3>
-          <Swiper
-            slidesPerView={isMobile ? 1 : 4}
-            spaceBetween={30}
-            slidesPerGroup={isMobile ? 1 : 4}
-            initialSlide={0}
-            loop={true}
-            data-aos="fade-right"
-            // onSlideChange={(e) => console.log(e.realIndex)}
-            // loopFillGroupWithBlank={true}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            modules={[Pagination, Navigation]}
-            className={clsx("mySwiper", classes.swiperBestSeller)}
-          >
-            {listHotelLove?.map((item, index) => {
-              return (
-                <SwiperSlide key={index}>
-                  <Card className="card-blog card-plain">
-                    <div className="card-image">
-                      <a href={`/listHotel/:${item?.id}`}>
-                        <img
-                          alt="..."
-                          className="img rounded img-raised"
-                          src={item?.images[0]}
-                        ></img>
-                      </a>
-                    </div>
-                    <CardBody>
-                      <CardTitle tag="h5" className={classes.titleCard}>
-                        <a href={`/listHotel/:${item?.id}`}>{item?.name}</a>
-                      </CardTitle>
-                      <p className={clsx("card-description", classes.textDesc)}>
-                        {item?.description}
-                      </p>
-                      <div className={classes.boxPrice}>
-                        <p>Starting from </p>
-                      </div>
-                      <CardFooter className={classes.cardFooter}>
-                        <div className={classes.rateBox}>
-                          {item?.rate.toFixed(1)}
-                        </div>
-                        <div>
-                          <span>{item?.numberOfReviewer} reviews</span>
-                        </div>
-                      </CardFooter>
-                    </CardBody>
+              </Grid>
+              <Grid xs={6} item container className={classes.col6} spacing={1}>
+                <Grid xs={6} item>
+                  <Card className={clsx(classes.cardDaLat)}>
+                    <p>Da Lat</p>
+                    <span>100 hotels</span>
                   </Card>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </Container>
+                </Grid>
+                <Grid xs={6} item>
+                  <Card className={clsx(classes.cardQuyNhon)}>
+                    <p>Quy Nhon</p>
+                    <span>100 hotels</span>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              xs={4}
+              sx={{ paddingBottom: "16px", paddingLeft: "0 !important" }}
+            >
+              <Card className={clsx(classes.cardVungTau)}>
+                <p>Vung Tau</p>
+                <span>100 hotels</span>
+              </Card>
+            </Grid>
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );

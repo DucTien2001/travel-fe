@@ -70,7 +70,7 @@ const Search = memo(() => {
   return (
     <>
       <Grid container className={classes.root}>
-        <Grid className={classes.boxSearch}>
+        <Grid className={classes.boxSearch} sx={{ width: "100%" }}>
           <Nav className={classes.boxTabControl} nav>
             <NavItem
               onClick={() => onChangeTab(EActiveNav.Tour_Active)}
