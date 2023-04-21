@@ -35,7 +35,9 @@ const TourSearch = memo(() => {
     <>
       <Grid className={classes.root} container>
         <Grid item xs={6}>
-          <h3 className={classes.titleEvent}>Find The Perfect Place</h3>
+          <h3 className={classes.titleEvent}>
+            Find The Perfect Event Apply Your Order
+          </h3>
           <p className={classes.subTitleEvent}>
             A list of the top event apply for your tour in world for a perfect
             holiday or a trip
