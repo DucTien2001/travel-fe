@@ -33,7 +33,7 @@ const TourSearch = memo(() => {
 
   return (
     <>
-      <Grid className={classes.root} container>
+      <Grid className={classes.root} container spacing={2}>
         <Grid item xs={6}>
           <h3 className={classes.titleEvent}>
             Find The Perfect Event Apply Your Order

@@ -113,13 +113,11 @@ const ProductPage = memo(() => {
         ) : (
           <>
             <SectionTour tour={tour} tourSchedule={tourSchedule} />
-            {/* <div className={classes.containerComment}>
-              <Comment
-                comments={listComment}
-                onGetTourComments={getTourComments}
-                tour={tour}
-              />
-            </div> */}
+            <Comment
+              // comments={listComment}
+              // onGetTourComments={getTourComments}
+              tour={tour}
+            />
             {/* 
           <RelatedTour/>  */}
           </>

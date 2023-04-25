@@ -25,6 +25,7 @@ import { clsx } from "clsx";
 import { Col } from "reactstrap";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import Button, { BtnType } from "components/common/buttons/Button";
+import moment from "moment";
 interface FormSearch {
   tour?: string;
   startTime?: Date;
@@ -66,6 +67,11 @@ const TourSearch = memo(() => {
   };
 
   const watchSearch = watch("tour");
+
+  const yesterday = moment().subtract(1, "day");
+  const disablePastDt = (current) => {
+    return current.isAfter(yesterday);
+  };
 
   const handleKeyPress = (e) => {
     var code = e.keyCode || e.which;
@@ -114,14 +120,16 @@ const TourSearch = memo(() => {
               name="startTime"
               dateFormat="DD/MM/YYYY"
               timeFormat={false}
-              inputRef={"startTime"}
+              isValidDate={disablePastDt}
+              inputRef={register("startTime")}
               errorMessage={errors.startTime?.message}
             />
           </Grid>
         </Grid>
         <Grid className={classes.boxItemButton}>
           <Button btnType={BtnType.Secondary} type="submit">
-            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>Search hotel
+            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>Search
+            destination
           </Button>
         </Grid>
         {focus && (

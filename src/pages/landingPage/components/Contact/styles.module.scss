@@ -1,5 +1,8 @@
 .root {
     padding: 64px 250px;
+    @media only screen and (max-width: 768px) {
+        padding: 24px;
+    }
 }
 
 .infoBodyListContact {

@@ -48,7 +48,7 @@ import InputSearch from "components/common/inputs/InputSearch";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 
 const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Id", sortable: false },
+  { name: "id", label: "Tour Id", sortable: false },
   { name: "name", label: "Name", sortable: false },
   { name: "languages", label: "Languages", sortable: false },
   { name: "actions", label: "Actions", sortable: false },
@@ -226,7 +226,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
                   return (
                     <TableRow key={index}>
                       <TableCell scope="row" className={classes.tableCell}>
-                        {item.id}
+                        Tour {item.id}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <a

@@ -30,17 +30,8 @@ import {
   Paper,
 } from "@mui/material";
 import TableHeader from "components/Table/TableHeader";
-import {
-  DataPagination,
-  LangSupport,
-  langSupports,
-  TableHeaderLabel,
-} from "models/general";
-import {
-  EditOutlined,
-  DeleteOutlineOutlined,
-  ExpandMoreOutlined,
-} from "@mui/icons-material";
+import { DataPagination, TableHeaderLabel } from "models/general";
+import { DeleteOutlineOutlined } from "@mui/icons-material";
 import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
 import { useRouter } from "next/router";
 import useDebounce from "hooks/useDebounce";
@@ -52,7 +43,7 @@ import { getRoleUser } from "utils/getOption";
 import StatusChip from "components/StatusChip";
 
 const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Id", sortable: false },
+  { name: "id", label: "Staff Id", sortable: false },
   { name: "name", label: "Name", sortable: false },
   { name: "role", label: "Role", sortable: false },
   { name: "status", label: "Status", sortable: false },
@@ -199,7 +190,7 @@ const Staff = memo(({ handleTourEdit }: Props) => {
                   return (
                     <TableRow key={index}>
                       <TableCell scope="row" className={classes.tableCell}>
-                        {item.id}
+                        Staff {item.id}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <a

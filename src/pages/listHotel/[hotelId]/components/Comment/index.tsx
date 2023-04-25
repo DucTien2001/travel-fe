@@ -104,7 +104,7 @@ const Comments = memo(({ comments, hotel, onGetHotelComments }: Props) => {
         <Container>
           {/* eslint-disable-next-line react/no-unescaped-entities */}
           <h3 className="text-center">CUSTOMER'S FEEDBACKS</h3>
-          <Swiper
+          {/* <Swiper
             slidesPerView={isMobile ? 1 : 3}
             spaceBetween={30}
             slidesPerGroup={isMobile ? 1 : 3}
@@ -152,7 +152,7 @@ const Comments = memo(({ comments, hotel, onGetHotelComments }: Props) => {
                 )}
               </div>
             </div>
-          </Row>
+          </Row> */}
           <PopupAddHotelComment
             isOpen={openPopupAddComment}
             commentEdit={commentEdit}

@@ -40,7 +40,7 @@ const LandingPage: NextPage = () => {
                   data-aos="fade-up"
                 >
                   <h1 className={clsx("title", classes.titleHome)}>
-                    Where do you want to go?
+                    Discover story-worthy travel moments
                   </h1>
                   <h4 className={classes.subTitle}>
                     It time for new adventures, escapes thrills & experiences

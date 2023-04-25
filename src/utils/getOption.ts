@@ -58,3 +58,18 @@ export const getCurrency = (currency) => {
         return { id: 2, name: "PERCENT", value: EDiscountType.PERCENT };
     }
   };
+
+  export const getRateComment = (rate: number) => {
+    switch (rate) {
+      case 1:
+        return "Worst";
+      case 2:
+        return "Bad";
+      case 3: 
+        return "Neutral";
+      case 4: 
+        return "Good";
+      case 5:
+        return "Excellent";
+    }
+  }

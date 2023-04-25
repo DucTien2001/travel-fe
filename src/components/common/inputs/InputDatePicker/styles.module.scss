@@ -15,6 +15,15 @@
   [class~="form-control"] {
     padding: 12px 12px 12px 41px !important;
   }
+  [class~=rdtDay] {
+    color: var(--text-color);
+ } 
+ [class~=rdtMonth] {
+  color: var(--text-color);
+} 
+[class~=rdtYear] {
+  color: var(--text-color);
+} 
     input {
         display: block;
         width: 100%;

@@ -1,8 +1,14 @@
 .root {
     padding: 64px 250px;
+    @media only screen and (max-width: 768px) {
+        padding: 24px;
+    }
 }
 .containerBoxCard {
     height: 515px;
+    @media only screen and (max-width: 600px) {
+        height: 250px;
+    }
 }
 .title {
     color: var(--text-color);
@@ -30,6 +36,10 @@
     span {
         font-size: 14px;
     }
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+    }
 }
 .col4 {
     display: flex;
@@ -52,6 +62,11 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
+    }
 }
 .col4Short {
     max-width: 100%;
@@ -69,6 +84,11 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
+    }
 }
 .card41Equal {
     background-image: url("../../../../assets/img/ha-long.jpg");
@@ -83,6 +103,11 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
+    }
 }
 .card42Equal {
     background-image: url("../../../../assets/img/da-lat.jpg");
@@ -97,6 +122,11 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
+    }
 }
 .card41Long {
     background-image: url("../../../../assets/img/hue.jpg");
@@ -111,6 +141,11 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
+    }
 }
 .card41Short {
     background-image: url("../../../../assets/img/sa-pa.jpg");
@@ -125,6 +160,14 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    p {
+        margin-bottom: 0;
+    }
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
+    }
 }
 
 .cardPhuYen {
@@ -143,8 +186,16 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    p {
+        margin-bottom: 0;
+    }
     span {
         font-size: 14px;
+    }
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
     }
 }
 .cardVungTau {
@@ -163,8 +214,16 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    p {
+        margin-bottom: 0;
+    }
     span {
         font-size: 14px;
+    }
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
     }
 }
 .cardDaLat {
@@ -183,8 +242,16 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    p {
+        margin-bottom: 0;
+    }
     span {
         font-size: 14px;
+    }
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
     }
 }
 .cardQuyNhon {
@@ -203,8 +270,16 @@
     font-size: 24px;
     font-weight:700;
     text-transform: uppercase;
+    p {
+        margin-bottom: 0;
+    }
     span {
         font-size: 14px;
+    }
+    @media only screen and (max-width: 768px) {
+        font-size: 14px;
+        text-align: center;
+
     }
 }
 .col8 {

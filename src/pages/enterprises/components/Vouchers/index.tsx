@@ -29,6 +29,7 @@ import {
 import TableHeader from "components/Table/TableHeader";
 import {
   DataPagination,
+  EDiscountType,
   LangSupport,
   langSupports,
   TableHeaderLabel,
@@ -44,11 +45,11 @@ import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
 import { FindAll, Voucher } from "models/enterprise/voucher";
 import { VoucherService } from "services/enterprise/voucher";
+import { fPercent, fShortenNumber } from "utils/formatNumber";
 
 const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Id", sortable: false },
+  { name: "id", label: "Voucher Id", sortable: false },
   { name: "name", label: "Name", sortable: false },
-  { name: "languages", label: "Languages", sortable: false },
   { name: "actions", label: "Actions", sortable: false },
 ];
 
@@ -59,7 +60,7 @@ const Event = memo(({}: Props) => {
   const router = useRouter();
 
   const [itemAction, setItemAction] = useState<Voucher>();
-  const [eventDelete, setEventDelete] = useState<Voucher>(null);
+  const [voucherDelete, setVoucherDelete] = useState<Voucher>(null);
   const [keyword, setKeyword] = useState<string>("");
   const [data, setData] = useState<DataPagination<Voucher>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
@@ -148,21 +149,21 @@ const Event = memo(({}: Props) => {
 
   const onShowConfirmDelete = () => {
     if (!itemAction) return;
-    setEventDelete(itemAction);
+    setVoucherDelete(itemAction);
     onCloseActionMenu();
   };
 
   const onClosePopupConfirmDelete = () => {
-    if (!eventDelete) return;
-    setEventDelete(null);
+    if (!voucherDelete) return;
+    setVoucherDelete(null);
     onCloseActionMenu();
   };
 
   const onYesDelete = () => {
-    if (!eventDelete) return;
+    if (!voucherDelete) return;
     onClosePopupConfirmDelete();
     dispatch(setLoading(true));
-    VoucherService.delete(eventDelete?.id)
+    VoucherService.delete(voucherDelete?.id)
       .then(() => {
         dispatch(setSuccessMess("Delete successfully"));
         fetchData();
@@ -209,20 +210,14 @@ const Event = memo(({}: Props) => {
                   return (
                     <TableRow key={index}>
                       <TableCell scope="row" className={classes.tableCell}>
-                        {item.id}
+                        Voucher {item.id}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <a
-                          href={`/listTour/:${item?.id}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={classes.tourName}
-                        >
-                          lllll
-                        </a>
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {/* {item?.languages?.map((it) => it.language).join(", ")} */}
+                        {item?.discountType === EDiscountType.PERCENT ? (
+                          <>Deal {fPercent(item?.discountValue)} </>
+                        ) : (
+                          <>Deal {fShortenNumber(item?.discountValue)}</>
+                        )}
                       </TableCell>
                       <TableCell className="text-center" component="th">
                         <IconButton
@@ -240,7 +235,7 @@ const Event = memo(({}: Props) => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={6}>
+                  <TableCell align="center" colSpan={3}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>
@@ -294,7 +289,7 @@ const Event = memo(({}: Props) => {
         </Menu>
         <PopupConfirmDelete
           title="Are you sure delete this voucher ?"
-          isOpen={!!eventDelete}
+          isOpen={!!voucherDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}
           onYes={onYesDelete}

@@ -65,8 +65,6 @@ const ListServices = memo(
     rate,
     isTemporarilyStopWorking,
     isDelete,
-    roomNumber,
-    bookDates,
     isHotel,
     numberOfReviewers,
   }: Props) => {
@@ -107,7 +105,11 @@ const ListServices = memo(
               >
                 <Grid className={classes.boxLocation}>
                   <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
-                  <div dangerouslySetInnerHTML={{ __html: description }}></div>
+                  <div>
+                    <p>
+                      {commune}, {district}, {city}
+                    </p>
+                  </div>
                 </Grid>
                 <Grid className={classes.boxTitle}>
                   <p>{title}</p>

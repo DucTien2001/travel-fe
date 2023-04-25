@@ -1,6 +1,13 @@
 .root {
     padding: 64px 250px;
     display: flex;
+    @media only screen and (max-width: 768px) {
+        padding: 24px;
+        flex-direction: column;
+        div {
+            max-width: 100%;
+        }
+    }
 }
 
 .title {
@@ -24,6 +31,9 @@
 }
 
 .swiper {
+    img {
+        width: 100%;
+    }
     [class~="swiper-button-prev"] {
         // top: 150px;
     }

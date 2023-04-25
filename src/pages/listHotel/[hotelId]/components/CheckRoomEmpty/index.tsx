@@ -250,7 +250,6 @@ const CheckRoomEmpty = memo(({ hotel }: Props) => {
 
   const watchStartDate = watch("departure");
 
-  console.log(watchStartDate);
   const disableEndDt = (current) => {
     return current.isAfter(watchStartDate);
   };

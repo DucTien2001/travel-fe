@@ -86,14 +86,14 @@ const About = memo(() => {
               </span>
             </Card>
           </Grid>
-          <Grid item xs={6} container spacing={2}>
+          <Grid item xs={6} container spacing={2} className={classes.lastCol}>
             <Grid item xs={6} container className={classes.aboutCard}>
               <Grid item xs={8} className={classes.col8}>
                 <Card className={classes.card1}></Card>
               </Grid>
               <Grid item xs={4} className={classes.col4}>
                 <div className={classes.titleCard}>
-                  <h3>13 things you need to know before visiting Greece</h3>
+                  <span>13 things you need to know before visiting Greece</span>
                   Weve got everything you need to know before your next trip to
                   Viet Nam.
                 </div>
@@ -105,7 +105,9 @@ const About = memo(() => {
               </Grid>
               <Grid item xs={4} className={classes.col4}>
                 <div className={classes.titleCard}>
-                  <h3>Here&apos;s how you can visit Viet Nam on a budget</h3>
+                  <span>
+                    Here&apos;s how you can visit Viet Nam on a budget
+                  </span>
                   How to save money on a trip to Greece with cheap flights,
                   ferries, trains and buses plus how to get the best deal on
                   hotels, food and drinks.

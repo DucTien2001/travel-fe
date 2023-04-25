@@ -1,14 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 // reactstrap components
-import {
-  Carousel,
-  CarouselControl,
-  CarouselIndicators,
-  CarouselItem,
-  Col,
-  Container,
-  Row,
-} from "reactstrap";
+import { Container } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import classes from "./styles.module.scss";
@@ -24,19 +16,15 @@ import Warning from "components/common/warning";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import { CommentService } from "services/normal/comment";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
-import { getAllTourBills } from "redux/reducers/Normal/actionTypes";
 import { Tour } from "models/tour";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
 import clsx from "clsx";
-import { useMediaQuery, useTheme } from "@mui/material";
+import { useMediaQuery, useTheme, Grid } from "@mui/material";
+import Stars from "components/Stars";
+import { getRateComment } from "utils/getOption";
 interface Props {
-  comments: Comment[];
+  comments?: Comment[];
   tour: Tour;
-  onGetTourComments: () => void;
+  onGetTourComments?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
@@ -103,11 +91,14 @@ const Comments = memo(({ comments, tour, onGetTourComments }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allTourBills]);
   return (
-    <>
-      <Container className={classes.root}>
+    <Grid className={classes.root}>
+      <Container className={classes.container}>
         {/* eslint-disable-next-line react/no-unescaped-entities */}
-        <h3 className="text-center">CUSTOMER'S FEEDBACKS</h3>
-        <Swiper
+        <h2 className={classes.title}>CUSTOMER'S FEEDBACKS</h2>
+        <p className={classes.subTitle}>
+          Travelix customer(s) have a lot to say about their experiences:
+        </p>
+        {/* <Swiper
           slidesPerView={isMobile ? 1 : 3}
           spaceBetween={30}
           slidesPerGroup={isMobile ? 1 : 3}
@@ -153,7 +144,244 @@ const Comments = memo(({ comments, tour, onGetTourComments }: Props) => {
               {!isAddComment && <Warning content="You don't book this tour" />}
             </div>
           </div>
-        </Row>
+        </Row> */}
+        <Grid
+          container
+          sx={{ borderTop: "1px solid var(--gray-40)", padding: "16px 0" }}
+        >
+          <Grid xs={3} item className={classes.boxAvatar}>
+            <Grid>
+              <img
+                alt=""
+                src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+              />
+            </Grid>
+            <p>Dinh Minh Khoi</p>
+          </Grid>
+          <Grid xs={9} item>
+            <Grid className={classes.boxRate}>
+              <Stars numberOfStars={5} />
+              <p className={classes.textRate}>{getRateComment(5)}</p>
+              <p className={classes.textTime}>21/2/2020</p>
+            </Grid>
+            <Grid className={classes.boxComment}>
+              <p>Chuyen di that tuyet voi</p>
+            </Grid>
+            <ul className={classes.boxImg}>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+            </ul>
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          sx={{ borderTop: "1px solid var(--gray-40)", padding: "16px 0" }}
+        >
+          <Grid xs={3} item className={classes.boxAvatar}>
+            <Grid>
+              <img
+                alt=""
+                src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+              />
+            </Grid>
+            <p>Dinh Minh Khoi</p>
+          </Grid>
+          <Grid xs={9} item>
+            <Grid className={classes.boxRate}>
+              <Stars numberOfStars={5} />
+              <p className={classes.textRate}>Tuyet voi</p>
+              <p className={classes.textTime}>21/2/2020</p>
+            </Grid>
+            <Grid className={classes.boxComment}>
+              <p>Chuyen di that tuyet voi</p>
+            </Grid>
+            <ul className={classes.boxImg}>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+              <li className={classes.boxItemImg}>
+                <Grid className={classes.overLay}></Grid>
+                <img
+                  alt=""
+                  src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
+                />
+              </li>
+            </ul>
+          </Grid>
+        </Grid>
+        <Grid className={classes.boxViewMore}>
+          <Button btnType={BtnType.Primary}>See More</Button>
+        </Grid>
         <PopupAddTourComment
           isOpen={openPopupAddComment}
           commentEdit={commentEdit}
@@ -169,7 +397,7 @@ const Comments = memo(({ comments, tour, onGetTourComments }: Props) => {
           onYes={onYesDelete}
         />
       </Container>
-    </>
+    </Grid>
   );
 });
 

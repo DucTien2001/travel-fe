@@ -1,5 +1,8 @@
 .root {
     padding: 64px 250px;
+    @media only screen and (max-width: 768px) {
+        padding: 24px;
+    }
 }
 .title {
     color: var(--text-color);
@@ -10,6 +13,25 @@
 
 .containerBoxCard {
     height: 515px;
+    display: flex;
+    @media only screen and (max-width: 768px) {
+        flex-direction: column;
+        height: 100%;
+
+        div {
+            max-width: 100%;
+        }
+    }
+}
+.lastCol {
+    @media only screen and (max-width: 768px) {
+        height: 100%;
+
+        div {
+            max-width: 100%;
+            height: 100%;
+        }
+    }
 }
 
 .card {
@@ -111,6 +133,9 @@
 .aboutCard {
     display: flex;
     flex-direction: column ;
+    @media only screen and (max-width: 768px) {
+        padding-left: 32px !important;
+    }
 }
 
 .col8 {
@@ -125,9 +150,10 @@
 
     font-weight: 500;
     margin: 0;
-    h3 {
+    span {
         margin: 0;
         font-weight: 700;
-
+        font-size: 18px;
+        display: block;
     }
 }

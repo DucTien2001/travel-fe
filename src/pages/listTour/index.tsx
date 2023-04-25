@@ -414,7 +414,7 @@ const ListTours: NextPage = () => {
                         linkView="listTour"
                         linkBook="book/tour"
                         key={index}
-                        id={index}
+                        id={tour?.id}
                         src={tour?.images[0]}
                         title={tour.title}
                         description={tour.description}
