@@ -71,7 +71,7 @@ export const API = {
       CANCEL_BOOK_ROOM: "/v1.0/room-bill/cancel-room-bill/:id",
     },
     TOURBILL: {
-      CREATE: "/v1.0/tour-bill/create",
+      CREATE: "/v1.0/tour-bill/",
       GET_ALL_TOURBILL: "/v1.0/tour-bill/get-all-user-tour-bills/:id",
       GET_TOURBILL: "/v1.0/tour-bill/get-tour-bill/:id",
       VERIFY_BOOKTOUR: "/v1.0/tour-bill/verify-book-tour",

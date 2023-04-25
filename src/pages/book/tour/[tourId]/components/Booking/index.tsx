@@ -54,6 +54,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PopupVoucher from "../PopopVoucher";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { TourBillService } from "services/normal/tourBill";
 
 const CHARACTER_LIMIT = 100;
 
@@ -140,23 +141,38 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
   const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
 
   const _onSubmit = (data: BookForm) => {
-    onSubmit({
-      firstName: data?.firstName,
-      lastName: data?.lastName,
+    TourBillService.create({
+      tourId: 16,
+      tourOnSaleId: 7,
+      amountChild: 2,
+      amountAdult: 3,
+      price: 550000,
+      discount: 50000,
+      totalBill: 500000,
       email: data?.email,
       phoneNumber: data?.phoneNumber,
-      price:
-        voucherChoose?.discountType === EDiscountType.PERCENT
-          ? (confirmBookTour?.totalPrice * (100 - voucherChoose.voucherValue)) /
-            100
-          : confirmBookTour?.totalPrice - voucherChoose.voucherValue,
-      numberOfAdult: confirmBookTour?.amountAdult,
-      numberOfChild: confirmBookTour?.amountChildren,
-      startDate: confirmBookTour?.startDate,
-      specialRequest: data?.specialRequest,
-      priceOfChild: confirmBookTour?.priceChildren,
-      priceOfAdult: confirmBookTour?.priceAdult,
-    });
+      firstName: data?.firstName,
+      lastName: data?.lastName,
+    }).then(res => {
+      console.log(res, "=========res=======")
+    })
+    // onSubmit({
+    //   firstName: data?.firstName,
+    //   lastName: data?.lastName,
+    //   email: data?.email,
+    //   phoneNumber: data?.phoneNumber,
+    //   price:
+    //     voucherChoose?.discountType === EDiscountType.PERCENT
+    //       ? (confirmBookTour?.totalPrice * (100 - voucherChoose.voucherValue)) /
+    //         100
+    //       : confirmBookTour?.totalPrice - voucherChoose.voucherValue,
+    //   numberOfAdult: confirmBookTour?.amountAdult,
+    //   numberOfChild: confirmBookTour?.amountChildren,
+    //   startDate: confirmBookTour?.startDate,
+    //   specialRequest: data?.specialRequest,
+    //   priceOfChild: confirmBookTour?.priceChildren,
+    //   priceOfAdult: confirmBookTour?.priceAdult,
+    // });
   };
 
   const createOrder = (data, actions) => {
