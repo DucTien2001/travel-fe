@@ -68,7 +68,11 @@ export interface BookForm {
   lastName: string;
   email: string;
   phoneNumber: string;
+  tourId: number;
+  tourOnSaleId: number;
   price: number;
+  discount: number;
+  totalBill: number;
   numberOfAdult: number;
   numberOfChild: number;
   priceOfChild: number;
@@ -141,55 +145,37 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
   const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
 
   const _onSubmit = (data: BookForm) => {
-    TourBillService.create({
-      tourId: 16,
-      tourOnSaleId: 7,
-      amountChild: 2,
-      amountAdult: 3,
-      price: 550000,
-      discount: 50000,
-      totalBill: 500000,
-      email: data?.email,
-      phoneNumber: data?.phoneNumber,
+    onSubmit({
       firstName: data?.firstName,
       lastName: data?.lastName,
-    }).then(res => {
-      console.log(res, "=========res=======")
-    })
-    // onSubmit({
-    //   firstName: data?.firstName,
-    //   lastName: data?.lastName,
-    //   email: data?.email,
-    //   phoneNumber: data?.phoneNumber,
-    //   price:
-    //     voucherChoose?.discountType === EDiscountType.PERCENT
-    //       ? (confirmBookTour?.totalPrice * (100 - voucherChoose.voucherValue)) /
-    //         100
-    //       : confirmBookTour?.totalPrice - voucherChoose.voucherValue,
-    //   numberOfAdult: confirmBookTour?.amountAdult,
-    //   numberOfChild: confirmBookTour?.amountChildren,
-    //   startDate: confirmBookTour?.startDate,
-    //   specialRequest: data?.specialRequest,
-    //   priceOfChild: confirmBookTour?.priceChildren,
-    //   priceOfAdult: confirmBookTour?.priceAdult,
-    // });
-  };
-
-  const createOrder = (data, actions) => {
-    return actions.order.create({
-      purchase_units: [
-        {
-          amount: {
-            value: "1.99",
-          },
-        },
-      ],
-    });
-  };
-  const onApprove = (data, actions) => {
-    return actions.order.capture().then((details) => {
-      const name = details.payer.name.given_name;
-      alert(`Transaction completed by ${name}`);
+      email: data?.email,
+      phoneNumber: data?.phoneNumber,
+      tourId: tour?.id,
+      tourOnSaleId: confirmBookTour?.tourOnSaleId,
+      price: confirmBookTour?.totalPrice,
+      discount:
+        voucherChoose?.discountType === EDiscountType.PERCENT
+          ? confirmBookTour?.discount + voucherChoose?.voucherValue
+          : confirmBookTour?.totalPrice -
+            (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) /
+              100 +
+            voucherChoose?.voucherValue,
+      totalBill:
+        voucherChoose?.discountType === EDiscountType.PERCENT
+          ? (((confirmBookTour?.totalPrice *
+              (100 - confirmBookTour?.discount)) /
+              100) *
+              (100 - voucherChoose.voucherValue)) /
+            100
+          : (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) /
+              100 -
+            voucherChoose.voucherValue,
+      numberOfAdult: confirmBookTour?.amountAdult,
+      numberOfChild: confirmBookTour?.amountChildren,
+      startDate: confirmBookTour?.startDate,
+      specialRequest: data?.specialRequest,
+      priceOfChild: confirmBookTour?.priceChildren,
+      priceOfAdult: confirmBookTour?.priceAdult,
     });
   };
 
@@ -430,12 +416,16 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                         <h4 className={classes.price}>
                           {voucherChoose?.discountType === EDiscountType.PERCENT
                             ? fCurrency2VND(
-                                (confirmBookTour?.totalPrice *
+                                (((confirmBookTour?.totalPrice *
+                                  (100 - confirmBookTour?.discount)) /
+                                  100) *
                                   (100 - voucherChoose.voucherValue)) /
                                   100
                               )
                             : fCurrency2VND(
-                                confirmBookTour?.totalPrice -
+                                (confirmBookTour?.totalPrice *
+                                  (100 - confirmBookTour?.discount)) /
+                                  100 -
                                   voucherChoose.voucherValue
                               )}
                           VND
@@ -543,17 +533,6 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                       <Button btnType={BtnType.Primary} type="submit">
                         Continue to Review
                       </Button>
-                      <PayPalScriptProvider
-                        options={{
-                          "client-id":
-                            "ATwisFU2Z4zvz8wCMpqWRplHmFBGrOYkVr4-0mET7MNhuDOSE-YiJVmyrT5oglK57pbrJes7ubbwjMsl",
-                        }}
-                      >
-                        <PayPalButtons
-                          createOrder={createOrder}
-                          onApprove={onApprove}
-                        />
-                      </PayPalScriptProvider>
                     </Grid>
                   </Grid>
                 </Grid>

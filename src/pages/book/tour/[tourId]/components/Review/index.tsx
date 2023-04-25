@@ -19,8 +19,11 @@ import { TourService } from "services/normal/tour";
 import { Tour } from "models/tour";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import _ from "lodash";
-interface Props {}
-const Review = memo(({}: Props) => {
+import { TourBillService } from "services/normal/tourBill";
+interface Props {
+  handleChangeStep?: () => void;
+}
+const Review = memo(({ handleChangeStep }: Props) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -30,11 +33,33 @@ const Review = memo(({}: Props) => {
 
   const [open, setOpen] = useState(false);
   const [tour, setTour] = useState<Tour>();
-  const [successPayPal, setSuccessPayPal] = useState(false);
 
   const policyType = useMemo(() => {
     return _.toArray(_.groupBy(tour?.tourPolicies, "policyType"));
   }, [tour]);
+
+  const onSubmit = () => {
+    TourBillService.create({
+      tourId: confirmBookTourReview?.tourId,
+      tourOnSaleId: confirmBookTourReview?.tourOnSaleId,
+      amountChild: confirmBookTourReview.numberOfChild,
+      amountAdult: confirmBookTourReview.numberOfAdult,
+      price: confirmBookTourReview?.price,
+      discount: confirmBookTourReview?.discount,
+      totalBill: confirmBookTourReview?.totalBill,
+      email: confirmBookTourReview?.email,
+      phoneNumber: confirmBookTourReview?.phoneNumber,
+      firstName: confirmBookTourReview?.firstName,
+      lastName: confirmBookTourReview?.lastName,
+    })
+      .then((res) => {
+        router.push(res?.data?.checkoutUrl);
+        handleChangeStep();
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      });
+  };
 
   useEffect(() => {
     if (router) {
@@ -51,6 +76,12 @@ const Review = memo(({}: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+
+  useEffect(() => {
+    if (!confirmBookTourReview) {
+      router.push(`/listTour/:${tour?.id}`);
+    }
+  }, [dispatch, confirmBookTourReview]);
 
   return (
     <Grid component="form">
@@ -245,11 +276,16 @@ const Review = memo(({}: Props) => {
                   >
                     <Grid>
                       {" "}
-                      <p className={classes.titlePrice}>Total</p>
+                      <p className={classes.titlePrice}>
+                        Total{" "}
+                        {confirmBookTourReview?.discount !== 0 && (
+                          <span>(voucher has been applied)</span>
+                        )}
+                      </p>
                     </Grid>
                     <Grid className={classes.priceTotal}>
                       <h4 className={classes.price}>
-                        {fCurrency2VND(confirmBookTourReview?.price)} VND
+                        {fCurrency2VND(confirmBookTourReview?.totalBill)} VND
                       </h4>
                     </Grid>
                   </Grid>
@@ -291,16 +327,9 @@ const Review = memo(({}: Props) => {
                     }}
                     className={classes.btnContinue}
                   >
-                    {/* <Button btnType={BtnType.Secondary} type="submit">
+                    <Button btnType={BtnType.Secondary} onClick={onSubmit}>
                       Continue to Pay
-                    </Button> */}
-
-                    {/* <Button
-                      btnType={BtnType.Secondary}
-                      onClick={() => setSuccessPayPal(true)}
-                    >
-                      Continue to Pay
-                    </Button> */}
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>

@@ -59,6 +59,7 @@ export interface IRoomBillConfirm {
 }
 export interface IConfirmBookTour {
   tourId: number;
+  tourOnSaleId: number;
   amountAdult: number;
   amountChildren: number;
   startDate: Date;
@@ -75,7 +76,11 @@ export interface IConfirmBookTourReview {
   lastName: string;
   email: string;
   phoneNumber: string;
+  tourId: number;
+  tourOnSaleId: number;
   price: number;
+  discount: number;
+  totalBill: number;
   numberOfAdult: number;
   numberOfChild: number;
   startDate: Date;

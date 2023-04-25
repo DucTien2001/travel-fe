@@ -12,22 +12,38 @@ export interface Create {
   lastName: string;
 }
 
+export interface Update {
+  tourOnSaleId?: number;
+  amountChild?: number;
+  amountAdult?: number;
+  price?: number;
+  discount?: number;
+  totalBill?: number;
+  status?: number;
+  email?: string;
+  phoneNumber?: string;
+  firstName?: string;
+  lastName?: string;
+}
+export interface FindAll {
+  take: number;
+  page: number;
+  keyword?: string;
+}
+
 export interface TourBill {
-  userId: number;
-  userMail: string;
-  tourId: number;
-  amount: number;
-  price: number;
-  discount: number;
-  email: string;
-  phoneNumber: string;
-  firstName: string;
-  lastName: string;
-  bankName: string;
-  bankAccountName: string;
-  bankNumber: string;
-  accountExpirationDate: Date;
-  deposit: number;
+  id?:number;
+  tourOnSaleId?: number;
+  amountChild?: number;
+  amountAdult?: number;
+  price?: number;
+  discount?: number;
+  totalBill?: number;
+  status?: number;
+  email?: string;
+  phoneNumber?: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface IVerifyBookTour {

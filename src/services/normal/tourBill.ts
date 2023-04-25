@@ -1,10 +1,10 @@
 import { API } from "configs/constants";
-import { Create, IVerifyBookTour, TourBill } from "models/tourBill";
+import { Create, FindAll, IVerifyBookTour, TourBill, Update } from "models/tourBill";
 import api from "services/configApi";
 
 export class TourBillService {
     static async create(data: Create): Promise<any> {
-        return await api.post(API.NORMAL.TOURBILL.CREATE, data)
+        return await api.post(API.NORMAL.TOUR_BILL.CREATE, data)
           .then((res) => {
             return Promise.resolve(res.data)
           })
@@ -12,27 +12,53 @@ export class TourBillService {
             return Promise.reject(e?.response?.data);
           })
       }
-    static async getAllTourBills(userId: number): Promise<any> {
-        return await api.get(API.NORMAL.TOURBILL.GET_ALL_TOURBILL.replace(":id", `${userId}`))
-            .then((res) => {
-              return Promise.resolve(res.data)
-            })
-            .catch((e) => {
-              return Promise.reject(e?.response?.data);
-            })
-        }
-    static async getTourBill(billId: number): Promise<any> {
-        return await api.get(API.NORMAL.TOURBILL.GET_TOURBILL.replace(":id", `${billId}`))
+      static async getAllTourBills(data: FindAll): Promise<any> {
+        return await api.get(API.NORMAL.TOUR_BILL.DEFAULT, {params:data})
           .then((res) => {
-              return Promise.resolve(res.data)
+            return Promise.resolve(res.data)
           })
           .catch((e) => {
-              return Promise.reject(e?.response?.data);
+            return Promise.reject(e?.response?.data);
           })
+      }
+
+      
+    static async getTourBill(billId: number): Promise<any> {
+      return await api.get(API.NORMAL.TOUR_BILL.GET_TOUR_BILL.replace(":id", `${billId}`))
+        .then((res) => {
+            return Promise.resolve(res.data)
+        })
+        .catch((e) => {
+            return Promise.reject(e?.response?.data);
+        })
     }
+
+    static async updateTourBill(billId: number, data: Update): Promise<any> {
+      return await api.put(API.NORMAL.TOUR_BILL.UPDATE_TOUR_BILL.replace(":id", `${billId}`), data)
+        .then((res) => {
+            return Promise.resolve(res.data)
+        })
+        .catch((e) => {
+            return Promise.reject(e?.response?.data);
+        })
+    }
+
+    static async payAgain(billId: number): Promise<any> {
+      return await api.get(API.NORMAL.TOUR_BILL.PAY_AGAIN.replace(":id", `${billId}`))
+        .then((res) => {
+            return Promise.resolve(res.data)
+        })
+        .catch((e) => {
+            return Promise.reject(e?.response?.data);
+        })
+    }
+
+//-------------------------------------------------------
+
+
     static async verifyBookTour(data: IVerifyBookTour): Promise<any> {
       return await api
-        .post(API.NORMAL.TOURBILL.VERIFY_BOOKTOUR, data)
+        .post(API.NORMAL.TOUR_BILL.VERIFY_BOOKTOUR, data)
         .then((res) => {
           return Promise.resolve(res.data.data);
         })
@@ -42,7 +68,7 @@ export class TourBillService {
     }
     static async cancelBookTour(billId: number): Promise<any> {
       return await api
-        .put(API.NORMAL.TOURBILL.CANCEL_BOOK_TOUR.replace(":id", `${billId}`) )
+        .put(API.NORMAL.TOUR_BILL.CANCEL_BOOK_TOUR.replace(":id", `${billId}`) )
         .then((res) => {
           return Promise.resolve(res.data.data);
         })

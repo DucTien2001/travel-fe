@@ -18,6 +18,7 @@ import Booking from "../components/Booking";
 import Review from "../components/Review";
 import { BookTourReview } from "models/tour";
 import { setConfirmBookTourReviewReducer } from "redux/reducers/Normal/actionTypes";
+import Payment from "../components/Payment";
 
 export enum EStep {
   BOOKING,
@@ -56,10 +57,14 @@ const BookTour = memo(() => {
 
   const toggle = () => setModal(!modal);
 
-  const handleChangeStep = () => {
+  const handleChangeStepReview = () => {
     setActiveStep(EStep.REVIEW);
     router.push(`/book/tour/:${tour?.id}/review`);
     toggle();
+  };
+
+  const handleChangeStepPayment = () => {
+    setActiveStep(EStep.PAYMENT);
   };
 
   const onSubmitTourToReview = (data: BookTourReview) => {
@@ -69,9 +74,13 @@ const BookTour = memo(() => {
         lastName: data?.lastName,
         email: data?.email,
         phoneNumber: data?.phoneNumber,
+        tourId: data?.tourId,
+        tourOnSaleId: data?.tourOnSaleId,
         numberOfAdult: data?.numberOfAdult,
         numberOfChild: data?.numberOfChild,
         price: data?.price,
+        discount: data?.discount,
+        totalBill: data?.totalBill,
         startDate: data?.startDate,
         specialRequest: data?.specialRequest,
         priceOfAdult: data?.priceOfAdult,
@@ -102,7 +111,9 @@ const BookTour = memo(() => {
       case "booking":
         return <Booking onSubmit={onSubmitTourToReview} />;
       case "review":
-        return <Review />;
+        return <Review handleChangeStep={handleChangeStepPayment} />;
+      case "payment":
+        return <Payment />;
     }
   };
 
@@ -156,7 +167,7 @@ const BookTour = memo(() => {
           isOpen={modal}
           onClose={toggle}
           toggle={toggle}
-          onClick={handleChangeStep}
+          onClick={handleChangeStepReview}
         />
       </div>
     </>

@@ -70,10 +70,12 @@ export const API = {
       VERIFY_BOOKROOM: "/v1.0/room-bill/verify-book-room",
       CANCEL_BOOK_ROOM: "/v1.0/room-bill/cancel-room-bill/:id",
     },
-    TOURBILL: {
+    TOUR_BILL: {
+      DEFAULT: "/v1.0/tour-bill/",
       CREATE: "/v1.0/tour-bill/",
-      GET_ALL_TOURBILL: "/v1.0/tour-bill/get-all-user-tour-bills/:id",
-      GET_TOURBILL: "/v1.0/tour-bill/get-tour-bill/:id",
+      GET_TOUR_BILL: "/v1.0/tour-bill/:id",
+      UPDATE_TOUR_BILL: "/v1.0/tour-bill/:id",
+      PAY_AGAIN: "/v1.0/tour-bill/pay-again/:id",
       VERIFY_BOOKTOUR: "/v1.0/tour-bill/verify-book-tour",
       CANCEL_BOOK_TOUR: "/v1.0/tour-bill/cancel-tour-bill/:id",
     },

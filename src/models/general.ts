@@ -69,6 +69,14 @@ export const userType = [
   { id: 5, name: "User" },
 ]
 
+export enum EPaymentStatus {
+  NOT_PAID = 0,
+  PAID = 1,
+  CANCEL = 3,
+  FAILED = 4,
+}
+
+
 export enum EDiscountType {
   MONEY = 1,
   PERCENT = 2

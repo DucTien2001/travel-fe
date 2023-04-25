@@ -85,7 +85,11 @@ export interface HistoryBookTour {
     lastName: string;
     email: string;
     phoneNumber: string;
+    tourId: number;
+    tourOnSaleId:number;
     price: number;
+    discount:number;
+    totalBill: number;
     numberOfAdult: number;
     numberOfChild: number;
     startDate: Date;

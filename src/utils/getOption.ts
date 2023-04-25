@@ -1,4 +1,4 @@
-import { EDiscountType, EServicePolicyType } from "models/general";
+import { EDiscountType, EPaymentStatus, EServicePolicyType } from "models/general";
 import { EUserType } from "models/user";
 
 export const getCurrency = (currency) => {
@@ -73,3 +73,5 @@ export const getCurrency = (currency) => {
         return "Excellent";
     }
   }
+
+

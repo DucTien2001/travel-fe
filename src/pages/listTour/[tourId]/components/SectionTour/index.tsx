@@ -54,6 +54,7 @@ export interface FormBookData {
 }
 
 interface PriceAndAge {
+  tourOnSaleId: number;
   childrenAgeMin: number;
   childrenAgeMax: number;
   priceChildren: number;
@@ -106,6 +107,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   const [tab, setTab] = React.useState("1");
   const [coords, setCoords] = useState(null);
   const [priceAndAge, setPriceAndAge] = useState<PriceAndAge>({
+    tourOnSaleId: null,
     childrenAgeMin: null,
     childrenAgeMax: null,
     priceChildren: null,
@@ -186,6 +188,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
         moment(e._d).format("DD/MM/YYYY")
       ) {
         setPriceAndAge({
+          tourOnSaleId: item?.id,
           childrenAgeMin: item.childrenAgeMin,
           childrenAgeMax: item.childrenAgeMax,
           priceChildren: item.childrenPrice,
@@ -202,6 +205,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
     dispatch(
       setConfirmBookTourReducer({
         tourId: tour?.id,
+        tourOnSaleId: priceAndAge?.tourOnSaleId,
         amountAdult: data?.numberOfAdult,
         amountChildren: data?.numberOfChild,
         startDate: dateDefault,
@@ -221,6 +225,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
       if (moment(tour?.tourOnSales[i]?.startDate) > yesterday) {
         setDateDefault(new Date(tour?.tourOnSales[i]?.startDate));
         setPriceAndAge({
+          tourOnSaleId: tour?.tourOnSales[i]?.id,
           childrenAgeMin: tour?.tourOnSales[i]?.childrenAgeMin,
           childrenAgeMax: tour?.tourOnSales[i]?.childrenAgeMax,
           priceChildren: tour?.tourOnSales[i]?.childrenPrice,
@@ -235,14 +240,8 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
 
   useEffect(() => {
     setTotalPrice(
-      (priceAndAge?.adultPrice *
-        _numberOfAdult *
-        (100 - priceAndAge?.discount)) /
-        100 +
-        (priceAndAge?.priceChildren *
-          _numberOfChild *
-          (100 - priceAndAge?.discount)) /
-          100
+      priceAndAge?.adultPrice * _numberOfAdult +
+        priceAndAge?.priceChildren * _numberOfChild
     );
   }, [priceAndAge, _numberOfAdult, _numberOfChild]);
 
