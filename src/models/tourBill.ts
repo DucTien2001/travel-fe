@@ -1,3 +1,17 @@
+export interface Create {
+  tourId: number;
+  tourOnSaleId: number;
+  amountChild: number;
+  amountAdult: number;
+  price: number;
+  discount: number;
+  totalBill: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+}
+
 export interface TourBill {
   userId: number;
   userMail: string;

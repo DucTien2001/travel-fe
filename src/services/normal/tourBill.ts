@@ -1,9 +1,9 @@
 import { API } from "configs/constants";
-import { IVerifyBookTour, TourBill } from "models/tourBill";
+import { Create, IVerifyBookTour, TourBill } from "models/tourBill";
 import api from "services/configApi";
 
 export class TourBillService {
-    static async create(data: TourBill): Promise<any> {
+    static async create(data: Create): Promise<any> {
         return await api.post(API.NORMAL.TOURBILL.CREATE, data)
           .then((res) => {
             return Promise.resolve(res.data)
