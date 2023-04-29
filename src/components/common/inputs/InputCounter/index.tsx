@@ -14,6 +14,7 @@ interface InputsProps {
   value: number;
   onChange: (value: number) => void;
   errorMessage?: string;
+  disabled?: boolean;
 }
 // eslint-disable-next-line react/display-name
 const InputCounter = memo((props: InputsProps) => {
@@ -24,6 +25,7 @@ const InputCounter = memo((props: InputsProps) => {
     max,
     min,
     value,
+    disabled,
     onChange,
     errorMessage,
   } = props;
@@ -65,7 +67,7 @@ const InputCounter = memo((props: InputsProps) => {
           btnType={BtnType.Primary}
           type="button"
           onClick={add}
-          disabled={(max ?? null) !== null ? value >= max : false}
+          disabled={disabled}
         >
           <i className="now-ui-icons ui-1_simple-add"></i>
         </Button>

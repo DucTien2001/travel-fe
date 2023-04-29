@@ -8,13 +8,30 @@
   // width: 841px;
   padding: 20px;
   width: 595px;
+  height: 70vh;
+  overflow-y: auto;
 }
 
 .title {
   font-weight: 600 !important;
   font-size: 1.3em !important;
   margin-bottom: 8px !important;
+  text-transform: uppercase !important;
   text-align: center;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  padding: 8px 0;
+}
+
+.titleInfo {
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  margin-bottom: 8px !important;
+}
+
+.info {
+  font-weight: 500 !important;
+  font-size: 16px !important;
 }
 
 .subTitle {
@@ -29,5 +46,5 @@
 .downloadBtnWrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end !important;
 }

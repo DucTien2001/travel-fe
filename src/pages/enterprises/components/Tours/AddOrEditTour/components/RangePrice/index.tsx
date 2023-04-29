@@ -38,7 +38,11 @@ export interface SaleForm {
     childrenAgeMax: number;
     childrenPrice: number;
     adultPrice: number;
-    currency?: OptionItem;
+    currency?: {
+      id?: number;
+      name?: string;
+      value?: string;
+    };
   }[];
 }
 
@@ -148,7 +152,7 @@ const RangePriceComponent = memo((props: Props) => {
       childrenAgeMax: null,
       childrenPrice: null,
       adultPrice: null,
-      currency: currencyType[0],
+      currency: { id: 1, name: "VND", value: "vi" },
     });
   };
   const clearForm = () => {
@@ -166,7 +170,7 @@ const RangePriceComponent = memo((props: Props) => {
       childrenAgeMax: null,
       childrenPrice: null,
       adultPrice: null,
-      currency: currencyType[0],
+      currency: { id: 1, name: "VND", value: "vi" },
     });
   };
   const onDeleteSale = (index) => () => {

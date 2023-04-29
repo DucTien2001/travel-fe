@@ -36,6 +36,10 @@ export const GET_USER_INFORMATION_BOOK_ROOM = "GET_USER_INFORMATION_BOOK_ROOM";
 export const SET_USER_INFORMATION_BOOK_ROOM_REDUCER =
   "SET_USER_INFORMATION_BOOK_ROOM_REDUCER";
 // ********** tour **********
+
+//GET SELECT CHANGE DATE//
+export const GET_SELECT_CHANGE_DATE = "GET_SELECT_CHANGE_DATE";
+export const SET_SELECT_CHANGE_DATE_REDUCER = "SET_SELECT_CHANGE_DATE_REDUCER";
 export const getAllTours = () => {
   return {
     type: GET_NORMAL_TOURS_REQUEST,
@@ -158,6 +162,21 @@ export const getUserInformationBookRoom = () => {
 export const setUserInformationBookRoomReducer = (data: any) => {
   return {
     type: SET_USER_INFORMATION_BOOK_ROOM_REDUCER,
+    data: data,
+  };
+};
+
+//****** get change date */
+export const getSelectChangeDate = (data: any) => {
+  return {
+    type: GET_SELECT_CHANGE_DATE,
+    data: data,
+  };
+};
+
+export const setSelectChangeDateReducer = (data: any) => {
+  return {
+    type: SET_SELECT_CHANGE_DATE_REDUCER,
     data: data,
   };
 };

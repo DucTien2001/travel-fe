@@ -2,6 +2,7 @@ import produce from "immer";
 import { Comment } from "models/comment";
 import { TourBill } from "models/tourBill";
 import * as types from "./actionTypes";
+import { TourPrice } from "models/tour";
 
 export interface ITour {
   id?: number;
@@ -165,6 +166,7 @@ export interface NormalState {
   confirmBookTourReview: IConfirmBookTourReview;
   confirmBookRoom: IConfirmBookRoom;
   getUserInformationBookRoom: IUserInformationBookRoom;
+  getSelectChangeDate: TourPrice;
 }
 
 const initial: NormalState = {
@@ -177,6 +179,7 @@ const initial: NormalState = {
   confirmBookTourReview: null,
   confirmBookRoom: null,
   getUserInformationBookRoom: null,
+  getSelectChangeDate: null,
 };
 
 export const normalReducer = (state = initial, action: any) =>
@@ -208,6 +211,9 @@ export const normalReducer = (state = initial, action: any) =>
         break;
       case types.SET_USER_INFORMATION_BOOK_ROOM_REDUCER:
         draft.getUserInformationBookRoom = action.data;
+        break;
+      case types.SET_SELECT_CHANGE_DATE_REDUCER:
+        draft.getSelectChangeDate = action.data;
         break;
       default:
         return state;

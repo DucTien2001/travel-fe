@@ -16,20 +16,22 @@ import { images } from "configs/images";
 import classes from "./styles.module.scss";
 import SectionHeader from "components/Header/SectionHeader";
 
-import Button, { BtnType } from "components/common/buttons/Button";
-import Tour from "../components/Tour";
-import Hotel from "../components/Hotel";
 import { Grid } from "@mui/material";
 import { useRouter } from "next/router";
+import Tour from "pages/paymentHistory/components/Tour";
+import Hotel from "pages/paymentHistory/components/Hotel";
+import UpdateBill from "pages/paymentHistory/components/Tour/UpdateBill";
 
 const PaymentHistory: NextPage = () => {
   const router = useRouter();
-  const { page } = router.query;
+  const { page, action } = router.query;
 
   const renderComponent = () => {
     switch (page) {
       case "tour":
-        return <Tour />;
+        if (action) {
+          return <UpdateBill tourBillId={Number(action)} />;
+        }
       case "hotel":
         return <Hotel />;
     }

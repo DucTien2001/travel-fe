@@ -23,7 +23,7 @@ export interface OptionItem<T = number> {
   name: string;
   translation?: string;
   img?: string;
-  value?: string | T;
+  value?: T | string;
 }
 
 export interface OptionItemT<T> {

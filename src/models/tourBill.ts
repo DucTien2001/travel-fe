@@ -1,3 +1,6 @@
+import { TourPrice } from "./tour";
+import { Tour } from "./tour";
+
 export interface Create {
   tourId: number;
   tourOnSaleId: number;
@@ -39,11 +42,15 @@ export interface TourBill {
   price?: number;
   discount?: number;
   totalBill?: number;
+  tourData?: Tour;
+  createdAt?: Date;
+  tourOnSaleData?: TourPrice;
   status?: number;
   email?: string;
   phoneNumber?: string;
   firstName?: string;
   lastName?: string;
+  specialRequest?: string;
 }
 
 export interface IVerifyBookTour {

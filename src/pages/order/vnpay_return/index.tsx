@@ -71,6 +71,7 @@ const VNPay: NextPage = () => {
             ) : (
               <ModalHeader className={classes.dangerTitle}>
                 <DangerousIcon />
+                Notification
               </ModalHeader>
             )}
             <ModalBody>

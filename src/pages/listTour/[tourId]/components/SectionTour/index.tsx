@@ -61,6 +61,7 @@ interface PriceAndAge {
   adultPrice: number;
   discount: number;
   quantity: number;
+  quantityOrdered: number;
 }
 interface Props {
   tour: Tour;
@@ -88,20 +89,13 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   }, [tourSchedule]);
 
   const dayValid = useMemo(() => {
-    return [];
+    return tour?.tourOnSales?.map((item) => {
+      return moment(item.startDate).format("DD/MM/YYYY");
+    });
   }, [tour]);
 
   const yesterday = moment().subtract(1, "day");
 
-  const _dateDefault = useMemo(() => {
-    for (var i = 0; i < tour?.tourOnSales?.length; i++) {
-      if (moment(tour?.tourOnSales[i]?.startDate) > yesterday) {
-        return new Date(tour?.tourOnSales[i]?.startDate);
-      }
-    }
-  }, [tour]);
-
-  const [dateDefault, setDateDefault] = useState(new Date(_dateDefault));
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
   const [openPopupDetailTour, setOpenPopupDetailTour] = useState(false);
   const [tab, setTab] = React.useState("1");
@@ -114,9 +108,11 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
     adultPrice: null,
     discount: null,
     quantity: null,
+    quantityOrdered: null,
   });
 
   const [totalPrice, setTotalPrice] = useState(null);
+  const [isValidQuantity, setIsValidQuantity] = useState(false);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -156,7 +152,6 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
     defaultValues: {
       numberOfAdult: 1,
       numberOfChild: 0,
-      startDate: dateDefault,
       language: languageOptions[0],
     },
   });
@@ -173,7 +168,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
 
   const disableCustomDt = (current) => {
     return (
-      dayValid.includes(current.format("DD/MM/YYYY")) &&
+      dayValid?.includes(current.format("DD/MM/YYYY")) &&
       current.isAfter(yesterday)
     );
   };
@@ -195,10 +190,10 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
           adultPrice: item.adultPrice,
           discount: item.discount,
           quantity: item.quantity,
+          quantityOrdered: item.quantityOrdered,
         });
       }
     });
-    setDateDefault(e._d);
   };
 
   const _onSubmit = (data: FormBookData) => {
@@ -208,7 +203,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
         tourOnSaleId: priceAndAge?.tourOnSaleId,
         amountAdult: data?.numberOfAdult,
         amountChildren: data?.numberOfChild,
-        startDate: dateDefault,
+        startDate: data?.startDate,
         totalPrice: totalPrice,
         language: data?.language.name,
         priceAdult: priceAndAge.adultPrice,
@@ -223,7 +218,9 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
   useEffect(() => {
     for (var i = 0; i < tour?.tourOnSales?.length; i++) {
       if (moment(tour?.tourOnSales[i]?.startDate) > yesterday) {
-        setDateDefault(new Date(tour?.tourOnSales[i]?.startDate));
+        reset({
+          startDate: new Date(tour?.tourOnSales[i]?.startDate),
+        });
         setPriceAndAge({
           tourOnSaleId: tour?.tourOnSales[i]?.id,
           childrenAgeMin: tour?.tourOnSales[i]?.childrenAgeMin,
@@ -232,6 +229,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
           adultPrice: tour?.tourOnSales[i]?.adultPrice,
           discount: tour?.tourOnSales[i]?.discount,
           quantity: tour?.tourOnSales[i]?.quantity,
+          quantityOrdered: tour?.tourOnSales[i]?.quantityOrdered,
         });
         break;
       }
@@ -243,27 +241,29 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
       priceAndAge?.adultPrice * _numberOfAdult +
         priceAndAge?.priceChildren * _numberOfChild
     );
+    if (
+      _numberOfAdult + _numberOfChild >=
+      priceAndAge.quantity - priceAndAge.quantityOrdered
+    ) {
+      setIsValidQuantity(true);
+    } else {
+      setIsValidQuantity(false);
+    }
   }, [priceAndAge, _numberOfAdult, _numberOfChild]);
 
-  useEffect(() => {
-    tour?.tourOnSales.forEach((item) => {
-      dayValid.push(moment(item.startDate).format("DD/MM/YYYY"));
-    });
-  }, [tour]);
-
-  useEffect(() => {
-    Geocode.fromAddress(
-      `${tour?.moreLocation}, ${tour?.commune.name}, ${tour?.district.name}, ${tour?.city.name}`
-    ).then(
-      (response) => {
-        const { lat, lng } = response.results[0].geometry.location;
-        setCoords({ lat, lng });
-      },
-      (error) => {
-        // console.error(error);
-      }
-    );
-  }, [tour]);
+  // useEffect(() => {
+  //   Geocode.fromAddress(
+  //     `${tour?.moreLocation}, ${tour?.commune.name}, ${tour?.district.name}, ${tour?.city.name}`
+  //   ).then(
+  //     (response) => {
+  //       const { lat, lng } = response.results[0].geometry.location;
+  //       setCoords({ lat, lng });
+  //     },
+  //     (error) => {
+  //       // console.error(error);
+  //     }
+  //   );
+  // }, [tour]);
 
   return (
     <>
@@ -389,7 +389,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                     {tour?.moreLocation}, {tour?.commune.name},
                     {tour?.district.name}, {tour?.city.name}
                   </p>
-                  <div style={{ height: "30vh", width: "100%" }}>
+                  {/* <div style={{ height: "30vh", width: "100%" }}>
                     <GoogleMapReact
                       bootstrapURLKeys={{
                         key: "AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k",
@@ -408,7 +408,7 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                         }
                       />
                     </GoogleMapReact>
-                  </div>
+                  </div> */}
                   <div className={classes.contactBox}>
                     <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
                     <p>Contact Partner: </p>
@@ -428,22 +428,17 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
               <Grid className={classes.boxSelect}>
                 <p>When are you going?</p>
                 <Grid sx={{ paddingTop: "14px" }}>
-                  <Controller
-                    name="startDate"
+                  <InputDatePicker
                     control={control}
-                    render={({ field }) => (
-                      <InputDatePicker
-                        value={dateDefault}
-                        placeholder="Check-out"
-                        closeOnSelect={true}
-                        timeFormat={false}
-                        className={classes.inputStartDate}
-                        isValidDate={disableCustomDt}
-                        inputRef={register("startDate")}
-                        onChange={(e) => handleChangeStartDate(e)}
-                        errorMessage={errors.startDate?.message}
-                      />
-                    )}
+                    name="startDate"
+                    placeholder="Check-out"
+                    closeOnSelect={true}
+                    timeFormat={false}
+                    className={classes.inputStartDate}
+                    isValidDate={disableCustomDt}
+                    inputRef={register("startDate")}
+                    _onChange={(e) => handleChangeStartDate(e)}
+                    errorMessage={errors.startDate?.message}
                   />
                 </Grid>
                 {/* <Grid className={classes.boxTime}>
@@ -476,8 +471,11 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                       render={({ field }) => (
                         <InputCounter
                           className={classes.inputCounter}
-                          max={1000}
+                          max={
+                            priceAndAge?.quantity - priceAndAge.quantityOrdered
+                          }
                           min={1}
+                          disabled={isValidQuantity}
                           onChange={field.onChange}
                           value={field.value}
                         />
@@ -500,8 +498,11 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                       render={({ field }) => (
                         <InputCounter
                           className={classes.inputCounter}
-                          max={1000}
+                          max={
+                            priceAndAge?.quantity - priceAndAge.quantityOrdered
+                          }
                           min={0}
+                          disabled={isValidQuantity}
                           onChange={field.onChange}
                           value={field.value}
                         />
@@ -514,7 +515,10 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                 <Grid>
                   <p className={classes.discount}>
                     Number of tickets left:{" "}
-                    <span>{priceAndAge?.quantity} </span>tickets
+                    <span>
+                      {priceAndAge?.quantity - priceAndAge.quantityOrdered}{" "}
+                    </span>
+                    tickets
                   </p>
                 </Grid>
                 <Grid

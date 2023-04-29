@@ -33,6 +33,7 @@ export interface TourPrice {
   tourId?: number;
   discount: number;
   quantity: number;
+  quantityOrdered?: number;
   startDate: Date;
   childrenAgeMin: number;
   childrenAgeMax: number;

@@ -115,8 +115,10 @@ const AddOrEditVoucher = memo((props: Props) => {
         then: yup
           .number()
           .typeError("Max discount is required.")
+          .nullable()
           .positive("Max discount must be a positive number")
-          .required("Max discount is required."),
+          .notRequired()
+          .transform((_, val) => (val !== "" ? Number(val) : null)),
         otherwise: yup.number().nullable().notRequired().default(0),
       }),
       numberOfCodes: yup.number().when(["isQuantityLimit"], {
@@ -284,7 +286,13 @@ const AddOrEditVoucher = memo((props: Props) => {
       formData.append("numberOfCodes", `${data.numberOfCodes}`);
     }
     if (data?.discountType.value === EDiscountType.PERCENT) {
-      formData.append("maxDiscount", `${data.maxDiscount}`);
+      if (data?.maxDiscount === null) {
+        formData.append("maxDiscount", `${0}`);
+      } else {
+        formData.append("maxDiscount", `${data.maxDiscount}`);
+      }
+    } else {
+      formData.append("maxDiscount", `${0}`);
     }
     if (tourSelected.length === 0) {
       setIsEmptyTourSelect(true);

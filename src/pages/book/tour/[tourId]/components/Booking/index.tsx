@@ -145,7 +145,7 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
   const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
 
   const _onSubmit = (data: BookForm) => {
-    onSubmit({
+    console.log({
       firstName: data?.firstName,
       lastName: data?.lastName,
       email: data?.email,
@@ -155,18 +155,29 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
       price: confirmBookTour?.totalPrice,
       discount:
         voucherChoose?.discountType === EDiscountType.PERCENT
-          ? confirmBookTour?.discount + voucherChoose?.voucherValue
+          ? voucherChoose?.voucherValue <= 100
+            ? confirmBookTour?.discount + voucherChoose?.voucherValue
+            : confirmBookTour?.totalPrice -
+              (confirmBookTour?.totalPrice *
+                (100 - confirmBookTour?.discount)) /
+                100 +
+              voucherChoose?.voucherValue
           : confirmBookTour?.totalPrice -
             (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) /
               100 +
             voucherChoose?.voucherValue,
       totalBill:
         voucherChoose?.discountType === EDiscountType.PERCENT
-          ? (((confirmBookTour?.totalPrice *
-              (100 - confirmBookTour?.discount)) /
-              100) *
-              (100 - voucherChoose.voucherValue)) /
-            100
+          ? voucherChoose.voucherValue <= 100
+            ? (((confirmBookTour?.totalPrice *
+                (100 - confirmBookTour?.discount)) /
+                100) *
+                (100 - voucherChoose.voucherValue)) /
+              100
+            : (confirmBookTour?.totalPrice *
+                (100 - confirmBookTour?.discount)) /
+                100 -
+              voucherChoose.voucherValue
           : (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) /
               100 -
             voucherChoose.voucherValue,
@@ -415,13 +426,18 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                       <Grid sx={{ display: "flex", alignItems: "center" }}>
                         <h4 className={classes.price}>
                           {voucherChoose?.discountType === EDiscountType.PERCENT
-                            ? fCurrency2VND(
-                                (((confirmBookTour?.totalPrice *
+                            ? voucherChoose.voucherValue <= 100
+                              ? fCurrency2VND(
+                                  (((confirmBookTour?.totalPrice *
+                                    (100 - confirmBookTour?.discount)) /
+                                    100) *
+                                    (100 - voucherChoose.voucherValue)) /
+                                    100
+                                )
+                              : (confirmBookTour?.totalPrice *
                                   (100 - confirmBookTour?.discount)) /
-                                  100) *
-                                  (100 - voucherChoose.voucherValue)) /
-                                  100
-                              )
+                                  100 -
+                                voucherChoose.voucherValue
                             : fCurrency2VND(
                                 (confirmBookTour?.totalPrice *
                                   (100 - confirmBookTour?.discount)) /
@@ -500,7 +516,14 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                                       handleValidVoucher(item?.startTime),
                                   })}
                                 >
-                                  Deal {fPercent(item?.discountValue)}
+                                  <span>
+                                    Deal {fPercent(item?.discountValue)}
+                                  </span>
+                                  {item?.maxDiscount !== 0 && (
+                                    <span>
+                                      Max {fCurrency2VND(item?.maxDiscount)} VND
+                                    </span>
+                                  )}
                                 </Grid>
                               ) : (
                                 <Grid
@@ -626,6 +649,10 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
         isOpen={openPopupVoucher}
         toggle={onOpenPopupVoucher}
         voucher={voucher?.data}
+        totalBill={
+          (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) /
+          100
+        }
         onGetVoucher={onGetVoucher}
       />
     </>

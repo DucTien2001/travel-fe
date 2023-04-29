@@ -23,6 +23,9 @@
     border: 0;
     white-space: nowrap;
     margin-bottom: 14px;
+    span {
+        font-weight: 600 !important;
+    }
 }
 .boxVoucherItemInValid {
     display: none;

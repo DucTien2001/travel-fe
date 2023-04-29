@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import {
   Modal,
   ModalProps,
@@ -10,7 +10,7 @@ import classes from "./styles.module.scss";
 import { GetVoucherValue, Voucher } from "models/voucher";
 import { Grid } from "@mui/material";
 import { EDiscountType } from "models/general";
-import { fPercent, fShortenNumber } from "utils/formatNumber";
+import { fCurrency2VND, fPercent, fShortenNumber } from "utils/formatNumber";
 import moment from "moment";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
 import * as yup from "yup";
@@ -18,22 +18,28 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button, { BtnType } from "components/common/buttons/Button";
 import clsx from "clsx";
+import ErrorMessage from "components/common/texts/ErrorMessage";
 
 interface Props {
   isOpen?: boolean;
   toggle?: () => void;
   voucher: Voucher[];
+  totalBill?: number;
   onGetVoucher?: (data: GetVoucherValue) => void;
 }
 
 interface VoucherForm {
   voucherValue: number;
   discountType: number;
+  minOrder: number;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupVoucher = memo((props: Props) => {
-  const { isOpen, toggle, voucher, onGetVoucher } = props;
+  const { isOpen, toggle, voucher, totalBill, onGetVoucher } = props;
+
+  const [isError, setIsError] = useState(false);
+  const [dataError, setDataError] = useState(null);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -48,8 +54,13 @@ const PopupVoucher = memo((props: Props) => {
   });
 
   const _onSubmit = (data: VoucherForm) => {
-    onGetVoucher(data);
-    toggle();
+    if (totalBill < data?.minOrder) {
+      setIsError(true);
+      setDataError(data?.minOrder);
+    } else {
+      onGetVoucher(data);
+      toggle();
+    }
   };
 
   const handleValidVoucher = (startTime) => {
@@ -77,7 +88,7 @@ const PopupVoucher = memo((props: Props) => {
               itself.
             </span>
             <Grid className={classes.boxVoucher}>
-              {voucher?.length &&
+              {voucher?.length ? (
                 voucher?.map((item, index) => (
                   <>
                     {item?.discountType === EDiscountType.PERCENT ? (
@@ -88,10 +99,25 @@ const PopupVoucher = memo((props: Props) => {
                           ),
                         })}
                       >
-                        Deal {fPercent(item?.discountValue)} <br />
-                        Period: {moment(item?.startTime).format(
-                          "DD/MM/YYYY"
-                        )} - {moment(item?.endTime).format("DD/MM/YYYY")}
+                        <Grid sx={{ display: "flex", flexDirection: "column" }}>
+                          <span>Deal {fPercent(item?.discountValue)}</span>
+                          {item?.maxDiscount !== 0 && (
+                            <span>
+                              Max: {fCurrency2VND(item?.maxDiscount)} VND
+                            </span>
+                          )}
+                          {item?.minOrder && (
+                            <span>
+                              Apply for minimum order:{" "}
+                              {fCurrency2VND(item?.minOrder)} VND
+                            </span>
+                          )}
+                          <span>
+                            Period:{" "}
+                            {moment(item?.startTime).format("DD/MM/YYYY")} -{" "}
+                            {moment(item?.endTime).format("DD/MM/YYYY")}
+                          </span>
+                        </Grid>
                         <Controller
                           name="voucherValue"
                           control={control}
@@ -99,16 +125,28 @@ const PopupVoucher = memo((props: Props) => {
                             <>
                               <Grid sx={{ paddingRight: "14px" }}>
                                 <InputCheckbox
-                                  checked={field.value === item?.discountValue}
+                                  checked={
+                                    item?.maxDiscount === 0
+                                      ? field.value === item?.discountValue
+                                      : field.value === item?.maxDiscount
+                                  }
                                   onChange={() => {
-                                    setValue(
-                                      "voucherValue",
-                                      item?.discountValue
-                                    );
+                                    item?.maxDiscount === 0
+                                      ? setValue(
+                                          "voucherValue",
+                                          item?.discountValue
+                                        )
+                                      : setValue(
+                                          "voucherValue",
+                                          item?.maxDiscount
+                                        );
                                     setValue(
                                       "discountType",
                                       item?.discountType
                                     );
+                                    item?.minOrder !== 0
+                                      ? setValue("minOrder", item?.minOrder)
+                                      : setValue("minOrder", 0);
                                   }}
                                 />
                               </Grid>
@@ -124,10 +162,33 @@ const PopupVoucher = memo((props: Props) => {
                           ),
                         })}
                       >
-                        Deal {fShortenNumber(item?.discountValue)} VND <br />
-                        Period: {moment(item?.startTime).format(
-                          "DD/MM/YYYY"
-                        )} - {moment(item?.endTime).format("DD/MM/YYYY")}
+                        <Grid
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            fontWeight: "500px",
+                          }}
+                        >
+                          <span>
+                            Deal {fShortenNumber(item?.discountValue)} VND
+                          </span>
+                          {item?.maxDiscount !== 0 && (
+                            <span>
+                              Max: {fCurrency2VND(item?.maxDiscount)} VND
+                            </span>
+                          )}
+                          {item?.minOrder && (
+                            <span>
+                              Apply for minimum order:{" "}
+                              {fCurrency2VND(item?.minOrder)} VND
+                            </span>
+                          )}
+                          <span>
+                            Period:{" "}
+                            {moment(item?.startTime).format("DD/MM/YYYY")} -{" "}
+                            {moment(item?.endTime).format("DD/MM/YYYY")}
+                          </span>
+                        </Grid>
                         <Controller
                           name="voucherValue"
                           control={control}
@@ -135,16 +196,28 @@ const PopupVoucher = memo((props: Props) => {
                             <>
                               <Grid sx={{ paddingRight: "14px" }}>
                                 <InputCheckbox
-                                  checked={field.value === item?.discountValue}
+                                  checked={
+                                    item?.maxDiscount === 0
+                                      ? field.value === item?.discountValue
+                                      : field.value === item?.maxDiscount
+                                  }
                                   onChange={() => {
-                                    setValue(
-                                      "voucherValue",
-                                      item?.discountValue
-                                    );
+                                    item?.maxDiscount === 0
+                                      ? setValue(
+                                          "voucherValue",
+                                          item?.discountValue
+                                        )
+                                      : setValue(
+                                          "voucherValue",
+                                          item?.maxDiscount
+                                        );
                                     setValue(
                                       "discountType",
                                       item?.discountType
                                     );
+                                    item?.minOrder !== 0
+                                      ? setValue("minOrder", item?.minOrder)
+                                      : setValue("minOrder", 0);
                                   }}
                                 />
                               </Grid>
@@ -154,8 +227,19 @@ const PopupVoucher = memo((props: Props) => {
                       </Grid>
                     )}
                   </>
-                ))}
+                ))
+              ) : (
+                <p style={{ fontWeight: "600" }}>
+                  {" "}
+                  There are currently no coupons available !
+                </p>
+              )}
             </Grid>
+            {isError && (
+              <ErrorMessage>
+                Your order must be larger {fCurrency2VND(dataError)} VND
+              </ErrorMessage>
+            )}
           </ModalBody>
           <ModalFooter className={classes.footer}>
             <Button
