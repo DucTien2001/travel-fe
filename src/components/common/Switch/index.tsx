@@ -1,47 +1,23 @@
+import Switch, { SwitchProps } from "@mui/material/Switch";
+import { styled } from "@mui/material/styles";
 import { memo } from "react";
-import clsx from "clsx";
-import classes from "./styles.module.scss";
-import { FormGroup } from "reactstrap";
-import { FieldError, FieldErrors, Merge } from "react-hook-form";
-import Switch from "react-bootstrap-switch";
 
-interface CustomSwitchProps {
-  className?: string;
-  inputRef?: any;
-  value: boolean;
-  onChange: () => void;
-  errorMessage?: string | FieldError | Merge<FieldError, FieldErrors<any>>;
-}
+interface ToggleProps extends SwitchProps {}
 
-// eslint-disable-next-line react/display-name
-const CustomSwitch = memo(
-  ({
-    className,
-    inputRef,
-    errorMessage,
-    value,
-    onChange,
-    ...props
-  }: CustomSwitchProps) => {
-    return (
-      <FormGroup
-        className={clsx(
-          classes.root,
-          { "has-danger": !!errorMessage },
-          className
-        )}
-      >
-        <Switch
-          value={value}
-          onChange={onChange}
-          {...props}
-        />
-        {errorMessage && (
-          <span className="text-danger ml-2 mt-1 d-block"><>{errorMessage}</></span>
-        )}
-      </FormGroup>
-    );
-  }
-);
+const CustomSwitch = styled(Switch)((props) => ({
+  "& .MuiSwitch-switchBase .MuiSwitch-thumb": {
+    color: "#ffffff",
+  },
+  "& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb": {
+    color: "var(--primary-color)",
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: "var(--primary-color",
+  },
+}));
 
-export default CustomSwitch;
+const Toggle = memo(({ ...props }: ToggleProps) => {
+  return <CustomSwitch inputProps={{ "aria-label": "Toggle" }} {...props} />;
+});
+
+export default Toggle;

@@ -52,6 +52,10 @@ const EventPage = memo(() => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+
+  useEffect(() => {
+    setCopyCode(event?.code);
+  }, [event]);
   return (
     <>
       <SectionHeader

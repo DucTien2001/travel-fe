@@ -43,6 +43,7 @@ export const API = {
     EVENT: {
       DEFAULT: "/v1.0/event",
       DETAIL_EVENT: "/v1.0/event/:id",
+      FIND_CODE: "/v1.0/event/match/:code",
     },
     VOUCHER: {
       DEFAULT: "/v1.0/voucher",
