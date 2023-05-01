@@ -15,11 +15,8 @@ import { faFaceFrown } from "@fortawesome/free-regular-svg-icons";
 import { CommentService } from "services/normal/comment";
 import { formatStar } from "utils/formatStar";
 import { TourScheduleService } from "services/normal/tourSchedule";
-<<<<<<< HEAD
 import Skeleton from "react-loading-skeleton";
-=======
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
->>>>>>> dac6734899a5fd3af164ba842cafbe5dd0d5fa75
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(() => {
@@ -149,14 +146,14 @@ export default ProductPage;
 export async function getStaticPaths() {
   return {
     paths: [], //indicates that no page needs be created at build time
-    fallback: 'blocking' //indicates the type of fallback
-  }
+    fallback: "blocking", //indicates the type of fallback
+  };
 }
 
 export async function getStaticProps({ locale }) {
   return {
     props: {
       ...(await serverSideTranslations(locale)),
-    }
-  } 
+    },
+  };
 }
