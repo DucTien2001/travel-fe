@@ -47,8 +47,16 @@ import SellIcon from "@mui/icons-material/Sell";
 import PublicIcon from "@mui/icons-material/Public";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { UserService } from "services/user";
+import { useTranslation } from "next-i18next";
+import { useDispatch } from "react-redux";
+import { setLoading } from "redux/reducers/Status/actionTypes";
+import i18n from "locales";
+// import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 const WhiteNavbar = memo(() => {
   const { isLoggedIn, logout, user } = UseAuth();
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
   const [collapseOpen, setCollapseOpen] = useState(false);
   const [navbarColor, setNavbarColor] = useState(" navbar-transparent");
   const handleCollapseNavbar = () => {
@@ -59,17 +67,18 @@ const WhiteNavbar = memo(() => {
   };
 
   const changeLanguage = async (lang: string) => {
+    // console.log(lang, i18n,  "=========lang=======")
     // setAnchorElLang(null);
-    // if (lang === i18n.language) return;
-    // if (isLoggedIn) {
-    //   dispatch(setLoading(true));
-    //   await UserService.changeLanguage(lang).finally(() =>
-    //     dispatch(setLoading(false))
-    //   );
-    // }
-    // i18n.changeLanguage(lang, () => {
-    //   window.location.reload();
-    // });
+    if (lang === i18n.language) return;
+    if (isLoggedIn) {
+      dispatch(setLoading(true));
+      await UserService.changeLanguage(lang).finally(() =>
+        dispatch(setLoading(false))
+      );
+    }
+    i18n.changeLanguage(lang, (res) => {
+      window.location.reload();
+    });
   };
 
   useEffect(() => {
@@ -259,7 +268,7 @@ const WhiteNavbar = memo(() => {
                   <NavItem onClick={logout}>
                     <Link href="/auth/login" passHref>
                       <a>
-                        <Button btnType={BtnType.Secondary}>Log out</Button>
+                        <Button btnType={BtnType.Secondary} translation-key={"logout_title"}>{t("logout_title")}</Button>
                       </a>
                     </Link>
                   </NavItem>
@@ -269,7 +278,7 @@ const WhiteNavbar = memo(() => {
                   <NavItem className={classes.navMobile}>
                     <Link href="/auth/login" passHref>
                       <a>
-                        <Button btnType={BtnType.Secondary}>Log in</Button>
+                        <Button btnType={BtnType.Secondary} translation-key={"login_title"}>{t("login_title")}</Button>
                       </a>
                     </Link>
                   </NavItem>
@@ -291,3 +300,11 @@ const WhiteNavbar = memo(() => {
 });
 
 export default WhiteNavbar;
+
+// export async function getStaticProps({ locale }) {
+//   return {
+//     props: {
+//       ...(await serverSideTranslations(locale)),
+//     }
+//   } 
+// }

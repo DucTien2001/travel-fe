@@ -13,7 +13,7 @@ import TableAddMileStone from "./components/TableAddMileStone";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import _ from "lodash";
-import { useSSR } from "react-i18next";
+import { useSSR } from "next-i18next";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { useDispatch } from "react-redux";
 import { TourScheduleService } from "services/enterprise/tourSchedule";

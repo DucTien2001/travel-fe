@@ -11,7 +11,7 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import { Grid, StepConnector, StepLabel } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import QontoStepIcon from "components/QontoStepIcon";
 import PopupCheckReview from "components/Popup/PopupCheckReview";
 import Booking from "../components/Booking";

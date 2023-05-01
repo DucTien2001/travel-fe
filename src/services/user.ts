@@ -109,4 +109,16 @@ export class UserService {
         return Promise.reject(e?.response?.data);
       })
   }
+  
+  static async changeLanguage(language: string): Promise<any> {
+    return await api.put(API.AUTH.CHANGE_LANGUAGE, {
+      language
+    })
+      .then((res) => {
+        return Promise.resolve(res.data.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
 }

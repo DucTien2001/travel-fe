@@ -8,7 +8,7 @@ import { memo } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { FormControl, OutlinedInput, TextField } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 
 import {

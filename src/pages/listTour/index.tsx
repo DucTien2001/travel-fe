@@ -37,6 +37,7 @@ import { DataPagination, sortType } from "models/general";
 import { Grid, Pagination } from "@mui/material";
 import { NormalGetTours, Tour } from "models/tour";
 import useDebounce from "hooks/useDebounce";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 interface SearchData {
   location?: string;
@@ -468,3 +469,11 @@ const ListTours: NextPage = () => {
 };
 
 export default ListTours;
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale)),
+    }
+  } 
+}

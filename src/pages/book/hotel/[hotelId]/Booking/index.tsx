@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { Grid, Link, useMediaQuery, useTheme, Collapse } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

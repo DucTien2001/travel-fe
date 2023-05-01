@@ -22,7 +22,7 @@ import {
   Stepper,
 } from "@mui/material";
 import QontoStepIcon from "components/QontoStepIcon";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHotel } from "@fortawesome/free-solid-svg-icons";
 import {
