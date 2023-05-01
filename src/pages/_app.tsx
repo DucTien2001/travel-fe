@@ -41,6 +41,7 @@ import {
 import Home from "pages";
 import { langSupports } from "models/general";
 import moment from 'moment';
+import { I18nextProvider } from "react-i18next";
 
 // const { store } = createConfigureStore();
 
@@ -102,13 +103,16 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const ComponentToRender = allowed ? Component : Home;
   return (
-    <LayoutAuth>
-      {loading && <LoadingScreen />}
-      <AppStatus />
-      <ComponentToRender {...pageProps} />
-    </LayoutAuth>
+      <I18nextProvider i18n={i18n}>
+        <LayoutAuth>
+          {/* {loading && <LoadingScreen />} */}
+          <AppStatus />
+          <ComponentToRender {...pageProps} />
+        </LayoutAuth>
+      </I18nextProvider>
   );
 }
 
-export default appWithTranslation(withRedux(wrapper)(withReduxSaga(MyApp)));
+export default withRedux(wrapper)(withReduxSaga(MyApp));
+// export default appWithTranslation(withRedux(wrapper)(withReduxSaga(MyApp)));
 // export default MyApp;
