@@ -9,6 +9,8 @@ import { TourService } from "services/normal/tour";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import {
   Collapse,
+  FormControlLabel,
+  FormGroup,
   Grid,
   Link,
   Popover,
@@ -34,7 +36,7 @@ import UseAuth from "hooks/useAuth";
 import { setConfirmBookTourReducer } from "redux/reducers/Normal/actionTypes";
 import { UserService } from "services/user";
 import * as yup from "yup";
-import { ITour } from "redux/reducers/Normal";
+
 import PopupDetailTour from "pages/listTour/[tourId]/components/SectionTour/components/PopupDetailTour";
 import { BookTourReview, Tour } from "models/tour";
 import { ReducerType } from "redux/reducers";
@@ -53,8 +55,10 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PopupVoucher from "../PopopVoucher";
 import InputTextfield from "components/common/inputs/InputTextfield";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { TourBillService } from "services/normal/tourBill";
+import Toggle from "components/common/Switch";
+import { EventService } from "services/normal/event";
+import { IEvent } from "models/event";
+import ErrorMessage from "components/common/texts/ErrorMessage";
 
 const CHARACTER_LIMIT = 100;
 
@@ -100,8 +104,14 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
   const [openCollapse, setOpenCollapse] = useState(false);
   const [voucherChoose, setVoucherChoose] = useState({
     discountType: null,
-    voucherValue: null,
+    voucherValue: 0,
   });
+  const [addCoupon, setAddCoupon] = useState(false);
+  const [inputValueCode, setInputValueCode] = useState(null);
+  const [valueEvent, setValueEvent] = useState<IEvent>(null);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalFinal, setTotalFinal] = useState(0);
+  const [isErrorUseEvent, setIsErrorUseEvent] = useState(false);
 
   const policyRefund = useMemo(() => {
     return [];
@@ -145,49 +155,53 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
   const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
 
   const _onSubmit = (data: BookForm) => {
-    console.log({
-      firstName: data?.firstName,
-      lastName: data?.lastName,
-      email: data?.email,
-      phoneNumber: data?.phoneNumber,
-      tourId: tour?.id,
-      tourOnSaleId: confirmBookTour?.tourOnSaleId,
-      price: confirmBookTour?.totalPrice,
-      discount:
-        voucherChoose?.discountType === EDiscountType.PERCENT
-          ? voucherChoose?.voucherValue <= 100
-            ? confirmBookTour?.discount + voucherChoose?.voucherValue
+    dispatch(
+      setConfirmBookTourReducer({
+        firstName: data?.firstName,
+        lastName: data?.lastName,
+        email: data?.email,
+        phoneNumber: data?.phoneNumber,
+        tourId: tour?.id,
+        tourOnSaleId: confirmBookTour?.tourOnSaleId,
+        price: confirmBookTour?.totalPrice,
+        discount:
+          voucherChoose?.discountType === EDiscountType.PERCENT
+            ? voucherChoose?.voucherValue <= 100
+              ? confirmBookTour?.discount + voucherChoose?.voucherValue
+              : confirmBookTour?.totalPrice -
+                (confirmBookTour?.totalPrice *
+                  (100 - confirmBookTour?.discount)) /
+                  100 +
+                voucherChoose?.voucherValue
             : confirmBookTour?.totalPrice -
               (confirmBookTour?.totalPrice *
                 (100 - confirmBookTour?.discount)) /
                 100 +
-              voucherChoose?.voucherValue
-          : confirmBookTour?.totalPrice -
-            (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) /
-              100 +
-            voucherChoose?.voucherValue,
-      totalBill:
-        voucherChoose?.discountType === EDiscountType.PERCENT
-          ? voucherChoose.voucherValue <= 100
-            ? (((confirmBookTour?.totalPrice *
-                (100 - confirmBookTour?.discount)) /
-                100) *
-                (100 - voucherChoose.voucherValue)) /
-              100
+              voucherChoose?.voucherValue,
+        totalBill:
+          voucherChoose?.discountType === EDiscountType.PERCENT
+            ? voucherChoose.voucherValue <= 100
+              ? (((confirmBookTour?.totalPrice *
+                  (100 - confirmBookTour?.discount)) /
+                  100) *
+                  (100 - voucherChoose.voucherValue)) /
+                100
+              : (confirmBookTour?.totalPrice *
+                  (100 - confirmBookTour?.discount)) /
+                  100 -
+                voucherChoose.voucherValue
             : (confirmBookTour?.totalPrice *
                 (100 - confirmBookTour?.discount)) /
                 100 -
-              voucherChoose.voucherValue
-          : (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) /
-              100 -
-            voucherChoose.voucherValue,
-      numberOfAdult: confirmBookTour?.amountAdult,
-      numberOfChild: confirmBookTour?.amountChildren,
-      startDate: confirmBookTour?.startDate,
-      specialRequest: data?.specialRequest,
-      priceOfChild: confirmBookTour?.priceChildren,
-      priceOfAdult: confirmBookTour?.priceAdult,
-    });
+              voucherChoose.voucherValue,
+        numberOfAdult: confirmBookTour?.amountAdult,
+        numberOfChild: confirmBookTour?.amountChildren,
+        startDate: confirmBookTour?.startDate,
+        specialRequest: data?.specialRequest,
+        priceOfChild: confirmBookTour?.priceChildren,
+        priceOfAdult: confirmBookTour?.priceAdult,
+      })
+    );
   };
 
   const specialRequest = watch("specialRequest");
@@ -242,6 +256,24 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
     return isValid;
   };
 
+  const onUseCoupon = () => {
+    dispatch(setLoading(true));
+    EventService.findByCode(inputValueCode)
+      .then((res) => {
+        setValueEvent(res?.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
+
+  useEffect(() => {
+    console.log(valueEvent, "value");
+  }, [valueEvent]);
+
   useEffect(() => {
     tour?.tourPolicies.forEach((item) => {
       if (item.policyType === EServicePolicyType.REFUND)
@@ -282,6 +314,52 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, dispatch]);
+
+  useEffect(() => {
+    setTotalPrice(
+      (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) / 100
+    );
+  }, [confirmBookTour]);
+
+  useEffect(() => {
+    if (voucherChoose?.discountType === EDiscountType.PERCENT) {
+      if (voucherChoose?.voucherValue <= 100) {
+        if (valueEvent) {
+          if (totalPrice < valueEvent?.minOrder) {
+            setIsErrorUseEvent(true);
+          } else {
+            if (valueEvent.discountType === EDiscountType.PERCENT) {
+              if (valueEvent?.maxDiscount === 0) {
+                setTotalFinal(
+                  (((totalPrice * (100 - voucherChoose?.voucherValue)) / 100) *
+                    (100 - valueEvent?.discountValue)) /
+                    100
+                );
+              } else {
+                setTotalFinal(
+                  (totalPrice * (100 - voucherChoose?.voucherValue)) / 100 -
+                    valueEvent?.maxDiscount
+                );
+              }
+            } else {
+              setTotalFinal(
+                (totalPrice * (100 - voucherChoose?.voucherValue)) / 100 -
+                  valueEvent?.discountValue
+              );
+            }
+          }
+        } else {
+          setTotalFinal(
+            (totalPrice * (100 - voucherChoose?.voucherValue)) / 100
+          );
+        }
+      } else {
+        setTotalFinal(totalPrice - voucherChoose?.voucherValue);
+      }
+    } else {
+      setTotalFinal(totalPrice - voucherChoose?.voucherValue);
+    }
+  }, [voucherChoose, totalPrice, valueEvent]);
 
   useEffect(() => {
     fetchVoucher();
@@ -425,15 +503,27 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                       </Grid>
                       <Grid sx={{ display: "flex", alignItems: "center" }}>
                         <h4 className={classes.price}>
-                          {voucherChoose?.discountType === EDiscountType.PERCENT
+                          {/* {voucherChoose?.discountType === EDiscountType.PERCENT
                             ? voucherChoose.voucherValue <= 100
-                              ? fCurrency2VND(
-                                  (((confirmBookTour?.totalPrice *
-                                    (100 - confirmBookTour?.discount)) /
-                                    100) *
-                                    (100 - voucherChoose.voucherValue)) /
-                                    100
-                                )
+                              ? valueEvent?.discountType ===
+                                EDiscountType.PERCENT
+                                ? fCurrency2VND(
+                                    (((((confirmBookTour?.totalPrice *
+                                      (100 - confirmBookTour?.discount)) /
+                                      100) *
+                                      (100 - voucherChoose.voucherValue)) /
+                                      100) *
+                                      (100 - valueEvent?.discountValue)) /
+                                      100
+                                  )
+                                : fCurrency2VND(
+                                    (((confirmBookTour?.totalPrice *
+                                      (100 - confirmBookTour?.discount)) /
+                                      100) *
+                                      (100 - voucherChoose.voucherValue)) /
+                                      100 -
+                                      valueEvent?.discountValue
+                                  )
                               : (confirmBookTour?.totalPrice *
                                   (100 - confirmBookTour?.discount)) /
                                   100 -
@@ -443,7 +533,8 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                                   (100 - confirmBookTour?.discount)) /
                                   100 -
                                   voucherChoose.voucherValue
-                              )}
+                              )} */}
+                          {fCurrency2VND(totalFinal)}
                           VND
                         </h4>
                         {openCollapse ? (
@@ -544,6 +635,52 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                       >
                         <p>Choose the voucher</p>
                       </Grid>
+                    </Grid>
+                    <Grid>
+                      <FormGroup>
+                        <FormControlLabel
+                          className={classes.boxToggle}
+                          control={
+                            <Toggle
+                              checked={addCoupon}
+                              onChange={() => setAddCoupon(!addCoupon)}
+                            />
+                          }
+                          label="Add Coupon"
+                        />
+                      </FormGroup>
+                      {addCoupon && (
+                        <Grid
+                          className={classes.inputCoupon}
+                          container
+                          spacing={2}
+                        >
+                          <Grid item xs={8}>
+                            <InputTextfield
+                              placeholder="Example: CHEAPTRAVEL"
+                              type="text"
+                              onChange={(e) =>
+                                setInputValueCode(e.target.value)
+                              }
+                            />
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Button
+                              btnType={BtnType.Primary}
+                              className={classes.btnUseCoupon}
+                              onClick={onUseCoupon}
+                            >
+                              Use Coupon
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      )}
+                      {isErrorUseEvent && (
+                        <ErrorMessage>
+                          Your order must be larger{" "}
+                          {fCurrency2VND(valueEvent?.minOrder)} VND
+                        </ErrorMessage>
+                      )}
                     </Grid>
                     <Grid
                       sx={{
