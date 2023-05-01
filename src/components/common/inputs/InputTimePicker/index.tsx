@@ -80,7 +80,7 @@ const TimePicker = memo(
             inputFormat="hh:mm"
             mask="__:__"
             renderInput={({ InputProps, ...params }) => (
-              <OutlinedInput
+              <TextField
                 fullWidth
                 variant="standard"
                 classes={{
