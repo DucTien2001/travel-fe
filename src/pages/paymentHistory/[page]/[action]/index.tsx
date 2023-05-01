@@ -32,6 +32,7 @@ const PaymentHistory: NextPage = () => {
         if (action) {
           return <UpdateBill tourBillId={Number(action)} />;
         }
+        return <Tour />;
       case "hotel":
         return <Hotel />;
     }
