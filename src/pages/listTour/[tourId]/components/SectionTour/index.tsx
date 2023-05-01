@@ -44,7 +44,8 @@ import { setConfirmBookTourReducer } from "redux/reducers/Normal/actionTypes";
 import { useRouter } from "next/router";
 import { OptionItem } from "models/general";
 import { useDispatch } from "react-redux";
-
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 const AnyReactComponent = ({ text, lat, lng }) => <div>{text}</div>;
 export interface FormBookData {
   startDate: Date;
@@ -66,6 +67,7 @@ interface PriceAndAge {
 interface Props {
   tour: Tour;
   tourSchedule?: any[];
+  isLoading: boolean;
 }
 
 const languageOptions = [
@@ -74,7 +76,7 @@ const languageOptions = [
 ];
 
 // eslint-disable-next-line react/display-name
-const SectionTour = memo(({ tour, tourSchedule }: Props) => {
+const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
   const { user } = useAuth();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -275,28 +277,36 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
         <Container className={classes.container}>
           <Row>
             <Col>
-              <h2 className={`title ${classes.nameTour}`}>
-                {tour?.title} - {tour?.city.name}
-              </h2>
+              {isLoading ? (
+                <Skeleton style={{ marginTop: "16px" }} />
+              ) : (
+                <h2 className={`title ${classes.nameTour}`}>
+                  {tour?.title} - {tour?.city.name}
+                </h2>
+              )}
               <div className={classes.subProduct}>
                 <div className={classes.tags}>
                   <Badge pill className={classes.badgeTags}>
                     tour
                   </Badge>
                 </div>
-                <div className={classes.locationRate}>
-                  <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
-                  <p>
-                    {tour?.commune.name}, {tour?.district.name},{" "}
-                    {tour?.city.name}
-                  </p>
-                  {tour?.rate !== 0 && (
-                    <Stars
-                      numberOfStars={Math.floor(tour?.rate)}
-                      className={classes.starRating}
-                    />
-                  )}
-                </div>
+                {isLoading ? (
+                  <Skeleton width={100} className={classes.locationRate} />
+                ) : (
+                  <div className={classes.locationRate}>
+                    <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
+                    <p>
+                      {tour?.commune.name}, {tour?.district.name},{" "}
+                      {tour?.city.name}
+                    </p>
+                    {tour?.rate !== 0 && (
+                      <Stars
+                        numberOfStars={Math.floor(tour?.rate)}
+                        className={classes.starRating}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
               <Row
                 className={classes.containerImg}
@@ -332,15 +342,23 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
             <Col xs={8} className={classes.leftContent}>
               <h2 className={classes.leftTextTitle}>Product Details</h2>
               <h5 className={classes.leftTextPanel}>Highlight</h5>
-              <div className={classes.highlightContent}>
-                <p dangerouslySetInnerHTML={{ __html: tour?.highlight }}></p>
-              </div>
-              <div className={classes.goodWrapper}>
-                <FontAwesomeIcon icon={faFaceSmile}></FontAwesomeIcon>
-                <p>
-                  <span>Good for:</span> {tour?.suitablePerson}
-                </p>
-              </div>
+              {isLoading ? (
+                <Skeleton className={classes.highlightContent} />
+              ) : (
+                <div className={classes.highlightContent}>
+                  <p dangerouslySetInnerHTML={{ __html: tour?.highlight }}></p>
+                </div>
+              )}
+              {isLoading ? (
+                <Skeleton className={classes.goodWrapper} />
+              ) : (
+                <div className={classes.goodWrapper}>
+                  <FontAwesomeIcon icon={faFaceSmile}></FontAwesomeIcon>
+                  <p>
+                    <span>Good for:</span> {tour?.suitablePerson}
+                  </p>
+                </div>
+              )}
               <div className={classes.itineraryBox}>
                 <h5 className={classes.leftTextPanel}>Tour Itinerary</h5>
                 <Box sx={{ width: "100%" }}>
@@ -370,10 +388,14 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                 <h5 className={classes.leftTextPanel}>
                   What You’ll Experience
                 </h5>
-                <p
-                  className={classes.textDescription}
-                  dangerouslySetInnerHTML={{ __html: tour?.description }}
-                ></p>
+                {isLoading ? (
+                  <Skeleton width={100} className={classes.textDescription} />
+                ) : (
+                  <p
+                    className={classes.textDescription}
+                    dangerouslySetInnerHTML={{ __html: tour?.description }}
+                  ></p>
+                )}
               </Grid>
               <div className={classes.mapBox}>
                 <h5 className={classes.leftTextPanel}> Location Detail</h5>
@@ -412,7 +434,11 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                   <div className={classes.contactBox}>
                     <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
                     <p>Contact Partner: </p>
-                    <a href={`tel: ${tour?.contact}`}>{tour?.contact}</a>
+                    {isLoading ? (
+                      <Skeleton width={100} />
+                    ) : (
+                      <a href={`tel: ${tour?.contact}`}>{tour?.contact}</a>
+                    )}
                   </div>
                 </Grid>
               </div>
@@ -571,9 +597,14 @@ const SectionTour = memo(({ tour, tourSchedule }: Props) => {
                   <FontAwesomeIcon icon={faClock}></FontAwesomeIcon>
                   <p>
                     Tour duration:{" "}
-                    <span>
-                      {tour?.numberOfDays} days - {tour?.numberOfNights} nights
-                    </span>
+                    {isLoading ? (
+                      <Skeleton width={100} />
+                    ) : (
+                      <span>
+                        {tour?.numberOfDays} days - {tour?.numberOfNights}{" "}
+                        nights
+                      </span>
+                    )}
                   </p>
                 </div>
                 <div className={classes.serviceTip}>

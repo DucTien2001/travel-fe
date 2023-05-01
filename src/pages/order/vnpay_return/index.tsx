@@ -77,8 +77,10 @@ const VNPay: NextPage = () => {
             <ModalBody>
               {router?.query?.vnp_TransactionStatus === "00" ? (
                 <span>
-                  You have successfully paid, you will be redirected to the
-                  payment courtesy page in a few seconds{" "}
+                  You have successfully paid. Please fill in more contact
+                  information so that we can contact you if there is a need to
+                  contact at the order payment page, you will be redirected to
+                  the payment courtesy page in a few seconds{" "}
                 </span>
               ) : (
                 <span>

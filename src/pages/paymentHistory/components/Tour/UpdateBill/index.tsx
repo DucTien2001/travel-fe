@@ -210,38 +210,38 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
   const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
 
   const _onSubmit = (data: BookForm) => {
-    TourBillService.updateTourBill(tourBill?.id, {
-      tourOnSaleId: priceAndAge?.tourOnSaleId,
-      amountChild: data?.numberOfChild,
-      amountAdult: data?.numberOfAdult,
-      price: totalBillReschedule,
-      discount: priceAndAge?.discount,
-      totalBill: priceMustPay,
-      status: EPaymentStatus.PAID,
-      email: data?.email,
-      phoneNumber: data?.phoneNumber,
-      firstName: data?.firstName,
-      lastName: data?.lastName,
-    })
-      .then((res) => {
-        router.push(res?.data?.checkoutUrl);
-      })
-      .catch((err) => {
-        dispatch(setErrorMess(err));
-      });
-    console.log({
-      tourOnSaleId: priceAndAge?.tourOnSaleId,
-      amountChild: data?.numberOfChild,
-      amountAdult: data?.numberOfAdult,
-      price: totalBillReschedule,
-      discount: priceAndAge?.discount,
-      totalBill: priceMustPay,
-      status: EPaymentStatus.PAID,
-      email: data?.email,
-      phoneNumber: data?.phoneNumber,
-      firstName: data?.firstName,
-      lastName: data?.lastName,
-    });
+    // TourBillService.updateTourBill(tourBill?.id, {
+    //   tourOnSaleId: priceAndAge?.tourOnSaleId,
+    //   amountChild: data?.numberOfChild,
+    //   amountAdult: data?.numberOfAdult,
+    //   price: totalBillReschedule,
+    //   discount: priceAndAge?.discount,
+    //   totalBill: priceMustPay,
+    //   status: EPaymentStatus.PAID,
+    //   email: data?.email,
+    //   phoneNumber: data?.phoneNumber,
+    //   firstName: data?.firstName,
+    //   lastName: data?.lastName,
+    // })
+    //   .then((res) => {
+    //     router.push(res?.data?.checkoutUrl);
+    //   })
+    //   .catch((err) => {
+    //     dispatch(setErrorMess(err));
+    //   });
+    // console.log({
+    //   tourOnSaleId: priceAndAge?.tourOnSaleId,
+    //   amountChild: data?.numberOfChild,
+    //   amountAdult: data?.numberOfAdult,
+    //   price: totalBillReschedule,
+    //   discount: priceAndAge?.discount,
+    //   totalBill: priceMustPay,
+    //   status: EPaymentStatus.PAID,
+    //   email: data?.email,
+    //   phoneNumber: data?.phoneNumber,
+    //   firstName: data?.firstName,
+    //   lastName: data?.lastName,
+    // });
   };
 
   const specialRequest = watch("specialRequest");

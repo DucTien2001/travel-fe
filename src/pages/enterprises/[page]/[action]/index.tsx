@@ -171,6 +171,16 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
               </NavLink>
             </NavItem>
           )}
+          <span>Order</span>
+          <NavItem
+            onClick={() => gotoMenu("tourBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourBills")}>
+              <AirplaneTicketIcon />
+              <span ref={vouchersRef}>Tour Bills</span>
+            </NavLink>
+          </NavItem>
         </Nav>
       </Col>
       {renderComponent()}

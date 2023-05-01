@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Modal, Row, Col, ModalFooter } from "reactstrap";
+import { Modal, Row, Col, ModalFooter, ModalHeader } from "reactstrap";
 import classes from "./styles.module.scss";
 import moment from "moment";
 import clsx from "clsx";
@@ -11,6 +11,7 @@ import { TourBill } from "models/tourBill";
 import { fCurrency2VND } from "utils/formatNumber";
 import Button, { BtnType } from "components/common/buttons/Button";
 import QRCode from "react-qr-code";
+import { EPaymentStatus } from "models/general";
 interface DownloadTourBillProps {
   onClose: () => void;
   isOpen: boolean;
@@ -49,6 +50,13 @@ const DownloadTourBill = memo(
         scrollable
         className={classes.modal}
       >
+        <ModalHeader
+          isOpen={isOpen}
+          toggle={onClose}
+          className={classes.titleHeader}
+        >
+          View Tour
+        </ModalHeader>
         <div id="pdf-component" className={clsx(classes.pdfWrapper)}>
           <h3 className={classes.title}>Tour Bill</h3>
           <Row className="mb-1">
@@ -91,7 +99,7 @@ const DownloadTourBill = memo(
               {fCurrency2VND(tourBill?.tourOnSaleData?.adultPrice)} VND/ticket
             </Col>
           </Row>
-          {tourBill?.amountChild && (
+          {tourBill?.amountChild !== 0 && (
             <Row className="mb-1">
               <Col xs={4} className={classes.titleInfo}>
                 Children price:
@@ -118,7 +126,7 @@ const DownloadTourBill = memo(
               {tourBill?.amountAdult}
             </Col>
           </Row>
-          {tourBill?.amountChild && (
+          {tourBill?.amountChild !== 0 && (
             <Row className="mb-1">
               <Col xs={4} className={classes.titleInfo}>
                 Children:
@@ -182,32 +190,17 @@ const DownloadTourBill = memo(
               {tourBill?.tourData?.contact}
             </Col>
           </Row>
-          <Row className="mb-3">
-            <Col xs={4} className={classes.titleInfo}>
-              Your bill QR Code:
-            </Col>
-            <Col xs={8} className={classes.info}>
-              <div
-                style={{
-                  height: "auto",
-                  maxWidth: 100,
-                  width: "100%",
-                }}
-              >
-                <QRCode
-                  size={256}
-                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                  value={`${tourBill?.id}`}
-                  viewBox={`0 0 256 256`}
-                />
-              </div>
-            </Col>
-          </Row>
         </div>
         <ModalFooter className={classes.downloadBtnWrapper}>
-          <Button onClick={handleDownload} btnType={BtnType.Primary}>
-            Download
-          </Button>
+          {tourBill?.status === EPaymentStatus.PAID ? (
+            <Button onClick={handleDownload} btnType={BtnType.Primary}>
+              Download
+            </Button>
+          ) : (
+            <Button onClick={onClose} btnType={BtnType.Primary}>
+              Cancel
+            </Button>
+          )}
         </ModalFooter>
       </Modal>
     );

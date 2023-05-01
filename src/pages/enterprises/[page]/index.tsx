@@ -12,7 +12,7 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { EUserType } from "models/user";
 import useAuth from "hooks/useAuth";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
-
+import TourIcon from "@mui/icons-material/Tour";
 const Tours = dynamic(() => import("pages/enterprises/components/Tours"));
 const Hotels = dynamic(() => import("pages/enterprises/components/Hotels"));
 const Vouchers = dynamic(() => import("pages/enterprises/components/Vouchers"));
@@ -92,6 +92,14 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
+      case "tourBills":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <Staffs />
+            </TabContent>
+          </Col>
+        );
     }
   };
 
@@ -151,6 +159,16 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
               </NavLink>
             </NavItem>
           )}
+          <span>Order</span>
+          <NavItem
+            onClick={() => gotoMenu("tourBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourBills")}>
+              <TourIcon />
+              <span ref={vouchersRef}>Tour Bills</span>
+            </NavLink>
+          </NavItem>
         </Nav>
       </Col>
       {renderComponent()}

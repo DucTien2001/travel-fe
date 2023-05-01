@@ -15,6 +15,7 @@ import { faFaceFrown } from "@fortawesome/free-regular-svg-icons";
 import { CommentService } from "services/normal/comment";
 import { formatStar } from "utils/formatStar";
 import { TourScheduleService } from "services/normal/tourSchedule";
+import Skeleton from "react-loading-skeleton";
 
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(() => {
@@ -22,6 +23,8 @@ const ProductPage = memo(() => {
   const router = useRouter();
   const [tour, setTour] = useState<any>();
   const [tourSchedule, setTourSchedule] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   // const [listComment, setListComment] = useState([]);
   // const listRates = [];
   // listComment.forEach((item) => {
@@ -43,15 +46,18 @@ const ProductPage = memo(() => {
 
   useEffect(() => {
     if (router) {
+      setIsLoading(true);
       TourService.getTour(Number(router.query.tourId.slice(1)))
         .then((res) => {
           setTour(res.data);
+          setIsLoading(false);
         })
         .catch((e) => {
           dispatch(setErrorMess(e));
+          setIsLoading(false);
         })
         .finally(() => {
-          dispatch(setLoading(false));
+          // dispatch(setLoading(false));
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,15 +65,18 @@ const ProductPage = memo(() => {
 
   useEffect(() => {
     if (router) {
+      setIsLoading(true);
       TourScheduleService.getTourSchedule(Number(router.query.tourId.slice(1)))
         .then((res) => {
           setTourSchedule(res.data);
+          setIsLoading(false);
         })
         .catch((e) => {
           dispatch(setErrorMess(e));
+          setIsLoading(false);
         })
         .finally(() => {
-          dispatch(setLoading(false));
+          // dispatch(setLoading(false));
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,7 +121,11 @@ const ProductPage = memo(() => {
           </Container>
         ) : (
           <>
-            <SectionTour tour={tour} tourSchedule={tourSchedule} />
+            <SectionTour
+              tour={tour}
+              tourSchedule={tourSchedule}
+              isLoading={isLoading}
+            />
             <Comment
               // comments={listComment}
               // onGetTourComments={getTourComments}

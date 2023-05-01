@@ -14,19 +14,18 @@ export interface Create {
   firstName: string;
   lastName: string;
 }
-
+export interface IParticipantInfo {
+  fullName: string;
+  phoneNumber: string;
+}
 export interface Update {
-  tourOnSaleId?: number;
-  amountChild?: number;
-  amountAdult?: number;
-  price?: number;
-  discount?: number;
-  totalBill?: number;
   status?: number;
-  email?: string;
-  phoneNumber?: string;
-  firstName?: string;
-  lastName?: string;
+  participantsInfo?: IParticipantInfo[];
+
+}
+
+export interface Cancel {
+  moneyRefund: number;
 }
 export interface FindAll {
   take: number;
@@ -45,6 +44,7 @@ export interface TourBill {
   tourData?: Tour;
   createdAt?: Date;
   tourOnSaleData?: TourPrice;
+  participantsInfo?: IParticipantInfo[];
   status?: number;
   email?: string;
   phoneNumber?: string;

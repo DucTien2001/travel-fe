@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { Create, FindAll, IVerifyBookTour, TourBill, Update } from "models/tourBill";
+import { Cancel, Create, FindAll, IVerifyBookTour, TourBill, Update } from "models/tourBill";
 import api from "services/configApi";
 
 export class TourBillService {
@@ -53,22 +53,9 @@ export class TourBillService {
         })
     }
 
-//-------------------------------------------------------
-
-
-    static async verifyBookTour(data: IVerifyBookTour): Promise<any> {
+    static async cancelBookTour(billId: number, data: Cancel): Promise<any> {
       return await api
-        .post(API.NORMAL.TOUR_BILL.VERIFY_BOOKTOUR, data)
-        .then((res) => {
-          return Promise.resolve(res.data.data);
-        })
-        .catch((e) => {
-          return Promise.reject(e?.response?.data);
-        });
-    }
-    static async cancelBookTour(billId: number): Promise<any> {
-      return await api
-        .put(API.NORMAL.TOUR_BILL.CANCEL_BOOK_TOUR.replace(":id", `${billId}`) )
+        .put(API.NORMAL.TOUR_BILL.CANCEL_BOOK_TOUR.replace(":id", `${billId}`), data )
         .then((res) => {
           return Promise.resolve(res.data.data);
         })

@@ -3,6 +3,13 @@
     width: unset;
   }
 }
+.titleHeader {
+  h5 {
+      font-weight: 700!important;
+      color: var(--text-color);
+      text-transform: uppercase;
+  }
+}
 
 .pdfWrapper {
   // width: 841px;

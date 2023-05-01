@@ -27,7 +27,6 @@ import {
   faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 import { images } from "configs/images";
-import Tours from "./Tours";
 import Hotels from "./Hotels";
 import Sales from "./Sales";
 import EmailTemplate from "./EmailTemplate";
@@ -38,7 +37,6 @@ import HotelComments from "./HotelComments";
 import CheckRoom from "./CheckRoom";
 import HotelStatistic from "./HotelStatistic";
 import TourStatistic from "./TourStatistic";
-import AddOrEditTour from "./Tours/AddOrEditTour";
 import { ETour, IHotel } from "models/enterprise";
 import AddOrEditHotel from "./Hotels/AddOrEditHotel";
 import { faSellsy } from "@fortawesome/free-brands-svg-icons";
@@ -308,12 +306,10 @@ const Enterprise: NextPage = () => {
             activeTab={"verticalTabs" + verticalTabs}
             className={classes.tabContent}
           >
-            <TabPane tabId="verticalTabs1" className={classes.tabPane}>
-              <Tours
-                onChangeTabCreate={onChangeTab}
-                handleTourEdit={handleTourEdit}
-              />
-            </TabPane>
+            <TabPane
+              tabId="verticalTabs1"
+              className={classes.tabPane}
+            ></TabPane>
             <TabPane tabId="verticalTabs2" className={classes.tabPane}>
               <Hotels
                 onChangeTabCreate={onChangeTab}
@@ -344,9 +340,10 @@ const Enterprise: NextPage = () => {
             <TabPane tabId="verticalTabs11" className={classes.tabPane}>
               <HotelStatistic />
             </TabPane>
-            <TabPane tabId="verticalTabs12" className={classes.tabPane}>
-              <AddOrEditTour itemEdit={tourEdit} onBack={onChangeTab} />
-            </TabPane>
+            <TabPane
+              tabId="verticalTabs12"
+              className={classes.tabPane}
+            ></TabPane>
             <TabPane tabId="verticalTabs13" className={classes.tabPane}>
               <AddOrEditHotel itemEdit={hotelEdit} />
             </TabPane>

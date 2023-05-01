@@ -117,7 +117,7 @@ const PopupSelectDate = memo(({ onClose, isOpen, tour, tourBill }: Props) => {
             <NotificationsActiveIcon />
             <p>Notification: </p>
           </Grid>
-          <ul>
+          <ul className={classes.boxContentNote}>
             <li>
               You will not be able to re-select the date you previously booked{" "}
             </li>

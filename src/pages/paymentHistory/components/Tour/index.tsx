@@ -44,20 +44,21 @@ import { FindAll, TourBill } from "models/tourBill";
 import useDebounce from "hooks/useDebounce";
 import StatusPayment from "components/StatusPayment";
 import AddCardIcon from "@mui/icons-material/AddCard";
-import DownloadIcon from "@mui/icons-material/Download";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import PopupSelectDate from "./PopupChangeDate";
 import { TourService } from "services/normal/tour";
 import { Tour } from "models/tour";
-
+import PopupAddInformation from "./PopupAddInformation";
+import PopupConfirmCancel from "./PopupConfirmCancel";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 const tableHeaders: TableHeaderLabel[] = [
   { name: "Invoice no.", label: "Invoice no.", sortable: false },
   { name: "Tour name", label: "Tour name", sortable: false },
-  { name: "createAt", label: "Created at", sortable: false },
+  { name: "Booking date", label: "Booking date", sortable: false },
   { name: "price", label: "Total bill", sortable: false },
   { name: "status", label: "Status", sortable: false },
-  { name: "download", label: "Download", sortable: false },
+  { name: "download", label: "Download / View", sortable: false },
   { name: "actions", label: "Actions", sortable: false },
 ];
 
@@ -77,9 +78,16 @@ const Tour = memo(() => {
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [openPopupSelectDate, setOpenPopupSelectDate] = useState(false);
   const [tour, setTour] = useState<Tour>(null);
+  const [openAddInformation, setOpenAddInformation] = useState(false);
 
   const onTogglePopupConfirmCancel = () => {
     setOpenConfirmCancelBookTour(!openConfirmCancelBookTour);
+  };
+
+  const onToggleAddInformation = () => {
+    setOpenAddInformation(!openAddInformation);
+    onCloseActionMenu();
+    setTourBill(itemAction);
   };
 
   const onTogglePopupSelectDate = () => {
@@ -101,41 +109,6 @@ const Tour = memo(() => {
 
   const sortDataByDate = (first, second) =>
     Number(Date.parse(second)) - Number(Date.parse(first));
-
-  // const isExpire = (item) => {
-  //   var currentDate = new Date();
-  //   let isExpired = false;
-  //   var date = new Date(item?.createdAt);
-  //   if (
-  //     currentDate.setDate(currentDate.getDate()) >
-  //     date.setDate(date.getDate() + 2)
-  //   ) {
-  //     isExpired = true;
-  //   } else {
-  //     isExpired = false;
-  //   }
-  //   return isExpired;
-  // };
-
-  // const onCancelBookTour = (e, id) => {
-  //   setTourBillId(id);
-  //   onTogglePopupConfirmCancel();
-  // };
-
-  const onYesCancel = () => {
-    dispatch(setLoading(true));
-    TourBillService.cancelBookTour(tourBillId)
-      .then(() => {
-        dispatch(setSuccessMess("Cancel book tour successfully"));
-        onTogglePopupConfirmCancel();
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
-  };
 
   const handleChangePage = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -201,7 +174,10 @@ const Tour = memo(() => {
       });
   };
 
-  const onDownloadBill = (bill) => {
+  const onDownloadBill = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    bill: TourBill
+  ) => {
     setModalDownloadTourBill(true);
     setTourBill(bill);
   };
@@ -211,17 +187,35 @@ const Tour = memo(() => {
     setTourBill(null);
   };
 
-  const onSelectDate = () => {
-    setTourBill(itemAction);
+  const fetchTour = () => {
     TourService.getTour(itemAction?.tourData?.id)
       .then((res) => {
         setTour(res.data);
-        onTogglePopupSelectDate();
-        onCloseActionMenu();
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
       });
+  };
+
+  const onSelectDate = () => {
+    setTourBill(itemAction);
+    fetchTour();
+    onTogglePopupSelectDate();
+    onCloseActionMenu();
+  };
+
+  const onUpdateInfo = () => {
+    setTourBill(itemAction);
+    onToggleAddInformation();
+    onCloseActionMenu();
+  };
+
+  const onCancel = () => {
+    setTourBill(itemAction);
+    fetchTour();
+    onTogglePopupConfirmCancel();
+    onCloseActionMenu();
+    console.log(itemAction);
   };
 
   useEffect(() => {
@@ -271,24 +265,14 @@ const Tour = memo(() => {
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <IconButton
-                          disabled={
-                            item?.status === EPaymentStatus.NOT_PAID ||
-                            item?.status === EPaymentStatus.FAILED ||
-                            item?.status === EPaymentStatus.CANCEL
-                          }
-                          onClick={() => {
-                            onDownloadBill(item);
+                          onClick={(e) => {
+                            onDownloadBill(e, item);
                           }}
                         >
-                          <DownloadIcon
+                          <VisibilityIcon
                             sx={{
                               fontSize: "28px",
-                              color:
-                                item?.status === EPaymentStatus.NOT_PAID ||
-                                item?.status === EPaymentStatus.FAILED ||
-                                item?.status === EPaymentStatus.CANCEL
-                                  ? "disabled"
-                                  : "var(--primary-color)",
+                              color: "var(--primary-color)",
                             }}
                           />
                         </IconButton>
@@ -351,6 +335,21 @@ const Tour = memo(() => {
               </Box>
             </MenuItem>
           )}
+          {itemAction?.status === EPaymentStatus.PAID && (
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onUpdateInfo}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <EditOutlined
+                  sx={{ marginRight: "0.25rem" }}
+                  fontSize="small"
+                />
+                <span>Update contact information</span>
+              </Box>
+            </MenuItem>
+          )}
           {itemAction?.status !== EPaymentStatus.PAID && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
@@ -371,6 +370,7 @@ const Tour = memo(() => {
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
               className={classes.menuItem}
+              onClick={onCancel}
             >
               <Box display="flex" alignItems={"center"}>
                 <DeleteOutlineOutlined
@@ -395,12 +395,18 @@ const Tour = memo(() => {
         tour={tour}
         tourBill={tourBill}
       />
-      <PopupConfirmDelete
-        title="Are you sure cancel this tour ?"
+      <PopupConfirmCancel
         isOpen={openConfirmCancelBookTour}
         onClose={onTogglePopupConfirmCancel}
         toggle={onTogglePopupConfirmCancel}
-        onYes={onYesCancel}
+        tourBill={tourBill}
+        tour={tour}
+      />
+      <PopupAddInformation
+        onClose={onToggleAddInformation}
+        isOpen={openAddInformation}
+        tourBill={tourBill}
+        fetchDataTourBill={fetchData}
       />
     </>
   );
