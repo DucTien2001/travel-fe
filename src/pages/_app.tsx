@@ -18,6 +18,8 @@ import withRedux from "next-redux-wrapper";
 import withReduxSaga from "next-redux-saga";
 import { wrapper } from "redux/configureStore";
 import { useEffect, useState } from "react";
+import { appWithTranslation } from 'next-i18next';
+import i18n from 'locales';
 import { getMe } from "redux/reducers/User/actionTypes";
 import AppStatus from "components/AppStatus";
 import Router, { useRouter } from "next/router";
@@ -37,13 +39,23 @@ import {
   getAllRoomBills,
 } from "redux/reducers/Normal/actionTypes";
 import Home from "pages";
-// import { getAllHotels as getAllHotelsOfNormal } from "redux/reducers/Normal/actionTypes";
+import { langSupports } from "models/general";
+import moment from 'moment';
 
 // const { store } = createConfigureStore();
 
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
   const { user } = useSelector((state: ReducerType) => state.user);
+
+  useEffect(() => {
+    if (!i18n.language) return
+    if (!langSupports.find(lang => lang.key === i18n.language)) {
+      i18n.changeLanguage(langSupports[0].key)
+    }
+    moment.locale(i18n.language)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i18n.language])
 
   useEffect(() => {
     dispatch(getMe());
@@ -98,5 +110,5 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default withRedux(wrapper)(withReduxSaga(MyApp));
+export default appWithTranslation(withRedux(wrapper)(withReduxSaga(MyApp)));
 // export default MyApp;

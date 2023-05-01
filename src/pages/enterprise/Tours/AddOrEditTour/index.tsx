@@ -60,7 +60,7 @@ import { TourHelper } from "helpers/tour";
 import { ReducerType } from "redux/reducers";
 import Schedule from "./components/Schedule";
 import RangePrice from "./components/RangePrice";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import QontoStepIcon from "components/QontoStepIcon";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });

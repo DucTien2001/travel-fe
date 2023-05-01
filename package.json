@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "i18nexus pull --api-key TZlxbJjR8jc5iCeufkTx3Q && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "i18nexus": "i18nexus pull --api-key TZlxbJjR8jc5iCeufkTx3Q"
   },
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
@@ -49,6 +50,7 @@
     "lodash": "^4.17.21",
     "lodash.isempty": "^4.4.0",
     "next": "12.2.5",
+    "next-i18next": "^13.2.2",
     "next-redux-saga": "^4.1.2",
     "next-redux-wrapper": "^8.0.0",
     "numeral": "^2.0.6",
@@ -108,6 +110,7 @@
     "@types/uuid": "^8.3.4",
     "eslint": "8.23.0",
     "eslint-config-next": "12.2.5",
+    "i18nexus-cli": "^3.1.0",
     "redux-devtools-extension": "^2.13.9",
     "typescript": "^4.8.2"
   }

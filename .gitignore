@@ -7,6 +7,7 @@
 
 # testing
 /coverage
+/public/locales
 
 # next.js
 /.next/

@@ -10,7 +10,7 @@ import {
 import classes from "./styles.module.scss";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import clsx from "clsx";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
