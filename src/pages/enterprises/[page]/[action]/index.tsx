@@ -13,6 +13,8 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
+import Tours from "pages/enterprises/components/Tours";
+import Vouchers from "pages/enterprises/components/Vouchers";
 const AddOrEditTour = dynamic(
   () => import("pages/enterprises/components/Tours/AddOrEditTour")
 );
@@ -61,6 +63,13 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </Col>
           );
         }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <Tours />
+            </TabContent>
+          </Col>
+        );
       case "hotels":
         return (
           <Col xs={10} className={classes.content}>
@@ -95,6 +104,13 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </Col>
           );
         }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <Vouchers />
+            </TabContent>
+          </Col>
+        );
       case "staffs":
         staffsRef &&
           staffsRef.current &&
