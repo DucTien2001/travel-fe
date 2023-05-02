@@ -13,10 +13,10 @@ import { EUserType } from "models/user";
 import useAuth from "hooks/useAuth";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import TourIcon from "@mui/icons-material/Tour";
-const Tours = dynamic(() => import("pages/enterprises/components/Tours"));
-const Hotels = dynamic(() => import("pages/enterprises/components/Hotels"));
-const Vouchers = dynamic(() => import("pages/enterprises/components/Vouchers"));
-const Staffs = dynamic(() => import("pages/enterprises/components/Staffs"));
+import Tours from "../components/Tours";
+import Hotels from "../components/Hotels";
+import Vouchers from "../components/Vouchers";
+import Staffs from "../components/Staffs";
 
 interface PropTypes {}
 

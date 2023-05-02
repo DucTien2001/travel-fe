@@ -83,7 +83,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
 
   // Geocode.setApiKey("AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k");
 
-  const dayCategory = useMemo(() => {
+  const daySchedule = useMemo(() => {
     return _.chain(tourSchedule)
       .groupBy((item) => item?.day)
       .map((value) => ({ day: value[0].day, schedule: value }))
@@ -199,23 +199,23 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
   };
 
   const _onSubmit = (data: FormBookData) => {
-    // dispatch(
-    //   setConfirmBookTourReducer({
-    //     tourId: tour?.id,
-    //     tourOnSaleId: priceAndAge?.tourOnSaleId,
-    //     amountAdult: data?.numberOfAdult,
-    //     amountChildren: data?.numberOfChild,
-    //     startDate: data?.startDate,
-    //     totalPrice: totalPrice,
-    //     language: data?.language.name,
-    //     priceAdult: priceAndAge.adultPrice,
-    //     priceChildren: priceAndAge.priceChildren,
-    //     discount: priceAndAge?.discount,
-    //     owner: tour?.owner,
-    //   })
-    // );
-    // router.push(`/book/tour/:${tour?.id}/booking`);
-    console.log(totalPrice);
+    dispatch(
+      setConfirmBookTourReducer({
+        tourId: tour?.id,
+        tourOnSaleId: priceAndAge?.tourOnSaleId,
+        amountAdult: data?.numberOfAdult,
+        amountChildren: data?.numberOfChild,
+        startDate: data?.startDate,
+        totalPrice: totalPrice,
+        language: data?.language.name,
+        priceAdult: priceAndAge.adultPrice,
+        priceChildren: priceAndAge.priceChildren,
+        discount: priceAndAge?.discount,
+        owner: tour?.owner,
+      })
+    );
+    router.push(`/book/tour/:${tour?.id}/booking`);
+    // console.log(totalPrice);
   };
 
   useEffect(() => {
@@ -252,12 +252,9 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
     } else {
       setIsValidQuantity(false);
     }
-    console.log(priceAndAge, "-----");
   }, [priceAndAge, _numberOfAdult, _numberOfChild]);
 
-  useEffect(() => {
-    console.log(totalPrice, "----price");
-  }, [totalPrice]);
+  useEffect(() => {}, [totalPrice]);
 
   // useEffect(() => {
   //   Geocode.fromAddress(
@@ -371,7 +368,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   <TabContext value={tab}>
                     <Box>
                       <TabList onChange={handleChangeDaySchedule}>
-                        {dayCategory?.map((item, index) => (
+                        {daySchedule?.map((item, index) => (
                           <Tab
                             key={index}
                             label={`Day ${item?.day}`}
@@ -380,10 +377,10 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                         ))}
                       </TabList>
                     </Box>
-                    {dayCategory?.map((item, index) => (
+                    {daySchedule?.map((item, index) => (
                       <TourSchedule
                         key={index}
-                        tourSchedule={(dayCategory || [])[index]?.schedule}
+                        tourSchedule={(daySchedule || [])[index]?.schedule}
                         value={`${index + 1}`}
                       />
                     ))}

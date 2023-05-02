@@ -15,13 +15,8 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import Tours from "pages/enterprises/components/Tours";
 import Vouchers from "pages/enterprises/components/Vouchers";
-const AddOrEditTour = dynamic(
-  () => import("pages/enterprises/components/Tours/AddOrEditTour")
-);
-const AddOrEditVoucher = dynamic(
-  () =>
-    import("pages/enterprises/components/Vouchers/components/AddOrEditVoucher")
-);
+import AddOrEditTour from "pages/enterprises/components/Tours/AddOrEditTour";
+import AddOrEditVoucher from "pages/enterprises/components/Vouchers/components/AddOrEditVoucher";
 
 interface PropTypes {}
 
