@@ -888,7 +888,6 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                               priceAndAge.quantityOrdered
                             }
                             min={tourBill?.amountAdult}
-                            disabled={isValidQuantity}
                             onChange={field.onChange}
                             value={field.value}
                           />
@@ -916,7 +915,6 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                               priceAndAge.quantityOrdered
                             }
                             min={tourBill?.amountChild}
-                            disabled={isValidQuantity}
                             onChange={field.onChange}
                             value={field.value}
                           />

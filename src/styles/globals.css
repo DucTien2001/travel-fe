@@ -57,13 +57,13 @@ html,
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: var(--violet-light-color); 
+  background: var(--gray-20); 
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--violet-light-color); 
+  background: var(--gray-20); 
 }
 
 body {

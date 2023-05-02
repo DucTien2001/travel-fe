@@ -177,20 +177,21 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
               100 +
             voucherChoose?.voucherValue,
       totalBill:
-        voucherChoose?.discountType === EDiscountType.PERCENT
-          ? voucherChoose.voucherValue <= 100
-            ? (((confirmBookTour?.totalPrice *
-                (100 - confirmBookTour?.discount)) /
-                100) *
-                (100 - voucherChoose.voucherValue)) /
-              100
-            : (confirmBookTour?.totalPrice *
-                (100 - confirmBookTour?.discount)) /
-                100 -
-              voucherChoose.voucherValue
-          : (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) /
-              100 -
-            voucherChoose.voucherValue,
+        // voucherChoose?.discountType === EDiscountType.PERCENT
+        //   ? voucherChoose.voucherValue <= 100
+        //     ? (((confirmBookTour?.totalPrice *
+        //         (100 - confirmBookTour?.discount)) /
+        //         100) *
+        //         (100 - voucherChoose.voucherValue)) /
+        //       100
+        //     : (confirmBookTour?.totalPrice *
+        //         (100 - confirmBookTour?.discount)) /
+        //         100 -
+        //       voucherChoose.voucherValue
+        //   : (confirmBookTour?.totalPrice * (100 - confirmBookTour?.discount)) /
+        //       100 -
+        //     voucherChoose.voucherValue,
+        totalFinal,
       numberOfAdult: confirmBookTour?.amountAdult,
       numberOfChild: confirmBookTour?.amountChildren,
       startDate: confirmBookTour?.startDate,
@@ -266,9 +267,9 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
       });
   };
 
-  useEffect(() => {
-    console.log(valueEvent, "value");
-  }, [valueEvent]);
+  // useEffect(() => {
+  //   console.log(valueEvent, "value");
+  // }, [valueEvent]);
 
   useEffect(() => {
     tour?.tourPolicies.forEach((item) => {
@@ -317,75 +318,43 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
     );
   }, [confirmBookTour]);
 
-  // useEffect(() => {
-  //   if (voucherChoose?.discountType === EDiscountType.PERCENT) {
-  //     if (voucherChoose?.voucherValue <= 100) {
-  //       if (valueEvent) {
-  //         if (totalPrice < valueEvent?.minOrder) {
-  //           setIsErrorUseEvent(true);
-  //         } else {
-  //           if (valueEvent.discountType === EDiscountType.PERCENT) {
-  //             if (valueEvent?.maxDiscount === 0) {
-  //               setTotalFinal(
-  //                 (((totalPrice * (100 - voucherChoose?.voucherValue)) / 100) *
-  //                   (100 - valueEvent?.discountValue)) /
-  //                   100
-  //               );
-  //             } else {
-  //               setTotalFinal(
-  //                 (totalPrice * (100 - voucherChoose?.voucherValue)) / 100 -
-  //                   valueEvent?.maxDiscount
-  //               );
-  //             }
-  //           } else {
-  //             setTotalFinal(
-  //               (totalPrice * (100 - voucherChoose?.voucherValue)) / 100 -
-  //                 valueEvent?.discountValue
-  //             );
-  //           }
-  //         }
-  //       } else {
-  //         setTotalFinal(
-  //           (totalPrice * (100 - voucherChoose?.voucherValue)) / 100
-  //         );
-  //       }
-  //     } else {
-  //       setTotalFinal(totalPrice - voucherChoose?.voucherValue);
-  //     }
-  //   } else {
-  //     setTotalFinal(totalPrice - voucherChoose?.voucherValue);
-  //   }
-  // }, [voucherChoose, totalPrice, valueEvent]);
   useEffect(() => {
-    if (
-      voucherChoose?.discountType === EDiscountType.PERCENT ||
-      (valueEvent && valueEvent?.discountType === EDiscountType.PERCENT)
-    ) {
-      if (voucherChoose?.voucherValue <= 100 || valueEvent?.maxDiscount === 0) {
-        setTotalFinal(
-          totalPrice *
-            (100 - voucherChoose?.voucherValue) *
-            (100 - valueEvent?.discountValue)
-        );
-      } else if (
-        voucherChoose?.voucherValue > 100 ||
-        valueEvent?.maxDiscount !== 0
-      ) {
-        setTotalFinal(
-          totalPrice - voucherChoose?.voucherValue - valueEvent?.discountValue
-        );
+    if (voucherChoose?.discountType === EDiscountType.PERCENT) {
+      if (voucherChoose?.voucherValue <= 100) {
+        if (valueEvent) {
+          if (totalPrice < valueEvent?.minOrder) {
+            setIsErrorUseEvent(true);
+          } else {
+            if (valueEvent.discountType === EDiscountType.PERCENT) {
+              if (valueEvent?.maxDiscount === 0) {
+                setTotalFinal(
+                  (((totalPrice * (100 - voucherChoose?.voucherValue)) / 100) *
+                    (100 - valueEvent?.discountValue)) /
+                    100
+                );
+              } else {
+                setTotalFinal(
+                  (totalPrice * (100 - voucherChoose?.voucherValue)) / 100 -
+                    valueEvent?.maxDiscount
+                );
+              }
+            } else {
+              setTotalFinal(
+                (totalPrice * (100 - voucherChoose?.voucherValue)) / 100 -
+                  valueEvent?.discountValue
+              );
+            }
+          }
+        } else {
+          setTotalFinal(
+            (totalPrice * (100 - voucherChoose?.voucherValue)) / 100
+          );
+        }
+      } else {
+        setTotalFinal(totalPrice - voucherChoose?.voucherValue);
       }
-    }
-    if (
-      voucherChoose?.discountType !== EDiscountType.PERCENT ||
-      (valueEvent && valueEvent?.discountType !== EDiscountType.PERCENT)
-    ) {
-      setTotalFinal(
-        totalPrice - voucherChoose?.voucherValue - valueEvent?.discountValue
-      );
-    }
-    if (!voucherChoose && !valueEvent) {
-      setTotalFinal(totalPrice);
+    } else {
+      setTotalFinal(totalPrice - voucherChoose?.voucherValue);
     }
   }, [voucherChoose, totalPrice, valueEvent]);
 

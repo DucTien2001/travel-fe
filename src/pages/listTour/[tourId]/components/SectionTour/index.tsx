@@ -6,7 +6,7 @@ import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
 import Link from "next/link";
 import { Schedule, Tour } from "models/tour";
-import { fCurrency2 } from "utils/formatNumber";
+import { fCurrency2, fCurrency2VND } from "utils/formatNumber";
 import clsx from "clsx";
 import useAuth from "hooks/useAuth";
 import Stars from "components/Stars";
@@ -112,9 +112,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
     quantity: null,
     quantityOrdered: null,
   });
-
   const [totalPrice, setTotalPrice] = useState(null);
-  const [isValidQuantity, setIsValidQuantity] = useState(false);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -175,8 +173,8 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
     );
   };
 
-  const _numberOfChild = watch("numberOfChild");
-  const _numberOfAdult = watch("numberOfAdult");
+  const _numberOfChild = Number(watch("numberOfChild"));
+  const _numberOfAdult = Number(watch("numberOfAdult"));
 
   const handleChangeStartDate = (e) => {
     tour?.tourOnSales.forEach((item) => {
@@ -223,6 +221,8 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
       if (moment(tour?.tourOnSales[i]?.startDate) > yesterday) {
         reset({
           startDate: new Date(tour?.tourOnSales[i]?.startDate),
+          numberOfAdult: 1,
+          numberOfChild: 0,
         });
         setPriceAndAge({
           tourOnSaleId: tour?.tourOnSales[i]?.id,
@@ -244,17 +244,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
       priceAndAge?.adultPrice * _numberOfAdult +
         priceAndAge?.priceChildren * _numberOfChild
     );
-    if (
-      _numberOfAdult + _numberOfChild >=
-      priceAndAge.quantity - priceAndAge.quantityOrdered
-    ) {
-      setIsValidQuantity(true);
-    } else {
-      setIsValidQuantity(false);
-    }
   }, [priceAndAge, _numberOfAdult, _numberOfChild]);
-
-  useEffect(() => {}, [totalPrice]);
 
   // useEffect(() => {
   //   Geocode.fromAddress(
@@ -504,7 +494,6 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                             priceAndAge?.quantity - priceAndAge.quantityOrdered
                           }
                           min={1}
-                          disabled={isValidQuantity}
                           onChange={field.onChange}
                           value={field.value}
                         />
@@ -531,7 +520,6 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                             priceAndAge?.quantity - priceAndAge.quantityOrdered
                           }
                           min={0}
-                          disabled={isValidQuantity}
                           onChange={field.onChange}
                           value={field.value}
                         />
@@ -569,7 +557,9 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   }}
                 >
                   <p>Total Price &nbsp;</p>
-                  <p className={classes.price}>{fCurrency2(totalPrice)} VND</p>
+                  <p className={classes.price}>
+                    {fCurrency2VND(totalPrice)} VND
+                  </p>
                 </Grid>
               </div>
               {user ? (
