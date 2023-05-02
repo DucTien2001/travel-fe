@@ -19,7 +19,7 @@ export interface IParticipantInfo {
   phoneNumber: string;
 }
 export interface Update {
-  status?: number;
+  paymentStatus?: number;
   participantsInfo?: IParticipantInfo[];
 
 }
@@ -60,6 +60,7 @@ export interface TourBill {
   tourOnSaleData?: TourPrice;
   participantsInfo?: IParticipantInfo[];
   status?: number;
+  paymentStatus?: number;
   email?: string;
   phoneNumber?: string;
   firstName?: string;

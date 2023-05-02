@@ -169,7 +169,10 @@ export const API = {
       DELETE_ROOM_OTHER_PRICE: "/v1.0/room-other-price/delete/:id",
       GET_ROOMS_AVAILABLE: "/v1.0/room/get-rooms-available",
     },
-    TOURBILL: {
+    TOUR_BILL: {
+      DEFAULT: "/v1.0/enterprise/tour-bill",
+      GET_ONE: "/v1.0/enterprise/tour-bill/:id",
+      UPDATE_STATUS: "/v1.0/enterprise/tour-bill/:id",
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",
       GET_TOURS_REVENUE_BY_YEAR: "/v1.0/tour-bill/get-tours-revenue-by-year",
       GET_ALL_BILLS_OF_ANY_TOUR: "/v1.0/tour-bill/get-all-tour-bills/:id",

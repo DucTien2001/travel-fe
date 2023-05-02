@@ -1,63 +1,40 @@
-import { memo } from "react";
-import { Modal, Row, Col, ModalFooter, ModalHeader } from "reactstrap";
+import { memo, useEffect, useState } from "react";
+import { Row, Col, Container } from "reactstrap";
 import classes from "./styles.module.scss";
-import moment from "moment";
 import clsx from "clsx";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import { useDispatch } from "react-redux";
-import { setLoading } from "redux/reducers/Status/actionTypes";
-import { TourBill } from "models/tourBill";
-import { fCurrency2VND, fPercent } from "utils/formatNumber";
+import { Grid } from "@mui/material";
 import Button, { BtnType } from "components/common/buttons/Button";
-import QRCode from "react-qr-code";
-import { EPaymentStatus } from "models/general";
-interface DownloadTourBillProps {
-  onClose: () => void;
-  isOpen: boolean;
-  tourBill: TourBill;
+import { useRouter } from "next/router";
+import { TourBillService } from "services/enterprise/tourBill";
+import { TourBill } from "models/enterprise/tourBill";
+import { setErrorMess } from "redux/reducers/Status/actionTypes";
+import moment from "moment";
+import { fCurrency2VND, fPercent } from "utils/formatNumber";
+
+interface Props {
+  tourBillId: number;
 }
 
-const DownloadTourBill = memo(
-  ({ onClose, isOpen, tourBill }: DownloadTourBillProps) => {
-    const dispatch = useDispatch();
+const DetailTourBill = memo(({ tourBillId }: Props) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [tourBill, setTourBill] = useState<TourBill>(null);
 
-    const handleDownload = () => {
-      const pdfElement = document.getElementById("pdf-component");
-      if (pdfElement) {
-        dispatch(setLoading(true));
-        const w = pdfElement?.offsetWidth;
-        const h = pdfElement?.offsetHeight;
-        const doc = new jsPDF("p", "pt", "a4");
-        html2canvas(pdfElement, {
-          scale: 4,
-        }).then(async (canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          doc.addImage(imgData as any, "PNG", 0, 30, w, h);
+  useEffect(() => {
+    TourBillService.findOne(tourBillId)
+      .then((res) => {
+        setTourBill(res?.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      });
+  }, [tourBillId]);
 
-          doc.save(`tour-bill.pdf`);
-          onClose();
-          dispatch(setLoading(false));
-        });
-      }
-    };
-
-    return (
-      <Modal
-        isOpen={isOpen}
-        toggle={onClose}
-        centered
-        scrollable
-        className={classes.modal}
-      >
-        <ModalHeader
-          isOpen={isOpen}
-          toggle={onClose}
-          className={classes.titleHeader}
-        >
-          View Tour
-        </ModalHeader>
-        <div id="pdf-component" className={clsx(classes.pdfWrapper)}>
+  return (
+    <Grid className={classes.modal}>
+      <Grid className={clsx(classes.wrapper)} container spacing={1}>
+        <Grid item xs={6}>
           <h3 className={classes.title}>Tour Bill</h3>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
@@ -148,7 +125,8 @@ const DownloadTourBill = memo(
               {fCurrency2VND(tourBill?.totalBill)} VND
             </Col>
           </Row>
-          <hr />
+        </Grid>
+        <Grid item xs={6}>
           <h3 className={classes.title}>Tour Information</h3>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
@@ -194,21 +172,10 @@ const DownloadTourBill = memo(
               {tourBill?.tourData?.contact}
             </Col>
           </Row>
-        </div>
-        <ModalFooter className={classes.downloadBtnWrapper}>
-          {tourBill?.paymentStatus === EPaymentStatus.PAID ? (
-            <Button onClick={handleDownload} btnType={BtnType.Primary}>
-              Download
-            </Button>
-          ) : (
-            <Button onClick={onClose} btnType={BtnType.Primary}>
-              Cancel
-            </Button>
-          )}
-        </ModalFooter>
-      </Modal>
-    );
-  }
-);
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+});
 
-export default DownloadTourBill;
+export default DetailTourBill;

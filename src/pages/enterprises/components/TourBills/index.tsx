@@ -1,20 +1,9 @@
 import React, { memo, useEffect, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Row } from "reactstrap";
-import Button, { BtnType } from "components/common/buttons/Button";
-import Skeleton from "react-loading-skeleton";
-
-import { AdminGetTours, ETour } from "models/enterprise";
 import { useDispatch } from "react-redux";
-import {
-  setErrorMess,
-  setLoading,
-  setSuccessMess,
-} from "redux/reducers/Status/actionTypes";
-import { TourService } from "services/enterprise/tour";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import SearchNotFound from "components/SearchNotFound";
 
 import {
@@ -31,52 +20,51 @@ import {
   Paper,
 } from "@mui/material";
 import TableHeader from "components/Table/TableHeader";
-import {
-  DataPagination,
-  LangSupport,
-  langSupports,
-  TableHeaderLabel,
-} from "models/general";
-import {
-  EditOutlined,
-  DeleteOutlineOutlined,
-  ExpandMoreOutlined,
-} from "@mui/icons-material";
+import { DataPagination, TableHeaderLabel } from "models/general";
+import { EditOutlined, ExpandMoreOutlined } from "@mui/icons-material";
 
 import { useRouter } from "next/router";
 import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
-import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import { FindAll, TourBill } from "models/enterprise/tourBill";
+import { TourBillService } from "services/enterprise/tourBill";
+import { fCurrency2VND } from "utils/formatNumber";
+import moment from "moment";
+import StatusPayment from "components/StatusPayment";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import PopupChangeStatus from "./components/PopupChangeStatus";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 const tableHeaders: TableHeaderLabel[] = [
   { name: "id", label: "Tour Id", sortable: false },
-  { name: "name", label: "Name", sortable: false },
-  { name: "languages", label: "Languages", sortable: false },
+  { name: "name", label: "Tour Name", sortable: false },
+  { name: "total bill", label: "Total bill", sortable: false },
+  { name: "amount", label: "Amount", sortable: false },
+  { name: "booking date", label: "Booking date", sortable: false },
+  { name: "status", label: "Status", sortable: false },
   { name: "actions", label: "Actions", sortable: false },
 ];
 
-interface Props {
-  handleTourEdit?: () => void;
-}
+interface Props {}
 // eslint-disable-next-line react/display-name
-const Tour = memo(({ handleTourEdit }: Props) => {
+const Tour = memo(({}: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [itemAction, setItemAction] = useState<ETour>();
-  const [itemDelete, setItemDelete] = useState<ETour>(null);
+  const [itemAction, setItemAction] = useState<TourBill>();
   const [keyword, setKeyword] = useState<string>("");
-  const [data, setData] = useState<DataPagination<ETour>>();
+  const [data, setData] = useState<DataPagination<TourBill>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
-  const [languageAnchor, setLanguageAnchor] = useState<null | HTMLElement>(
-    null
-  );
+  const [openPopupChangeStatus, setOpenPopupChangeStatus] = useState(false);
+  const [tourBillId, setTourBillId] = useState(null);
+
+  const onClosePopupChangeStatus = () => {
+    setOpenPopupChangeStatus(!openPopupChangeStatus);
+  };
 
   const handleAction = (
     event: React.MouseEvent<HTMLButtonElement>,
-    item: ETour
+    item: TourBill
   ) => {
     setItemAction(item);
     setActionAnchor(event.currentTarget);
@@ -110,7 +98,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
     page?: number;
     keyword?: string;
   }) => {
-    const params: AdminGetTours = {
+    const params: FindAll = {
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
       keyword: keyword,
@@ -119,18 +107,16 @@ const Tour = memo(({ handleTourEdit }: Props) => {
       params.keyword = value.keyword || undefined;
     }
     dispatch(setLoading(true));
-    setIsLoading(true);
-    TourService.getTours(params)
+
+    TourBillService.findAll(params)
       .then((res) => {
         setData({
           data: res.data,
           meta: res.meta,
         });
-        setIsLoading(false);
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
-        setIsLoading(false);
       })
       .finally(() => dispatch(setLoading(false)));
   };
@@ -140,64 +126,27 @@ const Tour = memo(({ handleTourEdit }: Props) => {
     500
   );
 
-  const onCreateTour = () => {
-    router.push("/enterprises/tours/create-tour");
-  };
-
   const onCloseActionMenu = () => {
     setItemAction(null);
     setActionAnchor(null);
-    setLanguageAnchor(null);
   };
 
-  const onShowLangAction = (event: React.MouseEvent<HTMLElement>) => {
-    setLanguageAnchor(event.currentTarget);
-  };
-
-  const onCloseLangAction = () => {
-    setLanguageAnchor(null);
-  };
-
-  const handleLanguageRedirect = (lang?: LangSupport) => {
+  const handleRedirect = () => {
     if (!itemAction) return;
-    onRedirectEdit(itemAction, lang);
+    onRedirectEdit(itemAction);
     onCloseActionMenu();
   };
 
-  const onRedirectEdit = (item: ETour, lang?: LangSupport) => {
+  const onRedirectEdit = (item: TourBill) => {
     router.push({
-      pathname: `/enterprises/tours/${item.id}`,
-      search: lang && `?lang=${lang.key}`,
+      pathname: `/enterprises/tourBills/${item.id}`,
     });
   };
 
-  const onShowConfirm = () => {
-    if (!itemAction) return;
-    setItemDelete(itemAction);
+  const onChangeStatus = () => {
+    setTourBillId(itemAction?.id);
+    onClosePopupChangeStatus();
     onCloseActionMenu();
-  };
-
-  const onClosePopupConfirmDelete = () => {
-    if (!itemDelete) return;
-    setItemDelete(null);
-    onCloseActionMenu();
-  };
-
-  const onYesDelete = () => {
-    if (!itemDelete) return;
-    onClosePopupConfirmDelete();
-    dispatch(setLoading(true));
-    TourService.delete(itemDelete?.id)
-      .then(() => {
-        dispatch(setSuccessMess("Delete successfully"));
-        fetchData();
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
   };
 
   useEffect(() => {
@@ -209,29 +158,17 @@ const Tour = memo(({ handleTourEdit }: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          {isLoading ? <Skeleton width={100} /> : <h3>Tours</h3>}
+          <h3>Tour bills</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
-          {isLoading ? (
-            <Skeleton width={100} />
-          ) : (
-            <div className={classes.boxInputSearch}>
-              <InputSearch
-                autoComplete="off"
-                placeholder="Search ..."
-                value={keyword || ""}
-                onChange={onSearch}
-              />
-            </div>
-          )}
-          {isLoading ? (
-            <Skeleton width={100} />
-          ) : (
-            <Button btnType={BtnType.Primary} onClick={onCreateTour}>
-              <FontAwesomeIcon icon={faPlus} />
-              Create
-            </Button>
-          )}
+          <div className={classes.boxInputSearch}>
+            <InputSearch
+              autoComplete="off"
+              placeholder="Search ..."
+              value={keyword || ""}
+              onChange={onSearch}
+            />
+          </div>
         </Row>
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
           <Table className={classes.table}>
@@ -241,49 +178,42 @@ const Tour = memo(({ handleTourEdit }: Props) => {
                 data.data?.map((item, index) => {
                   return (
                     <TableRow key={index}>
-                      {isLoading ? (
-                        <Skeleton width={100} className={classes.tableCell} />
-                      ) : (
-                        <TableCell scope="row" className={classes.tableCell}>
-                          Tour {item.id}
-                        </TableCell>
-                      )}
-                      {isLoading ? (
-                        <Skeleton width={100} className={classes.tableCell} />
-                      ) : (
-                        <TableCell className={classes.tableCell} component="th">
-                          <a
-                            href={`/listTour/:${item?.id}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={classes.tourName}
-                          >
-                            {item?.title}
-                          </a>
-                        </TableCell>
-                      )}
-                      {isLoading ? (
-                        <Skeleton width={100} className={classes.tableCell} />
-                      ) : (
-                        <TableCell className={classes.tableCell} component="th">
-                          {item?.languages?.map((it) => it.language).join(", ")}
-                        </TableCell>
-                      )}
-                      {isLoading ? (
-                        <Skeleton width={100} className={classes.tableCell} />
-                      ) : (
-                        <TableCell className="text-center" component="th">
-                          <IconButton
-                            className={clsx(classes.actionButton)}
-                            color="primary"
-                            onClick={(event) => {
-                              handleAction(event, item);
-                            }}
-                          >
-                            <ExpandMoreOutlined />
-                          </IconButton>
-                        </TableCell>
-                      )}
+                      <TableCell scope="row" className={classes.tableCell}>
+                        Tour bill {item.id}
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        <a
+                          href={`/listTour/:${item?.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={classes.tourName}
+                        >
+                          {item?.tourData?.title}
+                        </a>
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {fCurrency2VND(item?.totalBill)} VND
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.amountAdult + item?.amountChild} people
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {moment(item?.createdAt).format("DD-MM-YYYY")}
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        <StatusPayment status={item?.status} type={true} />
+                      </TableCell>
+                      <TableCell className="text-center" component="th">
+                        <IconButton
+                          className={clsx(classes.actionButton)}
+                          color="primary"
+                          onClick={(event) => {
+                            handleAction(event, item);
+                          }}
+                        >
+                          <ExpandMoreOutlined />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   );
                 })
@@ -318,69 +248,38 @@ const Tour = memo(({ handleTourEdit }: Props) => {
         >
           <MenuItem
             sx={{ fontSize: "0.875rem" }}
-            onClick={onShowLangAction}
+            onClick={handleRedirect}
             className={classes.menuItem}
           >
             <Box display="flex" alignItems={"center"}>
-              <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>Edit Languages</span>
-            </Box>
-          </MenuItem>
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            className={classes.menuItem}
-            onClick={onShowConfirm}
-          >
-            <Box display="flex" alignItems={"center"}>
-              <DeleteOutlineOutlined
+              <VisibilityIcon
                 sx={{ marginRight: "0.25rem" }}
-                color="error"
                 fontSize="small"
               />
-              <span>Delete</span>
+              <span>View detail</span>
+            </Box>
+          </MenuItem>
+          <MenuItem
+            sx={{ fontSize: "0.875rem" }}
+            onClick={onChangeStatus}
+            className={classes.menuItem}
+          >
+            <Box display="flex" alignItems={"center"}>
+              <PublishedWithChangesIcon
+                sx={{ marginRight: "0.25rem" }}
+                fontSize="small"
+              />
+              <span>Change status</span>
             </Box>
           </MenuItem>
         </Menu>
-        <Menu
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          anchorEl={languageAnchor}
-          keepMounted
-          open={Boolean(languageAnchor)}
-          onClose={onCloseLangAction}
-        >
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            className={classes.menuItem}
-            onClick={() => {
-              handleLanguageRedirect();
-            }}
-          >
-            <span>Default</span>
-          </MenuItem>
-          {langSupports.map((item, index) => (
-            <MenuItem
-              key={index}
-              sx={{ fontSize: "0.875rem" }}
-              className={classes.menuItem}
-              onClick={() => {
-                handleLanguageRedirect(item);
-              }}
-            >
-              <span>{item.name}</span>
-            </MenuItem>
-          ))}
-        </Menu>
-        <PopupConfirmDelete
-          title="Are you sure delete this tour ?"
-          isOpen={!!itemDelete}
-          onClose={onClosePopupConfirmDelete}
-          toggle={onClosePopupConfirmDelete}
-          onYes={onYesDelete}
-        />
       </div>
+      <PopupChangeStatus
+        isOpen={openPopupChangeStatus}
+        onClose={onClosePopupChangeStatus}
+        tourBillId={tourBillId}
+        fetchData={fetchData}
+      />
     </>
   );
 });

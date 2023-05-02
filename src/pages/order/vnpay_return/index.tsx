@@ -46,7 +46,7 @@ const VNPay: NextPage = () => {
 
   useEffect(() => {
     TourBillService.updateTourBill(Number(router?.query.vnp_TxnRef), {
-      status: getStatusPayment(router?.query?.vnp_TransactionStatus),
+      paymentStatus: getStatusPayment(router?.query?.vnp_TransactionStatus),
     })
       .then(() => {
         setTimeout(() => {

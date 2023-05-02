@@ -13,10 +13,14 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
+import TourIcon from "@mui/icons-material/Tour";
 import Tours from "pages/enterprises/components/Tours";
 import Vouchers from "pages/enterprises/components/Vouchers";
 import AddOrEditTour from "pages/enterprises/components/Tours/AddOrEditTour";
 import AddOrEditVoucher from "pages/enterprises/components/Vouchers/components/AddOrEditVoucher";
+import DetailTourBill from "pages/enterprises/components/TourBills/components/DetailTourBill";
+import Staffs from "pages/enterprises/components/Staffs";
+import TourBills from "pages/enterprises/components/TourBills";
 
 interface PropTypes {}
 
@@ -123,6 +127,30 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </Col>
           );
         }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <Staffs />
+            </TabContent>
+          </Col>
+        );
+      case "tourBills":
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <DetailTourBill tourBillId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <TourBills />
+            </TabContent>
+          </Col>
+        );
     }
   };
 
@@ -188,7 +216,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             className={classes.navItem}
           >
             <NavLink className={renderClass("tourBills")}>
-              <AirplaneTicketIcon />
+              <TourIcon />
               <span ref={vouchersRef}>Tour Bills</span>
             </NavLink>
           </NavItem>

@@ -1,0 +1,45 @@
+
+  .wrapper {
+    // width: 841px;
+    padding-top: 85px;
+    display: flex;
+  }
+
+  
+  
+  .title {
+    font-weight: 600 !important;
+    font-size: 1.3em !important;
+    margin-bottom: 8px !important;
+    text-transform: uppercase !important;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 8px 0;
+  }
+  
+  .titleInfo {
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .info {
+    font-weight: 500 !important;
+    font-size: 16px !important;
+  }
+  
+  .subTitle {
+    font-weight: 500 !important;
+    font-size: 1em !important;
+  }
+  
+  .paragraphFontSize {
+    font-size: 0.7em !important;
+  }
+  
+  .downloadBtnWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end !important;
+  }

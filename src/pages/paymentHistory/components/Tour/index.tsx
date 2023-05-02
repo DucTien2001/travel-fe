@@ -261,7 +261,7 @@ const Tour = memo(() => {
                         {fCurrency2VND(item?.totalBill)} VND
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <StatusPayment status={item?.status} />
+                        <StatusPayment status={item?.paymentStatus} />
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <IconButton
@@ -320,7 +320,7 @@ const Tour = memo(() => {
           open={Boolean(actionAnchor)}
           onClose={onCloseActionMenu}
         >
-          {itemAction?.status === EPaymentStatus.PAID && (
+          {itemAction?.paymentStatus === EPaymentStatus.PAID && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
               className={classes.menuItem}
@@ -335,7 +335,7 @@ const Tour = memo(() => {
               </Box>
             </MenuItem>
           )}
-          {itemAction?.status === EPaymentStatus.PAID && (
+          {itemAction?.paymentStatus === EPaymentStatus.PAID && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
               className={classes.menuItem}
@@ -350,7 +350,7 @@ const Tour = memo(() => {
               </Box>
             </MenuItem>
           )}
-          {itemAction?.status !== EPaymentStatus.PAID && (
+          {itemAction?.paymentStatus !== EPaymentStatus.PAID && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
               className={classes.menuItem}
@@ -366,7 +366,7 @@ const Tour = memo(() => {
               </Box>
             </MenuItem>
           )}
-          {itemAction?.status === EPaymentStatus.PAID && (
+          {itemAction?.paymentStatus === EPaymentStatus.PAID && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
               className={classes.menuItem}

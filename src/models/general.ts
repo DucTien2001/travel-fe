@@ -76,6 +76,15 @@ export enum EPaymentStatus {
   FAILED = 4,
 }
 
+export enum EBillStatus {
+  RESCHEDULED = 0,
+  CANCELED = 1,
+  NOT_CONTACTED_YET = 2,
+  CONTACTED = 3,
+  USED = 4,
+  NOT_USE =5,
+}
+
 
 export enum EDiscountType {
   MONEY = 1,

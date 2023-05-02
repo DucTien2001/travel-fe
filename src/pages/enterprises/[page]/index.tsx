@@ -17,6 +17,7 @@ import Tours from "../components/Tours";
 import Hotels from "../components/Hotels";
 import Vouchers from "../components/Vouchers";
 import Staffs from "../components/Staffs";
+import TourBills from "../components/TourBills";
 
 interface PropTypes {}
 
@@ -96,7 +97,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
         return (
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
-              <Staffs />
+              <TourBills />
             </TabContent>
           </Col>
         );
