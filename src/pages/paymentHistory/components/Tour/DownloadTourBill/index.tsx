@@ -8,7 +8,7 @@ import jsPDF from "jspdf";
 import { useDispatch } from "react-redux";
 import { setLoading } from "redux/reducers/Status/actionTypes";
 import { TourBill } from "models/tourBill";
-import { fCurrency2VND } from "utils/formatNumber";
+import { fCurrency2VND, fPercent } from "utils/formatNumber";
 import Button, { BtnType } from "components/common/buttons/Button";
 import QRCode from "react-qr-code";
 import { EPaymentStatus } from "models/general";
@@ -115,7 +115,11 @@ const DownloadTourBill = memo(
               Discount:
             </Col>
             <Col xs={8} className={classes.info}>
-              {tourBill?.discount}%
+              {tourBill?.discount <= 100 ? (
+                fPercent(tourBill?.discount)
+              ) : (
+                <span>{fCurrency2VND(tourBill?.discount)}VND</span>
+              )}
             </Col>
           </Row>
           <Row className="mb-1">
