@@ -210,38 +210,25 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
   const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
 
   const _onSubmit = (data: BookForm) => {
-    // TourBillService.updateTourBill(tourBill?.id, {
-    //   tourOnSaleId: priceAndAge?.tourOnSaleId,
-    //   amountChild: data?.numberOfChild,
-    //   amountAdult: data?.numberOfAdult,
-    //   price: totalBillReschedule,
-    //   discount: priceAndAge?.discount,
-    //   totalBill: priceMustPay,
-    //   status: EPaymentStatus.PAID,
-    //   email: data?.email,
-    //   phoneNumber: data?.phoneNumber,
-    //   firstName: data?.firstName,
-    //   lastName: data?.lastName,
-    // })
-    //   .then((res) => {
-    //     router.push(res?.data?.checkoutUrl);
-    //   })
-    //   .catch((err) => {
-    //     dispatch(setErrorMess(err));
-    //   });
-    // console.log({
-    //   tourOnSaleId: priceAndAge?.tourOnSaleId,
-    //   amountChild: data?.numberOfChild,
-    //   amountAdult: data?.numberOfAdult,
-    //   price: totalBillReschedule,
-    //   discount: priceAndAge?.discount,
-    //   totalBill: priceMustPay,
-    //   status: EPaymentStatus.PAID,
-    //   email: data?.email,
-    //   phoneNumber: data?.phoneNumber,
-    //   firstName: data?.firstName,
-    //   lastName: data?.lastName,
-    // });
+    TourBillService.reSchedule(tourBill?.id, {
+      tourId: tour?.id,
+      tourOnSaleId: priceAndAge?.tourOnSaleId,
+      amountChild: data?.numberOfChild,
+      amountAdult: data?.numberOfAdult,
+      price: totalBillReschedule,
+      discount: priceAndAge?.discount,
+      totalBill: priceMustPay,
+      email: data?.email,
+      phoneNumber: data?.phoneNumber,
+      firstName: data?.firstName,
+      lastName: data?.lastName,
+    })
+      .then((res) => {
+        router.push(res?.data?.checkoutUrl);
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      });
   };
 
   const specialRequest = watch("specialRequest");
@@ -456,6 +443,68 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
         <Container>
           <Grid container spacing={2} className={classes.rootContent}>
             <Grid xs={7} item className={classes.leftPanel}>
+              <Grid item xs={12}>
+                <h4 className={classes.title}>Contact Details</h4>
+                <Grid
+                  sx={{
+                    backgroundColor: "var(--white-color)",
+                    padding: "24px 16px",
+                    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25);",
+                    borderRadius: "10px",
+                  }}
+                >
+                  <Grid
+                    container
+                    columnSpacing={isMobile ? 0 : 1}
+                    rowSpacing={3}
+                  >
+                    <Grid item xs={12} sm={6}>
+                      <InputTextField
+                        title="First name"
+                        placeholder="First Name"
+                        inputRef={register("firstName")}
+                        startAdornment={
+                          <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+                        }
+                        errorMessage={errors?.firstName?.message}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <InputTextField
+                        title="Last name"
+                        placeholder="Last Name"
+                        inputRef={register("lastName")}
+                        startAdornment={
+                          <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+                        }
+                        errorMessage={errors?.lastName?.message}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <InputTextField
+                      title="Email"
+                      placeholder="Email"
+                      inputRef={register("email")}
+                      startAdornment={
+                        <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
+                      }
+                      errorMessage={errors?.email?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <InputTextField
+                      title="Phone"
+                      placeholder="Phone"
+                      inputRef={register("phoneNumber")}
+                      startAdornment={
+                        <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
+                      }
+                      errorMessage={errors?.phoneNumber?.message}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
               <Grid container item spacing={2}>
                 <Grid item xs={12}>
                   <h4 className={classes.title}>Special Request</h4>

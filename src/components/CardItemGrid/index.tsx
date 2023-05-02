@@ -122,12 +122,8 @@ const ListServices = memo(
                       </Grid>
                     )}
                     <Grid className={classes.boxPrice}>
-                      {discount !== 0 && (
-                        <span>
-                          {fCurrency2((price * (100 - discount)) / 100)} VND
-                        </span>
-                      )}
-                      <p>{fCurrency2(price)} VND</p>
+                      {discount !== 0 && <span>{fCurrency2(price)}VND</span>}
+                      <p>{fCurrency2((price * (100 - discount)) / 100)} VND</p>
                     </Grid>
                     <Grid className={classes.boxViewMore}>
                       <p>View more</p>

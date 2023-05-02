@@ -293,7 +293,7 @@ const Tour = memo(() => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={6}>
+                  <TableCell align="center" colSpan={7}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>

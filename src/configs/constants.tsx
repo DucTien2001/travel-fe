@@ -77,6 +77,7 @@ export const API = {
       GET_TOUR_BILL: "/v1.0/tour-bill/:id",
       UPDATE_TOUR_BILL: "/v1.0/tour-bill/:id",
       PAY_AGAIN: "/v1.0/tour-bill/pay-again/:id",
+      RESCHEDULE: "/v1.0/tour-bill/re-schedule/:id",
       CANCEL_BOOK_TOUR: "/v1.0/tour-bill/cancel/:id",
     },
     HOTEL: {

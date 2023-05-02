@@ -18,7 +18,7 @@ import Booking from "../components/Booking";
 import Review from "../components/Review";
 import { BookTourReview } from "models/tour";
 import { setConfirmBookTourReviewReducer } from "redux/reducers/Normal/actionTypes";
-import Payment from "../components/payment";
+import Payment from "../components/Payment";
 
 export enum EStep {
   BOOKING,

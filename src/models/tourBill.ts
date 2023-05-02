@@ -24,6 +24,20 @@ export interface Update {
 
 }
 
+export interface ReSchedule {
+  tourId: number;
+  tourOnSaleId: number;
+  amountChild: number;
+  amountAdult: number;
+  price: number;
+  discount: number;
+  totalBill: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+}
+
 export interface Cancel {
   moneyRefund: number;
 }

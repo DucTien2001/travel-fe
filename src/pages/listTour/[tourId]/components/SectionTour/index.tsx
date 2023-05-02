@@ -199,22 +199,23 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
   };
 
   const _onSubmit = (data: FormBookData) => {
-    dispatch(
-      setConfirmBookTourReducer({
-        tourId: tour?.id,
-        tourOnSaleId: priceAndAge?.tourOnSaleId,
-        amountAdult: data?.numberOfAdult,
-        amountChildren: data?.numberOfChild,
-        startDate: data?.startDate,
-        totalPrice: totalPrice,
-        language: data?.language.name,
-        priceAdult: priceAndAge.adultPrice,
-        priceChildren: priceAndAge.priceChildren,
-        discount: priceAndAge?.discount,
-        owner: tour?.owner,
-      })
-    );
-    router.push(`/book/tour/:${tour?.id}/booking`);
+    // dispatch(
+    //   setConfirmBookTourReducer({
+    //     tourId: tour?.id,
+    //     tourOnSaleId: priceAndAge?.tourOnSaleId,
+    //     amountAdult: data?.numberOfAdult,
+    //     amountChildren: data?.numberOfChild,
+    //     startDate: data?.startDate,
+    //     totalPrice: totalPrice,
+    //     language: data?.language.name,
+    //     priceAdult: priceAndAge.adultPrice,
+    //     priceChildren: priceAndAge.priceChildren,
+    //     discount: priceAndAge?.discount,
+    //     owner: tour?.owner,
+    //   })
+    // );
+    // router.push(`/book/tour/:${tour?.id}/booking`);
+    console.log(totalPrice);
   };
 
   useEffect(() => {
@@ -251,7 +252,12 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
     } else {
       setIsValidQuantity(false);
     }
+    console.log(priceAndAge, "-----");
   }, [priceAndAge, _numberOfAdult, _numberOfChild]);
+
+  useEffect(() => {
+    console.log(totalPrice, "----price");
+  }, [totalPrice]);
 
   // useEffect(() => {
   //   Geocode.fromAddress(

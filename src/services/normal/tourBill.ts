@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { Cancel, Create, FindAll, IVerifyBookTour, TourBill, Update } from "models/tourBill";
+import { Cancel, Create, FindAll, IVerifyBookTour, ReSchedule, TourBill, Update } from "models/tourBill";
 import api from "services/configApi";
 
 export class TourBillService {
@@ -42,6 +42,16 @@ export class TourBillService {
             return Promise.reject(e?.response?.data);
         })
     }
+    static async reSchedule(billId: number, data: ReSchedule): Promise<any> {
+      return await api.put(API.NORMAL.TOUR_BILL.RESCHEDULE.replace(":id", `${billId}`), data)
+        .then((res) => {
+            return Promise.resolve(res.data)
+        })
+        .catch((e) => {
+            return Promise.reject(e?.response?.data);
+        })
+    }
+
 
     static async payAgain(billId: number): Promise<any> {
       return await api.get(API.NORMAL.TOUR_BILL.PAY_AGAIN.replace(":id", `${billId}`))
