@@ -8,7 +8,10 @@
         padding: 24px 15px;
     }
 }
-
+.titleHeader {
+    display: flex;
+    justify-content:space-between;
+}
 .title {
     font-size: 24px;
     font-weight: 700;
@@ -147,35 +150,48 @@
         }
     }
 }
-
-.swiper {
+.menuItem {
+    padding: 8px 14px;
     display: flex;
-    margin:0 !important; 
-    flex-direction: row-reverse;
-    padding-bottom: 20px !important;
-    [class~="swiper-button-prev"]{
-        left: -9px;
+    align-items: center;
+    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.btnPostReply {
+    display: flex;
+    margin-top: 16px;
+    justify-content: flex-end;
+}
+
+.boxCommentReply {
+    padding: 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    p {
+        margin: 0;
     }
-    [class~="swiper-button-prev"]:after {
-        font-size: 16px;
-        color: var(--primary-color);
-        font-weight: 600;
+
+    .dateReply {
+        font-weight: 500;
+        color: var(--gray-40);
+        margin: 0 14px;
+
     }
-    [class~="swiper-button-next"] {
-        right: -9px;
+    .edit {
+        font-weight: 400;
+        color: var(--gray-40);
+        cursor: pointer;
+        &:hover {
+            color: var(--text-color);
+            text-decoration: underline;
+        }
     }
-    [class~="swiper-button-next"]:after {
-        font-size: 16px;
-        color: var(--primary-color);
-        font-weight: 600;
-    }
-    [class~="swiper-pagination"] {
-        bottom: 0px !important;
-    }
-    [class~="swiper-slide"] {
-       cursor: pointer;
-    }
-    [class~="swiper-pagination-bullet-active"] {
-        background: var(--primary-color);
-     }
+}
+
+.contentReply {
+    font-size: 16px;
+    font-weight: 600;
+    margin-left: 14px;
 }

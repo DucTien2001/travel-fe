@@ -30,7 +30,9 @@ import {
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import {
   DataPagination,
+  EBillStatus,
   EPaymentStatus,
+  EServiceType,
   TableHeaderLabel,
 } from "models/general";
 import InputSearch from "components/common/inputs/InputSearch";
@@ -52,12 +54,16 @@ import { Tour } from "models/tour";
 import PopupAddInformation from "./PopupAddInformation";
 import PopupConfirmCancel from "./PopupConfirmCancel";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import AddCommentIcon from "@mui/icons-material/AddComment";
+import PopupAddTourComment from "pages/listTour/[tourId]/components/PopupAddTourComment";
+import { CommentService } from "services/normal/comment";
 const tableHeaders: TableHeaderLabel[] = [
   { name: "Invoice no.", label: "Invoice no.", sortable: false },
   { name: "Tour name", label: "Tour name", sortable: false },
   { name: "Booking date", label: "Booking date", sortable: false },
   { name: "price", label: "Total bill", sortable: false },
-  { name: "status", label: "Status", sortable: false },
+  { name: "statusPayment", label: "Status payment", sortable: false },
+  { name: "statusBill", label: "Status bill", sortable: false },
   { name: "download", label: "Download / View", sortable: false },
   { name: "actions", label: "Actions", sortable: false },
 ];
@@ -68,10 +74,10 @@ const Tour = memo(() => {
   const router = useRouter();
 
   const [modalDownloadTourBill, setModalDownloadTourBill] = useState(false);
-  const [tourBill, setTourBill] = useState(null);
+  const [tourBill, setTourBill] = useState<TourBill>(null);
   const [openConfirmCancelBookTour, setOpenConfirmCancelBookTour] =
     useState(false);
-  const [tourBillId, setTourBillId] = useState();
+
   const [data, setData] = useState<DataPagination<TourBill>>();
   const [keyword, setKeyword] = useState<string>("");
   const [itemAction, setItemAction] = useState<TourBill>();
@@ -79,6 +85,9 @@ const Tour = memo(() => {
   const [openPopupSelectDate, setOpenPopupSelectDate] = useState(false);
   const [tour, setTour] = useState<Tour>(null);
   const [openAddInformation, setOpenAddInformation] = useState(false);
+  const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
+
+  const onToggleAddComment = () => setOpenPopupAddComment(!openPopupAddComment);
 
   const onTogglePopupConfirmCancel = () => {
     setOpenConfirmCancelBookTour(!openConfirmCancelBookTour);
@@ -215,7 +224,27 @@ const Tour = memo(() => {
     fetchTour();
     onTogglePopupConfirmCancel();
     onCloseActionMenu();
-    console.log(itemAction);
+  };
+
+  const onRate = () => {
+    setTourBill(itemAction);
+    onToggleAddComment();
+    onCloseActionMenu();
+  };
+
+  const onSubmitRate = (data) => {
+    dispatch(setLoading(true));
+    CommentService?.createCommentTour(data)
+      .then(() => {
+        dispatch(setSuccessMess("Rating successfully"));
+        onToggleAddComment();
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
   };
 
   useEffect(() => {
@@ -262,6 +291,13 @@ const Tour = memo(() => {
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <StatusPayment status={item?.paymentStatus} />
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.paymentStatus === EPaymentStatus.PAID ? (
+                          <StatusPayment status={item?.status} type={true} />
+                        ) : (
+                          "-"
+                        )}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <IconButton
@@ -382,6 +418,22 @@ const Tour = memo(() => {
               </Box>
             </MenuItem>
           )}
+          {itemAction?.status === EBillStatus.USED && (
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onRate}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <AddCommentIcon
+                  sx={{ marginRight: "0.25rem" }}
+                  fontSize="small"
+                  color="info"
+                />
+                <span>Rate</span>
+              </Box>
+            </MenuItem>
+          )}
         </Menu>
       </div>
       <DownloadTourBill
@@ -407,6 +459,15 @@ const Tour = memo(() => {
         isOpen={openAddInformation}
         tourBill={tourBill}
         fetchDataTourBill={fetchData}
+      />
+      <PopupAddTourComment
+        isOpen={openPopupAddComment}
+        // commentEdit={commentEdit}
+        onClose={onToggleAddComment}
+        toggle={onToggleAddComment}
+        onSubmit={onSubmitRate}
+        // onGetTourComments={onGetTourComments}
+        tourBill={tourBill}
       />
     </>
   );

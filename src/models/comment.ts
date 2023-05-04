@@ -1,5 +1,42 @@
 import { User } from "./user";
 
+
+export interface FindAllComment {
+  serviceId: number;
+  serviceType: number;
+  take: number;
+  page: number;
+  keyword?: string;
+}
+
+export interface Create {
+  content: string;
+  rate: number;
+  serviceId: number;
+  serviceType: number;
+  billId: number;
+}
+export interface Update {
+  content: string;
+  rate: number;
+  images: string[];         // mảng url image cũ
+  imagesDeleted: string[];  // mảng url image bị xóa
+}
+
+export interface Comment {
+  id?: number;
+  content: string;
+  rate: number;
+  tourId?: number;
+  roomId?: number;
+  userId?: number;
+  reviewer?: Reviewer;
+  createdAt: Date;
+  replyComment?: string;
+  images: string[];
+  replies?: Reply[];
+}
+//---------------------------------
 export interface IGetAllTourComments {
   tourIds: number[];
 }
@@ -10,6 +47,7 @@ export interface ICreateTourComment {
   rate: number;
   tourId: number;
   userId: number;
+
 }
 
 export interface IUpdateTourComment {
@@ -17,7 +55,15 @@ export interface IUpdateTourComment {
   rate: number;
 }
 
-export interface TourReviewer {
+export interface Reply {
+  id?: string;
+  commentRepliedId: string;
+  content?: string;
+  createdAt?: Date;
+  userId: number;
+  reviewer: Reviewer;
+}
+export interface Reviewer {
   address?: string;
   avatar: string;
   firstName?: string;
@@ -35,22 +81,17 @@ export interface HotelReviewer {
   role?: number;
   userName?: string;
 }
-export interface Comment {
-  id?: number;
-  comment: string;
-  rate: number;
-  tourId?: number;
-  roomId?: number;
-  userId?: number;
-  tourReviewer?: TourReviewer;
-  hotelReviewer?: HotelReviewer;
-  createdAt: Date;
-  replyComment?: string;
+
+
+export interface ReplyTourComment {
+  commentId: number;
+  content: string;
 }
 
-export interface IReplyTourComment {
-  replyComment: string;
+export interface UpdateReply {
+  content: string;
 }
+
 
 export interface ICreateHotelComment {
   id?: number;

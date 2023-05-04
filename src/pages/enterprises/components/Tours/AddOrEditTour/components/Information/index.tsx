@@ -79,6 +79,7 @@ const InformationComponent = memo((props: Props) => {
   const [communes, setCommunes] = useState([]);
   const [oldImages, setOldImages] = useState<any>([]);
   const [imagesDeleted, setImagesDeleted] = useState([]);
+  const [imagesUpload, setImagesUpload] = useState([]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -165,8 +166,6 @@ const InformationComponent = memo((props: Props) => {
       images: [],
     });
   };
-
-  const [imagesUpload, setImagesUpload] = useState([]);
 
   const handleFile = async (e) => {
     e.stopPropagation();

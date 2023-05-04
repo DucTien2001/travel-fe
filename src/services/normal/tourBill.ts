@@ -33,6 +33,17 @@ export class TourBillService {
         })
     }
 
+    static async getLastedTourBill(tourId: number): Promise<any> {
+      return await api.get(API.NORMAL.TOUR_BILL.GET_LASTED_TOUR_BILL.replace(":id", `${tourId}`))
+        .then((res) => {
+            return Promise.resolve(res.data)
+        })
+        .catch((e) => {
+            return Promise.reject(e?.response?.data);
+        })
+    }
+
+
     static async updateTourBill(billId: number, data: Update): Promise<any> {
       return await api.put(API.NORMAL.TOUR_BILL.UPDATE_TOUR_BILL.replace(":id", `${billId}`), data)
         .then((res) => {
