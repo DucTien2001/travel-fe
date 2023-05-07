@@ -30,7 +30,7 @@ import InputSelect from "components/common/inputs/InputSelect";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(async () => await import("react-quill"), { ssr: false });
 const modules = {
   toolbar: [
     [{ size: ["small", false, "large", "huge"] }],
