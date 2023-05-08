@@ -32,11 +32,22 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
   }, [tourBillId]);
 
   return (
-    <Grid className={classes.modal}>
+    <Grid className={classes.root}>
+      <Row className={clsx(classes.rowHeaderBox, classes.title)}>
+        <h3>Tour bills</h3>
+        <Button
+          onClick={() => {
+            router.push("/enterprises/tourBills");
+          }}
+          btnType={BtnType.Primary}
+        >
+          Back
+        </Button>
+      </Row>
       <Grid className={clsx(classes.wrapper)} container spacing={1}>
         <Grid item xs={6}>
-          <h3 className={classes.title}>Tour Bill</h3>
-          <Row className="mb-1">
+          <h3 className={classes.titleBill}>Tour Bill</h3>
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Name:
             </Col>
@@ -44,7 +55,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               {tourBill?.firstName} {tourBill?.lastName}
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Email:
             </Col>
@@ -52,7 +63,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               {tourBill?.email}
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Phone number:
             </Col>
@@ -60,7 +71,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               {tourBill?.phoneNumber}
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Purchase date:
             </Col>
@@ -68,7 +79,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               {moment(tourBill?.createdAt).format("DD/MM/YYYY")}
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Adult price:
             </Col>
@@ -77,7 +88,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
             </Col>
           </Row>
           {tourBill?.amountChild !== 0 && (
-            <Row className="mb-1">
+            <Row className={clsx("mb-1", classes.row)}>
               <Col xs={4} className={classes.titleInfo}>
                 Children price:
               </Col>
@@ -87,7 +98,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               </Col>
             </Row>
           )}
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Discount:
             </Col>
@@ -99,7 +110,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               )}
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Adult:
             </Col>
@@ -108,7 +119,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
             </Col>
           </Row>
           {tourBill?.amountChild !== 0 && (
-            <Row className="mb-1">
+            <Row className={clsx("mb-1", classes.row)}>
               <Col xs={4} className={classes.titleInfo}>
                 Children:
               </Col>
@@ -117,7 +128,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               </Col>
             </Row>
           )}
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Total bill:
             </Col>
@@ -127,8 +138,8 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
         </Grid>
         <Grid item xs={6}>
-          <h3 className={classes.title}>Tour Information</h3>
-          <Row className="mb-1">
+          <h3 className={classes.titleBill}>Tour Information</h3>
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Name:
             </Col>
@@ -136,7 +147,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               {tourBill?.tourData?.title}
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Location:
             </Col>
@@ -147,7 +158,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               {tourBill?.tourData?.city?.name}
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Start date:
             </Col>
@@ -155,7 +166,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               {moment(tourBill?.tourOnSaleData?.startDate).format("DD-MM-YYYY")}
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Duration:
             </Col>
@@ -164,7 +175,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
               {tourBill?.tourData?.numberOfNights} nights
             </Col>
           </Row>
-          <Row className="mb-3">
+          <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
               Contact:
             </Col>

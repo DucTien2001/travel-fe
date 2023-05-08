@@ -1,4 +1,4 @@
-import React, { memo, useRef } from "react";
+import React, { memo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { Col, Nav, NavItem, NavLink, TabContent } from "reactstrap";
@@ -23,6 +23,7 @@ import Staffs from "pages/enterprises/components/Staffs";
 import TourBills from "pages/enterprises/components/TourBills";
 import TourStatistic from "pages/enterprises/components/TourStatistic";
 import TourOnSaleStatistic from "pages/enterprises/components/TourStatistic/components/TourOnSaleStatistic";
+import PopupTermsAndConditions from "pages/enterprises/components/PopupTermsAndConditions";
 
 interface PropTypes {}
 
@@ -35,6 +36,13 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
   const hotelsRef = useRef<HTMLDivElement>(null);
   const vouchersRef = useRef<HTMLDivElement>(null);
   const staffsRef = useRef<HTMLDivElement>(null);
+
+  const [openPopupTermsAndConditions, setOpenPopupTermsAndConditions] =
+    useState(false);
+
+  const onTogglePopupTermsAndConditions = () => {
+    setOpenPopupTermsAndConditions(!openPopupTermsAndConditions);
+  };
 
   const renderComponent = () => {
     switch (page) {
@@ -251,7 +259,12 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           </NavItem>
         </Nav>
       </Col>
+
       {renderComponent()}
+      <PopupTermsAndConditions
+        isOpen={openPopupTermsAndConditions}
+        toggle={onTogglePopupTermsAndConditions}
+      />
     </div>
   );
 });

@@ -90,11 +90,7 @@ const PopupChangeStatus = memo(
         scrollable
         className={classes.modal}
       >
-        <ModalHeader
-          isOpen={isOpen}
-          toggle={onClose}
-          className={classes.titleHeader}
-        >
+        <ModalHeader isOpen={isOpen} toggle={onClose} className={classes.title}>
           Change status
         </ModalHeader>
         <Grid component={"form"} onSubmit={handleSubmit(_onSubmit)}>
@@ -163,7 +159,11 @@ const PopupChangeStatus = memo(
             />
           </ModalBody>
           <ModalFooter className={classes.btn}>
-            <Button onClick={onClose} btnType={BtnType.Secondary}>
+            <Button
+              onClick={onClose}
+              btnType={BtnType.Secondary}
+              className="mr-2"
+            >
               Cancel
             </Button>
             <Button btnType={BtnType.Primary} type="submit">

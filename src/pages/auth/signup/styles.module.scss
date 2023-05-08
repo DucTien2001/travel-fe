@@ -95,10 +95,37 @@
     justify-content: center;
   }
 }
+.boxCheckTerms {
+  display: flex;
+  align-items: center !important;
+  justify-content: center;
+  padding-left: 24px;
+}
 .textYouAre {
   font-size: 14px; 
   font-weight: 500;
   margin: 0;
 }
 
+.boxCheckbox {
+  display: flex;
+  align-items: center;
+  p {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+    margin:0;
+    
+   span {
+    color: var(--primary-light-color);
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+   } 
+}  
+}
 
+.errorTerms {
+  padding-left: 32px;
+}

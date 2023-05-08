@@ -1,4 +1,4 @@
-import React, { memo, useRef } from "react";
+import React, { memo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 
 import dynamic from "next/dynamic";
@@ -13,12 +13,15 @@ import { EUserType } from "models/user";
 import useAuth from "hooks/useAuth";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import TourIcon from "@mui/icons-material/Tour";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import Tours from "../components/Tours";
 import Hotels from "../components/Hotels";
 import Vouchers from "../components/Vouchers";
 import Staffs from "../components/Staffs";
 import TourBills from "../components/TourBills";
 import TourStatistic from "../components/TourStatistic";
+import { Grid } from "@mui/material";
+import PopupTermsAndConditions from "../components/PopupTermsAndConditions";
 
 interface PropTypes {}
 
@@ -31,6 +34,13 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
   const hotelsRef = useRef<HTMLDivElement>(null);
   const vouchersRef = useRef<HTMLDivElement>(null);
   const staffsRef = useRef<HTMLDivElement>(null);
+
+  const [openPopupTermsAndConditions, setOpenPopupTermsAndConditions] =
+    useState(false);
+
+  const onTogglePopupTermsAndConditions = () => {
+    setOpenPopupTermsAndConditions(!openPopupTermsAndConditions);
+  };
 
   const renderComponent = () => {
     switch (page) {
@@ -185,13 +195,23 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             className={classes.navItem}
           >
             <NavLink className={renderClass("tourStatistic")}>
-              <TourIcon />
+              <BarChartIcon />
               <span ref={vouchersRef}>Tour</span>
             </NavLink>
           </NavItem>
+          <Grid
+            className={classes.boxTerms}
+            onClick={onTogglePopupTermsAndConditions}
+          >
+            <span>Terms and conditions</span>
+          </Grid>
         </Nav>
       </Col>
       {renderComponent()}
+      <PopupTermsAndConditions
+        isOpen={openPopupTermsAndConditions}
+        toggle={onTogglePopupTermsAndConditions}
+      />
     </div>
   );
 });

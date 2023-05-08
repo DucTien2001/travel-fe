@@ -53,9 +53,20 @@ export enum EServicePolicyType {
   REFUND = 2
 }
 
+export enum EServiceType {
+  TOUR = 1,
+  HOTEL = 2
+}
+
+
 export const policyType = [
   { id: 1, name: "RESCHEDULE", value: EServicePolicyType.RESCHEDULE },
   { id: 2, name: "REFUND", value: EServicePolicyType.REFUND},
+]
+
+export const serviceType = [
+  { id: 1, name: "TOUR", value: EServiceType.TOUR },
+  { id: 2, name: "HOTEL", value: EServiceType.HOTEL},
 ]
 
 
@@ -146,10 +157,5 @@ export interface TableHeaderLabel {
   | 'justify'
   | 'left'
   | 'right'
-}
-
-export enum EServiceType {
-  TOUR = 1,
-  HOTEL = 2
 }
 

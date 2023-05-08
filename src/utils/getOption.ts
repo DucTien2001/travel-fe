@@ -1,4 +1,4 @@
-import { EDiscountType, EPaymentStatus, EServicePolicyType } from "models/general";
+import { EDiscountType, EPaymentStatus, EServicePolicyType, EServiceType } from "models/general";
 import { EUserType } from "models/user";
 
 export const getCurrency = (currency) => {
@@ -71,6 +71,15 @@ export const getCurrency = (currency) => {
         return "Good";
       case 5:
         return "Excellent";
+    }
+  }
+
+  export const getServiceType = (type: number) => {
+    switch (type) {
+      case EServiceType.TOUR:
+        return { id: 1, name: "TOUR", value:  EServiceType.TOUR};
+      case EServiceType.HOTEL:
+        return { id: 1, name: "HOTEL", value:  EServiceType.HOTEL};
     }
   }
 

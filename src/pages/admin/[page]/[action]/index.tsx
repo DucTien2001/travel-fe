@@ -5,9 +5,11 @@ import classes from "./styles.module.scss";
 import { images } from "configs/images";
 import useAuth from "hooks/useAuth";
 import EventIcon from "@mui/icons-material/Event";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import Users from "pages/admin/components/Users";
 import AddOrEditEvent from "pages/admin/components/Events/components/AddOrEditEvent";
+import AddOrEditCommission from "pages/admin/components/Commissions/components/AddOrEditCommission";
 
 interface PropTypes {}
 
@@ -62,6 +64,25 @@ const Admin = memo(({ ...props }: PropTypes) => {
             </Col>
           );
         }
+      case "commissions":
+        if (action === "create-commission") {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <AddOrEditCommission />
+              </TabContent>
+            </Col>
+          );
+        }
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <AddOrEditCommission commissionId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
     }
   };
 
@@ -92,7 +113,6 @@ const Admin = memo(({ ...props }: PropTypes) => {
               <span ref={usersRef}>User</span>
             </NavLink>
           </NavItem>
-
           <NavItem
             onClick={() => gotoMenu("events")}
             className={classes.navItem}
@@ -100,6 +120,15 @@ const Admin = memo(({ ...props }: PropTypes) => {
             <NavLink className={renderClass("events")}>
               <EventIcon />
               <span ref={eventsRef}>Events</span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("commissions")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("commissions")}>
+              <MonetizationOnIcon />
+              <span>Commission</span>
             </NavLink>
           </NavItem>
         </Nav>

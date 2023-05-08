@@ -90,3 +90,12 @@
         padding: 0;
     }
 }
+
+.boxTerms {
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}

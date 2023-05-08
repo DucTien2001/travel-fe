@@ -26,6 +26,8 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { UserService } from "services/user";
 import PopupConfirmSucess from "components/Popup/PopupConfirmSucess";
 import { Grid } from "@mui/material";
+import ErrorMessage from "components/common/texts/ErrorMessage";
+import PopupTermsAndConditions from "pages/enterprises/components/PopupTermsAndConditions";
 
 interface SignUpForm {
   firstName: string;
@@ -35,11 +37,15 @@ interface SignUpForm {
   confirmPassword: string;
   phoneNumber: string;
   role: number;
+  terms: boolean;
 }
 
 const Login: NextPage = () => {
   const dispatch = useDispatch();
   const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [checkTerms, setCheckTerms] = useState(true);
+  const [openPopupTermsAndConditions, setOpenPopupTermsAndConditions] =
+    useState(false);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -69,6 +75,14 @@ const Login: NextPage = () => {
           excludeEmptyString: true,
         }),
       role: yup.number().required(),
+      terms: yup.boolean().when("role", {
+        is: (role: number) => !!role && role === EUserType.ENTERPRISE,
+        then: yup
+          .boolean()
+          .typeError("Please tick terms and conditions")
+          .required("Please tick terms and conditions"),
+        otherwise: yup.boolean().notRequired().nullable(),
+      }),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -78,6 +92,7 @@ const Login: NextPage = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
     control,
     setValue,
   } = useForm<SignUpForm>({
@@ -88,28 +103,34 @@ const Login: NextPage = () => {
     },
   });
 
+  const onTogglePopupTermsAndConditions = () => {
+    setOpenPopupTermsAndConditions(!openPopupTermsAndConditions);
+  };
+
   const onClosePopupRegisterSuccess = () =>
     setRegisterSuccess(!registerSuccess);
 
   const _onSubmit = (data: SignUpForm) => {
-    console.log(data);
-    dispatch(setLoading(true));
-    UserService.register({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      username: data.email,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-      phoneNumber: data.phoneNumber,
-      role: data.role,
-    })
-      .then(() => {
-        setRegisterSuccess(true);
+    if (checkTerms) {
+      dispatch(setLoading(true));
+      UserService.register({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        username: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        phoneNumber: data.phoneNumber,
+        role: data.role,
       })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => dispatch(setLoading(false)));
+        .then(() => {
+          setRegisterSuccess(true);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => dispatch(setLoading(false)));
+    }
+
     // clearForm();
   };
   return (
@@ -241,6 +262,48 @@ const Login: NextPage = () => {
                             />
                           </div>
                         </Grid>
+                        {Number(watch("role")) === EUserType.ENTERPRISE && (
+                          <>
+                            <Grid className={classes.boxCheckTerms}>
+                              <div className={classes.boxCheckRole}>
+                                <Controller
+                                  name="role"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <>
+                                      <Grid className={classes.boxCheckbox}>
+                                        <InputCheckbox
+                                          checked={checkTerms}
+                                          onChange={() => {
+                                            setCheckTerms(!checkTerms);
+                                            setValue("terms", checkTerms);
+                                          }}
+                                        />
+                                        <p>
+                                          Yes, I agree to the{" "}
+                                          <span
+                                            onClick={
+                                              onTogglePopupTermsAndConditions
+                                            }
+                                          >
+                                            Terms and Conditions
+                                          </span>
+                                        </p>
+                                      </Grid>
+                                    </>
+                                  )}
+                                />
+                              </div>
+                            </Grid>
+                            {!checkTerms && (
+                              <Grid className={classes.errorTerms}>
+                                <ErrorMessage>
+                                  Please tick terms and conditions
+                                </ErrorMessage>
+                              </Grid>
+                            )}
+                          </>
+                        )}
                         <Grid
                           className={classes.btnSignUpContainer}
                           sx={{
@@ -291,6 +354,10 @@ const Login: NextPage = () => {
           description={
             "You have register successfully. Please check email to verify."
           }
+        />
+        <PopupTermsAndConditions
+          isOpen={openPopupTermsAndConditions}
+          toggle={onTogglePopupTermsAndConditions}
         />
       </div>
     </div>

@@ -153,6 +153,10 @@ export const API = {
       GET_OFFERS: "/v1.0/enterprise/staff/get-offers",
       DELETE_STAFF: "/v1.0/enterprise/staff/delete/:id",
     },
+    COMMISSION: {
+      DEFAULT: "/v1.0/enterprise/commission",
+      GET_ID: "/v1.0/enterprise/commission/:id",
+    },
     HOTEL: {
       CREATE_HOTEL: "/v1.0/hotel/create",
       UPDATE_HOTEL: "/v1.0/hotel/update/:id",
@@ -202,6 +206,10 @@ export const API = {
     EVENT: {
       DEFAULT: "/v1.0/admin/event",
       DELETE_EVENT: "/v1.0/admin/event/:id",
+    },
+    COMMISSION: {
+      DEFAULT: "/v1.0/admin/commission",
+      GET_ID: "/v1.0/admin/commission/:id",
     },
     COMMENT: {
       HOTEL_COMMENT: {

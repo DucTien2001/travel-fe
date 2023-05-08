@@ -6,9 +6,10 @@ import classes from "./styles.module.scss";
 import { images } from "configs/images";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import EventIcon from "@mui/icons-material/Event";
-
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 const Users = dynamic(() => import("pages/admin/components/Users"));
 const Events = dynamic(() => import("pages/admin/components/Events"));
+const Commissions = dynamic(() => import("pages/admin/components/Commissions"));
 
 interface PropTypes {}
 
@@ -51,6 +52,14 @@ const Admin = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
+      case "commissions":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <Commissions />
+            </TabContent>
+          </Col>
+        );
     }
   };
 
@@ -81,7 +90,6 @@ const Admin = memo(({ ...props }: PropTypes) => {
               <span ref={usersRef}>User</span>
             </NavLink>
           </NavItem>
-
           <NavItem
             onClick={() => gotoMenu("events")}
             className={classes.navItem}
@@ -89,6 +97,15 @@ const Admin = memo(({ ...props }: PropTypes) => {
             <NavLink className={renderClass("events")}>
               <EventIcon />
               <span ref={eventsRef}>Events</span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("commissions")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("commissions")}>
+              <MonetizationOnIcon />
+              <span>Commission</span>
             </NavLink>
           </NavItem>
         </Nav>
