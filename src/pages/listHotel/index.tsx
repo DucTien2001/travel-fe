@@ -333,11 +333,11 @@ const ListHotels: NextPage = () => {
                       description={hotel.description}
                       checkInTime={hotel.checkInTime}
                       checkOutTime={hotel.checkOutTime}
-                      location={hotel.location}
+                      // location={hotel.location}
                       contact={hotel.contact}
-                      tags={hotel.tags}
+                      // tags={hotel.tags}
                       rate={Math.floor(hotel?.rate)}
-                      creator={hotel.creator}
+                      // creator={hotel.creator}
                       isTemporarilyStopWorking={hotel.isTemporarilyStopWorking}
                       isHotel={true}
                     />

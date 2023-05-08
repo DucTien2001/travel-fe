@@ -1,16 +1,6 @@
 /*eslint-disable*/
 import { useState, useEffect, memo, Fragment } from "react";
-import {
-  Collapse,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  NavItem,
-  Navbar,
-  Nav,
-  Container,
-} from "reactstrap";
+import { Collapse, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown, NavItem, Navbar, Nav, Container } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -53,8 +43,8 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "redux/reducers/Status/actionTypes";
 const WhiteNavbar = memo(() => {
   const { isLoggedIn, logout, user } = UseAuth();
-  const { t, i18n } = useTranslation("common")
-  const dispatch = useDispatch()
+  const { t, i18n } = useTranslation("common");
+  const dispatch = useDispatch();
   const [collapseOpen, setCollapseOpen] = useState(false);
   const [navbarColor, setNavbarColor] = useState(" navbar-transparent");
   const handleCollapseNavbar = () => {
@@ -70,9 +60,10 @@ const WhiteNavbar = memo(() => {
     if (lang === i18n.language) return;
     if (isLoggedIn) {
       dispatch(setLoading(true));
-      await UserService.changeLanguage(lang).finally(() =>
-        dispatch(setLoading(false))
-      );
+      await UserService.changeLanguage(lang).finally(() => {
+        localStorage.setItem("langCode", lang);
+        dispatch(setLoading(false));
+      });
     }
     i18n.changeLanguage(lang, (res) => {
       window.location.reload();
@@ -81,10 +72,7 @@ const WhiteNavbar = memo(() => {
 
   useEffect(() => {
     const updateNavbarColor = () => {
-      if (
-        document.documentElement.scrollTop > 10 ||
-        document.body.scrollTop > 10
-      ) {
+      if (document.documentElement.scrollTop > 10 || document.body.scrollTop > 10) {
         setNavbarColor("");
       } else {
         setNavbarColor(" navbar-transparent");
@@ -110,32 +98,18 @@ const WhiteNavbar = memo(() => {
             <Link href="/" passHref>
               <a>TRAVELIX</a>
             </Link>
-            <button
-              onClick={handleCollapseNavbar}
-              aria-expanded={collapseOpen}
-              className="navbar-toggler"
-            >
+            <button onClick={handleCollapseNavbar} aria-expanded={collapseOpen} className="navbar-toggler">
               <span className="navbar-toggler-bar top-bar"></span>
               <span className="navbar-toggler-bar middle-bar"></span>
               <span className="navbar-toggler-bar bottom-bar"></span>
             </button>
           </div>
-          <Collapse
-            isOpen={collapseOpen}
-            navbar
-            className={classes.collapseMobile}
-          >
-            <Nav
-              className={clsx("ml-auto", classes.navWrapperMenu)}
-              id="ceva"
-              navbar={true}
-            >
+          <Collapse isOpen={collapseOpen} navbar className={classes.collapseMobile}>
+            <Nav className={clsx("ml-auto", classes.navWrapperMenu)} id="ceva" navbar={true}>
               <NavItem className={classes.navItem}>
                 <Link href="/listTour" passHref>
                   <a>
-                    <AttractionsIcon
-                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
-                    />
+                    <AttractionsIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
                     <p>TOURS</p>
                   </a>
                 </Link>
@@ -143,9 +117,7 @@ const WhiteNavbar = memo(() => {
               <NavItem className={classes.navItem}>
                 <Link href="/listHotel" passHref>
                   <a>
-                    <ApartmentIcon
-                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
-                    />
+                    <ApartmentIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
                     <p translation-key={"stay_title"}>{t("stay_title")}</p>
                   </a>
                 </Link>
@@ -153,9 +125,7 @@ const WhiteNavbar = memo(() => {
               <NavItem className={classes.navItem}>
                 <Link href="/listEvents" passHref>
                   <a>
-                    <SellIcon
-                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
-                    />
+                    <SellIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
                     <p>COUPONS & DEALS</p>
                   </a>
                 </Link>
@@ -170,19 +140,13 @@ const WhiteNavbar = memo(() => {
                   onClick={(e) => e.preventDefault()}
                   className={classes.dropdownMenu}
                 >
-                  <PublicIcon
-                    sx={{ fontSize: "20px !important", marginRight: "8px" }}
-                  />
+                  <PublicIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
                   <p>Languages</p>
                   <ArrowDropDownIcon />
                 </DropdownToggle>
                 <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
                   {langSupports.map((it) => (
-                    <DropdownItem
-                      className={classes.dropdownItem}
-                      key={it.key}
-                      onClick={() => changeLanguage(it.key)}
-                    >
+                    <DropdownItem className={classes.dropdownItem} key={it.key} onClick={() => changeLanguage(it.key)}>
                       <img src={it.img} alt="anh" />
                       {it.name}
                     </DropdownItem>
@@ -201,9 +165,7 @@ const WhiteNavbar = memo(() => {
                       onClick={(e) => e.preventDefault()}
                       className={classes.dropdownMenu}
                     >
-                      <AccountBoxIcon
-                        sx={{ fontSize: "20px !important", marginRight: "8px" }}
-                      />
+                      <AccountBoxIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
                       <p>Profile</p>
                       <ArrowDropDownIcon />
                     </DropdownToggle>
@@ -214,10 +176,7 @@ const WhiteNavbar = memo(() => {
                       <DropdownItem className={classes.dropdownItem}>
                         <Link href="/profile" passHref>
                           <a>
-                            <FontAwesomeIcon
-                              icon={faAddressCard}
-                              className={classes.iconNav}
-                            />
+                            <FontAwesomeIcon icon={faAddressCard} className={classes.iconNav} />
                             My profile
                           </a>
                         </Link>
@@ -225,37 +184,26 @@ const WhiteNavbar = memo(() => {
                       <DropdownItem className={classes.dropdownItem}>
                         <Link href="/paymentHistory/tour" passHref>
                           <a>
-                            <FontAwesomeIcon
-                              icon={faCalendarCheck}
-                              className={classes.iconNav}
-                            />
+                            <FontAwesomeIcon icon={faCalendarCheck} className={classes.iconNav} />
                             Payment history
                           </a>
                         </Link>
                       </DropdownItem>
-                      {(user?.role === EUserType.ENTERPRISE ||
-                        user?.role === EUserType.STAFF) && (
+                      {(user?.role === EUserType.ENTERPRISE || user?.role === EUserType.STAFF) && (
                         <DropdownItem className={classes.dropdownItem}>
                           <Link href="/enterprises/tours" passHref>
                             <a>
-                              <FontAwesomeIcon
-                                icon={faBarsProgress}
-                                className={classes.iconNav}
-                              />
+                              <FontAwesomeIcon icon={faBarsProgress} className={classes.iconNav} />
                               Management
                             </a>
                           </Link>
                         </DropdownItem>
                       )}
-                      {(user?.role === EUserType.ADMIN ||
-                        user?.role === EUserType.SUPER_ADMIN) && (
+                      {(user?.role === EUserType.ADMIN || user?.role === EUserType.SUPER_ADMIN) && (
                         <DropdownItem className={classes.dropdownItem}>
                           <Link href="/admin/users" passHref>
                             <a>
-                              <FontAwesomeIcon
-                                icon={faBarsProgress}
-                                className={classes.iconNav}
-                              />
+                              <FontAwesomeIcon icon={faBarsProgress} className={classes.iconNav} />
                               Management
                             </a>
                           </Link>
@@ -266,7 +214,9 @@ const WhiteNavbar = memo(() => {
                   <NavItem onClick={logout}>
                     <Link href="/auth/login" passHref>
                       <a>
-                        <Button btnType={BtnType.Secondary} translation-key={"logout_title"}>{t("logout_title")}</Button>
+                        <Button btnType={BtnType.Secondary} translation-key={"logout_title"}>
+                          {t("logout_title")}
+                        </Button>
                       </a>
                     </Link>
                   </NavItem>
@@ -276,7 +226,9 @@ const WhiteNavbar = memo(() => {
                   <NavItem className={classes.navMobile}>
                     <Link href="/auth/login" passHref>
                       <a>
-                        <Button btnType={BtnType.Secondary} translation-key={"login_title"}>{t("login_title")}</Button>
+                        <Button btnType={BtnType.Secondary} translation-key={"login_title"}>
+                          {t("login_title")}
+                        </Button>
                       </a>
                     </Link>
                   </NavItem>
