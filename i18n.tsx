@@ -5,15 +5,15 @@ import commonVi from "./translations/vi/common.json";
 const ISSERVER = typeof window === "undefined";
 
 (async () => {
-  let langCode = "vi"
+  let lang = "vi"
   if (!ISSERVER) {
-    langCode = localStorage.getItem('langCode') || 'vi'
+    lang = localStorage.getItem('lang') || 'vi'
   }
 
   i18n
     .init({
       interpolation: { escapeValue: false },
-      lng: langCode,
+      lng: lang,
       resources: {
         en: {
           common: commonEn,

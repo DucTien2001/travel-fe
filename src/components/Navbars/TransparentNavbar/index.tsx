@@ -61,7 +61,7 @@ const WhiteNavbar = memo(() => {
     if (isLoggedIn) {
       dispatch(setLoading(true));
       await UserService.changeLanguage(lang).finally(() => {
-        localStorage.setItem("langCode", lang);
+        localStorage.setItem("lang", lang);
         dispatch(setLoading(false));
       });
     }
