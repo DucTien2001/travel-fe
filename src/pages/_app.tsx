@@ -18,7 +18,6 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 import withReduxSaga from "next-redux-saga";
 import { wrapper } from "redux/configureStore";
 import { appWithTranslation } from "next-i18next";
-import i18n from "locales";
 import { StrictMode, useEffect, useState } from "react";
 import { getMe } from "redux/reducers/User/actionTypes";
 import AppStatus from "components/AppStatus";
