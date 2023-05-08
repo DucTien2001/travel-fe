@@ -146,7 +146,7 @@ const WhiteNavbar = memo(() => {
                     <ApartmentIcon
                       sx={{ fontSize: "20px !important", marginRight: "8px" }}
                     />
-                    <p>STAYS</p>
+                    <p translation-key={"stay_title"}>{t("stay_title")}</p>
                   </a>
                 </Link>
               </NavItem>
