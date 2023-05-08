@@ -18,6 +18,7 @@ import Hotels from "../components/Hotels";
 import Vouchers from "../components/Vouchers";
 import Staffs from "../components/Staffs";
 import TourBills from "../components/TourBills";
+import TourStatistic from "../components/TourStatistic";
 
 interface PropTypes {}
 
@@ -101,6 +102,14 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
+      case "tourStatistic":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <TourStatistic />
+            </TabContent>
+          </Col>
+        );
     }
   };
 
@@ -168,6 +177,16 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             <NavLink className={renderClass("tourBills")}>
               <TourIcon />
               <span ref={vouchersRef}>Tour Bills</span>
+            </NavLink>
+          </NavItem>
+          <span>Statistic</span>
+          <NavItem
+            onClick={() => gotoMenu("tourStatistic")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourStatistic")}>
+              <TourIcon />
+              <span ref={vouchersRef}>Tour</span>
             </NavLink>
           </NavItem>
         </Nav>

@@ -21,6 +21,8 @@ import AddOrEditVoucher from "pages/enterprises/components/Vouchers/components/A
 import DetailTourBill from "pages/enterprises/components/TourBills/components/DetailTourBill";
 import Staffs from "pages/enterprises/components/Staffs";
 import TourBills from "pages/enterprises/components/TourBills";
+import TourStatistic from "pages/enterprises/components/TourStatistic";
+import TourOnSaleStatistic from "pages/enterprises/components/TourStatistic/components/TourOnSaleStatistic";
 
 interface PropTypes {}
 
@@ -151,6 +153,23 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
+      case "tourStatistic":
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <TourOnSaleStatistic tourId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <TourStatistic />
+            </TabContent>
+          </Col>
+        );
     }
   };
 
@@ -218,6 +237,16 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             <NavLink className={renderClass("tourBills")}>
               <TourIcon />
               <span ref={vouchersRef}>Tour Bills</span>
+            </NavLink>
+          </NavItem>
+          <span>Statistic</span>
+          <NavItem
+            onClick={() => gotoMenu("tourStatistic")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourStatistic")}>
+              <TourIcon />
+              <span ref={vouchersRef}>Tour</span>
             </NavLink>
           </NavItem>
         </Nav>

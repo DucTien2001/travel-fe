@@ -1,3 +1,4 @@
+import "../../i18n";
 import "styles/globals.css";
 import "assets/css/bootstrap.min.css";
 import "assets/scss/now-ui-kit.scss?v=1.4.0";
@@ -12,14 +13,13 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import { publicRoutes } from "routes";
 config.autoAddCss = false;
 import type { AppProps } from "next/app";
-import { useDispatch, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 // import { createConfigureStore } from "redux/configureStore";
-import withRedux from "next-redux-wrapper";
 import withReduxSaga from "next-redux-saga";
 import { wrapper } from "redux/configureStore";
-import { useEffect, useState } from "react";
 import { appWithTranslation } from "next-i18next";
 import i18n from "locales";
+import { StrictMode, useEffect, useState } from "react";
 import { getMe } from "redux/reducers/User/actionTypes";
 import AppStatus from "components/AppStatus";
 import Router, { useRouter } from "next/router";
@@ -42,11 +42,14 @@ import Home from "pages";
 import { langSupports } from "models/general";
 import moment from "moment";
 import { I18nextProvider } from "react-i18next";
-import { Provider } from "react-redux";
 
 // const { store } = createConfigureStore();
 
+import i18next from "i18next";
+import { store } from "redux/configureStore";
+
 function MyApp({ Component, pageProps }: AppProps) {
+  // const { store, props } = wrapper.useWrappedStore(pageProps);
   const dispatch = useDispatch();
   const { user } = useSelector((state: ReducerType) => state.user);
 
@@ -58,7 +61,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   //   moment.locale(i18n.language);
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [i18n.language]);
-
   useEffect(() => {
     dispatch(getMe());
   }, [dispatch]);
@@ -104,17 +106,23 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const ComponentToRender = allowed ? Component : Home;
   return (
-    // <I18nextProvider i18n={i18n}>
-    <LayoutAuth>
-      {loading && <LoadingScreen />}
-      <AppStatus />
-      <ComponentToRender {...pageProps} />
-    </LayoutAuth>
-
-    // </I18nextProvider>
+    <StrictMode>
+      <Provider store={store}>
+        <I18nextProvider i18n={i18next}>
+          <LayoutAuth>
+            {loading && <LoadingScreen />}
+            <AppStatus />
+            <ComponentToRender {...pageProps} />
+          </LayoutAuth>
+        </I18nextProvider>
+      </Provider>
+    </StrictMode>
   );
 }
 
-export default withRedux(wrapper)(withReduxSaga(MyApp));
+// export default useWrappedStore(wrapper)(withReduxSaga(MyApp));
+export default wrapper.withRedux(withReduxSaga(MyApp));
+// export default translate('common')(wrapper.withRedux(withReduxSaga(MyApp)));
+// export default withRedux(wrapper)(withReduxSaga(MyApp));
 // export default appWithTranslation(withRedux(wrapper)(withReduxSaga(MyApp)));
 // export default MyApp;

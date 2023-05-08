@@ -15,7 +15,7 @@ import TextTitle from "components/common/texts/TextTitle";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 
 const customStyles = (
   error?: boolean

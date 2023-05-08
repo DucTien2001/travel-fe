@@ -1,10 +1,9 @@
 import { API } from "configs/constants";
-import { FindAll, UpdateStatus } from "models/enterprise/tourBill";
+import { FindAll, StatisticAll, UpdateStatus } from "models/enterprise/tourBill";
 import { EGetAllTourBillsAnyDate, IToursRevenueByMonth, IToursRevenueByYear, IVerifyBookTour, TourBill } from "models/tourBill";
 import api from "services/configApi";
 
 export class TourBillService {
-
   static async findAll(data: FindAll): Promise<any> {
     return await api
       .get(API.ENTERPRISE.TOUR_BILL.DEFAULT, {params: data})
@@ -30,6 +29,28 @@ export class TourBillService {
   static async updateStatus(billId: number, data: UpdateStatus): Promise<any> {
     return await api
       .put(API.ENTERPRISE.TOUR_BILL.UPDATE_STATUS.replace(":id", `${billId}`), data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async statisticAll(data: StatisticAll): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.TOUR_BILL.STATISTIC, {params: data})
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async statisticOneTour(tourId: number, data: StatisticAll): Promise<any> {
+    return await api
+      .get(`${API.ENTERPRISE.TOUR_BILL.STATISTIC}/${tourId}`, {params: data})
       .then((res) => {
         return Promise.resolve(res.data);
       })

@@ -32,3 +32,31 @@ export interface TourBill {
   export interface UpdateStatus {
     status: number;
   }
+  
+export interface StatisticAll {
+  take: number;
+  page: number;
+  keyword?: string;
+  month: number;
+  year: number;
+}
+
+export interface ITourStatistic {
+  tourId: number,
+  numberOfBookings: number,
+  totalAmountChild: number,
+  totalAmountAdult: number,
+  revenue: number,
+  commission: number,
+  tourInfo: Tour,
+}
+
+export interface ITourOnSaleStatistic {
+  tourId: number,
+  numberOfBookings: number,
+  totalAmountChild: number,
+  totalAmountAdult: number,
+  revenue: number,
+  commission: number,
+  tourOnSaleInfo: TourPrice,
+}

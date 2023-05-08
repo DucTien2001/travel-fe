@@ -9,7 +9,7 @@ import {
 import classes from "./styles.module.scss";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import clsx from "clsx";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
