@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, Fragment } from "react";
 import {
   Collapse,
   DropdownToggle,
@@ -48,14 +48,12 @@ import PublicIcon from "@mui/icons-material/Public";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { UserService } from "services/user";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { setLoading } from "redux/reducers/Status/actionTypes";
-import i18n from "locales";
-// import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 const WhiteNavbar = memo(() => {
   const { isLoggedIn, logout, user } = UseAuth();
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation("common")
   const dispatch = useDispatch()
   const [collapseOpen, setCollapseOpen] = useState(false);
   const [navbarColor, setNavbarColor] = useState(" navbar-transparent");
@@ -98,7 +96,7 @@ const WhiteNavbar = memo(() => {
     };
   }, []);
   return (
-    <>
+    <Fragment>
       <Navbar
         className={
           user?.role === EUserType.USER || !user
@@ -130,7 +128,7 @@ const WhiteNavbar = memo(() => {
             <Nav
               className={clsx("ml-auto", classes.navWrapperMenu)}
               id="ceva"
-              navbar
+              navbar={true}
             >
               <NavItem className={classes.navItem}>
                 <Link href="/listTour" passHref>
@@ -295,16 +293,8 @@ const WhiteNavbar = memo(() => {
           </Collapse>
         </Container>
       </Navbar>
-    </>
+    </Fragment>
   );
 });
 
 export default WhiteNavbar;
-
-// export async function getStaticProps({ locale }) {
-//   return {
-//     props: {
-//       ...(await serverSideTranslations(locale)),
-//     }
-//   } 
-// }

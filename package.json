@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "i18nexus pull --api-key TZlxbJjR8jc5iCeufkTx3Q && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -50,7 +50,6 @@
     "lodash": "^4.17.21",
     "lodash.isempty": "^4.4.0",
     "next": "12.2.5",
-    "next-i18next": "^13.2.2",
     "next-redux-saga": "^4.1.2",
     "next-redux-wrapper": "^8.0.0",
     "numeral": "^2.0.6",
