@@ -27,6 +27,7 @@ import {
   MenuItem,
   Box,
   Menu,
+  Pagination,
 } from "@mui/material";
 import Stars from "components/Stars";
 import { getRateComment } from "utils/getOption";
@@ -95,6 +96,12 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
   const onCloseActionMenu = () => {
     setItemAction(null);
     setActionAnchor(null);
+  };
+
+  const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
+    fetchData({
+      page: newPage + 1,
+    });
   };
 
   const fetchData = (value?: {
@@ -409,23 +416,27 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
                       <p className={classes.dateReply}>
                         {moment(item?.createdAt).format("DD-MM-YYYY")}
                       </p>
-                      <Grid>
-                        <IconButton onClick={(e) => onUpdateReply(e, reply)}>
-                          <EditOutlined
-                            sx={{
-                              fontSize: "28px",
-                            }}
-                          />
-                        </IconButton>
-                      </Grid>
-                      <Grid>
-                        <IconButton onClick={(e) => onDeleteReply(e, reply)}>
-                          <DeleteOutlineOutlined
-                            fontSize="small"
-                            color="error"
-                          />
-                        </IconButton>
-                      </Grid>
+                      {user && user?.id === reply?.userId && (
+                        <Grid>
+                          <IconButton onClick={(e) => onUpdateReply(e, reply)}>
+                            <EditOutlined
+                              sx={{
+                                fontSize: "28px",
+                              }}
+                            />
+                          </IconButton>
+                        </Grid>
+                      )}
+                      {user && user?.id === reply?.userId && (
+                        <Grid>
+                          <IconButton onClick={(e) => onDeleteReply(e, reply)}>
+                            <DeleteOutlineOutlined
+                              fontSize="small"
+                              color="error"
+                            />
+                          </IconButton>
+                        </Grid>
+                      )}
                     </Grid>
                     {replyEdit?.id === reply?.id ? (
                       <Grid>
@@ -476,7 +487,14 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
         )}
 
         <Grid className={classes.boxViewMore}>
-          <Button btnType={BtnType.Primary}>See More</Button>
+          {/* <Button btnType={BtnType.Primary}>See More</Button>
+           */}
+          <Pagination
+            count={data?.meta?.itemCount || 0}
+            page={data?.meta?.page ? data?.meta?.page - 1 : 0}
+            shape="rounded"
+            onChange={handleChangePage}
+          />
         </Grid>
 
         <Menu

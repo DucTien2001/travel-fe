@@ -56,7 +56,7 @@ export interface IUpdateTourComment {
 }
 
 export interface Reply {
-  id?: string;
+  id?: number;
   commentRepliedId: string;
   content?: string;
   createdAt?: Date;
