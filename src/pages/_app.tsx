@@ -18,8 +18,8 @@ import withRedux from "next-redux-wrapper";
 import withReduxSaga from "next-redux-saga";
 import { wrapper } from "redux/configureStore";
 import { useEffect, useState } from "react";
-import { appWithTranslation } from 'next-i18next';
-import i18n from 'locales';
+import { appWithTranslation } from "next-i18next";
+import i18n from "locales";
 import { getMe } from "redux/reducers/User/actionTypes";
 import AppStatus from "components/AppStatus";
 import Router, { useRouter } from "next/router";
@@ -40,8 +40,9 @@ import {
 } from "redux/reducers/Normal/actionTypes";
 import Home from "pages";
 import { langSupports } from "models/general";
-import moment from 'moment';
+import moment from "moment";
 import { I18nextProvider } from "react-i18next";
+import { Provider } from "react-redux";
 
 // const { store } = createConfigureStore();
 
@@ -49,14 +50,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
   const { user } = useSelector((state: ReducerType) => state.user);
 
-  useEffect(() => {
-    if (!i18n.language) return
-    if (!langSupports.find(lang => lang.key === i18n.language)) {
-      i18n.changeLanguage(langSupports[0].key)
-    }
-    moment.locale(i18n.language)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language])
+  // useEffect(() => {
+  //   if (!i18n.language) return;
+  //   if (!langSupports.find((lang) => lang.key === i18n.language)) {
+  //     i18n.changeLanguage(langSupports[0].key);
+  //   }
+  //   moment.locale(i18n.language);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [i18n.language]);
 
   useEffect(() => {
     dispatch(getMe());
@@ -103,13 +104,14 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const ComponentToRender = allowed ? Component : Home;
   return (
-      <I18nextProvider i18n={i18n}>
-        <LayoutAuth>
-          {/* {loading && <LoadingScreen />} */}
-          <AppStatus />
-          <ComponentToRender {...pageProps} />
-        </LayoutAuth>
-      </I18nextProvider>
+    // <I18nextProvider i18n={i18n}>
+    <LayoutAuth>
+      {loading && <LoadingScreen />}
+      <AppStatus />
+      <ComponentToRender {...pageProps} />
+    </LayoutAuth>
+
+    // </I18nextProvider>
   );
 }
 
