@@ -115,7 +115,7 @@ const PopupAddComment = memo((props: Props) => {
     useEffect(() => {
       if(commentEdit) {
         reset({
-          comment: commentEdit.comment,
+          // comment: commentEdit.comment,
           numberOfStars: commentEdit.rate,
         })
       }
