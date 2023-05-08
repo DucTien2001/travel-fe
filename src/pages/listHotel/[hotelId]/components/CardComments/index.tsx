@@ -108,21 +108,21 @@ const Comments = memo((props: Props) => {
               <div className="pull-left">
                 <div className={classes.avatar}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {comment?.hotelReviewer.avatar ? (
+                  {/* {comment?.hotelReviewer.avatar ? (
                     <img alt="anh" src={comment?.hotelReviewer.avatar} />
                   ) : (
                     <img
                       alt="anh"
                       src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
                     />
-                  )}
+                  )} */}
                 </div>
               </div>
               <Media body>
                 <div className={classes.containerHead}>
                   <Media heading tag="h5" className={classes.titleName}>
-                    {comment?.hotelReviewer?.firstName}{" "}
-                    {comment?.hotelReviewer?.lastName}
+                    {/* {comment?.hotelReviewer?.firstName}{" "}
+                    {comment?.hotelReviewer?.lastName} */}
                     <small className="text-muted">
                       · <>{moment(comment?.createdAt).format("DD/MM/YYYY")}</>
                     </small>
@@ -171,7 +171,7 @@ const Comments = memo((props: Props) => {
                   )}
                 </div>
                 <div className={classes.commentText}>
-                  <p>{comment?.comment}</p>
+                  {/* <p>{comment?.comment}</p> */}
                 </div>
                 {comment?.replyComment && (
                   <div className={classes.boxReply}>
