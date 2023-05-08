@@ -15,7 +15,7 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import PopupCheckReview from "components/Popup/PopupCheckReview";
 import { Grid, Step, StepConnector, StepLabel, Stepper } from "@mui/material";
 import QontoStepIcon from "components/QontoStepIcon";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import Booking from "./Booking";
 import Review from "./review";
 import { IUserInformationBookRoom } from "redux/reducers/Normal";

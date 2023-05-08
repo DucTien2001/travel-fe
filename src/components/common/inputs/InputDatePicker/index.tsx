@@ -13,6 +13,7 @@ import classes from "./styles.module.scss";
 import ReactDatetime from "react-datetime";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import { Moment } from "moment";
 
 interface Props {
   label?: string;
@@ -81,7 +82,7 @@ const CustomDatePicker = memo(
                       initialValue={initialValue}
                       closeOnClickOutside={closeOnClickOutside}
                       closeOnSelect={closeOnSelect}
-                      dateFormat={"D/M/YYYY"}
+                      dateFormat={dateFormat || "D/M/YYYY"}
                       inputProps={{
                         className: "form-control",
                         placeholder: `${placeholder}`,
@@ -113,11 +114,14 @@ const CustomDatePicker = memo(
               value={value}
               closeOnClickOutside={closeOnClickOutside}
               closeOnSelect={closeOnSelect}
-              dateFormat={"D/M/YYYY"}
+              dateFormat={dateFormat || "D/M/YYYY"}
               onChange={(date) => {
                 _onChange && _onChange(date);
               }}
               {...rest}
+              renderInput={(props) => {
+                return <input {...props} value={value ? (value as Moment).format(dateFormat || "D/M/YYYY") : ''} />
+              }}
             />
           </>
         )}
