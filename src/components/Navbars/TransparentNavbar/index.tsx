@@ -56,7 +56,7 @@ const WhiteNavbar = memo(() => {
   const { t, i18n } = useTranslation("common");
   const dispatch = useDispatch();
   const [collapseOpen, setCollapseOpen] = useState(false);
-  const [navbarColor, setNavbarColor] = useState(" navbar-transparent");
+  const [navbarColor, setNavbarColor] = useState("navbar-transparent");
   const handleCollapseNavbar = () => {
     if (window.innerWidth <= 991) {
       document.documentElement.classList.toggle("nav-open");
@@ -65,7 +65,7 @@ const WhiteNavbar = memo(() => {
   };
 
   const changeLanguage = async (lang: string) => {
-    // console.log(lang, i18n,  "=========lang=======")
+    // console.log(lang, i18n, "=========lang=======");
     // setAnchorElLang(null);
     if (lang === i18n.language) return;
     if (isLoggedIn) {
@@ -79,6 +79,10 @@ const WhiteNavbar = memo(() => {
       window.location.reload();
     });
   };
+
+  useEffect(() => {
+    setCollapseOpen(true);
+  }, [collapseOpen]);
 
   useEffect(() => {
     const updateNavbarColor = () => {
@@ -121,208 +125,213 @@ const WhiteNavbar = memo(() => {
               <span className="navbar-toggler-bar bottom-bar"></span>
             </button>
           </div>
-          <Collapse
-            isOpen={collapseOpen}
-            navbar
-            className={classes.collapseMobile}
-          >
-            <Nav
-              className={clsx("ml-auto", classes.navWrapperMenu)}
-              id="ceva"
-              navbar={true}
+          {collapseOpen && (
+            <Collapse
+              isOpen={collapseOpen}
+              navbar
+              className={classes.collapseMobile}
             >
-              <NavItem className={classes.navItem}>
-                <Link href="/listTour" passHref>
-                  <a>
-                    <AttractionsIcon
-                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
-                    />
-                    <p translation-key={"header_tour"}>{t("header_tour")}</p>
-                  </a>
-                </Link>
-              </NavItem>
-              <NavItem className={classes.navItem}>
-                <Link href="/listHotel" passHref>
-                  <a>
-                    <ApartmentIcon
-                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
-                    />
-                    <p translation-key={"header_stay"}>{t("header_stay")}</p>
-                  </a>
-                </Link>
-              </NavItem>
-              <NavItem className={classes.navItem}>
-                <Link href="/listEvents" passHref>
-                  <a>
-                    <SellIcon
-                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
-                    />
-                    <p translation-key={"header_coupon"}>
-                      {t("header_coupon")}
-                    </p>
-                  </a>
-                </Link>
-              </NavItem>
-              <UncontrolledDropdown nav>
-                <DropdownToggle
-                  color="default"
-                  data-toggle="dropdown"
-                  href="#pablo"
-                  id="navbarDropdownMenuLink"
-                  nav
-                  onClick={(e) => e.preventDefault()}
-                  className={classes.dropdownMenu}
-                >
-                  <PublicIcon
-                    sx={{ fontSize: "20px !important", marginRight: "8px" }}
-                  />
-                  <p translation-key={"header_language"}>
-                    {t("header_language")}
-                  </p>
-                  <ArrowDropDownIcon />
-                </DropdownToggle>
-                <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
-                  {langSupports.map((it) => (
-                    <DropdownItem
-                      className={classes.dropdownItem}
-                      key={it.key}
-                      onClick={() => changeLanguage(it.key)}
-                    >
-                      <img src={it.img} alt="anh" />
-                      {it.name}
-                    </DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </UncontrolledDropdown>
-              {isLoggedIn ? (
-                <>
-                  <UncontrolledDropdown nav>
-                    <DropdownToggle
-                      color="default"
-                      data-toggle="dropdown"
-                      href="#pablo"
-                      id="navbarDropdownMenuLink"
-                      nav
-                      onClick={(e) => e.preventDefault()}
-                      className={classes.dropdownMenu}
-                    >
-                      <AccountBoxIcon
+              <Nav
+                className={clsx("ml-auto", classes.navWrapperMenu)}
+                id="ceva"
+                navbar={true}
+              >
+                <NavItem className={classes.navItem}>
+                  <Link href="/listTour" passHref>
+                    <a>
+                      <AttractionsIcon
                         sx={{ fontSize: "20px !important", marginRight: "8px" }}
                       />
-                      <p translation-key={"auth_header_profile"}>
-                        {t("auth_header_profile")}
+                      <p translation-key={"header_tour"}>{t("header_tour")}</p>
+                    </a>
+                  </Link>
+                </NavItem>
+                <NavItem className={classes.navItem}>
+                  <Link href="/listHotel" passHref>
+                    <a>
+                      <ApartmentIcon
+                        sx={{ fontSize: "20px !important", marginRight: "8px" }}
+                      />
+                      <p translation-key={"header_stay"}>{t("header_stay")}</p>
+                    </a>
+                  </Link>
+                </NavItem>
+                <NavItem className={classes.navItem}>
+                  <Link href="/listEvents" passHref>
+                    <a>
+                      <SellIcon
+                        sx={{ fontSize: "20px !important", marginRight: "8px" }}
+                      />
+                      <p translation-key={"header_coupon"}>
+                        {t("header_coupon")}
                       </p>
-                      <ArrowDropDownIcon />
-                    </DropdownToggle>
-                    <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
-                      <DropdownItem className="noti-title" header tag="div">
-                        <h6
-                          className={classes.headerTitle}
-                          translation-key={"auth_sub_header_profile"}
-                        >
-                          {t("auth_sub_header_profile")}
-                        </h6>
+                    </a>
+                  </Link>
+                </NavItem>
+                <UncontrolledDropdown nav>
+                  <DropdownToggle
+                    color="default"
+                    data-toggle="dropdown"
+                    href="#pablo"
+                    id="navbarDropdownMenuLink"
+                    nav
+                    onClick={(e) => e.preventDefault()}
+                    className={classes.dropdownMenu}
+                  >
+                    <PublicIcon
+                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
+                    />
+                    <p translation-key={"header_language"}>
+                      {t("header_language")}
+                    </p>
+                    <ArrowDropDownIcon />
+                  </DropdownToggle>
+                  <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
+                    {langSupports.map((it) => (
+                      <DropdownItem
+                        className={classes.dropdownItem}
+                        key={it.key}
+                        onClick={() => changeLanguage(it.key)}
+                      >
+                        <img src={it.img} alt="anh" />
+                        {it.name}
                       </DropdownItem>
-                      <DropdownItem className={classes.dropdownItem}>
-                        <Link href="/profile" passHref>
-                          <a>
-                            <FontAwesomeIcon
-                              icon={faAddressCard}
-                              className={classes.iconNav}
-                              translation-key={"auth_profile"}
-                            />
-                            {t("auth_profile")}
-                          </a>
-                        </Link>
-                      </DropdownItem>
-                      <DropdownItem className={classes.dropdownItem}>
-                        <Link href="/paymentHistory/tour" passHref>
-                          <a>
-                            <FontAwesomeIcon
-                              icon={faCalendarCheck}
-                              className={classes.iconNav}
-                              translation-key={"auth_payment_history"}
-                            />
-                            {t("auth_payment_history")}
-                          </a>
-                        </Link>
-                      </DropdownItem>
-                      {(user?.role === EUserType.ENTERPRISE ||
-                        user?.role === EUserType.STAFF) && (
+                    ))}
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+                {isLoggedIn ? (
+                  <>
+                    <UncontrolledDropdown nav>
+                      <DropdownToggle
+                        color="default"
+                        data-toggle="dropdown"
+                        href="#pablo"
+                        id="navbarDropdownMenuLink"
+                        nav
+                        onClick={(e) => e.preventDefault()}
+                        className={classes.dropdownMenu}
+                      >
+                        <AccountBoxIcon
+                          sx={{
+                            fontSize: "20px !important",
+                            marginRight: "8px",
+                          }}
+                        />
+                        <p translation-key={"auth_header_profile"}>
+                          {t("auth_header_profile")}
+                        </p>
+                        <ArrowDropDownIcon />
+                      </DropdownToggle>
+                      <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
+                        <DropdownItem className="noti-title" header tag="div">
+                          <h6
+                            className={classes.headerTitle}
+                            translation-key={"auth_sub_header_profile"}
+                          >
+                            {t("auth_sub_header_profile")}
+                          </h6>
+                        </DropdownItem>
                         <DropdownItem className={classes.dropdownItem}>
-                          <Link href="/enterprises/tours" passHref>
+                          <Link href="/profile" passHref>
                             <a>
                               <FontAwesomeIcon
-                                icon={faBarsProgress}
+                                icon={faAddressCard}
                                 className={classes.iconNav}
-                                translation-key={"auth_management"}
+                                translation-key={"auth_profile"}
                               />
-                              {t("auth_management")}
+                              {t("auth_profile")}
                             </a>
                           </Link>
                         </DropdownItem>
-                      )}
-                      {(user?.role === EUserType.ADMIN ||
-                        user?.role === EUserType.SUPER_ADMIN) && (
                         <DropdownItem className={classes.dropdownItem}>
-                          <Link href="/admin/users" passHref>
+                          <Link href="/paymentHistory/tour" passHref>
                             <a>
                               <FontAwesomeIcon
-                                icon={faBarsProgress}
+                                icon={faCalendarCheck}
                                 className={classes.iconNav}
-                                translation-key={"auth_management"}
+                                translation-key={"auth_payment_history"}
                               />
-                              {t("auth_management")}
+                              {t("auth_payment_history")}
                             </a>
                           </Link>
                         </DropdownItem>
-                      )}
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                  <NavItem onClick={logout}>
-                    <Link href="/auth/login" passHref>
-                      <a>
-                        <Button
-                          btnType={BtnType.Secondary}
-                          translation-key={"header_login"}
-                        >
-                          {t("header_login")}
-                        </Button>
-                      </a>
-                    </Link>
-                  </NavItem>
-                </>
-              ) : (
-                <>
-                  <NavItem className={classes.navMobile}>
-                    <Link href="/auth/login" passHref>
-                      <a>
-                        <Button
-                          btnType={BtnType.Secondary}
-                          translation-key={"header_login"}
-                        >
-                          {t("header_login")}
-                        </Button>
-                      </a>
-                    </Link>
-                  </NavItem>
-                  <NavItem>
-                    <Link href="/auth/signup" passHref>
-                      <a>
-                        <Button
-                          btnType={BtnType.Secondary}
-                          translation-key="header_register"
-                        >
-                          {" "}
-                          {t("header_register")}
-                        </Button>
-                      </a>
-                    </Link>
-                  </NavItem>
-                </>
-              )}
-            </Nav>
-          </Collapse>
+                        {(user?.role === EUserType.ENTERPRISE ||
+                          user?.role === EUserType.STAFF) && (
+                          <DropdownItem className={classes.dropdownItem}>
+                            <Link href="/enterprises/tours" passHref>
+                              <a>
+                                <FontAwesomeIcon
+                                  icon={faBarsProgress}
+                                  className={classes.iconNav}
+                                  translation-key={"auth_management"}
+                                />
+                                {t("auth_management")}
+                              </a>
+                            </Link>
+                          </DropdownItem>
+                        )}
+                        {(user?.role === EUserType.ADMIN ||
+                          user?.role === EUserType.SUPER_ADMIN) && (
+                          <DropdownItem className={classes.dropdownItem}>
+                            <Link href="/admin/users" passHref>
+                              <a>
+                                <FontAwesomeIcon
+                                  icon={faBarsProgress}
+                                  className={classes.iconNav}
+                                  translation-key={"auth_management"}
+                                />
+                                {t("auth_management")}
+                              </a>
+                            </Link>
+                          </DropdownItem>
+                        )}
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                    <NavItem onClick={logout}>
+                      <Link href="/auth/login" passHref>
+                        <a>
+                          <Button
+                            btnType={BtnType.Secondary}
+                            translation-key={"header_login"}
+                          >
+                            {t("header_login")}
+                          </Button>
+                        </a>
+                      </Link>
+                    </NavItem>
+                  </>
+                ) : (
+                  <>
+                    <NavItem className={classes.navMobile}>
+                      <Link href="/auth/login" passHref>
+                        <a>
+                          <Button
+                            btnType={BtnType.Secondary}
+                            translation-key={"header_login"}
+                          >
+                            {t("header_login")}
+                          </Button>
+                        </a>
+                      </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link href="/auth/signup" passHref>
+                        <a>
+                          <Button
+                            btnType={BtnType.Secondary}
+                            translation-key="header_register"
+                          >
+                            {" "}
+                            {t("header_register")}
+                          </Button>
+                        </a>
+                      </Link>
+                    </NavItem>
+                  </>
+                )}
+              </Nav>
+            </Collapse>
+          )}
         </Container>
       </Navbar>
     </Fragment>
