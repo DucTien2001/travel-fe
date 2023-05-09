@@ -292,9 +292,9 @@ const WhiteNavbar = memo(() => {
                         <a>
                           <Button
                             btnType={BtnType.Secondary}
-                            translation-key={"header_login"}
+                            translation-key={"header_logout"}
                           >
-                            {t("header_login")}
+                            {t("header_logout")}
                           </Button>
                         </a>
                       </Link>

@@ -36,11 +36,14 @@ const tableHeaders: TableHeaderLabel[] = [
   { name: "departure day", label: "Departure day", sortable: false },
   { name: "quantity", label: "Quantity", sortable: false },
   { name: "number of booking", label: "Number of booking", sortable: false },
-  { name: "number of tickets booked", label: "Number of tickets booked", sortable: false },
+  {
+    name: "number of tickets booked",
+    label: "Number of tickets booked",
+    sortable: false,
+  },
   { name: "revenue", label: "Revenue", sortable: false },
   { name: "commission", label: "Commission", sortable: false },
   { name: "profit", label: "Profit", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
 ];
 
 interface Props {
@@ -61,13 +64,18 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateFilter]);
 
-  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => {
+  const handleChangePage = (
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    newPage: number
+  ) => {
     fetchData({
       page: newPage + 1,
     });
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     fetchData({
       take: Number(event.target.value),
       page: 1,
@@ -115,7 +123,10 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
     setActionAnchor(null);
   };
 
-  const handleAction = (event: React.MouseEvent<HTMLButtonElement>, item: ITourOnSaleStatistic) => {
+  const handleAction = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    item: ITourOnSaleStatistic
+  ) => {
     setItemAction(item);
     setActionAnchor(event.currentTarget);
   };
@@ -169,8 +180,15 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
                         {index}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <a href={`/listTour/:${item?.tourOnSaleInfo?.id}`} target="_blank" rel="noreferrer" className={classes.tourName}>
-                          {moment(item?.tourOnSaleInfo?.startDate).format("D/M/YYYY")}
+                        <a
+                          href={`/listTour/:${item?.tourOnSaleInfo?.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={classes.tourName}
+                        >
+                          {moment(item?.tourOnSaleInfo?.startDate).format(
+                            "D/M/YYYY"
+                          )}
                         </a>
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
@@ -180,7 +198,8 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
                         {item?.numberOfBookings}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {Number(item?.totalAmountChild) + Number(item?.totalAmountAdult)}
+                        {Number(item?.totalAmountChild) +
+                          Number(item?.totalAmountAdult)}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.revenue)} VND
@@ -190,17 +209,6 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.revenue - item?.commission)} VND
-                      </TableCell>
-                      <TableCell className="text-center" component="th">
-                        <IconButton
-                          className={clsx(classes.actionButton)}
-                          color="primary"
-                          onClick={(event) => {
-                            handleAction(event, item);
-                          }}
-                        >
-                          <ExpandMoreOutlined />
-                        </IconButton>
                       </TableCell>
                     </TableRow>
                   );
@@ -224,23 +232,6 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </TableContainer>
-        <Menu
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          anchorEl={actionAnchor}
-          keepMounted
-          open={Boolean(actionAnchor)}
-          onClose={onCloseActionMenu}
-        >
-          <MenuItem sx={{ fontSize: "0.875rem" }} onClick={handleRedirect} className={classes.menuItem}>
-            <Box display="flex" alignItems={"center"}>
-              <VisibilityIcon sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>View detail</span>
-            </Box>
-          </MenuItem>
-        </Menu>
       </div>
     </>
   );

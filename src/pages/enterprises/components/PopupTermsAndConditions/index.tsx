@@ -58,7 +58,7 @@ const TermsAndCondition = memo((props: Props) => {
 
   const fetchDataHotelCommission = (value?: { serviceType?: number }) => {
     const params: FindAll = {
-      serviceType: EServiceType?.TOUR,
+      serviceType: EServiceType?.HOTEL,
     };
     dispatch(setLoading(true));
     CommissionService.findAll(params)
@@ -120,7 +120,7 @@ const TermsAndCondition = memo((props: Props) => {
                       - If the tour bill has the smallest value from{" "}
                       <span>{fCurrency2VND(item?.minPrice)}</span> VND and the
                       largest from <span>{fCurrency2VND(item?.maxPrice)}</span>{" "}
-                      VND, the discount amount is: <span>{item?.rate}</span> %
+                      VND, the commission is: <span>{item?.rate}</span> %
                     </p>
                   </Grid>
                 ))

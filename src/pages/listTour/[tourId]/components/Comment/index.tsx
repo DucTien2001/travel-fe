@@ -41,6 +41,7 @@ import { DeleteOutlineOutlined, EditOutlined } from "@mui/icons-material";
 import useAuth from "hooks/useAuth";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import InputTextfield from "components/common/inputs/InputTextfield";
+import PopupModalImages from "components/Popup/PopupModalImages";
 
 interface Props {
   comments?: Comment[];
@@ -72,6 +73,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
   const [contentReply, setContentReply] = useState("");
   const [replyDelete, setReplyDelete] = useState(null);
   const [replyEdit, setReplyEdit] = useState(null);
+  const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
 
   const sortDataByDate = (first, second) =>
     Number(Date.parse(second)) - Number(Date.parse(first));
@@ -257,6 +259,9 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
     }
   };
 
+  const onOpenPopupModalImages = () =>
+    setOpenPopupModalImages(!openPopupModalImages);
+
   useEffect(() => {
     fetchData();
     if (user) {
@@ -354,10 +359,27 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
                   <ul className={classes.boxImg}>
                     {item?.images?.map((img, index) => (
                       <li className={classes.boxItemImg} key={index}>
-                        <Grid className={classes.overLay}></Grid>
+                        {item?.images?.length >= 7 ? (
+                          <Grid
+                            className={classes.overLayMore}
+                            onClick={onOpenPopupModalImages}
+                          >
+                            See All Photos
+                          </Grid>
+                        ) : (
+                          <Grid
+                            className={classes.overLay}
+                            onClick={onOpenPopupModalImages}
+                          ></Grid>
+                        )}
                         <img alt="" src={img} />
                       </li>
                     ))}
+                    <PopupModalImages
+                      isOpen={openPopupModalImages}
+                      toggle={onOpenPopupModalImages}
+                      images={item?.images}
+                    />
                   </ul>
                 ) : (
                   <p>No image</p>

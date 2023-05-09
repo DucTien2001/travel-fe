@@ -112,9 +112,12 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalFinal, setTotalFinal] = useState(0);
   const [isErrorUseEvent, setIsErrorUseEvent] = useState(false);
+  const [dateValidRefund, setDateValidRefund] = useState<Date>(new Date());
 
   const policyRefund = useMemo(() => {
-    return [];
+    return tour?.tourPolicies.map((item) => {
+      if (item.policyType === EServicePolicyType.REFUND) return item.dayRange;
+    });
   }, [tour]);
 
   const schema = useMemo(() => {
@@ -203,11 +206,6 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
 
   const specialRequest = watch("specialRequest");
 
-  const maxDateRefund = Math.max.apply(Math, policyRefund);
-
-  const dateBookTour = new Date();
-  dateBookTour.setDate(dateBookTour.getDate() + maxDateRefund);
-
   const fetchVoucher = (value?: {
     take?: number;
     page?: number;
@@ -267,16 +265,15 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
       });
   };
 
-  // useEffect(() => {
-  //   console.log(valueEvent, "value");
-  // }, [valueEvent]);
-
   useEffect(() => {
-    tour?.tourPolicies.forEach((item) => {
-      if (item.policyType === EServicePolicyType.REFUND)
-        policyRefund.push(item.dayRange);
+    let max_val = policyRefund?.reduce(function (accumulator, element) {
+      return accumulator > element ? accumulator : element;
     });
-  }, [tour]);
+    const dateBookTour = new Date();
+    setDateValidRefund(
+      new Date(dateBookTour?.setDate(dateBookTour.getDate() + max_val))
+    );
+  }, [policyRefund]);
 
   useEffect(() => {
     if (router) {
@@ -759,7 +756,7 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                     <p>
                       Refundable until{" "}
                       <span className={classes.tipBold}>
-                        {moment(dateBookTour).format("MMM Do YY")}
+                        {moment(dateValidRefund).format("MMM Do YY")}
                       </span>
                     </p>
                   </Grid>

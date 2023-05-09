@@ -77,14 +77,16 @@ const AddOrEditCommission = memo((props: Props) => {
             .typeError("Min price is required")
             .positive("Min price must be a positive number")
             .required("Min price is required"),
-          maxPRice: yup
+          maxPrice: yup
             .number()
+            .integer()
             .typeError("Max price is required.")
             .positive("Max price  must be a positive number")
             .min(yup.ref("minPrice"), "Max price must be rather than min price")
             .required("Max price  is required"),
           rate: yup
             .number()
+            .integer()
             .typeError("Service type is required")
             .required("Rate is required"),
         })
@@ -121,7 +123,7 @@ const AddOrEditCommission = memo((props: Props) => {
     dispatch(setLoading(true));
     if (commission) {
       CommissionService.update(commission?.id, {
-        minPrice: data?.maxPrice,
+        minPrice: data?.minPrice,
         maxPrice: data?.maxPrice,
         rate: data?.rate,
       })
@@ -137,7 +139,7 @@ const AddOrEditCommission = memo((props: Props) => {
         });
     } else {
       CommissionService.create({
-        minPrice: data?.maxPrice,
+        minPrice: data?.minPrice,
         maxPrice: data?.maxPrice,
         rate: data?.rate,
         serviceType: data?.serviceType.value,
@@ -208,7 +210,7 @@ const AddOrEditCommission = memo((props: Props) => {
                   title="Min price"
                   placeholder="Ex: 1,000,000"
                   autoComplete="off"
-                  type="number"
+                  type="float"
                   inputRef={register("minPrice")}
                   errorMessage={errors.minPrice?.message}
                 />
@@ -218,7 +220,7 @@ const AddOrEditCommission = memo((props: Props) => {
                   title="Money rate"
                   placeholder="Ex: 3,000,000"
                   autoComplete="off"
-                  type="number"
+                  type="float"
                   inputRef={register("maxPrice")}
                   errorMessage={errors.maxPrice?.message}
                 />
@@ -226,9 +228,9 @@ const AddOrEditCommission = memo((props: Props) => {
               <Grid item xs={6}>
                 <InputTextfield
                   title="Rate"
-                  placeholder="10%"
+                  placeholder="0.10"
                   autoComplete="off"
-                  type="number"
+                  type="float"
                   inputRef={register("rate")}
                   errorMessage={errors.rate?.message}
                 />

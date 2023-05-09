@@ -76,8 +76,8 @@ const RangePriceComponent = memo((props: Props) => {
             .required("Quantity is required"),
           discount: yup
             .number()
-            .typeError("Discount is required")
-            .positive("Discount  must be a positive number")
+            .positive("Discount must be a positive number")
+            .transform((value) => (isNaN(value) ? undefined : value))
             .notRequired(),
           childrenAgeMin: yup
             .number()
@@ -183,7 +183,7 @@ const RangePriceComponent = memo((props: Props) => {
       data.sale.map((item) => ({
         tourId: tourInformation?.id ? tourInformation?.id : tour?.id,
         id: item?.id,
-        discount: item?.discount,
+        discount: item?.discount === undefined ? 0 : item?.discount,
         quantity: item?.quantity,
         startDate: item?.startDate,
         childrenAgeMin: item?.childrenAgeMin,

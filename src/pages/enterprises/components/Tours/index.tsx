@@ -50,7 +50,7 @@ import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Tour Id", sortable: false },
+  { name: "#", label: "#", sortable: false },
   { name: "name", label: "Name", sortable: false },
   { name: "languages", label: "Languages", sortable: false },
   { name: "actions", label: "Actions", sortable: false },
@@ -245,7 +245,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
                         <Skeleton width={100} className={classes.tableCell} />
                       ) : (
                         <TableCell scope="row" className={classes.tableCell}>
-                          Tour {item.id}
+                          {index + 1}
                         </TableCell>
                       )}
                       {isLoading ? (

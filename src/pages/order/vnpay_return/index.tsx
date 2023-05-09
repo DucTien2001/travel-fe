@@ -88,7 +88,7 @@ const VNPay: NextPage = () => {
                   courtesy page in a few seconds
                 </span>
               )}
-              <Link href="/paymentHistory">
+              <Link href="/paymentHistory/tour">
                 <a>
                   <Button
                     btnType={BtnType.Primary}

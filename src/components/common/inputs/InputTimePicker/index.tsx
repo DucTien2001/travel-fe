@@ -77,7 +77,9 @@ const TimePicker = memo(
             value={value}
             onChange={onChange}
             views={["hours", "minutes"]}
-            inputFormat="hh:mm"
+            inputFormat="hh:mm a"
+            ampmInClock={true}
+            ampm={true}
             mask="__:__"
             renderInput={({ InputProps, ...params }) => (
               <TextField

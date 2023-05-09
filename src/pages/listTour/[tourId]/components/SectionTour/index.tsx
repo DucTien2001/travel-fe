@@ -322,7 +322,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   </div>
                   <div className={clsx(classes.rowImg, classes.moreImg)}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={tour?.images[1]} alt="anh" />
+                    <img src={tour?.images[2]} alt="anh" />
                     <div className={classes.modalImg}>
                       <p>See All</p>
                     </div>
@@ -616,7 +616,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   onClick={onOpenPopupDetailTour}
                   className={classes.btnSeeDetail}
                 >
-                  See detail
+                  Terms and Conditions
                 </Button>
               </div>
             </Col>
