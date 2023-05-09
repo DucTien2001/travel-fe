@@ -1,4 +1,25 @@
 {
-  "logout_title": "Logout",
-  "stay_title": "STAY"
+  "header_login": "Log in",
+  "header_register": "Register",
+  "header_tour": "TOURS",
+  "header_stay": "STAYS",
+  "header_coupon": "COUPONS AND DEALS",
+  "header_language": "LANGUAGES",
+
+  "auth_header_profile": "Profile",
+  "auth_sub_header_profile": "Welcome!",
+  "auth_profile": "My profile",
+  "auth_payment_history": "Payment history & order",
+  "auth_management": "Management",
+
+  "common_optional": "optional",
+  "common_cancel": "Cancel",
+  "common_delete": "Delete",
+  "common_save": "Save",
+  "common_edit": "Edit",
+  "common_ok": "OK",
+  "common_not_found": "Not found",
+  "common_create_success": "Create successful",
+  "common_update_success": "Update successful",
+  "common_delete_success": "Delete successful"
 }

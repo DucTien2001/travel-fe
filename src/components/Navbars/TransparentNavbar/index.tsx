@@ -1,6 +1,16 @@
 /*eslint-disable*/
 import { useState, useEffect, memo, Fragment } from "react";
-import { Collapse, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown, NavItem, Navbar, Nav, Container } from "reactstrap";
+import {
+  Collapse,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  UncontrolledDropdown,
+  NavItem,
+  Navbar,
+  Nav,
+  Container,
+} from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -72,7 +82,10 @@ const WhiteNavbar = memo(() => {
 
   useEffect(() => {
     const updateNavbarColor = () => {
-      if (document.documentElement.scrollTop > 10 || document.body.scrollTop > 10) {
+      if (
+        document.documentElement.scrollTop > 10 ||
+        document.body.scrollTop > 10
+      ) {
         setNavbarColor("");
       } else {
         setNavbarColor(" navbar-transparent");
@@ -98,35 +111,55 @@ const WhiteNavbar = memo(() => {
             <Link href="/" passHref>
               <a>TRAVELIX</a>
             </Link>
-            <button onClick={handleCollapseNavbar} aria-expanded={collapseOpen} className="navbar-toggler">
+            <button
+              onClick={handleCollapseNavbar}
+              aria-expanded={collapseOpen}
+              className="navbar-toggler"
+            >
               <span className="navbar-toggler-bar top-bar"></span>
               <span className="navbar-toggler-bar middle-bar"></span>
               <span className="navbar-toggler-bar bottom-bar"></span>
             </button>
           </div>
-          <Collapse isOpen={collapseOpen} navbar className={classes.collapseMobile}>
-            <Nav className={clsx("ml-auto", classes.navWrapperMenu)} id="ceva" navbar={true}>
+          <Collapse
+            isOpen={collapseOpen}
+            navbar
+            className={classes.collapseMobile}
+          >
+            <Nav
+              className={clsx("ml-auto", classes.navWrapperMenu)}
+              id="ceva"
+              navbar={true}
+            >
               <NavItem className={classes.navItem}>
                 <Link href="/listTour" passHref>
                   <a>
-                    <AttractionsIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
-                    <p>TOURS</p>
+                    <AttractionsIcon
+                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
+                    />
+                    <p translation-key={"header_tour"}>{t("header_tour")}</p>
                   </a>
                 </Link>
               </NavItem>
               <NavItem className={classes.navItem}>
                 <Link href="/listHotel" passHref>
                   <a>
-                    <ApartmentIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
-                    <p translation-key={"stay_title"}>{t("stay_title")}</p>
+                    <ApartmentIcon
+                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
+                    />
+                    <p translation-key={"header_stay"}>{t("header_stay")}</p>
                   </a>
                 </Link>
               </NavItem>
               <NavItem className={classes.navItem}>
                 <Link href="/listEvents" passHref>
                   <a>
-                    <SellIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
-                    <p>COUPONS & DEALS</p>
+                    <SellIcon
+                      sx={{ fontSize: "20px !important", marginRight: "8px" }}
+                    />
+                    <p translation-key={"header_coupon"}>
+                      {t("header_coupon")}
+                    </p>
                   </a>
                 </Link>
               </NavItem>
@@ -140,13 +173,21 @@ const WhiteNavbar = memo(() => {
                   onClick={(e) => e.preventDefault()}
                   className={classes.dropdownMenu}
                 >
-                  <PublicIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
-                  <p>Languages</p>
+                  <PublicIcon
+                    sx={{ fontSize: "20px !important", marginRight: "8px" }}
+                  />
+                  <p translation-key={"header_language"}>
+                    {t("header_language")}
+                  </p>
                   <ArrowDropDownIcon />
                 </DropdownToggle>
                 <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
                   {langSupports.map((it) => (
-                    <DropdownItem className={classes.dropdownItem} key={it.key} onClick={() => changeLanguage(it.key)}>
+                    <DropdownItem
+                      className={classes.dropdownItem}
+                      key={it.key}
+                      onClick={() => changeLanguage(it.key)}
+                    >
                       <img src={it.img} alt="anh" />
                       {it.name}
                     </DropdownItem>
@@ -165,46 +206,73 @@ const WhiteNavbar = memo(() => {
                       onClick={(e) => e.preventDefault()}
                       className={classes.dropdownMenu}
                     >
-                      <AccountBoxIcon sx={{ fontSize: "20px !important", marginRight: "8px" }} />
-                      <p>Profile</p>
+                      <AccountBoxIcon
+                        sx={{ fontSize: "20px !important", marginRight: "8px" }}
+                      />
+                      <p translation-key={"auth_header_profile"}>
+                        {t("auth_header_profile")}
+                      </p>
                       <ArrowDropDownIcon />
                     </DropdownToggle>
                     <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
                       <DropdownItem className="noti-title" header tag="div">
-                        <h6 className={classes.headerTitle}>Welcome!</h6>
+                        <h6
+                          className={classes.headerTitle}
+                          translation-key={"auth_sub_header_profile"}
+                        >
+                          {t("auth_sub_header_profile")}
+                        </h6>
                       </DropdownItem>
                       <DropdownItem className={classes.dropdownItem}>
                         <Link href="/profile" passHref>
                           <a>
-                            <FontAwesomeIcon icon={faAddressCard} className={classes.iconNav} />
-                            My profile
+                            <FontAwesomeIcon
+                              icon={faAddressCard}
+                              className={classes.iconNav}
+                              translation-key={"auth_profile"}
+                            />
+                            {t("auth_profile")}
                           </a>
                         </Link>
                       </DropdownItem>
                       <DropdownItem className={classes.dropdownItem}>
                         <Link href="/paymentHistory/tour" passHref>
                           <a>
-                            <FontAwesomeIcon icon={faCalendarCheck} className={classes.iconNav} />
-                            Payment history
+                            <FontAwesomeIcon
+                              icon={faCalendarCheck}
+                              className={classes.iconNav}
+                              translation-key={"auth_payment_history"}
+                            />
+                            {t("auth_payment_history")}
                           </a>
                         </Link>
                       </DropdownItem>
-                      {(user?.role === EUserType.ENTERPRISE || user?.role === EUserType.STAFF) && (
+                      {(user?.role === EUserType.ENTERPRISE ||
+                        user?.role === EUserType.STAFF) && (
                         <DropdownItem className={classes.dropdownItem}>
                           <Link href="/enterprises/tours" passHref>
                             <a>
-                              <FontAwesomeIcon icon={faBarsProgress} className={classes.iconNav} />
-                              Management
+                              <FontAwesomeIcon
+                                icon={faBarsProgress}
+                                className={classes.iconNav}
+                                translation-key={"auth_management"}
+                              />
+                              {t("auth_management")}
                             </a>
                           </Link>
                         </DropdownItem>
                       )}
-                      {(user?.role === EUserType.ADMIN || user?.role === EUserType.SUPER_ADMIN) && (
+                      {(user?.role === EUserType.ADMIN ||
+                        user?.role === EUserType.SUPER_ADMIN) && (
                         <DropdownItem className={classes.dropdownItem}>
                           <Link href="/admin/users" passHref>
                             <a>
-                              <FontAwesomeIcon icon={faBarsProgress} className={classes.iconNav} />
-                              Management
+                              <FontAwesomeIcon
+                                icon={faBarsProgress}
+                                className={classes.iconNav}
+                                translation-key={"auth_management"}
+                              />
+                              {t("auth_management")}
                             </a>
                           </Link>
                         </DropdownItem>
@@ -214,8 +282,11 @@ const WhiteNavbar = memo(() => {
                   <NavItem onClick={logout}>
                     <Link href="/auth/login" passHref>
                       <a>
-                        <Button btnType={BtnType.Secondary} translation-key={"logout_title"}>
-                          {t("logout_title")}
+                        <Button
+                          btnType={BtnType.Secondary}
+                          translation-key={"header_login"}
+                        >
+                          {t("header_login")}
                         </Button>
                       </a>
                     </Link>
@@ -226,8 +297,11 @@ const WhiteNavbar = memo(() => {
                   <NavItem className={classes.navMobile}>
                     <Link href="/auth/login" passHref>
                       <a>
-                        <Button btnType={BtnType.Secondary} translation-key={"login_title"}>
-                          {t("login_title")}
+                        <Button
+                          btnType={BtnType.Secondary}
+                          translation-key={"header_login"}
+                        >
+                          {t("header_login")}
                         </Button>
                       </a>
                     </Link>
@@ -235,7 +309,13 @@ const WhiteNavbar = memo(() => {
                   <NavItem>
                     <Link href="/auth/signup" passHref>
                       <a>
-                        <Button btnType={BtnType.Secondary}>Register</Button>
+                        <Button
+                          btnType={BtnType.Secondary}
+                          translation-key="header_register"
+                        >
+                          {" "}
+                          {t("header_register")}
+                        </Button>
                       </a>
                     </Link>
                   </NavItem>

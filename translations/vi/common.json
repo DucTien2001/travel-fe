@@ -1,4 +1,25 @@
 {
-  "logout_title": "Đăng xuất",
-  "stay_title": "NƠI Ở"
+  "header_login": "Đăng nhập",
+  "header_register": "Đăng ký",
+  "header_tour": "HOẠT ĐỘNG VÀ GIẢI TRÍ",
+  "header_stay": "NƠI Ở",
+  "header_coupon": "SỰ KIỆN GIẢM GIÁ",
+  "header_language": "NGÔN NGỮ",
+
+  "auth_header_profile": "Hồ sơ",
+  "auth_sub_header_profile": "Xin chào!",
+  "auth_profile": "Hồ sơ của tôi",
+  "auth_payment_history": "Lịch sử thanh toán và đơn hàng",
+  "auth_management": "Quản lý",
+
+  "common_optional": "không bắt buộc",
+  "common_cancel": "Quay lại",
+  "common_delete": "Xoá",
+  "common_save": "Lưu",
+  "common_edit": "Chỉnh sửa",
+  "common_ok": "Đồng ý",
+  "common_not_found": "không tìm thấy dữ liệu",
+  "common_create_success": "Tạo thành công",
+  "common_update_success": "Cập nhật thành công",
+  "common_delete_success": "Xóa thành công"
 }
