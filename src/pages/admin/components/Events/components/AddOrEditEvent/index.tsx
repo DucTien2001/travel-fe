@@ -92,7 +92,7 @@ const AddOrEditEvent = memo((props: Props) => {
   const { eventId } = props;
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
   const router = useRouter();
   let lang;
   if (typeof window !== "undefined") {
@@ -110,56 +110,129 @@ const AddOrEditEvent = memo((props: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      name: yup.string().required("Name is required"),
-      description: yup.string().required("Description is required"),
-      startTime: yup.date().required("Start time is required"),
+      name: yup
+        .string()
+        .required(
+          t("admin_management_section_add_or_edit_event_name_validate")
+        ),
+      description: yup
+        .string()
+        .required(t("admin_management_section_add_or_edit_event_des_validate")),
+      startTime: yup
+        .date()
+        .required(
+          t("admin_management_section_add_or_edit_event_start_time_validate")
+        ),
       endTime: yup
         .date()
-        .min(yup.ref("startTime"), "End time can't be before start time")
-        .required("End time is required"),
-      code: yup.string().required("Code is required"),
+        .min(
+          yup.ref("startTime"),
+          t("admin_management_section_add_or_edit_event_end_time_validate_min")
+        )
+        .required(
+          t("admin_management_section_add_or_edit_event_end_time_validate")
+        ),
+      code: yup
+        .string()
+        .required(
+          t("admin_management_section_add_or_edit_event_code_validate")
+        ),
 
       discountType: yup
         .object()
-        .typeError("Discount type is required.")
+        .typeError(
+          t("admin_management_section_add_or_edit_event_discount_type_validate")
+        )
         .shape({
-          id: yup.number().required("Discount type is required"),
+          id: yup
+            .number()
+            .required(
+              t(
+                "admin_management_section_add_or_edit_event_discount_type_validate"
+              )
+            ),
           name: yup.string().required(),
         })
         .required(),
       discountValue: yup
         .number()
-        .typeError("Discount value is required.")
-        .positive("Discount value must be a positive number")
-        .required("Discount value is required."),
+        .typeError(
+          t(
+            "admin_management_section_add_or_edit_event_discount_value_validate"
+          )
+        )
+        .positive(
+          t(
+            "admin_management_section_add_or_edit_event_discount_value_validate_error"
+          )
+        )
+        .required(
+          t(
+            "admin_management_section_add_or_edit_event_discount_value_validate"
+          )
+        ),
       minOder: yup
         .number()
-        .typeError("Min order is required.")
-        .positive("Min order must be a positive number")
+        .typeError(
+          t("admin_management_section_add_or_edit_event_min_order_validate")
+        )
+        .positive(
+          t(
+            "admin_management_section_add_or_edit_event_min_order_validate_error"
+          )
+        )
         .notRequired(),
       maxDiscount: yup.number().when("discountType", {
         is: (type: OptionItem) => type?.id === EDiscountType.PERCENT,
         then: yup
           .number()
-          .typeError("Max discount is required.")
-          .positive("Max discount must be a positive number")
-          .required("Max discount is required."),
+          .typeError(
+            t(
+              "admin_management_section_add_or_edit_event_max_discount_validate"
+            )
+          )
+          .positive(
+            t(
+              "admin_management_section_add_or_edit_event_max_discount_validate_error"
+            )
+          )
+          .required(
+            t(
+              "admin_management_section_add_or_edit_event_max_discount_validate"
+            )
+          ),
         otherwise: yup.number().nullable().notRequired().default(0),
       }),
       numberOfCodes: yup.number().when(["isQuantityLimit"], {
         is: (isQuantityLimit: boolean) => !!isQuantityLimit,
         then: yup
           .number()
-          .typeError("Number of codes must be number")
-          .positive("Number of codes  must be a integer number")
-          .required("Number of codes  is required."),
+          .typeError(
+            t("admin_management_section_add_or_edit_event_number_code_validate")
+          )
+          .positive(
+            t(
+              "admin_management_section_add_or_edit_event_number_code_validate_error"
+            )
+          )
+          .required(
+            t("admin_management_section_add_or_edit_event_number_code_validate")
+          ),
         otherwise: yup.number().nullable().notRequired().default(0),
       }),
-      isQuantityLimit: yup.boolean().required("Quantity limit is required"),
-      banner: yup.mixed().required("Image is required"),
+      isQuantityLimit: yup
+        .boolean()
+        .required(
+          t(
+            "admin_management_section_add_or_edit_event_number_code_quantity_limit"
+          )
+        ),
+      banner: yup
+        .mixed()
+        .required(t("admin_management_section_add_or_edit_event_banner")),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -210,21 +283,24 @@ const AddOrEditEvent = memo((props: Props) => {
       const validSize = await isValidSize(file);
       if (!validSize) {
         setError("banner", {
-          message: t("setup_survey_packs_popup_image_size"),
+          message: t("admin_management_section_add_or_edit_event_image_size"),
         });
         return;
       }
       if (!checkSize) {
         setError("banner", {
-          message: t("setup_survey_packs_popup_image_file_size", {
-            size: fData(PHOTO_SIZE),
-          }),
+          message: t(
+            "admin_management_section_add_or_edit_event_image_file_size",
+            {
+              size: fData(PHOTO_SIZE),
+            }
+          ),
         });
         return;
       }
       if (!checkType) {
         setError("banner", {
-          message: t("setup_survey_packs_popup_image_type"),
+          message: t("admin_management_section_add_or_edit_event_image_type"),
         });
         return;
       }
@@ -365,7 +441,11 @@ const AddOrEditEvent = memo((props: Props) => {
   const handleCheckCode = () => {
     for (var i = 0; i < dataEvent?.data?.length; i++) {
       if (watchCode.trim() === dataEvent?.data[i].name) {
-        setError("code", { message: "This code already exists" });
+        setError("code", {
+          message: t(
+            "admin_management_section_add_or_edit_event_number_code_validate_exist"
+          ),
+        });
         break;
       }
     }
@@ -411,7 +491,7 @@ const AddOrEditEvent = memo((props: Props) => {
       }
       EventService.update(event.id, formData)
         .then(async () => {
-          dispatch(setSuccessMess("Update event successfully"));
+          dispatch(setSuccessMess(t("common_update_success")));
           onBack();
           await fetchData();
         })
@@ -420,7 +500,7 @@ const AddOrEditEvent = memo((props: Props) => {
     } else {
       EventService.create(formData)
         .then((res) => {
-          dispatch(setSuccessMess("Create event successfully"));
+          dispatch(setSuccessMess(t("common_create_success")));
           onBack();
         })
         .catch((e) => dispatch(setErrorMess(e)))
@@ -488,8 +568,12 @@ const AddOrEditEvent = memo((props: Props) => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <InputTextfield
-                  title="Event's name"
-                  placeholder="Enter event's name"
+                  title={t(
+                    "admin_management_section_add_or_edit_event_event_name"
+                  )}
+                  placeholder={t(
+                    "admin_management_section_add_or_edit_event_event_name"
+                  )}
                   inputRef={register("name")}
                   autoComplete="off"
                   name="name"
@@ -501,11 +585,15 @@ const AddOrEditEvent = memo((props: Props) => {
                 <InputDatePicker
                   name={`startTime`}
                   control={control}
-                  label="Start time"
+                  label={t(
+                    "admin_management_section_add_or_edit_event_start_time"
+                  )}
                   timeConstraints={{
                     minutes: { min: 0, max: 59, step: 5 },
                   }}
-                  placeholder="Select date"
+                  placeholder={t(
+                    "admin_management_section_add_or_edit_event_start_time"
+                  )}
                   errorMessage={errors.startTime?.message}
                   isValidDate={disablePastDt}
                 />
@@ -514,24 +602,30 @@ const AddOrEditEvent = memo((props: Props) => {
                 <InputDatePicker
                   name={`endTime`}
                   control={control}
-                  label="End time"
+                  label={t(
+                    "admin_management_section_add_or_edit_event_end_time"
+                  )}
                   timeConstraints={{
                     minutes: { min: 0, max: 59, step: 5 },
                   }}
-                  placeholder="Select date"
+                  placeholder={t(
+                    "admin_management_section_add_or_edit_event_end_time"
+                  )}
                   errorMessage={errors.endTime?.message}
                   isValidDate={disablePastDt}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <p className={classes.titleSelect}>Select tours</p>
+                <p className={classes.titleSelect}>
+                  {t("admin_management_section_add_or_edit_event_select_tour")}
+                </p>
                 <Button
                   sx={{ width: { xs: "100%", sm: "auto" }, maxHeight: "36px" }}
                   className={classes.selectTourBtn}
                   btnType={BtnType.Outlined}
                   onClick={handleClickMenuChooseTour}
                 >
-                  Select tours
+                  {t("admin_management_section_add_or_edit_event_select_tour")}
                   <KeyboardArrowDown
                     sx={{
                       color: "var(--gray-80)",
@@ -540,7 +634,11 @@ const AddOrEditEvent = memo((props: Props) => {
                   />
                 </Button>
                 {isEmptyTourSelect && (
-                  <ErrorMessage>Select tours is required</ErrorMessage>
+                  <ErrorMessage>
+                    {t(
+                      "admin_management_section_add_or_edit_event_select_tour_error"
+                    )}
+                  </ErrorMessage>
                 )}
                 <Menu
                   anchorEl={anchorElMenuChooseTour}
@@ -583,7 +681,7 @@ const AddOrEditEvent = memo((props: Props) => {
                       translation-key="common_cancel"
                       onClick={handleCloseMenuChooseTour}
                     >
-                      Cancel
+                      {t("common_cancel")}
                     </Button>
                     <Button
                       btnType={BtnType.Primary}
@@ -591,7 +689,9 @@ const AddOrEditEvent = memo((props: Props) => {
                       className={classes.btnSave}
                       onClick={onSubmitChooseProjectTour}
                     >
-                      Done
+                      {t(
+                        "admin_managemcommon_doneent_section_add_or_edit_event_event_name"
+                      )}
                     </Button>
                   </Grid>
                 </Menu>
@@ -612,12 +712,16 @@ const AddOrEditEvent = memo((props: Props) => {
               <Grid item xs={12} sm={6}>
                 <InputSelect
                   fullWidth
-                  title="Discount Type"
+                  title={t(
+                    "admin_management_section_add_or_edit_event_discount_type"
+                  )}
                   name="discountType"
                   control={control}
                   selectProps={{
                     options: discountType,
-                    placeholder: "-- Discount type --",
+                    placeholder: t(
+                      "admin_management_section_add_or_edit_event_discount_type_placeholder"
+                    ),
                   }}
                   errorMessage={(errors.discountType as any)?.message}
                 />
@@ -625,8 +729,12 @@ const AddOrEditEvent = memo((props: Props) => {
               {watch("discountType")?.value === EDiscountType.PERCENT && (
                 <Grid item xs={12} sm={6}>
                   <InputTextfield
-                    title="Max discount"
-                    placeholder="Ex: 100 000 VND"
+                    title={t(
+                      "admin_management_section_add_or_edit_event_max_discount"
+                    )}
+                    placeholder={t(
+                      "admin_management_section_add_or_edit_event_max_discount_placeholder"
+                    )}
                     autoComplete="off"
                     name="maxDiscount"
                     optional
@@ -638,8 +746,12 @@ const AddOrEditEvent = memo((props: Props) => {
               )}
               <Grid item xs={12} sm={6}>
                 <InputTextfield
-                  title="Discount value"
-                  placeholder="Enter discount value"
+                  title={t(
+                    "admin_management_section_add_or_edit_event_discount_value"
+                  )}
+                  placeholder={t(
+                    "admin_management_section_add_or_edit_event_discount_value"
+                  )}
                   autoComplete="off"
                   name="discountValue"
                   type="number"
@@ -649,8 +761,12 @@ const AddOrEditEvent = memo((props: Props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <InputTextfield
-                  title="Min Order"
-                  placeholder="Ex: 3 order"
+                  title={t(
+                    "admin_management_section_add_or_edit_event_min_order"
+                  )}
+                  placeholder={t(
+                    "admin_management_section_add_or_edit_event_min_order_placeholder"
+                  )}
                   autoComplete="off"
                   name="minOrder"
                   optional
@@ -661,8 +777,10 @@ const AddOrEditEvent = memo((props: Props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <InputTextfield
-                  title="Code"
-                  placeholder="Ex: ENJOY NHA TRANG"
+                  title={t("admin_management_section_add_or_edit_event_code")}
+                  placeholder={t(
+                    "admin_management_section_add_or_edit_event_code_placeholder"
+                  )}
                   autoComplete="off"
                   name="code"
                   onBlur={handleCheckCode}
@@ -685,14 +803,20 @@ const AddOrEditEvent = memo((props: Props) => {
                       )}
                     />
                   }
-                  label="Enable Limit Quantity Code"
+                  label={t(
+                    "admin_management_section_add_or_edit_event_is_quantity"
+                  )}
                 />
               </Grid>
               {watch("isQuantityLimit") && (
                 <Grid item xs={12} sm={6}>
                   <InputTextfield
-                    title="Number of Codes"
-                    placeholder="Enter number of code"
+                    title={t(
+                      "admin_management_section_add_or_edit_event_number_code"
+                    )}
+                    placeholder={t(
+                      "admin_management_section_add_or_edit_event_number_code"
+                    )}
                     autoComplete="off"
                     name="code"
                     type="number"
@@ -705,7 +829,9 @@ const AddOrEditEvent = memo((props: Props) => {
                 <Divider />
               </Grid>
               <Grid xs={12} item>
-                <p className={classes.titleInput}>Description</p>
+                <p className={classes.titleInput}>
+                  {t("admin_management_section_add_or_edit_event_description")}
+                </p>
                 <Controller
                   name="description"
                   control={control}
@@ -715,7 +841,9 @@ const AddOrEditEvent = memo((props: Props) => {
                       className={clsx(classes.editor, {
                         [classes.editorError]: !!errors.description?.message,
                       })}
-                      placeholder="Enter tour's description"
+                      placeholder={t(
+                        "admin_management_section_add_or_edit_event_description"
+                      )}
                       value={field.value || ""}
                       onBlur={() => field.onBlur()}
                       onChange={(value) => field.onChange(value)}
@@ -735,7 +863,11 @@ const AddOrEditEvent = memo((props: Props) => {
                   flexDirection: "column",
                 }}
               >
-                <p className={classes.titleInput}>Upload banner</p>
+                <p className={classes.titleInput}>
+                  {t(
+                    "admin_management_section_add_or_edit_event_upload_banner"
+                  )}
+                </p>
                 <Grid
                   sx={{
                     display: "flex",
@@ -774,7 +906,11 @@ const AddOrEditEvent = memo((props: Props) => {
                         <AddPhotoAlternateOutlinedIcon
                           className={classes.imgAddPhoto}
                         />
-                        <p className={classes.selectImgTitle}>Select banner</p>
+                        <p className={classes.selectImgTitle}>
+                          {t(
+                            "admin_management_section_add_or_edit_event_select_banner"
+                          )}
+                        </p>
                       </>
                     )}
                   </Grid>
@@ -788,7 +924,7 @@ const AddOrEditEvent = memo((props: Props) => {
                 type="submit"
                 className={classes.btnSave}
               >
-                Save
+                {t("common_save")}
               </Button>
             </Grid>
           </Grid>

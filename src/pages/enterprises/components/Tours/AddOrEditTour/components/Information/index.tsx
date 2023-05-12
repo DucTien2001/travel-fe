@@ -29,8 +29,11 @@ import { ProvinceService } from "services/address";
 import InputSelect from "components/common/inputs/InputSelect";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
+import { useTranslation } from "react-i18next";
 
-const ReactQuill = dynamic(async () => await import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(async () => await import("react-quill"), {
+  ssr: false,
+});
 const modules = {
   toolbar: [
     [{ size: ["small", false, "large", "huge"] }],
@@ -71,6 +74,7 @@ interface Props {
 const InformationComponent = memo((props: Props) => {
   const { value, index, tour, lang, handleNextStep } = props;
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
 
   const [imagesPreview, setImagesPreview] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -83,59 +87,145 @@ const InformationComponent = memo((props: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      title: yup.string().required("Name is required"),
+      title: yup
+        .string()
+        .required(
+          t(
+            "enterprise_management_section_tour_tab_information_title_validation"
+          )
+        ),
       city: yup
         .object()
-        .typeError("City is required.")
+        .typeError(
+          t(
+            "enterprise_management_section_tour_tab_information_city_validation"
+          )
+        )
         .shape({
-          id: yup.number().required("City is required"),
+          id: yup
+            .number()
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_information_city_validation"
+              )
+            ),
           name: yup.string().required(),
         })
         .required(),
       district: yup
         .object()
-        .typeError("District is required.")
+        .typeError(
+          t(
+            "enterprise_management_section_tour_tab_information_district_validation"
+          )
+        )
         .shape({
-          id: yup.number().required("District is required"),
+          id: yup
+            .number()
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_information_district_validation"
+              )
+            ),
           name: yup.string().required(),
         })
         .required(),
       commune: yup
         .object()
-        .typeError("Commune is required.")
+        .typeError(
+          t(
+            "enterprise_management_section_tour_tab_information_commune_validation"
+          )
+        )
         .shape({
-          id: yup.number().required("Commune is required"),
+          id: yup
+            .number()
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_information_commune_validation"
+              )
+            ),
           name: yup.string().required(),
         })
         .required(),
-      moreLocation: yup.string().required("Detail address is required"),
+      moreLocation: yup
+        .string()
+        .required(
+          t(
+            "enterprise_management_section_tour_tab_information_detail_address_validation"
+          )
+        ),
       contact: yup
         .string()
-        .required("Contact is required")
+        .required(
+          t(
+            "enterprise_management_section_tour_tab_information_contact_validation"
+          )
+        )
         .matches(VALIDATION.phone, {
-          message: "Please enter a valid phone number.",
+          message: t(
+            "enterprise_management_section_tour_tab_information_contact_validation_error"
+          ),
           excludeEmptyString: true,
         }),
-      description: yup.string().required("Description is required"),
-      highlight: yup.string().required("Highlight is required"),
-      suitablePerson: yup.string().required("Suitable person is required."),
+      description: yup
+        .string()
+        .required(
+          t("enterprise_management_section_tour_tab_information_des_validation")
+        ),
+      highlight: yup
+        .string()
+        .required(
+          t("enterprise_management_section_tour_tab_information_hig_validation")
+        ),
+      suitablePerson: yup
+        .string()
+        .required(
+          t(
+            "enterprise_management_section_tour_tab_information_suit_validation"
+          )
+        ),
       numberOfDays: yup
         .number()
-        .typeError("Number of days is required.")
-        .positive("Number of days  must be a positive number")
-        .required("Number of days  is required."),
+        .typeError(
+          t("enterprise_management_section_tour_tab_information_day_validation")
+        )
+        .positive(
+          t(
+            "enterprise_management_section_tour_tab_information_day_validation_error"
+          )
+        )
+        .required(
+          t("enterprise_management_section_tour_tab_information_day_validation")
+        ),
       numberOfNights: yup
         .number()
-        .typeError("Number of nights  is required.")
-        .positive("Number of nights  must be a positive number")
-        .required("Number of nights  is required."),
+        .typeError(
+          t(
+            "enterprise_management_section_tour_tab_information_night_validation"
+          )
+        )
+        .positive(
+          t(
+            "enterprise_management_section_tour_tab_information_night_validation_error"
+          )
+        )
+        .required(
+          t(
+            "enterprise_management_section_tour_tab_information_night_validation"
+          )
+        ),
       termsAndCondition: yup
         .string()
-        .required("Terms and Condition is required"),
+        .required(
+          t(
+            "enterprise_management_section_tour_tab_information_term_validation"
+          )
+        ),
       images: yup.array(yup.mixed()),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -287,7 +377,7 @@ const InformationComponent = memo((props: Props) => {
       });
       TourService.updateTourInformation(tour?.id, formDataEdit)
         .then(() => {
-          dispatch(setSuccessMess("Update tour successfully"));
+          dispatch(setSuccessMess(t("common_update_success")));
           handleNextStep();
         })
         .catch((e) => dispatch(setErrorMess(e)))
@@ -314,7 +404,7 @@ const InformationComponent = memo((props: Props) => {
             })
           );
 
-          dispatch(setSuccessMess("Create tour successfully"));
+          dispatch(setSuccessMess(t("common_create_success")));
           handleNextStep();
         })
         .catch((e) => dispatch(setErrorMess(e)))
@@ -397,13 +487,21 @@ const InformationComponent = memo((props: Props) => {
           onSubmit={handleSubmit(_onSubmit)}
           className={classes.form}
         >
-          <h3 className={classes.title}>Set up Tour</h3>
+          <h3 className={classes.title}>
+            {t(
+              "enterprise_management_section_tour_tab_information_tour_name_title_setup"
+            )}
+          </h3>
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <InputTextfield
-                title="Tour's name"
-                placeholder="Enter tour's name"
+                title={t(
+                  "enterprise_management_section_tour_tab_information_tour_name"
+                )}
+                placeholder={t(
+                  "enterprise_management_section_tour_tab_information_tour_name"
+                )}
                 inputRef={register("title")}
                 autoComplete="off"
                 name="title"
@@ -412,8 +510,12 @@ const InformationComponent = memo((props: Props) => {
             </Grid>
             <Grid item xs={6}>
               <InputTextfield
-                title="Contact"
-                placeholder="Enter contact phone number"
+                title={t(
+                  "enterprise_management_section_tour_tab_information_contact"
+                )}
+                placeholder={t(
+                  "enterprise_management_section_tour_tab_information_contact"
+                )}
                 autoComplete="off"
                 name="contact"
                 inputRef={register("contact")}
@@ -423,12 +525,16 @@ const InformationComponent = memo((props: Props) => {
             <Grid item xs={6}>
               <InputSelect
                 fullWidth
-                title="City"
+                title={t(
+                  "enterprise_management_section_tour_tab_information_city"
+                )}
                 name="city"
                 control={control}
                 selectProps={{
                   options: fetchProvince(),
-                  placeholder: "-- City --",
+                  placeholder: t(
+                    "enterprise_management_section_tour_tab_information_city_placeholder"
+                  ),
                 }}
                 errorMessage={(errors.city as any)?.message}
               />
@@ -436,12 +542,16 @@ const InformationComponent = memo((props: Props) => {
             <Grid item xs={6}>
               <InputSelect
                 fullWidth
-                title="District"
+                title={t(
+                  "enterprise_management_section_tour_tab_information_district"
+                )}
                 name="district"
                 control={control}
                 selectProps={{
                   options: fetchDistrict(),
-                  placeholder: "-- District --",
+                  placeholder: t(
+                    "enterprise_management_section_tour_tab_information_district_placeholder"
+                  ),
                 }}
                 errorMessage={(errors.district as any)?.message}
               />
@@ -449,20 +559,28 @@ const InformationComponent = memo((props: Props) => {
             <Grid item xs={6}>
               <InputSelect
                 fullWidth
-                title="Commune"
+                title={t(
+                  "enterprise_management_section_tour_tab_information_commune"
+                )}
                 name="commune"
                 control={control}
                 selectProps={{
                   options: fetchCommune(),
-                  placeholder: "-- Commune --",
+                  placeholder: t(
+                    "enterprise_management_section_tour_tab_information_commune_placeholder"
+                  ),
                 }}
                 errorMessage={(errors.commune as any)?.message}
               />
             </Grid>
             <Grid item xs={6}>
               <InputTextfield
-                title="Detail address"
-                placeholder="Ex: 147 street 10"
+                title={t(
+                  "enterprise_management_section_tour_tab_information_more_location"
+                )}
+                placeholder={t(
+                  "enterprise_management_section_tour_tab_information_more_location"
+                )}
                 autoComplete="off"
                 name="moreLocation"
                 inputRef={register("moreLocation")}
@@ -472,8 +590,12 @@ const InformationComponent = memo((props: Props) => {
 
             <Grid item xs={6}>
               <InputTextfield
-                title="Number of days"
-                placeholder="Enter number of days"
+                title={t(
+                  "enterprise_management_section_tour_tab_information_day"
+                )}
+                placeholder={t(
+                  "enterprise_management_section_tour_tab_information_day"
+                )}
                 autoComplete="off"
                 name="numberOfDays"
                 inputRef={register("numberOfDays")}
@@ -482,8 +604,12 @@ const InformationComponent = memo((props: Props) => {
             </Grid>
             <Grid item xs={6}>
               <InputTextfield
-                title="Number of nights"
-                placeholder="Enter number of nights"
+                title={t(
+                  "enterprise_management_section_tour_tab_information_night"
+                )}
+                placeholder={t(
+                  "enterprise_management_section_tour_tab_information_night"
+                )}
                 autoComplete="off"
                 name="numberOfNights"
                 inputRef={register("numberOfNights")}
@@ -492,8 +618,12 @@ const InformationComponent = memo((props: Props) => {
             </Grid>
             <Grid item xs={12}>
               <InputTextfield
-                title="Suitable person"
-                placeholder="Ex: Sea, Family, Trekking"
+                title={t(
+                  "enterprise_management_section_tour_tab_information_suit"
+                )}
+                placeholder={t(
+                  "enterprise_management_section_tour_tab_information_suit_placeholder"
+                )}
                 autoComplete="off"
                 name="suitablePerson"
                 multiline
@@ -503,7 +633,9 @@ const InformationComponent = memo((props: Props) => {
               />
             </Grid>
             <Grid xs={12} item>
-              <p className={classes.titleInput}>Description</p>
+              <p className={classes.titleInput}>
+                {t("enterprise_management_section_tour_tab_information_des")}
+              </p>
               <Controller
                 name="description"
                 control={control}
@@ -513,7 +645,9 @@ const InformationComponent = memo((props: Props) => {
                     className={clsx(classes.editor, {
                       [classes.editorError]: !!errors.description?.message,
                     })}
-                    placeholder="Enter tour's description"
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_information_des"
+                    )}
                     value={field.value || ""}
                     onBlur={() => field.onBlur()}
                     onChange={(value) => field.onChange(value)}
@@ -525,7 +659,9 @@ const InformationComponent = memo((props: Props) => {
               )}
             </Grid>
             <Grid xs={12} item>
-              <p className={classes.titleInput}>Highlights</p>
+              <p className={classes.titleInput}>
+                {t("enterprise_management_section_tour_tab_information_hig")}
+              </p>
               <Controller
                 name="highlight"
                 control={control}
@@ -535,7 +671,9 @@ const InformationComponent = memo((props: Props) => {
                     className={clsx(classes.editor, {
                       [classes.editorError]: !!errors.highlight?.message,
                     })}
-                    placeholder="Enter tour's highlights"
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_information_hig"
+                    )}
                     value={field.value || ""}
                     onBlur={() => field.onBlur()}
                     onChange={(value) => field.onChange(value)}
@@ -547,7 +685,9 @@ const InformationComponent = memo((props: Props) => {
               )}
             </Grid>
             <Grid xs={12} item>
-              <p className={classes.titleInput}>Terms and condition</p>
+              <p className={classes.titleInput}>
+                {t("enterprise_management_section_tour_tab_information_term")}
+              </p>
               <Controller
                 name="termsAndCondition"
                 control={control}
@@ -558,7 +698,9 @@ const InformationComponent = memo((props: Props) => {
                       [classes.editorError]:
                         !!errors.termsAndCondition?.message,
                     })}
-                    placeholder="Enter tour's terms and condition"
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_information_term"
+                    )}
                     value={field.value || ""}
                     onBlur={() => field.onBlur()}
                     onChange={(value) => field.onChange(value)}
@@ -570,7 +712,11 @@ const InformationComponent = memo((props: Props) => {
               )}
             </Grid>
             <Grid item xs={12}>
-              <p className={classes.titleInput}>Upload images</p>
+              <p className={classes.titleInput}>
+                {t(
+                  "enterprise_management_section_tour_tab_information_upload_img"
+                )}
+              </p>
               <div className={classes.containerUploadImg}>
                 <label htmlFor="file" className={classes.boxUpload}>
                   <div>
@@ -580,7 +726,12 @@ const InformationComponent = memo((props: Props) => {
                     {isLoading ? (
                       <p className={classes.selectImgTitle}>Uploading...</p>
                     ) : (
-                      <p className={classes.selectImgTitle}>Upload images</p>
+                      <p className={classes.selectImgTitle}>
+                        {" "}
+                        {t(
+                          "enterprise_management_section_tour_tab_information_upload_img"
+                        )}
+                      </p>
                     )}
                   </div>
                 </label>
@@ -595,7 +746,11 @@ const InformationComponent = memo((props: Props) => {
               </div>
             </Grid>
             <Grid item xs={12}>
-              <p className={classes.titleInput}>Images preview</p>
+              <p className={classes.titleInput}>
+                {t(
+                  "enterprise_management_section_tour_tab_information_img_preview"
+                )}
+              </p>
               <Grid container spacing={2}>
                 {imagesPreview?.map((item, index) => {
                   return (
@@ -613,7 +768,11 @@ const InformationComponent = memo((props: Props) => {
                 })}
                 {!imagesPreview?.length && (
                   <Col className={classes.noImg}>
-                    <h4>No photos uploaded yet</h4>
+                    <h4>
+                      {t(
+                        "enterprise_management_section_tour_tab_information_no_img"
+                      )}
+                    </h4>
                   </Col>
                 )}
               </Grid>
@@ -623,7 +782,9 @@ const InformationComponent = memo((props: Props) => {
                   type="submit"
                   className={classes.btnSave}
                 >
-                  Save & Next Schedule
+                  {t(
+                    "enterprise_management_section_tour_tab_information_next_schedule"
+                  )}
                   <ArrowRightAltIcon />
                 </Button>
               </Row>

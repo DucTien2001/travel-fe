@@ -20,12 +20,14 @@ import { Tour } from "models/tour";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import _ from "lodash";
 import { TourBillService } from "services/normal/tourBill";
+import { useTranslation } from "react-i18next";
 interface Props {
   handleChangeStep?: () => void;
 }
 const Review = memo(({ handleChangeStep }: Props) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
 
   const { confirmBookTourReview } = useSelector(
     (state: ReducerType) => state.normal
@@ -95,10 +97,11 @@ const Review = memo(({ handleChangeStep }: Props) => {
           <Grid xs={8} item className={classes.leftPanel}>
             <Grid container item spacing={2}>
               <Grid item xs={12}>
-                <h4 className={classes.title}>Please Review Your Booking </h4>
+                <h4 className={classes.title}>
+                  {t("review_page_title_review")}
+                </h4>
                 <p className={classes.subTitle}>
-                  Please review your booking details before continuing to
-                  payment
+                  {t("review_page_sub_title_review")}
                 </p>
 
                 <Grid
@@ -131,7 +134,9 @@ const Review = memo(({ handleChangeStep }: Props) => {
                       </Grid>
                       <Grid container spacing={2} sx={{ paddingTop: "16px" }}>
                         <Grid item xs={4} className={classes.boxInforTime}>
-                          <p className={classes.textTitle}>Start date</p>
+                          <p className={classes.textTitle}>
+                            {t("review_page_section_tour_start_date")}
+                          </p>
                           <p className={classes.textDate}>
                             {moment(confirmBookTourReview?.startDate).format(
                               "DD/MM/YYYY"
@@ -139,7 +144,9 @@ const Review = memo(({ handleChangeStep }: Props) => {
                           </p>
                         </Grid>
                         <Grid item xs={4} className={classes.boxInforTime}>
-                          <p className={classes.textTitle}>Duration</p>
+                          <p className={classes.textTitle}>
+                            {t("review_page_section_tour_duration")}
+                          </p>
                           <p className={classes.textDate}>
                             {tour?.numberOfDays} Days - {tour?.numberOfNights}{" "}
                             Nights
@@ -166,7 +173,7 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     }}
                   >
                     <h5 className={classes.title}>
-                      Cancellation and Reschedule
+                      {t("review_page_section_cancellation_title")}
                     </h5>
                   </Grid>
                   <Grid
@@ -181,7 +188,7 @@ const Review = memo(({ handleChangeStep }: Props) => {
                   >
                     <Grid className={classes.boxSubTitle}>
                       <ReceiptLong />
-                      <p>Cancellation & Reschedule Policy</p>
+                      <p> {t("review_page_section_cancellation_sub_title")}</p>
                     </Grid>
                     <Grid>
                       {open ? (
@@ -194,11 +201,19 @@ const Review = memo(({ handleChangeStep }: Props) => {
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <Grid className={classes.rootOverview}>
                       <Grid className={classes.boxTitle}>
-                        <p>Terms and Condition</p>
+                        <p>
+                          {t(
+                            "review_page_section_cancellation_tour_terms_title"
+                          )}
+                        </p>
                       </Grid>
                       <Grid className={classes.boxDuration}>
                         <p className={classes.titleDetail}>
-                          - General Infomation:{" "}
+                          -{" "}
+                          {t(
+                            "review_page_section_cancellation_tour_info_title"
+                          )}
+                          :{" "}
                         </p>
                         <p
                           dangerouslySetInnerHTML={{
@@ -209,51 +224,77 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     </Grid>
                     <Grid className={classes.rootOverview}>
                       <Grid className={classes.boxTitle}>
-                        <p>Reschedule & Refund</p>
+                        <p>
+                          {t(
+                            "review_page_section_cancellation_tour_reschedule_refund_title"
+                          )}
+                        </p>
                       </Grid>
                       <Grid className={classes.boxDuration}>
                         <p className={classes.titleDetail}>
-                          - Reschedule Policy:{" "}
+                          -{" "}
+                          {t(
+                            "review_page_section_cancellation_tour_reschedule_title"
+                          )}
+                          :{" "}
                         </p>
                         {policyType[0]?.length ? (
                           <ul>
                             {policyType[0]?.map((item, index) => (
-                              <li key={index}>
-                                Request a refund at the latest{" "}
-                                <span className={classes.titleDetail}>
-                                  {item?.dayRange} day(s)
-                                </span>{" "}
-                                before your selected visit date to get up to{" "}
-                                <span className={classes.titleDetail}>
-                                  {item?.moneyRate}%{" "}
-                                </span>{" "}
-                                refund.
-                              </li>
+                              <li
+                                key={index}
+                                className={classes.itemPolicy}
+                                dangerouslySetInnerHTML={{
+                                  __html: t(
+                                    "review_page_section_cancellation_tour_reschedule_content",
+                                    {
+                                      dayRange: item?.dayRange,
+                                      moneyRate: item?.moneyRate,
+                                    }
+                                  ),
+                                }}
+                              ></li>
                             ))}
                           </ul>
                         ) : (
-                          <p>This booking cannot be rescheduled.</p>
+                          <p>
+                            {t(
+                              "review_page_section_cancellation_tour_no_refund"
+                            )}
+                          </p>
                         )}
 
-                        <p className={classes.titleDetail}>- Refund Policy: </p>
+                        <p className={classes.titleDetail}>
+                          -{" "}
+                          {t(
+                            "review_page_section_cancellation_tour_refund_title"
+                          )}
+                          :{" "}
+                        </p>
                         {policyType[1]?.length ? (
                           <ul>
                             {policyType[1]?.map((item, index) => (
-                              <li key={index}>
-                                Request a refund at the latest{" "}
-                                <span className={classes.titleDetail}>
-                                  {item?.dayRange} day(s)
-                                </span>{" "}
-                                before your selected visit date to get up to{" "}
-                                <span className={classes.titleDetail}>
-                                  {item?.moneyRate}%{" "}
-                                </span>{" "}
-                                refund.
-                              </li>
+                              <li
+                                className={classes.itemPolicy}
+                                key={index}
+                                dangerouslySetInnerHTML={{
+                                  __html: t(
+                                    "review_page_section_cancellation_tour_refund_content",
+                                    {
+                                      dayRange: item?.dayRange,
+                                      moneyRate: item?.moneyRate,
+                                    }
+                                  ),
+                                }}
+                              ></li>
                             ))}
                           </ul>
                         ) : (
-                          <p>This booking cannot be rescheduled.</p>
+                          <p>
+                            {t(
+                              "review_page_section_cancellation_tour_no_refund"
+                            )}
+                          </p>
                         )}
                       </Grid>
                     </Grid>
@@ -261,7 +302,9 @@ const Review = memo(({ handleChangeStep }: Props) => {
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <h4 className={classes.title}>Price Detail</h4>
+                <h4 className={classes.title}>
+                  {t("review_page_section_price_detail_title")}
+                </h4>
                 <Grid
                   sx={{
                     backgroundColor: "var(--white-color)",
@@ -277,9 +320,15 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     <Grid>
                       {" "}
                       <p className={classes.titlePrice}>
-                        Total{" "}
+                        {t("review_page_section_price_detail_price_you_pay")}{" "}
                         {confirmBookTourReview?.discount !== 0 && (
-                          <span>(voucher has been applied)</span>
+                          <span>
+                            (
+                            {t(
+                              "review_page_section_price_detail_price_apply_discount"
+                            )}
+                            )
+                          </span>
                         )}
                       </p>
                     </Grid>
@@ -297,7 +346,10 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     }}
                     className={classes.boxPriceDetail}
                   >
-                    <p>Adult ({confirmBookTourReview?.numberOfAdult}x)</p>
+                    <p>
+                      {t("review_page_section_price_detail_adult")} (
+                      {confirmBookTourReview?.numberOfAdult}x)
+                    </p>
                     <p>
                       {" "}
                       {fCurrency2VND(confirmBookTourReview?.priceOfAdult)} VND
@@ -312,7 +364,10 @@ const Review = memo(({ handleChangeStep }: Props) => {
                       }}
                       className={classes.boxPriceDetail}
                     >
-                      <p>Child ({confirmBookTourReview?.numberOfChild}x)</p>
+                      <p>
+                        {t("review_page_section_price_detail_child")} (
+                        {confirmBookTourReview?.numberOfChild}x)
+                      </p>
                       <p>
                         {" "}
                         {fCurrency2VND(confirmBookTourReview?.priceOfChild)} VND
@@ -328,7 +383,7 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     className={classes.btnContinue}
                   >
                     <Button btnType={BtnType.Secondary} onClick={onSubmit}>
-                      Continue to Pay
+                      {t("review_page_continue_payment")}
                     </Button>
                   </Grid>
                 </Grid>
@@ -349,7 +404,9 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     borderBottom: "1px solid var(--gray-20)",
                   }}
                 >
-                  <h5 className={classes.title}>Contact Details</h5>
+                  <h5 className={classes.title}>
+                    {t("review_page_contact_detail")}
+                  </h5>
                 </Grid>
                 <Grid sx={{ padding: "16px" }}>
                   <Grid className={classes.boxInfoPerson}>
@@ -376,21 +433,27 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     borderBottom: "1px solid var(--gray-20)",
                   }}
                 >
-                  <h5 className={classes.title}>Guest Details</h5>
+                  <h5 className={classes.title}>
+                    {t("review_page_guest_detail")}
+                  </h5>
                 </Grid>
                 <Grid sx={{ padding: "16px" }}>
                   <Grid
                     className={classes.boxInfoGuest}
                     sx={{ paddingBottom: "14px" }}
                   >
-                    <p className={classes.guestTitle}>Gest Name</p>
+                    <p className={classes.guestTitle}>
+                      {t("review_page_guest_name")}
+                    </p>
                     <p>
                       {confirmBookTourReview?.lastName}{" "}
                       {confirmBookTourReview?.firstName}
                     </p>
                   </Grid>
                   <Grid className={classes.boxInfoGuest}>
-                    <p className={classes.guestTitle}>Special Request</p>
+                    <p className={classes.guestTitle}>
+                      {t("review_page_special_request_title")}
+                    </p>
                     {confirmBookTourReview?.specialRequest ? (
                       <p>{confirmBookTourReview?.specialRequest}</p>
                     ) : (
@@ -398,10 +461,7 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     )}
                   </Grid>
                   <Grid className={classes.boxAdvice}>
-                    <p>
-                      Special requests are subject to availability and are not
-                      guaranteed. Some requests may incur charges.
-                    </p>
+                    <p>{t("review_page_special_request_sub_title")}</p>
                   </Grid>
                 </Grid>
               </Grid>

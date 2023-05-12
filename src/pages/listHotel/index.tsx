@@ -9,37 +9,25 @@ import {
   PaginationLink,
   Pagination,
 } from "reactstrap";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faGrip,
-  faList,
-  faXmark,
   faSearch,
-  faCalendarDays,
-  faBed,
   faChevronLeft,
   faChevronRight,
   faArrowsRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
-import clsx from "clsx";
 import classes from "./styles.module.scss";
 import Social from "components/Social";
-import Aos from "aos";
-import "aos/dist/aos.css";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
 import InputTextfield from "components/common/inputs/InputTextfield";
-import InputDatePicker from "components/common/inputs/InputDatePicker";
-import InputCounter from "components/common/inputs/InputCounter";
 import Button, { BtnType } from "components/common/buttons/Button";
 import SectionHeader from "components/Header/SectionHeader";
-import CardItemGrid from "components/CardItemGrid";
 import CardItemList from "components/CardItemList";
 import BoxSmallLeft from "components/BoxSmallLeft";
 import * as yup from "yup";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "redux/reducers";
@@ -48,6 +36,7 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "components/FilterPanel";
 import InputSelect from "components/common/inputs/InputSelect";
+import { useTranslation } from "react-i18next";
 
 interface SearchData {
   location?: string;
@@ -61,9 +50,7 @@ interface SearchData {
 const ListHotels: NextPage = () => {
   const dispatch = useDispatch();
   const { allHotels } = useSelector((state: ReducerType) => state.normal);
-  useEffect(() => {
-    Aos.init({ duration: 500 });
-  }, []);
+  const { t, i18n } = useTranslation("common");
 
   const [changeViewLayout, setChangeViewLayout] = useState(false);
   const [listHotels, setListHotels] = useState([]);
@@ -90,7 +77,7 @@ const ListHotels: NextPage = () => {
       sortType: yup.object().required("This field is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -242,7 +229,7 @@ const ListHotels: NextPage = () => {
   return (
     <>
       <SectionHeader
-        title="MULTI-HOTELS"
+        title={t("list_hotels_section_title_hero")}
         src={images.imagesListHotel.src}
         className={classes.imgHeader}
       />
@@ -253,26 +240,23 @@ const ListHotels: NextPage = () => {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img alt="anh" src={images.iconSearch.src}></img>
             </div>
-            <h1>BROWSE OUR MULTI-HOTELS </h1>
+            <h1>{t("list_hotels_section_title")}</h1>
             <div className={classes.divider}></div>
-            <p data-aos="fade-up">
-              Choose from our portfolio of unforgettable multi-country tours of
-              Asia and embark on the journey of a lifetime. Each private tour is
-              tailor-made to show the very best that Asia has to offer.
-            </p>
+            <p>{t("list_hotels_section_sub_title")}</p>
           </Row>
           <Row className={classes.containerSearch}>
             <div className={classes.boxControlSearch}>
               <div className={classes.boxTitleSearch}>
                 <p>
-                  Hotels / <span>Search Results</span>
+                  {t("list_hotels_header_search_title")} /{" "}
+                  <span>{t("list_hotels_header_search_results")}</span>
                 </p>
               </div>
               <div>
                 <InputTextfield
                   className={classes.inputSearch}
                   startAdornment={<FontAwesomeIcon icon={faSearch} />}
-                  placeholder="Search city, hotel"
+                  placeholder={t("list_hotels_header_search_placeholder")}
                   name="location"
                   onKeyPress={handleKeyPress}
                   inputRef={register("location")}
@@ -287,12 +271,13 @@ const ListHotels: NextPage = () => {
                   className={classes.btnResetOption}
                   onClick={onClearOption}
                 >
-                  <FontAwesomeIcon icon={faArrowsRotate} /> reset filter
+                  <FontAwesomeIcon icon={faArrowsRotate} />{" "}
+                  {t("list_hotels_reset_filter")}
                 </Button>
               </Col>
               <Col xs={10} className={classes.rowResult}>
                 <div className={classes.controlSelect}>
-                  <h5>SORT BY: </h5>
+                  <h5>{t("list_hotels_sort_by")}: </h5>
                   <InputSelect
                     className={classes.inputSelect}
                     selectProps={{
@@ -301,7 +286,7 @@ const ListHotels: NextPage = () => {
                   />
                 </div>
                 <h5>
-                  RESULTS-FOUND: <span>{listHotels?.length}</span>
+                  {t("list_hotels_result")} <span>{listHotels?.length}</span>
                 </h5>
               </Col>
             </div>
@@ -345,7 +330,7 @@ const ListHotels: NextPage = () => {
                 </div>
                 {!listHotels?.length && (
                   <div>
-                    <SearchNotFound mess="No hotel found" />
+                    <SearchNotFound mess={t("common_not_found")} />
                   </div>
                 )}
               </div>

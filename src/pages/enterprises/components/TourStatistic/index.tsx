@@ -31,25 +31,74 @@ import { TourBillService } from "services/enterprise/tourBill";
 import { fCurrency2VND } from "utils/formatNumber";
 import { Moment } from "moment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "#", label: "#", sortable: false },
-  { name: "name", label: "Tour Name", sortable: false },
-  { name: "duration", label: "Duration", sortable: false },
-  { name: "number of booking", label: "Number of booking", sortable: false },
-  { name: "total number of tickets", label: "Total number of tickets", sortable: false },
-  { name: "revenue", label: "Revenue", sortable: false },
-  { name: "commission", label: "Commission", sortable: false },
-  { name: "profit", label: "Profit", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
-];
+import { useTranslation } from "react-i18next";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
 const TourStatistic = memo(({}: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t, i18n } = useTranslation("common");
 
+  const tableHeaders: TableHeaderLabel[] = [
+    { name: "#", label: "#", sortable: false },
+    {
+      name: "name",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_name"
+      ),
+      sortable: false,
+    },
+    {
+      name: "duration",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_duration"
+      ),
+      sortable: false,
+    },
+    {
+      name: "number of booking",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_number_booking"
+      ),
+      sortable: false,
+    },
+    {
+      name: "total number of tickets",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_total_ticket"
+      ),
+      sortable: false,
+    },
+    {
+      name: "revenue",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_revenue"
+      ),
+      sortable: false,
+    },
+    {
+      name: "commission",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_commission"
+      ),
+      sortable: false,
+    },
+    {
+      name: "profit",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_profit"
+      ),
+      sortable: false,
+    },
+    {
+      name: "actions",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_action"
+      ),
+      sortable: false,
+    },
+  ];
   const [itemAction, setItemAction] = useState<ITourStatistic>();
   const [keyword, setKeyword] = useState<string>("");
   const [dateFilter, setDateFilter] = useState<Moment>(null);
@@ -61,13 +110,18 @@ const TourStatistic = memo(({}: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword, dateFilter]);
 
-  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => {
+  const handleChangePage = (
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    newPage: number
+  ) => {
     fetchData({
       page: newPage + 1,
     });
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     fetchData({
       take: Number(event.target.value),
       page: 1,
@@ -117,7 +171,10 @@ const TourStatistic = memo(({}: Props) => {
     setActionAnchor(null);
   };
 
-  const handleAction = (event: React.MouseEvent<HTMLButtonElement>, item: ITourStatistic) => {
+  const handleAction = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    item: ITourStatistic
+  ) => {
     setItemAction(item);
     setActionAnchor(event.currentTarget);
   };
@@ -142,19 +199,26 @@ const TourStatistic = memo(({}: Props) => {
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
-            <InputSearch autoComplete="off" placeholder="Search ..." value={keyword || ""} onChange={onSearch} />
+            <InputSearch
+              autoComplete="off"
+              placeholder={t("common_search")}
+              value={keyword || ""}
+              onChange={onSearch}
+            />
           </div>
           <InputDatePicker
             value={dateFilter ? dateFilter : ""}
             initialValue={dateFilter ? dateFilter : ""}
             _onChange={(date) => onChangeMonth(date)}
-            placeholder="Select month"
+            placeholder={t(
+              "enterprise_management_section_tour_statistic_input_placeholder"
+            )}
             closeOnSelect={true}
             timeFormat={false}
             dateFormat="M/YYYY"
           />
           <Button btnType={BtnType.Primary} onClick={onClear}>
-            Clear
+            {t("enterprise_management_section_tour_statistic_btn_clear")}
           </Button>
         </Row>
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
@@ -169,7 +233,12 @@ const TourStatistic = memo(({}: Props) => {
                         {index}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <a href={`/listTour/:${item?.tourInfo?.id}`} target="_blank" rel="noreferrer" className={classes.tourName}>
+                        <a
+                          href={`/listTour/:${item?.tourInfo?.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={classes.tourName}
+                        >
                           {item?.tourInfo?.title}
                         </a>
                       </TableCell>
@@ -180,7 +249,8 @@ const TourStatistic = memo(({}: Props) => {
                         {item?.numberOfBookings}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {Number(item?.totalAmountChild) + Number(item?.totalAmountAdult)}
+                        {Number(item?.totalAmountChild) +
+                          Number(item?.totalAmountAdult)}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.revenue)} VND
@@ -215,6 +285,18 @@ const TourStatistic = memo(({}: Props) => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={t("common_row_per_page")}
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
+              return t("common_row_of_page", {
+                from: from,
+                to: to,
+                count: count,
+              });
+            }}
             component="div"
             className={classes.pagination}
             count={data?.meta?.itemCount || 0}
@@ -234,10 +316,19 @@ const TourStatistic = memo(({}: Props) => {
           open={Boolean(actionAnchor)}
           onClose={onCloseActionMenu}
         >
-          <MenuItem sx={{ fontSize: "0.875rem" }} onClick={handleRedirect} className={classes.menuItem}>
+          <MenuItem
+            sx={{ fontSize: "0.875rem" }}
+            onClick={handleRedirect}
+            className={classes.menuItem}
+          >
             <Box display="flex" alignItems={"center"}>
-              <VisibilityIcon sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>View detail</span>
+              <VisibilityIcon
+                sx={{ marginRight: "0.25rem" }}
+                fontSize="small"
+              />
+              <span>
+                {t("enterprise_management_section_tour_statistic_view_detail")}
+              </span>
             </Box>
           </MenuItem>
         </Menu>

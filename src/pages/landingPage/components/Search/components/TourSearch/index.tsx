@@ -26,6 +26,7 @@ import { Col } from "reactstrap";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import Button, { BtnType } from "components/common/buttons/Button";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 interface FormSearch {
   tour?: string;
   startTime?: Date;
@@ -33,6 +34,7 @@ interface FormSearch {
 
 // eslint-disable-next-line react/display-name
 const TourSearch = memo(() => {
+  const { t, i18n } = useTranslation("common");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const schema = useMemo(() => {
@@ -41,7 +43,7 @@ const TourSearch = memo(() => {
       startTime: yup.date().required("Date search is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -99,10 +101,14 @@ const TourSearch = memo(() => {
       <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
         <Grid container className={classes.root}>
           <Grid item xs={6} className={classes.boxItem}>
-            <p className={classes.titleInput}>Location</p>
+            <p className={classes.titleInput}>
+              {t("landing_page_section_search_tour_input_location")}
+            </p>
             <InputTextfield
               className={classes.inputSearch}
-              placeholder="Search tour or destination"
+              placeholder={t(
+                "landing_page_section_search_tour_input_location_placeholder"
+              )}
               name="tour"
               startAdornment={<FontAwesomeIcon icon={faSearch} />}
               inputRef={register("tour")}
@@ -113,23 +119,26 @@ const TourSearch = memo(() => {
             />
           </Grid>
           <Grid xs={6} item className={classes.boxItem}>
-            <p className={classes.titleInput}>Start Time</p>
+            <p className={classes.titleInput}>
+              {t("landing_page_section_search_tour_input_start_time")}
+            </p>
             <InputDatePicker
               className={classes.inputSearchDate}
-              placeholder="Start time"
+              placeholder={t(
+                "landing_page_section_search_tour_input_start_time"
+              )}
               name="startTime"
               dateFormat="DD/MM/YYYY"
               timeFormat={false}
               isValidDate={disablePastDt}
               inputRef={register("startTime")}
-              errorMessage={errors.startTime?.message}
             />
           </Grid>
         </Grid>
         <Grid className={classes.boxItemButton}>
           <Button btnType={BtnType.Secondary} type="submit">
-            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>Search
-            destination
+            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+            {t("common_search")}
           </Button>
         </Grid>
         {focus && (

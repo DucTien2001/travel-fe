@@ -37,6 +37,7 @@ import Stars from "components/Stars";
 import { fCurrency2 } from "utils/formatNumber";
 import TourSearch from "./components/TourSearch";
 import HotelSearch from "./components/HotelSearch";
+import { useTranslation } from "react-i18next";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -45,6 +46,8 @@ export enum EActiveNav {
 
 // eslint-disable-next-line react/display-name
 const Search = memo(() => {
+  const { t, i18n } = useTranslation("common");
+
   const { allTours } = useSelector((state: ReducerType) => state.normal);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
@@ -64,9 +67,7 @@ const Search = memo(() => {
         break;
     }
   };
-  useEffect(() => {
-    Aos.init({ duration: 500 });
-  }, []);
+
   return (
     <>
       <Grid container className={classes.root}>
@@ -80,9 +81,10 @@ const Search = memo(() => {
                 className={
                   verticalTabs === EActiveNav.Tour_Active ? classes.active : ""
                 }
+                translation-key="landing_page_section_search_title_tour"
               >
                 <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
-                TOUR
+                {t("landing_page_section_search_title_tour")}
               </Grid>
             </NavItem>
             <NavItem
@@ -98,9 +100,10 @@ const Search = memo(() => {
                 className={
                   verticalTabs === EActiveNav.Hotel_Active ? classes.active : ""
                 }
+                translation-key="landing_page_section_search_title_stay"
               >
                 <FontAwesomeIcon icon={faHotel}></FontAwesomeIcon>
-                HOTEL
+                {t("landing_page_section_search_title_stay")}
               </Grid>
             </NavItem>
           </Nav>

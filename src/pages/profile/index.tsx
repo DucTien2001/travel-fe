@@ -29,6 +29,7 @@ import UserProfile from "./UserProfile";
 import ChangePassword from "./ChangePassword";
 import { Divider } from "@mui/material";
 import UseAuth from "hooks/useAuth";
+import { useTranslation } from "react-i18next";
 interface Props {
   routes: Item[];
 }
@@ -36,10 +37,14 @@ interface Props {
 const Profile: NextPage = () => {
   const { logout } = UseAuth();
   const [verticalTabs, setVerticalTabs] = React.useState("1");
+  const { t, i18n } = useTranslation("common");
 
   return (
     <>
-      <SectionHeader title="MY PROFILE" src={images.bgUser.src} />
+      <SectionHeader
+        title={t("profile_detail_section_hero_title")}
+        src={images.bgUser.src}
+      />
       <Container className={classes.root}>
         <Row>
           <Col md="4">
@@ -57,7 +62,7 @@ const Profile: NextPage = () => {
                 >
                   <FontAwesomeIcon icon={faUser} />
                   <div>
-                    <span>Profile</span>
+                    <span>{t("profile_detail_title")}</span>
                   </div>
                 </NavLink>
               </NavItem>
@@ -74,7 +79,7 @@ const Profile: NextPage = () => {
                 >
                   <FontAwesomeIcon icon={faArrowsRotate} />
                   <div>
-                    <span>Change password</span>
+                    <span>{t("profile_detail_change_pass_title")}</span>
                   </div>
                 </NavLink>
               </NavItem>
@@ -83,7 +88,7 @@ const Profile: NextPage = () => {
                 <Link href="/auth/login">
                   <a>
                     <FontAwesomeIcon icon={faArrowRightFromBracket} />
-                    <span>Logout</span>
+                    <span>{t("header_logout")}</span>
                   </a>
                 </Link>
               </NavItem>

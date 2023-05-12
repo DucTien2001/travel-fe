@@ -48,13 +48,7 @@ import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import "react-loading-skeleton/dist/skeleton.css";
-
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "#", label: "#", sortable: false },
-  { name: "name", label: "Name", sortable: false },
-  { name: "languages", label: "Languages", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
-];
+import { useTranslation } from "react-i18next";
 
 interface Props {
   handleTourEdit?: () => void;
@@ -63,7 +57,22 @@ interface Props {
 const Tour = memo(({ handleTourEdit }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t, i18n } = useTranslation("common");
 
+  const tableHeaders: TableHeaderLabel[] = [
+    { name: "#", label: "#", sortable: false },
+    {
+      name: "name",
+      label: t("enterprise_management_section_tour_header_name"),
+      sortable: false,
+    },
+    {
+      name: "languages",
+      label: t("enterprise_management_section_tour_header_language"),
+      sortable: false,
+    },
+    { name: "actions", label: t("common_action"), sortable: false },
+  ];
   const [isLoading, setIsLoading] = useState(true);
   const [itemAction, setItemAction] = useState<ETour>();
   const [itemDelete, setItemDelete] = useState<ETour>(null);
@@ -209,7 +218,11 @@ const Tour = memo(({ handleTourEdit }: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          {isLoading ? <Skeleton width={100} /> : <h3>Tours</h3>}
+          {isLoading ? (
+            <Skeleton width={100} />
+          ) : (
+            <h3>{t("enterprise_management_section_tour_title")}</h3>
+          )}
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           {isLoading ? (
@@ -218,7 +231,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
             <div className={classes.boxInputSearch}>
               <InputSearch
                 autoComplete="off"
-                placeholder="Search ..."
+                placeholder={t("common_search")}
                 value={keyword || ""}
                 onChange={onSearch}
               />
@@ -229,7 +242,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
           ) : (
             <Button btnType={BtnType.Primary} onClick={onCreateTour}>
               <FontAwesomeIcon icon={faPlus} />
-              Create
+              {t("common_create")}
             </Button>
           )}
         </Row>
@@ -297,6 +310,18 @@ const Tour = memo(({ handleTourEdit }: Props) => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={t("common_row_per_page")}
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
+              return t("common_row_of_page", {
+                from: from,
+                to: to,
+                count: count,
+              });
+            }}
             component="div"
             className={classes.pagination}
             count={data?.meta?.itemCount || 0}
@@ -323,7 +348,9 @@ const Tour = memo(({ handleTourEdit }: Props) => {
           >
             <Box display="flex" alignItems={"center"}>
               <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>Edit Languages</span>
+              <span>
+                {t("enterprise_management_section_tour_edit_language")}
+              </span>
             </Box>
           </MenuItem>
           <MenuItem
@@ -337,7 +364,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
                 color="error"
                 fontSize="small"
               />
-              <span>Delete</span>
+              <span>{t("common_delete")}</span>
             </Box>
           </MenuItem>
         </Menu>
@@ -358,7 +385,9 @@ const Tour = memo(({ handleTourEdit }: Props) => {
               handleLanguageRedirect();
             }}
           >
-            <span>Default</span>
+            <span>
+              {t("enterprise_management_section_tour_edit_language_default")}
+            </span>
           </MenuItem>
           {langSupports.map((item, index) => (
             <MenuItem
@@ -374,7 +403,9 @@ const Tour = memo(({ handleTourEdit }: Props) => {
           ))}
         </Menu>
         <PopupConfirmDelete
-          title="Are you sure delete this tour ?"
+          title={t(
+            "enterprise_management_section_tour_popup_confirm_delete_title"
+          )}
           isOpen={!!itemDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}

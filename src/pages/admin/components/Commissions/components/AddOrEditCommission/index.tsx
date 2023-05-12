@@ -2,42 +2,34 @@ import React, { useMemo, memo, useEffect, useState } from "react";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import * as yup from "yup";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
-import useAuth from "hooks/useAuth";
+import { useDispatch } from "react-redux";
+
 import {
   setErrorMess,
   setLoading,
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
-import { ETour } from "models/enterprise";
+
 import "react-quill/dist/quill.snow.css";
-import { Grid, IconButton } from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Grid } from "@mui/material";
+
 import Button, { BtnType } from "components/common/buttons/Button";
-import { DeleteOutlineOutlined, Grid3x3 } from "@mui/icons-material";
-import InputDatePicker from "components/common/inputs/InputDatePicker";
-import moment from "moment";
+
 import InputTextfield from "components/common/inputs/InputTextfield";
-import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+
 import InputSelect from "components/common/inputs/InputSelect";
-import {
-  EServicePolicyType,
-  EServiceType,
-  OptionItem,
-  policyType,
-  serviceType,
-} from "models/general";
-import { ReducerType } from "redux/reducers";
-import { PolicyService } from "services/enterprise/policy";
-import { getPolicyType, getServiceType } from "utils/getOption";
-import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
+import { serviceType } from "models/general";
+
+import { getServiceType } from "utils/getOption";
+
 import { useRouter } from "next/router";
 import { Container } from "reactstrap";
 import clsx from "clsx";
 import { CommissionService } from "services/admin/commission";
 import { Commission } from "models/admin/commission";
+import { useTranslation } from "react-i18next";
 // import { getPolicyType } from "utils/getOption";
 
 export interface CommissionForm {
@@ -54,6 +46,7 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const AddOrEditCommission = memo((props: Props) => {
   const { commissionId } = props;
+  const { t, i18n } = useTranslation("common");
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -67,33 +60,90 @@ const AddOrEditCommission = memo((props: Props) => {
           serviceType: yup
             .object()
             .shape({
-              id: yup.number().required("Service type is required"),
-              name: yup.string().required("Service type is required"),
-              value: yup.number().required("Service type is required"),
+              id: yup
+                .number()
+                .required(
+                  t(
+                    "admin_management_section_commission_add_or_edit_service_type_validate"
+                  )
+                ),
+              name: yup
+                .string()
+                .required(
+                  t(
+                    "admin_management_section_commission_add_or_edit_service_type_validate"
+                  )
+                ),
+              value: yup
+                .number()
+                .required(
+                  t(
+                    "admin_management_section_commission_add_or_edit_service_type_validate"
+                  )
+                ),
             })
-            .required("Policy type is required"),
+            .required(
+              t(
+                "admin_management_section_commission_add_or_edit_service_type_validate"
+              )
+            ),
           minPrice: yup
             .number()
-            .typeError("Min price is required")
-            .positive("Min price must be a positive number")
-            .required("Min price is required"),
+            .typeError(
+              t(
+                "admin_management_section_commission_add_or_edit_min_price_validate"
+              )
+            )
+            .positive(
+              t(
+                "admin_management_section_commission_add_or_edit_min_price_validate_error"
+              )
+            )
+            .required(
+              t(
+                "admin_management_section_commission_add_or_edit_min_price_validate"
+              )
+            ),
           maxPrice: yup
             .number()
             .integer()
-            .typeError("Max price is required.")
-            .positive("Max price  must be a positive number")
-            .min(yup.ref("minPrice"), "Max price must be rather than min price")
-            .required("Max price  is required"),
+            .typeError(
+              t(
+                "admin_management_section_commission_add_or_edit_max_price_validate"
+              )
+            )
+            .positive(
+              t(
+                "admin_management_section_commission_add_or_edit_max_price_validate_error"
+              )
+            )
+            .min(
+              yup.ref("minPrice"),
+              t(
+                "admin_management_section_commission_add_or_edit_max_price_validate_min"
+              )
+            )
+            .required(
+              t(
+                "admin_management_section_commission_add_or_edit_max_price_validate"
+              )
+            ),
           rate: yup
             .number()
             .integer()
-            .typeError("Service type is required")
-            .required("Rate is required"),
+            .typeError(
+              t(
+                "admin_management_section_commission_add_or_edit_rate_validate_error"
+              )
+            )
+            .required(
+              t("admin_management_section_commission_add_or_edit_rate_validate")
+            ),
         })
       ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -128,7 +178,7 @@ const AddOrEditCommission = memo((props: Props) => {
         rate: data?.rate,
       })
         .then(() => {
-          dispatch(setSuccessMess("Update commission successfully"));
+          dispatch(setSuccessMess(t("common_update_success")));
           router.push("/admin/commissions");
         })
         .catch((e) => {
@@ -145,7 +195,7 @@ const AddOrEditCommission = memo((props: Props) => {
         serviceType: data?.serviceType.value,
       })
         .then(() => {
-          dispatch(setSuccessMess("Create commission successfully"));
+          dispatch(setSuccessMess(t("common_create_success")));
           router.push("/admin/commissions");
         })
         .catch((e) => {
@@ -192,9 +242,13 @@ const AddOrEditCommission = memo((props: Props) => {
   return (
     <Grid className={classes.root}>
       <Container className={clsx(classes.rowHeaderBox, classes.title)}>
-        {!commissionId ? <h3>Create commission</h3> : <h3>Edit commission</h3>}
+        {!commissionId ? (
+          <h3>{t("common_create")}</h3>
+        ) : (
+          <h3>{t("common_edit")}</h3>
+        )}
         <Button onClick={onBack} btnType={BtnType.Primary}>
-          Back
+          {t("common_back")}
         </Button>
       </Container>
       <Container>
@@ -207,8 +261,12 @@ const AddOrEditCommission = memo((props: Props) => {
             >
               <Grid item xs={6}>
                 <InputTextfield
-                  title="Min price"
-                  placeholder="Ex: 1,000,000"
+                  title={t(
+                    "admin_management_section_commission_add_or_edit_min_price_title"
+                  )}
+                  placeholder={t(
+                    "admin_management_section_commission_add_or_edit_min_price_placeholder"
+                  )}
                   autoComplete="off"
                   type="float"
                   inputRef={register("minPrice")}
@@ -217,8 +275,12 @@ const AddOrEditCommission = memo((props: Props) => {
               </Grid>
               <Grid item xs={6}>
                 <InputTextfield
-                  title="Money rate"
-                  placeholder="Ex: 3,000,000"
+                  title={t(
+                    "admin_management_section_commission_add_or_edit_max_rate_title"
+                  )}
+                  placeholder={t(
+                    "admin_management_section_commission_add_or_edit_max_rate_placeholder"
+                  )}
                   autoComplete="off"
                   type="float"
                   inputRef={register("maxPrice")}
@@ -227,8 +289,12 @@ const AddOrEditCommission = memo((props: Props) => {
               </Grid>
               <Grid item xs={6}>
                 <InputTextfield
-                  title="Rate"
-                  placeholder="0.10"
+                  title={t(
+                    "admin_management_section_commission_add_or_edit_rate_title"
+                  )}
+                  placeholder={t(
+                    "admin_management_section_commission_add_or_edit_rate_placeholder"
+                  )}
                   autoComplete="off"
                   type="float"
                   inputRef={register("rate")}
@@ -238,12 +304,16 @@ const AddOrEditCommission = memo((props: Props) => {
               <Grid item xs={6}>
                 <InputSelect
                   fullWidth
-                  title={"Service type"}
+                  title={t(
+                    "admin_management_section_commission_add_or_edit_service_type_title"
+                  )}
                   name={`serviceType`}
                   control={control}
                   selectProps={{
                     options: serviceType,
-                    placeholder: "-- Service type --",
+                    placeholder: t(
+                      "admin_management_section_commission_add_or_edit_service_type_placeholder"
+                    ),
                   }}
                   errorMessage={errors.serviceType?.message}
                 />
@@ -256,7 +326,7 @@ const AddOrEditCommission = memo((props: Props) => {
               type="submit"
               className={classes.btnSave}
             >
-              Save
+              {t("common_save")}
             </Button>
           </Grid>
         </Grid>

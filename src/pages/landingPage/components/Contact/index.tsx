@@ -27,10 +27,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
 import InputTextArea from "components/common/inputs/InputTextArea";
-import Aos from "aos";
-import "aos/dist/aos.css";
 import clsx from "clsx";
 import { Grid } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import InputTextfield from "components/common/inputs/InputTextfield";
 export interface EmailForm {
   firstName: string;
   lastName: string;
@@ -40,9 +40,8 @@ export interface EmailForm {
 
 // eslint-disable-next-line react/display-name
 const Contact = memo(() => {
-  useEffect(() => {
-    Aos.init({ duration: 500 });
-  }, []);
+  const { t, i18n } = useTranslation("common");
+
   const schema = useMemo(() => {
     return yup.object().shape({
       firstName: yup.string().required("Fist name is required"),
@@ -54,7 +53,7 @@ const Contact = memo(() => {
       message: yup.string().required("Message is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -85,10 +84,11 @@ const Contact = memo(() => {
       <Grid className={classes.root}>
         <Row>
           <Col md="5">
-            <h2 className={clsx("title", classes.title)}>Get in Touch</h2>
+            <h2 className={clsx("title", classes.title)}>
+              {t("landing_page_section_contact_title")}
+            </h2>
             <h4 className="description">
-              You need more information? Check what other persons are saying
-              about our product. They are very happy with their purchase.
+              {t("landing_page_section_contact_sub_title")}
             </h4>
             <div className="info info-horizontal">
               <img alt="anh" src={images.man.src} />
@@ -103,17 +103,24 @@ const Contact = memo(() => {
                 onSubmit={handleSubmit(_onSubmit)}
               >
                 <CardHeader className="text-center">
-                  <CardTitle tag="h4">Contact Us</CardTitle>
+                  <CardTitle tag="h4">
+                    {" "}
+                    {t("landing_page_section_contact_form_title")}
+                  </CardTitle>
                 </CardHeader>
                 <CardBody>
                   <Row>
                     <Col className="pr-2" md="6">
-                      <InputTextFieldBorder
-                        label="First name"
-                        startIcon={
+                      <InputTextfield
+                        title={t(
+                          "landing_page_section_contact_title_first_name"
+                        )}
+                        startAdornment={
                           <i className="now-ui-icons users_circle-08"></i>
                         }
-                        placeholder="First Name..."
+                        placeholder={t(
+                          "landing_page_section_contact_title_first_name_placeholder"
+                        )}
                         aria-label="First Name..."
                         autoComplete="family-name"
                         type="text"
@@ -122,12 +129,16 @@ const Contact = memo(() => {
                       />
                     </Col>
                     <Col className="pl-2" md="6">
-                      <InputTextFieldBorder
-                        label="Last name"
-                        startIcon={
+                      <InputTextfield
+                        title={t(
+                          "landing_page_section_contact_title_last_name"
+                        )}
+                        startAdornment={
                           <i className="now-ui-icons text_caps-small"></i>
                         }
-                        placeholder="Last Name..."
+                        placeholder={t(
+                          "landing_page_section_contact_title_last_name_placeholder"
+                        )}
                         aria-label="Last Name..."
                         autoComplete="family-name"
                         type="text"
@@ -137,10 +148,14 @@ const Contact = memo(() => {
                     </Col>
                   </Row>
                   <FormGroup>
-                    <InputTextFieldBorder
-                      label="Email address"
-                      startIcon={<i className="now-ui-icons ui-1_email-85"></i>}
-                      placeholder="Email Here..."
+                    <InputTextfield
+                      title={t("landing_page_section_contact_title_email")}
+                      startAdornment={
+                        <i className="now-ui-icons ui-1_email-85"></i>
+                      }
+                      placeholder={t(
+                        "landing_page_section_contact_title_email_placeholder"
+                      )}
                       aria-label="Email Here..."
                       autoComplete="family-name"
                       type="text"
@@ -149,9 +164,13 @@ const Contact = memo(() => {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <InputTextArea
-                      label="Your message"
-                      placeholder="Message Here..."
+                    <InputTextfield
+                      multiline
+                      rows={3}
+                      title={t("landing_page_section_contact_title_message")}
+                      placeholder={t(
+                        "landing_page_section_contact_title_message_placeholder"
+                      )}
                       autoComplete="family-name"
                       inputRef={register("message")}
                       errorMessage={errors.message?.message}
@@ -164,7 +183,7 @@ const Contact = memo(() => {
                         btnType={BtnType.Primary}
                         type="submit"
                       >
-                        Send Message
+                        {t("landing_page_section_contact_title_send_btn")}
                       </Button>
                     </Col>
                   </Row>

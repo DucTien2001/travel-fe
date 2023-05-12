@@ -7,42 +7,20 @@ import clsx from "clsx";
 import classes from "./styles.module.scss";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
-import { useDispatch, useSelector } from "react-redux";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Container } from "reactstrap";
-import { faFaceFrown } from "@fortawesome/free-regular-svg-icons";
-
+import { useDispatch } from "react-redux";
+import { setErrorMess } from "redux/reducers/Status/actionTypes";
 import { TourScheduleService } from "services/normal/tourSchedule";
-
-// import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line react/display-name
 const ProductPage = memo(() => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t, i18n } = useTranslation("common");
+
   const [tour, setTour] = useState<any>();
   const [tourSchedule, setTourSchedule] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // const [listComment, setListComment] = useState([]);
-  // const listRates = [];
-  // listComment.forEach((item) => {
-  //   listRates.push(item.rate);
-  // });
-
-  // const getTourComments = () => {
-  //   CommentService.getTourComments(tourId)
-  //     .then((res) => {
-  //       setListComment(res.data);
-  //     })
-  //     .catch((e) => {
-  //       dispatch(setErrorMess(e));
-  //     })
-  //     .finally(() => {
-  //       dispatch(setLoading(false));
-  //     });
-  // };
 
   useEffect(() => {
     if (router) {
@@ -82,16 +60,11 @@ const ProductPage = memo(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
-  // useEffect(() => {
-  //   getTourComments();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch]);
-
   return (
     <>
       <div className={clsx("wrapper", classes.root)}>
         <SectionHeader
-          title="VIEW TOUR"
+          title={t("tour_detail_section_title_hero")}
           src={images.bgUser.src}
           className={
             tour?.isTemporarilyStopWorking || tour?.isDeleted
@@ -99,27 +72,12 @@ const ProductPage = memo(() => {
               : ""
           }
         />
-        {tour?.isTemporarilyStopWorking || tour?.isDeleted ? (
-          <Container className={classes.boxStopWorking}>
-            <h3>Sorry, our service is temporarily in active use </h3>
-            <FontAwesomeIcon icon={faFaceFrown} />
-          </Container>
-        ) : (
-          <>
-            <SectionTour
-              tour={tour}
-              tourSchedule={tourSchedule}
-              isLoading={isLoading}
-            />
-            <Comment
-            // comments={listComment}
-            // onGetTourComments={getTourComments}
-            // tourId={Number(router.query.tourId.slice(1))}
-            />
-            {/* 
-          <RelatedTour/>  */}
-          </>
-        )}
+        <SectionTour
+          tour={tour}
+          tourSchedule={tourSchedule}
+          isLoading={isLoading}
+        />
+        <Comment />
       </div>
     </>
   );

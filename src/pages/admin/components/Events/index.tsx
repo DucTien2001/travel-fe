@@ -46,19 +46,33 @@ import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
 import { IEvent, FindAll } from "models/admin/event";
 import { EventService } from "services/admin/event";
-
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Id", sortable: false },
-  { name: "name", label: "Name", sortable: false },
-  { name: "languages", label: "Languages", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
-];
+import { useTranslation } from "react-i18next";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
 const EventComponent = memo(({}: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t, i18n } = useTranslation("common");
+
+  const tableHeaders: TableHeaderLabel[] = [
+    { name: "#", label: "#", sortable: false },
+    {
+      name: "name",
+      label: t("admin_management_tab_event_header_table_name"),
+      sortable: false,
+    },
+    {
+      name: "languages",
+      label: t("admin_management_tab_event_header_table_language"),
+      sortable: false,
+    },
+    {
+      name: "actions",
+      label: t("admin_management_tab_event_header_table_action"),
+      sortable: false,
+    },
+  ];
 
   const [itemAction, setItemAction] = useState<IEvent>();
   const [eventDelete, setEventDelete] = useState<IEvent>(null);
@@ -179,7 +193,7 @@ const EventComponent = memo(({}: Props) => {
     dispatch(setLoading(true));
     EventService.delete(eventDelete?.id)
       .then(() => {
-        dispatch(setSuccessMess("Delete successfully"));
+        dispatch(setSuccessMess(t("common_delete_success")));
         fetchData();
       })
       .catch((e) => {
@@ -199,20 +213,20 @@ const EventComponent = memo(({}: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Events</h3>
+          <h3>{t("admin_management_tab_event_title")}</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
             <InputSearch
               autoComplete="off"
-              placeholder="Search ..."
+              placeholder={t("common_search")}
               value={keyword || ""}
               onChange={onSearch}
             />
           </div>
           <Button btnType={BtnType.Primary} onClick={onCreateEvent}>
             <FontAwesomeIcon icon={faPlus} />
-            Create
+            {t("common_create")}
           </Button>
         </Row>
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
@@ -256,6 +270,18 @@ const EventComponent = memo(({}: Props) => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={t("common_row_per_page")}
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
+              return t("common_row_of_page", {
+                from: from,
+                to: to,
+                count: count,
+              });
+            }}
             component="div"
             className={classes.pagination}
             count={data?.meta?.itemCount || 0}
@@ -282,7 +308,7 @@ const EventComponent = memo(({}: Props) => {
           >
             <Box display="flex" alignItems={"center"}>
               <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>Edit Languages</span>
+              <span>{t("admin_management_tab_event_edit_language")}</span>
             </Box>
           </MenuItem>
           <MenuItem
@@ -296,7 +322,7 @@ const EventComponent = memo(({}: Props) => {
                 color="error"
                 fontSize="small"
               />
-              <span>Delete</span>
+              <span>{t("common_delete")}</span>
             </Box>
           </MenuItem>
         </Menu>
@@ -317,7 +343,7 @@ const EventComponent = memo(({}: Props) => {
               handleLanguageRedirect();
             }}
           >
-            <span>Default</span>
+            <span>{t("admin_management_tab_event_edit_language_default")}</span>
           </MenuItem>
           {langSupports.map((item, index) => (
             <MenuItem
@@ -333,7 +359,7 @@ const EventComponent = memo(({}: Props) => {
           ))}
         </Menu>
         <PopupConfirmDelete
-          title="Are you sure delete this event ?"
+          title={t("admin_management_tab_event_confirm_delete")}
           isOpen={!!eventDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}

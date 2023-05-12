@@ -7,6 +7,7 @@ import { images } from "configs/images";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import EventIcon from "@mui/icons-material/Event";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import { useTranslation } from "react-i18next";
 const Users = dynamic(() => import("pages/admin/components/Users"));
 const Events = dynamic(() => import("pages/admin/components/Events"));
 const Commissions = dynamic(() => import("pages/admin/components/Commissions"));
@@ -16,6 +17,7 @@ interface PropTypes {}
 const Admin = memo(({ ...props }: PropTypes) => {
   const router = useRouter();
   const { page } = router.query;
+  const { t, i18n } = useTranslation("common");
 
   const usersRef = useRef<HTMLDivElement>(null);
   const eventsRef = useRef<HTMLDivElement>(null);
@@ -80,14 +82,14 @@ const Admin = memo(({ ...props }: PropTypes) => {
           <h4>TRAVELIX</h4>
         </div>
         <Nav tabs className={classes.nav}>
-          <span>Dashboard</span>
+          <span>{t("admin_management_navbar_dashboard")}</span>
           <NavItem
             onClick={() => gotoMenu("users")}
             className={classes.navItem}
           >
             <NavLink className={renderClass("users")}>
               <PeopleAltIcon />
-              <span ref={usersRef}>User</span>
+              <span ref={usersRef}>{t("admin_management_navbar_user")}</span>
             </NavLink>
           </NavItem>
           <NavItem
@@ -96,7 +98,7 @@ const Admin = memo(({ ...props }: PropTypes) => {
           >
             <NavLink className={renderClass("events")}>
               <EventIcon />
-              <span ref={eventsRef}>Events</span>
+              <span ref={eventsRef}>{t("admin_management_navbar_event")}</span>
             </NavLink>
           </NavItem>
           <NavItem
@@ -105,7 +107,7 @@ const Admin = memo(({ ...props }: PropTypes) => {
           >
             <NavLink className={renderClass("commissions")}>
               <MonetizationOnIcon />
-              <span>Commission</span>
+              <span>{t("admin_management_navbar_commission")}</span>
             </NavLink>
           </NavItem>
         </Nav>

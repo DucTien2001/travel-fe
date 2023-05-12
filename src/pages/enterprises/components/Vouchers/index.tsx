@@ -46,18 +46,28 @@ import InputSearch from "components/common/inputs/InputSearch";
 import { FindAll, Voucher } from "models/enterprise/voucher";
 import { VoucherService } from "services/enterprise/voucher";
 import { fPercent, fShortenNumber } from "utils/formatNumber";
-
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Voucher Id", sortable: false },
-  { name: "name", label: "Name", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
-];
+import { useTranslation } from "react-i18next";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
 const Event = memo(({}: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t, i18n } = useTranslation("common");
+
+  const tableHeaders: TableHeaderLabel[] = [
+    { name: "id", label: "#", sortable: false },
+    {
+      name: "name",
+      label: t("enterprise_management_section_voucher_header_table_name"),
+      sortable: false,
+    },
+    {
+      name: "actions",
+      label: t("enterprise_management_section_voucher_header_table_action"),
+      sortable: false,
+    },
+  ];
 
   const [itemAction, setItemAction] = useState<Voucher>();
   const [voucherDelete, setVoucherDelete] = useState<Voucher>(null);
@@ -165,7 +175,7 @@ const Event = memo(({}: Props) => {
     dispatch(setLoading(true));
     VoucherService.delete(voucherDelete?.id)
       .then(() => {
-        dispatch(setSuccessMess("Delete successfully"));
+        dispatch(setSuccessMess(t("common_delete_success")));
         fetchData();
       })
       .catch((e) => {
@@ -185,20 +195,20 @@ const Event = memo(({}: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Vouchers</h3>
+          <h3>{t("enterprise_management_section_voucher_title")}</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
             <InputSearch
               autoComplete="off"
-              placeholder="Search ..."
+              placeholder={t("common_search")}
               value={keyword || ""}
               onChange={onSearch}
             />
           </div>
           <Button btnType={BtnType.Primary} onClick={onCreateTour}>
             <FontAwesomeIcon icon={faPlus} />
-            Create
+            {t("common_create")}
           </Button>
         </Row>
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
@@ -210,13 +220,19 @@ const Event = memo(({}: Props) => {
                   return (
                     <TableRow key={index}>
                       <TableCell scope="row" className={classes.tableCell}>
-                        Voucher {item.id}
+                        {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {item?.discountType === EDiscountType.PERCENT ? (
-                          <>Deal {fPercent(item?.discountValue)} </>
+                          <>
+                            {t("voucher_title_deal")}{" "}
+                            {fPercent(item?.discountValue)}{" "}
+                          </>
                         ) : (
-                          <>Deal {fShortenNumber(item?.discountValue)}</>
+                          <>
+                            {t("voucher_title_deal")}{" "}
+                            {fShortenNumber(item?.discountValue)}
+                          </>
                         )}
                       </TableCell>
                       <TableCell className="text-center" component="th">
@@ -243,6 +259,18 @@ const Event = memo(({}: Props) => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={t("common_row_per_page")}
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
+              return t("common_row_of_page", {
+                from: from,
+                to: to,
+                count: count,
+              });
+            }}
             component="div"
             className={classes.pagination}
             count={data?.meta?.itemCount || 0}
@@ -269,7 +297,7 @@ const Event = memo(({}: Props) => {
           >
             <Box display="flex" alignItems={"center"}>
               <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>Edit</span>
+              <span>{t("common_edit")}</span>
             </Box>
           </MenuItem>
           <MenuItem
@@ -283,12 +311,12 @@ const Event = memo(({}: Props) => {
                 color="error"
                 fontSize="small"
               />
-              <span>Delete</span>
+              <span>{t("common_delete")}</span>
             </Box>
           </MenuItem>
         </Menu>
         <PopupConfirmDelete
-          title="Are you sure delete this voucher ?"
+          title={t("enterprise_management_section_voucher_confirm_delete")}
           isOpen={!!voucherDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}

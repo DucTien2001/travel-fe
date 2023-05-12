@@ -21,10 +21,12 @@ import { useRouter } from "next/router";
 import Tour from "pages/paymentHistory/components/Tour";
 import Hotel from "pages/paymentHistory/components/Hotel";
 import UpdateBill from "pages/paymentHistory/components/Tour/UpdateBill";
+import { useTranslation } from "react-i18next";
 
 const PaymentHistory: NextPage = () => {
   const router = useRouter();
   const { page, action } = router.query;
+  const { t, i18n } = useTranslation("common");
 
   const renderComponent = () => {
     switch (page) {
@@ -49,7 +51,7 @@ const PaymentHistory: NextPage = () => {
   return (
     <>
       <SectionHeader
-        title="PAYMENT ORDER"
+        title={t("payment_history_page_title_hero")}
         src={images.bgUser.src}
         className={classes.sectionHeader}
       />
@@ -57,18 +59,22 @@ const PaymentHistory: NextPage = () => {
         <Container className={classes.root}>
           <Row className={classes.headerPaymentHistory}>
             <Nav tabs className={classes.nav}>
-              <span>Payment order</span>
+              <span>{t("payment_history_page_title")}</span>
               <NavItem
                 onClick={() => gotoMenu("tour")}
                 className={classes.navItem}
               >
-                <NavLink className={renderClass("tour")}>Tour</NavLink>
+                <NavLink className={renderClass("tour")}>
+                  {t("payment_history_page_title_tab_tour")}
+                </NavLink>
               </NavItem>
               <NavItem
                 onClick={() => gotoMenu("hotel")}
                 className={classes.navItem}
               >
-                <NavLink className={renderClass("hotel")}>Hotel</NavLink>
+                <NavLink className={renderClass("hotel")}>
+                  {t("payment_history_page_title_tab_stay")}
+                </NavLink>
               </NavItem>
             </Nav>
           </Row>

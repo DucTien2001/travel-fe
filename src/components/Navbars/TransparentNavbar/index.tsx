@@ -13,33 +13,17 @@ import {
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faUser,
-  faBook,
-  faLocationDot,
-  faPlane,
-  faHotel,
   faAddressCard,
   faCalendarCheck,
-  faLandmarkDome,
   faBarsProgress,
-  faEarthAsia,
-  faE,
-  faV,
-  faSquarePlus,
-  faBagShopping,
-  faKey,
-  faSignsPost,
-  faTags,
 } from "@fortawesome/free-solid-svg-icons";
 import clsx from "clsx";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
-import SignOutButton from "components/common/buttons/SignOutButton";
 import UseAuth from "hooks/useAuth";
 import { EUserType } from "models/user";
-import { images } from "configs/images";
 import { langSupports } from "models/general";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import AttractionsIcon from "@mui/icons-material/Attractions";
@@ -224,12 +208,12 @@ const WhiteNavbar = memo(() => {
                       </DropdownToggle>
                       <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
                         <DropdownItem className="noti-title" header tag="div">
-                          <h6
+                          <p
                             className={classes.headerTitle}
                             translation-key={"auth_sub_header_profile"}
                           >
                             {t("auth_sub_header_profile")}
-                          </h6>
+                          </p>
                         </DropdownItem>
                         <DropdownItem className={classes.dropdownItem}>
                           <Link href="/profile" passHref>

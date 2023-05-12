@@ -19,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Button, { BtnType } from "components/common/buttons/Button";
 import clsx from "clsx";
 import ErrorMessage from "components/common/texts/ErrorMessage";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   isOpen?: boolean;
@@ -37,6 +38,7 @@ interface VoucherForm {
 // eslint-disable-next-line react/display-name
 const PopupVoucher = memo((props: Props) => {
   const { isOpen, toggle, voucher, totalBill, onGetVoucher } = props;
+  const { t, i18n } = useTranslation("common");
 
   const [isError, setIsError] = useState(false);
   const [dataError, setDataError] = useState(null);
@@ -46,7 +48,7 @@ const PopupVoucher = memo((props: Props) => {
       voucherValue: yup.number().required(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const { control, setValue, handleSubmit } = useForm<VoucherForm>({
     resolver: yupResolver(schema),
@@ -79,14 +81,10 @@ const PopupVoucher = memo((props: Props) => {
       <Modal isOpen={isOpen} toggle={toggle}>
         <Grid component={"form"} onSubmit={handleSubmit(_onSubmit)}>
           <ModalHeader toggle={toggle} className={classes.titleHeader}>
-            <p>Shop discount code</p>
+            <p>{t("popup_choose_voucher_title")}</p>
           </ModalHeader>
           <ModalBody className={classes.body}>
-            <span>
-              Save more when applying Shop discount code. Contact the Shop if
-              there is a problem with the discount code created by the Shop
-              itself.
-            </span>
+            <span>{t("popup_choose_voucher_sub_title")}</span>
             <Grid className={classes.boxVoucher}>
               {voucher?.length ? (
                 voucher?.map((item, index) => (
@@ -100,20 +98,24 @@ const PopupVoucher = memo((props: Props) => {
                         })}
                       >
                         <Grid sx={{ display: "flex", flexDirection: "column" }}>
-                          <span>Deal {fPercent(item?.discountValue)}</span>
+                          <span>
+                            {t("voucher_title_deal")}{" "}
+                            {fPercent(item?.discountValue)}
+                          </span>
                           {item?.maxDiscount !== 0 && (
                             <span>
-                              Max: {fCurrency2VND(item?.maxDiscount)} VND
+                              {t("voucher_title_max")}:{" "}
+                              {fCurrency2VND(item?.maxDiscount)} VND
                             </span>
                           )}
                           {item?.minOrder && (
                             <span>
-                              Apply for minimum order:{" "}
+                              {t("popup_choose_voucher_apply_order_minimum")}:{" "}
                               {fCurrency2VND(item?.minOrder)} VND
                             </span>
                           )}
                           <span>
-                            Period:{" "}
+                            {t("popup_choose_voucher_period")}:{" "}
                             {moment(item?.startTime).format("DD/MM/YYYY")} -{" "}
                             {moment(item?.endTime).format("DD/MM/YYYY")}
                           </span>
@@ -170,21 +172,23 @@ const PopupVoucher = memo((props: Props) => {
                           }}
                         >
                           <span>
-                            Deal {fShortenNumber(item?.discountValue)} VND
+                            {t("voucher_title_deal")}{" "}
+                            {fShortenNumber(item?.discountValue)} VND
                           </span>
                           {item?.maxDiscount !== 0 && (
                             <span>
-                              Max: {fCurrency2VND(item?.maxDiscount)} VND
+                              {t("voucher_title_max")}:{" "}
+                              {fCurrency2VND(item?.maxDiscount)} VND
                             </span>
                           )}
                           {item?.minOrder && (
                             <span>
-                              Apply for minimum order:{" "}
+                              {t("popup_choose_voucher_apply_order_minimum")}:{" "}
                               {fCurrency2VND(item?.minOrder)} VND
                             </span>
                           )}
                           <span>
-                            Period:{" "}
+                            {t("popup_choose_voucher_period")}:{" "}
                             {moment(item?.startTime).format("DD/MM/YYYY")} -{" "}
                             {moment(item?.endTime).format("DD/MM/YYYY")}
                           </span>
@@ -230,14 +234,14 @@ const PopupVoucher = memo((props: Props) => {
                 ))
               ) : (
                 <p style={{ fontWeight: "600" }}>
-                  {" "}
-                  There are currently no coupons available !
+                  {t("popup_choose_voucher_no_voucher")}
                 </p>
               )}
             </Grid>
             {isError && (
               <ErrorMessage>
-                Your order must be larger {fCurrency2VND(dataError)} VND
+                {t("book_page_section_price_detail_use_coupon_error")}{" "}
+                {fCurrency2VND(dataError)} VND
               </ErrorMessage>
             )}
           </ModalBody>
@@ -247,7 +251,7 @@ const PopupVoucher = memo((props: Props) => {
               type="submit"
               className={classes.btnDone}
             >
-              Done
+              {t("common_apply")}
             </Button>
           </ModalFooter>
         </Grid>

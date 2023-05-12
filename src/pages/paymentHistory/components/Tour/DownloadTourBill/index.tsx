@@ -12,6 +12,7 @@ import { fCurrency2VND, fPercent } from "utils/formatNumber";
 import Button, { BtnType } from "components/common/buttons/Button";
 import QRCode from "react-qr-code";
 import { EPaymentStatus } from "models/general";
+import { useTranslation } from "react-i18next";
 interface DownloadTourBillProps {
   onClose: () => void;
   isOpen: boolean;
@@ -21,6 +22,7 @@ interface DownloadTourBillProps {
 const DownloadTourBill = memo(
   ({ onClose, isOpen, tourBill }: DownloadTourBillProps) => {
     const dispatch = useDispatch();
+    const { t, i18n } = useTranslation("common");
 
     const handleDownload = () => {
       const pdfElement = document.getElementById("pdf-component");
@@ -55,13 +57,15 @@ const DownloadTourBill = memo(
           toggle={onClose}
           className={classes.titleHeader}
         >
-          View Tour
+          {t("popup_download_view_tour_title")}
         </ModalHeader>
         <div id="pdf-component" className={clsx(classes.pdfWrapper)}>
-          <h3 className={classes.title}>Tour Bill</h3>
+          <h3 className={classes.title}>
+            {t("popup_download_view_tour_title_section")}
+          </h3>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Name:
+              {t("popup_download_view_tour_title_person_name")}
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.firstName} {tourBill?.lastName}
@@ -69,7 +73,7 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Email:
+              {t("popup_download_view_tour_title_person_email")}
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.email}
@@ -77,7 +81,7 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Phone number:
+              {t("popup_download_view_tour_title_person_phone")}
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.phoneNumber}
@@ -85,7 +89,7 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Purchase date:
+              {t("popup_download_view_tour_title_person_purchase")}
             </Col>
             <Col xs={8} className={classes.info}>
               {moment(tourBill?.createdAt).format("DD/MM/YYYY")}
@@ -93,26 +97,27 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Adult price:
+              {t("popup_download_view_tour_title_person_adult")}
             </Col>
             <Col xs={8} className={classes.info}>
-              {fCurrency2VND(tourBill?.tourOnSaleData?.adultPrice)} VND/ticket
+              {fCurrency2VND(tourBill?.tourOnSaleData?.adultPrice)} VND/
+              {t("popup_download_view_tour_title_person_ticket")}
             </Col>
           </Row>
           {tourBill?.amountChild !== 0 && (
             <Row className="mb-1">
               <Col xs={4} className={classes.titleInfo}>
-                Children price:
+                {t("popup_download_view_tour_title_person_child")}
               </Col>
               <Col xs={8} className={classes.info}>
-                {fCurrency2VND(tourBill?.tourOnSaleData?.childrenPrice)}{" "}
-                VND/ticket
+                {fCurrency2VND(tourBill?.tourOnSaleData?.childrenPrice)} VND/
+                {t("popup_download_view_tour_title_person_ticket")}
               </Col>
             </Row>
           )}
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Discount:
+              {t("popup_download_view_tour_title_person_discount")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.discount <= 100 ? (
@@ -124,7 +129,7 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Adult:
+              {t("popup_download_view_tour_title_person_adult")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.amountAdult}
@@ -133,7 +138,7 @@ const DownloadTourBill = memo(
           {tourBill?.amountChild !== 0 && (
             <Row className="mb-1">
               <Col xs={4} className={classes.titleInfo}>
-                Children:
+                {t("popup_download_view_tour_title_person_child")}:
               </Col>
               <Col xs={8} className={classes.info}>
                 {tourBill?.amountChild}
@@ -142,17 +147,19 @@ const DownloadTourBill = memo(
           )}
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Total bill:
+              {t("popup_download_view_tour_title_person_total")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {fCurrency2VND(tourBill?.totalBill)} VND
             </Col>
           </Row>
           <hr />
-          <h3 className={classes.title}>Tour Information</h3>
+          <h3 className={classes.title}>
+            {t("popup_download_view_tour_title_section_info")}
+          </h3>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Name:
+              {t("popup_download_view_tour_title_tour_name")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.tourData?.title}
@@ -160,7 +167,7 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Location:
+              {t("popup_download_view_tour_title_tour_location")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.tourData?.moreLocation},{" "}
@@ -171,7 +178,7 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Start date:
+              {t("popup_download_view_tour_title_tour_start")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {moment(tourBill?.tourOnSaleData?.startDate).format("DD-MM-YYYY")}
@@ -179,7 +186,7 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
-              Duration:
+              {t("popup_download_view_tour_title_tour_duration")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.tourData?.numberOfDays} days -{" "}
@@ -188,7 +195,7 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-3">
             <Col xs={4} className={classes.titleInfo}>
-              Contact:
+              {t("popup_download_view_tour_title_tour_contact")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.tourData?.contact}
@@ -198,11 +205,11 @@ const DownloadTourBill = memo(
         <ModalFooter className={classes.downloadBtnWrapper}>
           {tourBill?.paymentStatus === EPaymentStatus.PAID ? (
             <Button onClick={handleDownload} btnType={BtnType.Primary}>
-              Download
+              {t("popup_download_view_tour_download_btn")}
             </Button>
           ) : (
             <Button onClick={onClose} btnType={BtnType.Primary}>
-              Cancel
+              {t("common_cancel")}
             </Button>
           )}
         </ModalFooter>

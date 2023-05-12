@@ -19,9 +19,12 @@ import useDebounce from "hooks/useDebounce";
 import { FindAll, IEvent } from "models/event";
 import { useDispatch } from "react-redux";
 import { EventService } from "services/normal/event";
+import { useTranslation } from "react-i18next";
 
 const ListEvents: NextPage = () => {
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
+
   const [data, setData] = useState<DataPagination<IEvent>>();
   const [keyword, setKeyword] = useState<string>("");
 
@@ -81,12 +84,8 @@ const ListEvents: NextPage = () => {
       <Row className={classes.containerBody}>
         <Container>
           <Grid className={classes.titleBody}>
-            <h1>All Ongoing Promotions</h1>
-            <p>
-              Looking for flight tickets and hotels for your next holiday or
-              business trip? You know you can save a lot more by using these
-              promotions:
-            </p>
+            <h1>{t("list_events_title")}</h1>
+            <p>🎉🎉🎉{t("list_events_sub_title")} ✨✨✨:</p>
           </Grid>
           <Grid className={classes.rowResultBody} container spacing={2}>
             <Grid xs={2} className={classes.btnResetWrapper} item>
@@ -94,7 +93,7 @@ const ListEvents: NextPage = () => {
                 btnType={BtnType.Primary}
                 className={classes.btnResetOption}
               >
-                See All Promos
+                {t("list_events_see_all_pro")}
               </Button>
             </Grid>
             <Grid xs={10} item className={classes.wrapperListItem}>
@@ -123,7 +122,7 @@ const ListEvents: NextPage = () => {
                             ></p>
                           </Grid>
                           <Grid className={classes.boxSeeMore}>
-                            <Grid>See More</Grid>
+                            <Grid>{t("common_view_more")}</Grid>
                           </Grid>
                         </Grid>
                       </Grid>

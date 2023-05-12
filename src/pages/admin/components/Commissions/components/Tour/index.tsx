@@ -39,6 +39,7 @@ import Button, { BtnType } from "components/common/buttons/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -56,18 +57,33 @@ export enum EActiveNav {
   Create_Hotel_Active = 13,
 }
 
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Id", sortable: false },
-  { name: "Commission no.", label: "Commission no.", sortable: false },
-  { name: "Service type", label: "Service type", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
-];
-
 interface Props {}
 // eslint-disable-next-line react/display-name
 const CommissionTour = memo(({}: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t, i18n } = useTranslation("common");
+
+  const tableHeaders: TableHeaderLabel[] = [
+    { name: "id", label: "#", sortable: false },
+    {
+      name: "Commission no.",
+      label: t("admin_management_section_commission_tab_header_table_comm_no"),
+      sortable: false,
+    },
+    {
+      name: "Service type",
+      label: t(
+        "admin_management_section_commission_tab_header_table_service_type"
+      ),
+      sortable: false,
+    },
+    {
+      name: "actions",
+      label: t("admin_management_section_commission_tab_header_table_action"),
+      sortable: false,
+    },
+  ];
 
   const [itemAction, setItemAction] = useState<Commission>();
   const [commissionDelete, setCommissionDelete] = useState<Commission>(null);
@@ -175,7 +191,7 @@ const CommissionTour = memo(({}: Props) => {
     dispatch(setLoading(true));
     CommissionService.delete(commissionDelete?.id)
       .then(() => {
-        dispatch(setSuccessMess("Delete successfully"));
+        dispatch(setSuccessMess(t("common_delete_success")));
         fetchData();
       })
       .catch((e) => {
@@ -198,14 +214,14 @@ const CommissionTour = memo(({}: Props) => {
           <div className={classes.boxInputSearch}>
             <InputSearch
               autoComplete="off"
-              placeholder="Search ..."
+              placeholder={t("common_search")}
               value={keyword || ""}
               onChange={onSearch}
             />
           </div>
           <Button btnType={BtnType.Primary} onClick={onCreateCommission}>
             <FontAwesomeIcon icon={faPlus} />
-            Create
+            {t("common_create")}
           </Button>
         </Row>
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
@@ -217,16 +233,25 @@ const CommissionTour = memo(({}: Props) => {
                   return (
                     <TableRow key={index}>
                       <TableCell scope="row" className={classes.tableCell}>
-                        {item.id}
+                        {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        Commission {item.rate} %
+                        {t("admin_management_navbar_commission")} {item.rate} %
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {item?.serviceType === EServiceType.TOUR ? (
-                          <>Tour</>
+                          <>
+                            {" "}
+                            {t(
+                              "admin_management_section_commission_tab_tour_title"
+                            )}
+                          </>
                         ) : (
-                          <>Hotel</>
+                          <>
+                            {t(
+                              "admin_management_section_commission_tab_hotel_title"
+                            )}
+                          </>
                         )}
                       </TableCell>
                       <TableCell className="text-center" component="th">
@@ -253,6 +278,18 @@ const CommissionTour = memo(({}: Props) => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={t("common_row_per_page")}
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
+              return t("common_row_of_page", {
+                from: from,
+                to: to,
+                count: count,
+              });
+            }}
             component="div"
             className={classes.pagination}
             count={data?.meta?.itemCount || 0}
@@ -279,7 +316,7 @@ const CommissionTour = memo(({}: Props) => {
           >
             <Box display="flex" alignItems={"center"}>
               <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>Edit</span>
+              <span>{t("common_edit")}</span>
             </Box>
           </MenuItem>
           <MenuItem
@@ -293,12 +330,12 @@ const CommissionTour = memo(({}: Props) => {
                 color="error"
                 fontSize="small"
               />
-              <span>Delete</span>
+              <span>{t("common_delete")}</span>
             </Box>
           </MenuItem>
         </Menu>
         <PopupConfirmDelete
-          title="Are you sure delete this commission ?"
+          title={t("admin_management_section_commission_confirm_delete")}
           isOpen={!!commissionDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}

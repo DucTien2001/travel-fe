@@ -26,6 +26,7 @@ import { TourBillService } from "services/normal/tourBill";
 import { EPaymentStatus } from "models/general";
 import { useDispatch } from "react-redux";
 import { setErrorMess } from "redux/reducers/Status/actionTypes";
+import { useTranslation } from "react-i18next";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -35,6 +36,7 @@ export enum EActiveNav {
 const VNPay: NextPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
 
   const getStatusPayment = (status) => {
     if (status === "00") {
@@ -66,27 +68,19 @@ const VNPay: NextPage = () => {
             {router?.query?.vnp_TransactionStatus === "00" ? (
               <ModalHeader className={classes.title}>
                 <FontAwesomeIcon icon={faCircleCheck} />
-                Notification
+                {t("order_vn_pay_title")}
               </ModalHeader>
             ) : (
               <ModalHeader className={classes.dangerTitle}>
                 <DangerousIcon />
-                Notification
+                {t("order_vn_pay_title")}
               </ModalHeader>
             )}
             <ModalBody>
               {router?.query?.vnp_TransactionStatus === "00" ? (
-                <span>
-                  You have successfully paid. Please fill in more contact
-                  information so that we can contact you if there is a need to
-                  contact at the order payment page, you will be redirected to
-                  the payment courtesy page in a few seconds{" "}
-                </span>
+                <span>{t("order_vn_pay_sub_title_success")}</span>
               ) : (
-                <span>
-                  Your payment failed, you will be redirected to the payment
-                  courtesy page in a few seconds
-                </span>
+                <span>{t("order_vn_pay_sub_title_error")}</span>
               )}
               <Link href="/paymentHistory/tour">
                 <a>
@@ -97,7 +91,7 @@ const VNPay: NextPage = () => {
                       router.push("/paymentHistory/tour");
                     }}
                   >
-                    Go to payment history
+                    {t("order_vn_pay_go_to_payment")}
                   </Button>
                 </a>
               </Link>

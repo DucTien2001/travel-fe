@@ -30,7 +30,6 @@ import {
   Pagination,
 } from "@mui/material";
 import Stars from "components/Stars";
-import { getRateComment } from "utils/getOption";
 import { TourBill } from "models/tourBill";
 import { DataPagination, EServiceType } from "models/general";
 import { TourBillService } from "services/normal/tourBill";
@@ -42,6 +41,7 @@ import useAuth from "hooks/useAuth";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import PopupModalImages from "components/Popup/PopupModalImages";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   comments?: Comment[];
@@ -56,6 +56,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { t, i18n } = useTranslation("common");
 
   const tourId = Number(router.query.tourId.slice(1));
   const { allTourBills } = useSelector((state: ReducerType) => state.normal);
@@ -74,6 +75,21 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
   const [replyDelete, setReplyDelete] = useState(null);
   const [replyEdit, setReplyEdit] = useState(null);
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
+
+  const getRateComment = (rate: number) => {
+    switch (rate) {
+      case 1:
+        return t("common_rate_worst");
+      case 2:
+        return t("common_rate_bad");
+      case 3:
+        return t("common_rate_normal");
+      case 4:
+        return t("common_rate_good");
+      case 5:
+        return t("common_rate_excellent");
+    }
+  };
 
   const sortDataByDate = (first, second) =>
     Number(Date.parse(second)) - Number(Date.parse(first));
@@ -294,15 +310,17 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
       <Container className={classes.container}>
         {/* eslint-disable-next-line react/no-unescaped-entities */}
         <Grid className={classes.titleHeader}>
-          <h2 className={classes.title}>CUSTOMER&lsquo;S FEEDBACKS</h2>
+          <h2 className={classes.title}>
+            {t("tour_detail_section_comment_title")}
+          </h2>
           {lastedBill && (
             <Button btnType={BtnType.Primary} onClick={onToggleAddComment}>
-              Add Comment
+              {t("tour_detail_section_comment_btn")}
             </Button>
           )}
         </Grid>
         <p className={classes.subTitle}>
-          Travelix customer(s) have a lot to say about their experiences:
+          {t("tour_detail_section_comment_sub_title")}
         </p>
         {data?.data.length ? (
           data?.data?.map((item, index) => (
@@ -331,8 +349,10 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
               <Grid xs={9} item>
                 <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Grid className={classes.boxRate}>
-                    <Stars numberOfStars={5} />
-                    <p className={classes.textRate}>{getRateComment(5)}</p>
+                    <Stars numberOfStars={item?.rate} />
+                    <p className={classes.textRate}>
+                      {getRateComment(item?.rate)}
+                    </p>
                     <p className={classes.textTime}>
                       {moment(item?.createdAt).format("DD-MM-YYYY")}
                     </p>
@@ -364,7 +384,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
                             className={classes.overLayMore}
                             onClick={onOpenPopupModalImages}
                           >
-                            See All Photos
+                            {t("common_see_all")}
                           </Grid>
                         ) : (
                           <Grid
@@ -382,7 +402,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
                     />
                   </ul>
                 ) : (
-                  <p>No image</p>
+                  <p>{t("tour_detail_section_comment_no_img")}</p>
                 )}
                 {reply?.id === item?.id && (
                   <Grid>
@@ -400,10 +420,10 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
                         className="mr-2"
                         onClick={() => setReply(null)}
                       >
-                        Cancel
+                        {t("common_cancel")}
                       </Button>
                       <Button btnType={BtnType?.Primary} onClick={onPostReply}>
-                        Post
+                        {t("tour_detail_section_comment_btn_post")}
                       </Button>
                     </Grid>
                   </Grid>
@@ -477,13 +497,13 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
                             className="mr-2"
                             onClick={() => setReplyEdit(null)}
                           >
-                            Cancel
+                            {t("common_cancel")}
                           </Button>
                           <Button
                             btnType={BtnType?.Primary}
                             onClick={onPostReply}
                           >
-                            Post
+                            {t("tour_detail_section_comment_btn_post")}
                           </Button>
                         </Grid>
                       </Grid>
@@ -503,7 +523,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
             sx={{ borderTop: "1px solid var(--gray-40)", padding: "16px 0" }}
           >
             <Grid xs={3} item className={classes.boxAvatar}>
-              <p>No comment</p>
+              <p>N{t("tour_detail_section_comment_no_cmt")}</p>
             </Grid>
           </Grid>
         )}
@@ -541,9 +561,42 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
                     sx={{ marginRight: "0.25rem" }}
                     fontSize="small"
                   />
-                  <span>Update</span>
+                  <span>{t("common_edit")}</span>
                 </Box>
               </MenuItem>
+              {user ? (
+                <MenuItem
+                  sx={{ fontSize: "0.875rem" }}
+                  className={classes.menuItem}
+                  onClick={onOpenReply}
+                >
+                  <Box display="flex" alignItems={"center"}>
+                    <AddCommentIcon
+                      sx={{ marginRight: "0.25rem" }}
+                      fontSize="small"
+                      color="info"
+                    />
+                    <span>{t("common_reply")}</span>
+                  </Box>
+                </MenuItem>
+              ) : (
+                <MenuItem
+                  sx={{ fontSize: "0.875rem" }}
+                  className={classes.menuItem}
+                  onClick={() => {
+                    router?.push("/auth/login");
+                  }}
+                >
+                  <Box display="flex" alignItems={"center"}>
+                    <AddCommentIcon
+                      sx={{ marginRight: "0.25rem" }}
+                      fontSize="small"
+                      color="info"
+                    />
+                    <span>{t("common_reply")}</span>
+                  </Box>
+                </MenuItem>
+              )}
               <MenuItem
                 sx={{ fontSize: "0.875rem" }}
                 className={classes.menuItem}
@@ -555,43 +608,10 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
                     fontSize="small"
                     color="error"
                   />
-                  <span>Delete</span>
+                  <span>{t("common_delete")}</span>
                 </Box>
               </MenuItem>
             </>
-          )}
-          {user ? (
-            <MenuItem
-              sx={{ fontSize: "0.875rem" }}
-              className={classes.menuItem}
-              onClick={onOpenReply}
-            >
-              <Box display="flex" alignItems={"center"}>
-                <AddCommentIcon
-                  sx={{ marginRight: "0.25rem" }}
-                  fontSize="small"
-                  color="info"
-                />
-                <span>Reply</span>
-              </Box>
-            </MenuItem>
-          ) : (
-            <MenuItem
-              sx={{ fontSize: "0.875rem" }}
-              className={classes.menuItem}
-              onClick={() => {
-                router?.push("/auth/login");
-              }}
-            >
-              <Box display="flex" alignItems={"center"}>
-                <AddCommentIcon
-                  sx={{ marginRight: "0.25rem" }}
-                  fontSize="small"
-                  color="info"
-                />
-                <span>Reply</span>
-              </Box>
-            </MenuItem>
           )}
         </Menu>
         <PopupAddTourComment
@@ -602,7 +622,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
           commentEdit={comment}
         />
         <PopupConfirmDelete
-          title="Are you sure delete this comment?"
+          title={t("tour_detail_section_comment_popup_title_cmt")}
           isOpen={openPopupConfirmDelete}
           onClose={onTogglePopupConfirmDelete}
           toggle={onTogglePopupConfirmDelete}

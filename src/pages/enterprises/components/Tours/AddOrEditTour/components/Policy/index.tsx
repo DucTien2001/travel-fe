@@ -33,6 +33,7 @@ import { PolicyService } from "services/enterprise/policy";
 import { getPolicyType } from "utils/getOption";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 // import { getPolicyType } from "utils/getOption";
 
 export interface PolicyForm {
@@ -54,6 +55,7 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const PolicyComponent = memo((props: Props) => {
   const { value, index, tour } = props;
+  const { t, i18n } = useTranslation("common");
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -70,33 +72,93 @@ const PolicyComponent = memo((props: Props) => {
           id: yup.number().empty().notRequired(),
           serviceType: yup
             .number()
-            .typeError("Service type is required")
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_policy_service_type_validate"
+              )
+            )
             .notRequired(),
           dayRange: yup
             .number()
-            .typeError("Day range is required")
-            .positive("Day range  must be a positive number")
-            .required("Day range min is required."),
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_policy_day_range_validate"
+              )
+            )
+            .positive(
+              t(
+                "enterprise_management_section_tour_tab_policy_day_range_validate_error"
+              )
+            )
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_policy_day_range_validate"
+              )
+            ),
           moneyRate: yup
             .number()
-            .typeError("Money rate min is required.")
-            .positive("Money rate must be a positive number")
-            .min(0, "Money rate must be more than 0")
-            .max(100, "Money rate must be less than 100")
-            .required("Money rate min is required."),
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_policy_money_rate_validate"
+              )
+            )
+            .positive(
+              t(
+                "enterprise_management_section_tour_tab_policy_money_rate_validate_error"
+              )
+            )
+            .min(
+              0,
+              t(
+                "enterprise_management_section_tour_tab_policy_money_rate_validate_error_min"
+              )
+            )
+            .max(
+              100,
+              t(
+                "enterprise_management_section_tour_tab_policy_money_rate_validate_error_max"
+              )
+            )
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_policy_money_rate_validate"
+              )
+            ),
           policyType: yup
             .object()
             .shape({
-              id: yup.number().required("Policy type is required"),
-              name: yup.string().required("Policy type is required"),
-              value: yup.number().required("Policy type is required"),
+              id: yup
+                .number()
+                .required(
+                  t(
+                    "enterprise_management_section_tour_tab_policy_policy_type_validate"
+                  )
+                ),
+              name: yup
+                .string()
+                .required(
+                  t(
+                    "enterprise_management_section_tour_tab_policy_policy_type_validate"
+                  )
+                ),
+              value: yup
+                .number()
+                .required(
+                  t(
+                    "enterprise_management_section_tour_tab_policy_policy_type_validate"
+                  )
+                ),
             })
-            .required("Policy type is required"),
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_policy_policy_type_validate"
+              )
+            ),
         })
       ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -207,7 +269,7 @@ const PolicyComponent = memo((props: Props) => {
       }))
     )
       .then(() => {
-        dispatch(setSuccessMess("Create policy successfully"));
+        dispatch(setSuccessMess(t("common_create_success")));
         router.push("/enterprises/tours");
       })
       .catch((e) => {
@@ -265,13 +327,18 @@ const PolicyComponent = memo((props: Props) => {
     >
       {value === index && (
         <Grid className={classes.root}>
-          <h3 className={classes.title}>Set up Policy</h3>
+          <h3 className={classes.title}>
+            {t("enterprise_management_section_tour_tab_policy_title_setup")}
+          </h3>
           {!!fieldsPolicy?.length &&
             fieldsPolicy?.map((field, index) => (
               <Grid key={index} sx={{ paddingTop: "32px" }}>
                 <Grid className={classes.boxTitleItem}>
                   <Grid className={classes.titleItem}>
-                    <p>Policy {index + 1}</p>
+                    <p>
+                      {t("enterprise_management_section_tour_tab_policy_title")}{" "}
+                      {index + 1}
+                    </p>
                   </Grid>
 
                   <IconButton
@@ -294,8 +361,12 @@ const PolicyComponent = memo((props: Props) => {
                 >
                   <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
-                      title="Day range"
-                      placeholder="Ex: 3"
+                      title={t(
+                        "enterprise_management_section_tour_tab_policy_day_range_title"
+                      )}
+                      placeholder={t(
+                        "enterprise_management_section_tour_tab_policy_day_range_placeholder"
+                      )}
                       autoComplete="off"
                       type="number"
                       inputRef={register(`policy.${index}.dayRange`)}
@@ -304,8 +375,12 @@ const PolicyComponent = memo((props: Props) => {
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
-                      title="Money rate"
-                      placeholder="Ex: 50%"
+                      title={t(
+                        "enterprise_management_section_tour_tab_policy_money_rate_title"
+                      )}
+                      placeholder={t(
+                        "enterprise_management_section_tour_tab_policy_money_rate_placeholder"
+                      )}
                       autoComplete="off"
                       type="number"
                       inputRef={register(`policy.${index}.moneyRate`)}
@@ -315,12 +390,16 @@ const PolicyComponent = memo((props: Props) => {
                   <Grid item xs={2} sm={4} md={4}>
                     <InputSelect
                       fullWidth
-                      title={"Policy type"}
+                      title={t(
+                        "enterprise_management_section_tour_tab_policy_policy_type_title"
+                      )}
                       name={`policy.${index}.policyType`}
                       control={control}
                       selectProps={{
                         options: policyType,
-                        placeholder: "-- Policy type --",
+                        placeholder: t(
+                          "enterprise_management_section_tour_tab_policy_policy_type_placeholder"
+                        ),
                       }}
                       errorMessage={errors.policy?.[index]?.policyType?.message}
                     />
@@ -330,19 +409,22 @@ const PolicyComponent = memo((props: Props) => {
             ))}
           <Grid className={classes.boxAddDay}>
             <Button btnType={BtnType.Outlined} onClick={onAddPolicy}>
-              <AddCircleIcon /> Click add to policy
+              <AddCircleIcon />
+              {t("enterprise_management_section_tour_tab_policy_add_policy")}
             </Button>
           </Grid>
           <Grid className={classes.boxNextBtn}>
             <Button btnType={BtnType.Primary} type="submit">
-              Done Set Up
+              {t("enterprise_management_section_tour_tab_policy_done")}
               <ArrowRightAltIcon />
             </Button>
           </Grid>
         </Grid>
       )}
       <PopupConfirmDelete
-        title="Are you sure delete this policy?"
+        title={t(
+          "enterprise_management_section_tour_tab_policy_confirm_delete_policy"
+        )}
         isOpen={!!policyItemDelete}
         onClose={onClosePopupConfirmDeletePolicy}
         toggle={onClosePopupConfirmDeletePolicy}

@@ -7,9 +7,6 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import SearchNotFound from "components/SearchNotFound";
 import {
   Box,
-  IconButton,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableContainer,
@@ -21,7 +18,6 @@ import {
 import Button, { BtnType } from "components/common/buttons/Button";
 import TableHeader from "components/Table/TableHeader";
 import { DataPagination, TableHeaderLabel } from "models/general";
-import { ExpandMoreOutlined } from "@mui/icons-material";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import { useRouter } from "next/router";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -29,22 +25,7 @@ import { StatisticAll, ITourOnSaleStatistic } from "models/enterprise/tourBill";
 import { TourBillService } from "services/enterprise/tourBill";
 import { fCurrency2VND } from "utils/formatNumber";
 import moment, { Moment } from "moment";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "#", label: "#", sortable: false },
-  { name: "departure day", label: "Departure day", sortable: false },
-  { name: "quantity", label: "Quantity", sortable: false },
-  { name: "number of booking", label: "Number of booking", sortable: false },
-  {
-    name: "number of tickets booked",
-    label: "Number of tickets booked",
-    sortable: false,
-  },
-  { name: "revenue", label: "Revenue", sortable: false },
-  { name: "commission", label: "Commission", sortable: false },
-  { name: "profit", label: "Profit", sortable: false },
-];
+import { useTranslation } from "react-i18next";
 
 interface Props {
   tourId: number;
@@ -53,6 +34,60 @@ interface Props {
 const TourOnSaleStatistic = memo(({ tourId }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t, i18n } = useTranslation("common");
+
+  const tableHeaders: TableHeaderLabel[] = [
+    { name: "#", label: "#", sortable: false },
+    {
+      name: "departure day",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_departure"
+      ),
+      sortable: false,
+    },
+    {
+      name: "quantity",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_quantity"
+      ),
+      sortable: false,
+    },
+    {
+      name: "number of booking",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_number_booking"
+      ),
+      sortable: false,
+    },
+    {
+      name: "number of tickets booked",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_number_of_ticket_booked"
+      ),
+      sortable: false,
+    },
+    {
+      name: "revenue",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_revenue"
+      ),
+      sortable: false,
+    },
+    {
+      name: "commission",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_commission"
+      ),
+      sortable: false,
+    },
+    {
+      name: "profit",
+      label: t(
+        "enterprise_management_section_tour_statistic_header_table_profit"
+      ),
+      sortable: false,
+    },
+  ];
 
   const [itemAction, setItemAction] = useState<ITourOnSaleStatistic>();
   const [dateFilter, setDateFilter] = useState<Moment>(null);
@@ -155,17 +190,19 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
               value={dateFilter ? dateFilter : ""}
               initialValue={dateFilter ? dateFilter : ""}
               _onChange={(date) => onChangeMonth(date)}
-              placeholder="Select month"
+              placeholder={t(
+                "enterprise_management_section_tour_statistic_input_placeholder"
+              )}
               closeOnSelect={true}
               timeFormat={false}
               dateFormat="M/YYYY"
             />
             <Button btnType={BtnType.Primary} onClick={onClear}>
-              Clear
+              {t("enterprise_management_section_tour_statistic_btn_clear")}
             </Button>
           </Box>
           <Button btnType={BtnType.Primary} onClick={onBack}>
-            Back
+            {t("common_back")}
           </Button>
         </Row>
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
@@ -177,7 +214,7 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
                   return (
                     <TableRow key={item?.tourId}>
                       <TableCell scope="row" className={classes.tableCell}>
-                        {index}
+                        {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <a
@@ -223,6 +260,18 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={t("common_row_per_page")}
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
+              return t("common_row_of_page", {
+                from: from,
+                to: to,
+                count: count,
+              });
+            }}
             component="div"
             className={classes.pagination}
             count={data?.meta?.itemCount || 0}

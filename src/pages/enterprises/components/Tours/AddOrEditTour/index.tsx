@@ -39,7 +39,7 @@ interface Props {
 const AddOrEditTour = memo((props: Props) => {
   const { tourId } = props;
   const dispatch = useDispatch();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
   const router = useRouter();
   let lang;
   if (typeof window !== "undefined") {
@@ -94,9 +94,13 @@ const AddOrEditTour = memo((props: Props) => {
     <>
       <div className={classes.root}>
         <Container className={clsx(classes.rowHeaderBox, classes.title)}>
-          {!tourId ? <h3>Create tour</h3> : <h3>Edit tour</h3>}
+          {!tourId ? (
+            <h3>{t("enterprise_management_section_tour_create_title")}</h3>
+          ) : (
+            <h3>{t("enterprise_management_section_tour_edit_title")}</h3>
+          )}
           <Button onClick={onBack} btnType={BtnType.Primary}>
-            Back
+            {t("common_back")}
           </Button>
         </Container>
         <Container className={classes.tabsBox}>
@@ -114,7 +118,9 @@ const AddOrEditTour = memo((props: Props) => {
               {...controlProps(EStep.INFORMATION)}
               label={
                 <Box display="flex" alignItems="center">
-                  <span className={classes.tabItemTitle}>Information</span>
+                  <span className={classes.tabItemTitle}>
+                    {t("enterprise_management_section_tour_tab_information")}
+                  </span>
                 </Box>
               }
             />
@@ -126,7 +132,7 @@ const AddOrEditTour = memo((props: Props) => {
                     className={classes.tabItemTitle}
                     // translation-key="target_tab"
                   >
-                    Schedule
+                    {t("enterprise_management_section_tour_tab_schedule")}
                   </span>
                 </Box>
               }
@@ -136,7 +142,7 @@ const AddOrEditTour = memo((props: Props) => {
               label={
                 <Box display="flex" alignItems="center">
                   <span className={classes.tabItemTitle}>
-                    Range Price & Date
+                    {t("enterprise_management_section_tour_tab_price")}
                   </span>
                 </Box>
               }
@@ -145,7 +151,9 @@ const AddOrEditTour = memo((props: Props) => {
               {...controlProps(EStep.POLICY)}
               label={
                 <Box display="flex" alignItems="center">
-                  <span className={classes.tabItemTitle}>Policy</span>
+                  <span className={classes.tabItemTitle}>
+                    {t("enterprise_management_section_tour_tab_policy")}
+                  </span>
                 </Box>
               }
             />

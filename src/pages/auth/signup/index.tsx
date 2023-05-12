@@ -37,7 +37,6 @@ interface SignUpForm {
   confirmPassword: string;
   phoneNumber: string;
   role: number;
-  terms: boolean;
 }
 
 const Login: NextPage = () => {
@@ -75,14 +74,6 @@ const Login: NextPage = () => {
           excludeEmptyString: true,
         }),
       role: yup.number().required(),
-      terms: yup.boolean().when("role", {
-        is: (role: number) => !!role && role === EUserType.ENTERPRISE,
-        then: yup
-          .boolean()
-          .typeError("Please tick terms and conditions")
-          .required("Please tick terms and conditions"),
-        otherwise: yup.boolean().notRequired().nullable(),
-      }),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -111,25 +102,26 @@ const Login: NextPage = () => {
     setRegisterSuccess(!registerSuccess);
 
   const _onSubmit = (data: SignUpForm) => {
-    if (checkTerms) {
-      dispatch(setLoading(true));
-      UserService.register({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        username: data.email,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-        phoneNumber: data.phoneNumber,
-        role: data.role,
+    // if (checkTerms) {
+    dispatch(setLoading(true));
+    UserService.register({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      username: data.email,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+      phoneNumber: data.phoneNumber,
+      role: data.role,
+    })
+      .then(() => {
+        setRegisterSuccess(true);
       })
-        .then(() => {
-          setRegisterSuccess(true);
-        })
-        .catch((e) => {
-          dispatch(setErrorMess(e));
-        })
-        .finally(() => dispatch(setLoading(false)));
-    }
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => dispatch(setLoading(false)));
+    // }
+    // console.log(data);
 
     // clearForm();
   };
@@ -276,7 +268,6 @@ const Login: NextPage = () => {
                                           checked={checkTerms}
                                           onChange={() => {
                                             setCheckTerms(!checkTerms);
-                                            setValue("terms", checkTerms);
                                           }}
                                         />
                                         <p>

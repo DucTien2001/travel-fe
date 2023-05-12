@@ -17,12 +17,12 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { useDispatch } from "react-redux";
 import { TourScheduleService } from "services/enterprise/tourSchedule";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
+import { useTranslation } from "react-i18next";
 
 function containsArray(memberArray, member) {
   return memberArray.find((m) => m.day === member.day);
 }
 export interface ScheduleForm {
-  test?: Date;
   schedule: {
     day: number;
   }[];
@@ -40,6 +40,7 @@ interface Props {
 const ScheduleComponent = memo((props: Props) => {
   const { value, index, tour, lang, handleNextStep } = props;
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
 
   const [schedule, setSchedule] = useState([]);
   const [scheduleDelete, setScheduleDelete] = useState(null);
@@ -61,7 +62,6 @@ const ScheduleComponent = memo((props: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      test: yup.date().required("wwww"),
       schedule: yup.array(
         yup.object({
           day: yup
@@ -73,7 +73,7 @@ const ScheduleComponent = memo((props: Props) => {
       ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     reset,
@@ -206,7 +206,12 @@ const ScheduleComponent = memo((props: Props) => {
               <Grid key={index}>
                 <Grid sx={{ display: "flex", alignItems: "center" }}>
                   <Grid className={classes.boxDateTitle}>
-                    <p>Day {index + 1}</p>
+                    <p>
+                      {t(
+                        "enterprise_management_section_tour_tab_schedule_day_title"
+                      )}{" "}
+                      {index + 1}
+                    </p>
                   </Grid>
                   <IconButton
                     onClick={onDeleteSchedule(field, index)}
@@ -241,12 +246,13 @@ const ScheduleComponent = memo((props: Props) => {
             ))}
           <Grid className={classes.boxAddDay}>
             <Button btnType={BtnType.Outlined} onClick={onAddSchedule}>
-              <AddCircleIcon /> Click add to day
+              <AddCircleIcon />{" "}
+              {t("enterprise_management_section_tour_tab_schedule_add")}
             </Button>
           </Grid>
           <Grid className={classes.boxNextBtn}>
             <Button btnType={BtnType.Primary} onClick={handleNextStep}>
-              Next Range Rice and Date
+              {t("enterprise_management_section_tour_tab_schedule_next_range")}
               <ArrowRightAltIcon />
             </Button>
           </Grid>

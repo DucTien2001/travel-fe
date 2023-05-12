@@ -24,6 +24,7 @@ import Stars from "components/Stars";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { Card, Grid, useMediaQuery, useTheme } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line react/display-name
 const OfferComponent = memo(() => {
@@ -32,6 +33,7 @@ const OfferComponent = memo(() => {
   );
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const { t, i18n } = useTranslation("common");
 
   const listBestSeller = allTours.filter((item) => {
     return item.discount;
@@ -41,48 +43,63 @@ const OfferComponent = memo(() => {
     return item?.rate >= 4;
   });
 
-  useEffect(() => {
-    Aos.init({ duration: 500 });
-  }, []);
   return (
     <>
       <Grid className={classes.root}>
         <Grid>
-          <h3 className={classes.title}>Best Places on Viet Nam</h3>
+          <h3 className={classes.title}>
+            {t("landing_page_section_offer_title_best")}
+          </h3>
           <Grid container spacing={1} className={classes.containerBoxCard}>
             <Grid item xs={5} sx={{ height: "100%", paddingBottom: "8px" }}>
-              <Card className={clsx(classes.card6)}>Phu Quoc Island</Card>
+              <Card className={clsx(classes.card6)}>
+                {t("landing_page_section_offer_title_Phu_Quoc")}
+              </Card>
             </Grid>
             <Grid item xs={7} container spacing={1} sx={{ height: "100%" }}>
               <Grid xs={4} className={classes.col4} item container spacing={1}>
                 <Grid xs={8} item className={classes.col4Long}>
-                  <Card className={clsx(classes.card4Long)}>Da Nang</Card>
+                  <Card className={clsx(classes.card4Long)}>
+                    {t("landing_page_section_offer_title_Da_Nang")}
+                  </Card>
                 </Grid>
                 <Grid xs={4} item className={classes.col4Short}>
-                  <Card className={clsx(classes.card4Short)}>Nha Trang</Card>
+                  <Card className={clsx(classes.card4Short)}>
+                    {t("landing_page_section_offer_title_Nha_Trang")}
+                  </Card>
                 </Grid>
               </Grid>
               <Grid xs={4} className={classes.col4} item container spacing={1}>
                 <Grid xs={6} item className={classes.col4Long}>
-                  <Card className={clsx(classes.card41Equal)}>Ha Long Bay</Card>
+                  <Card className={clsx(classes.card41Equal)}>
+                    {t("landing_page_section_offer_title_Ha_Long_Bay")}
+                  </Card>
                 </Grid>
                 <Grid xs={6} item className={classes.col4Short}>
-                  <Card className={clsx(classes.card42Equal)}>Da Lat</Card>
+                  <Card className={clsx(classes.card42Equal)}>
+                    {t("landing_page_section_offer_title_Da_Lat")}
+                  </Card>
                 </Grid>
               </Grid>
               <Grid xs={4} className={classes.col4} item container spacing={1}>
                 <Grid xs={4} item className={classes.col4Long}>
-                  <Card className={clsx(classes.card41Short)}>Sa Pa</Card>
+                  <Card className={clsx(classes.card41Short)}>
+                    {t("landing_page_section_offer_title_Sa_Pa")}
+                  </Card>
                 </Grid>
                 <Grid xs={8} item className={classes.col4Short}>
-                  <Card className={clsx(classes.card41Long)}>Hue</Card>
+                  <Card className={clsx(classes.card41Long)}>
+                    {t("landing_page_section_offer_title_Hue")}
+                  </Card>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
         <Grid sx={{ paddingTop: "64px" }}>
-          <h3 className={classes.title}>Favorite place in Viet Nam</h3>
+          <h3 className={classes.title}>
+            {t("landing_page_section_offer_title_favorite")}
+          </h3>
           <Grid container spacing={1} className={classes.containerBoxCard}>
             <Grid
               item
@@ -99,20 +116,27 @@ const OfferComponent = memo(() => {
                 sx={{ paddingRight: "8px" }}
               >
                 <Card className={clsx(classes.cardPhuYen)}>
-                  <p>Phu Yen</p> <span>100 hotels</span>
+                  <p>{t("landing_page_section_offer_title_PhuYen")}</p>{" "}
+                  <span>
+                    100 {t("landing_page_section_offer_title_favorite_stay")}
+                  </span>
                 </Card>
               </Grid>
               <Grid xs={6} item container className={classes.col6} spacing={1}>
                 <Grid xs={6} item>
                   <Card className={clsx(classes.cardDaLat)}>
-                    <p>Da Lat</p>
-                    <span>100 hotels</span>
+                    <p>{t("landing_page_section_offer_title_Da_Lat")}</p>
+                    <span>
+                      100 {t("landing_page_section_offer_title_favorite_stay")}
+                    </span>
                   </Card>
                 </Grid>
                 <Grid xs={6} item>
                   <Card className={clsx(classes.cardQuyNhon)}>
-                    <p>Quy Nhon</p>
-                    <span>100 hotels</span>
+                    <p>{t("landing_page_section_offer_title_QuyNhon")}</p>
+                    <span>
+                      100 {t("landing_page_section_offer_title_favorite_stay")}
+                    </span>
                   </Card>
                 </Grid>
               </Grid>
@@ -123,8 +147,10 @@ const OfferComponent = memo(() => {
               sx={{ paddingBottom: "16px", paddingLeft: "0 !important" }}
             >
               <Card className={clsx(classes.cardVungTau)}>
-                <p>Vung Tau</p>
-                <span>100 hotels</span>
+                <p>{t("landing_page_section_offer_title_VungTau")}</p>
+                <span>
+                  100 {t("landing_page_section_offer_title_favorite_stay")}
+                </span>
               </Card>
             </Grid>
           </Grid>

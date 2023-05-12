@@ -12,7 +12,7 @@
 }
 
 .containerBoxCard {
-    height: 515px;
+    min-height: 550px !important;
     display: flex;
     @media only screen and (max-width: 768px) {
         flex-direction: column;
@@ -45,17 +45,19 @@
     height: 100%;
     color: var(--white-color);
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: flex-end;
     flex-direction: column;
     padding: 16px 16px 72px 16px;
     border-radius: 20px;
+    
     p {
         margin: 0;
         font-size: 24px;
         font-weight:700;
         color: var(--white-color);
         z-index: 10;
+        text-align: justify;
     }
     span {
         font-size: 14px;
@@ -63,6 +65,7 @@
         font-weight:700;
         color: var(--white-color);
         z-index: 10;
+        text-align: justify;
 
     }
 }
@@ -147,7 +150,7 @@
 }
 
 .titleCard {
-
+    text-align: justify;
     font-weight: 500;
     margin: 0;
     span {

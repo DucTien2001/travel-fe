@@ -7,6 +7,7 @@ import { Grid } from "@mui/material";
 
 import Tour from "./components/Tour";
 import Hotel from "./components/Hotel";
+import { useTranslation } from "react-i18next";
 
 export enum EActiveNav {
   Tour_Active = 1,
@@ -16,6 +17,8 @@ export enum EActiveNav {
 interface Props {}
 // eslint-disable-next-line react/display-name
 const CommissionComponent = memo(({}: Props) => {
+  const { t, i18n } = useTranslation("common");
+
   const [verticalTabs, setVerticalTabs] = React.useState(
     EActiveNav.Tour_Active
   );
@@ -37,7 +40,7 @@ const CommissionComponent = memo(({}: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Commissions</h3>
+          <h3>{t("admin_management_navbar_commission")}</h3>
           <Nav tabs className={classes.nav}>
             <NavItem>
               <NavLink
@@ -49,7 +52,7 @@ const CommissionComponent = memo(({}: Props) => {
                 }
                 onClick={() => onChangeTab(EActiveNav.Tour_Active)}
               >
-                Tour
+                {t("admin_management_section_commission_tab_tour_title")}
               </NavLink>
             </NavItem>
             <NavItem>
@@ -61,7 +64,7 @@ const CommissionComponent = memo(({}: Props) => {
                 }
                 onClick={() => onChangeTab(EActiveNav.Hotel_Active)}
               >
-                Hotel
+                {t("admin_management_section_commission_tab_hotel_title")}
               </NavLink>
             </NavItem>
           </Nav>

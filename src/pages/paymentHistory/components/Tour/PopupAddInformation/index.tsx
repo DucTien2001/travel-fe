@@ -53,6 +53,7 @@ import { Grid } from "@mui/material";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import { TourBill } from "models/tourBill";
 import { TourBillService } from "services/normal/tourBill";
+import { useTranslation } from "react-i18next";
 
 export interface ParticipantForm {
   participant: {
@@ -71,24 +72,34 @@ interface Props extends ModalProps {
 // eslint-disable-next-line react/display-name
 const PopupAddOrEditHotel = memo((props: Props) => {
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
+
   const { isOpen, onClose, tourBill, fetchDataTourBill } = props;
   const schema = useMemo(() => {
     return yup.object().shape({
       participant: yup.array(
         yup.object({
-          fullName: yup.string().required("Full name is required"),
+          fullName: yup
+            .string()
+            .required(
+              t("popup_update_information_payment_history_fullName_validate")
+            ),
           phoneNumber: yup
             .string()
-            .required("Phone is required")
+            .required(
+              t("popup_update_information_payment_history_phone_validate")
+            )
             .matches(VALIDATION.phone, {
-              message: "Please enter a valid phone number.",
+              message: t(
+                "popup_update_information_payment_history_phone_validate_error"
+              ),
               excludeEmptyString: true,
             }),
         })
       ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -165,7 +176,7 @@ const PopupAddOrEditHotel = memo((props: Props) => {
     <>
       <Modal isOpen={isOpen} toggle={onClose} className={classes.root}>
         <ModalHeader toggle={onClose} className={classes.title}>
-          Participant Information
+          {t("popup_update_information_payment_history_title")}
         </ModalHeader>
         <Form
           role="form"
@@ -175,23 +186,27 @@ const PopupAddOrEditHotel = memo((props: Props) => {
           <ModalBody>
             <Row className={clsx(classes.boxTitleRoomNumber, classes.row)}>
               <Col>
-                <p>Booking information:</p>
+                <p> {t("popup_update_information_payment_history_booking")}</p>
               </Col>
             </Row>
             <Grid spacing={2} container>
               <Grid item xs={6}>
                 <InputTextfield
                   value={`${tourBill?.lastName} ${tourBill?.firstName}`}
-                  title="Full name"
-                  placeholder="Enter your full name"
+                  title={t("popup_update_information_payment_history_fullName")}
+                  placeholder={t(
+                    "popup_update_information_payment_history_fullName"
+                  )}
                   disabled
                 />
               </Grid>
               <Grid item xs={6}>
                 <InputTextfield
                   value={`${tourBill?.phoneNumber}`}
-                  title="Phone number"
-                  placeholder="Enter your phone number"
+                  title={t("popup_update_information_payment_history_phone")}
+                  placeholder={t(
+                    "popup_update_information_payment_history_phone"
+                  )}
                   disabled
                 />
               </Grid>
@@ -200,7 +215,12 @@ const PopupAddOrEditHotel = memo((props: Props) => {
               <>
                 <Row className={clsx(classes.boxTitleRoomNumber, classes.row)}>
                   <Col>
-                    <p>Participant {index + 1} :</p>
+                    <p>
+                      {t(
+                        "popup_update_information_payment_history_participant"
+                      )}{" "}
+                      {index + 1} :
+                    </p>
                   </Col>
                   {fields?.length > 1 && (
                     <Col className={classes.boxDeleteRoom}>
@@ -218,8 +238,12 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                 >
                   <Grid item xs={6}>
                     <InputTextfield
-                      title="Full name"
-                      placeholder="Enter your full name"
+                      title={t(
+                        "popup_update_information_payment_history_fullName"
+                      )}
+                      placeholder={t(
+                        "popup_update_information_payment_history_fullName"
+                      )}
                       inputRef={register(`participant.${index}.fullName`)}
                       errorMessage={
                         errors.participant &&
@@ -229,8 +253,12 @@ const PopupAddOrEditHotel = memo((props: Props) => {
                   </Grid>
                   <Grid item xs={6}>
                     <InputTextfield
-                      title="Phone number"
-                      placeholder="Enter your phone number"
+                      title={t(
+                        "popup_update_information_payment_history_phone"
+                      )}
+                      placeholder={t(
+                        "popup_update_information_payment_history_phone"
+                      )}
                       inputRef={register(`participant.${index}.phoneNumber`)}
                       errorMessage={
                         errors.participant &&
@@ -244,13 +272,13 @@ const PopupAddOrEditHotel = memo((props: Props) => {
             <Row className={classes.row}>
               <Col className={classes.boxClickAdd} onClick={onAddParticipant}>
                 <FontAwesomeIcon icon={faListCheck} />
-                Click add to participant
+                {t("popup_update_information_payment_history_add_participant")}
               </Col>
             </Row>
           </ModalBody>
           <ModalFooter className={classes.footer}>
             <Button btnType={BtnType.Primary} type="submit">
-              Save
+              {t("common_save")}
             </Button>
           </ModalFooter>
         </Form>

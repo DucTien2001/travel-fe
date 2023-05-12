@@ -1,23 +1,19 @@
-import React, { memo, useMemo, useRef, useState } from "react";
+import React, { memo, useMemo } from "react";
 import {
   Modal,
   ModalProps,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Container,
 } from "reactstrap";
 import classes from "./styles.module.scss";
-import "aos/dist/aos.css";
-import Button, { BtnType } from "components/common/buttons/Button";
 import { DETAIL_SECTION, Tour } from "models/tour";
-import { Link } from "react-scroll";
-import { Grid, Tabs, useMediaQuery, useTheme } from "@mui/material";
-import styled from "styled-components";
+import { Grid } from "@mui/material";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import _ from "lodash";
+import { useTranslation } from "react-i18next";
 
 interface Props extends ModalProps {
   isOpen: boolean;
@@ -29,6 +25,7 @@ interface Props extends ModalProps {
 // eslint-disable-next-line react/display-name
 const PopupDetailTour = memo((props: Props) => {
   const { isOpen, toggle, onClose, tour } = props;
+  const { t, i18n } = useTranslation("common");
 
   const policyType = useMemo(() => {
     return _.toArray(_.groupBy(tour?.tourPolicies, "policyType"));
@@ -49,16 +46,32 @@ const PopupDetailTour = memo((props: Props) => {
             >
               <Grid className={classes.boxTitle}>
                 <AirplaneTicketIcon />
-                <p>Tour Details</p>
-              </Grid>
-              <Grid className={classes.boxDuration}>
-                <p className={classes.titleDetail}>- Tour Duration: </p>
                 <p>
-                  {tour?.numberOfDays} days - {tour?.numberOfNights} nights
+                  {t(
+                    "popup_detail_tour_and_terms_conditions_tour_detail_title"
+                  )}
                 </p>
               </Grid>
               <Grid className={classes.boxDuration}>
-                <p className={classes.titleDetail}>- Tour Description: </p>
+                <p className={classes.titleDetail}>
+                  -{" "}
+                  {t(
+                    "popup_detail_tour_and_terms_conditions_tour_duration_title"
+                  )}
+                  :{" "}
+                </p>
+                <p>
+                  {t("popup_detail_tour_and_terms_conditions_tour_duration", {
+                    day: tour?.numberOfDays,
+                    night: tour?.numberOfNights,
+                  })}
+                </p>
+              </Grid>
+              <Grid className={classes.boxDuration}>
+                <p className={classes.titleDetail}>
+                  - {t("popup_detail_tour_and_terms_conditions_tour_des_title")}
+                  :{" "}
+                </p>
                 <p dangerouslySetInnerHTML={{ __html: tour?.description }}></p>
               </Grid>
             </Grid>
@@ -68,10 +81,15 @@ const PopupDetailTour = memo((props: Props) => {
             >
               <Grid className={classes.boxTitle}>
                 <LibraryBooksIcon />
-                <p>Terms and Condition</p>
+                <p>
+                  {t("popup_detail_tour_and_terms_conditions_tour_terms_title")}
+                </p>
               </Grid>
               <Grid className={classes.boxDuration}>
-                <p className={classes.titleDetail}>- General Infomation: </p>
+                <p className={classes.titleDetail}>
+                  -{" "}
+                  {t("popup_detail_tour_and_terms_conditions_tour_info_title")}:{" "}
+                </p>
                 <p
                   dangerouslySetInnerHTML={{ __html: tour?.termsAndCondition }}
                 ></p>
@@ -83,49 +101,75 @@ const PopupDetailTour = memo((props: Props) => {
             >
               <Grid className={classes.boxTitle}>
                 <CreditScoreIcon />
-                <p>Reschedule & Refund</p>
+                <p>
+                  {t(
+                    "popup_detail_tour_and_terms_conditions_tour_reschedule_title"
+                  )}
+                </p>
               </Grid>
               <Grid className={classes.boxDuration}>
-                <p className={classes.titleDetail}>- Reschedule Policy: </p>
+                <p className={classes.titleDetail}>
+                  -{" "}
+                  {t(
+                    "popup_detail_tour_and_terms_conditions_tour_reschedule_title"
+                  )}
+                  :{" "}
+                </p>
                 {policyType[0]?.length ? (
                   <ul>
                     {policyType[0]?.map((item, index) => (
-                      <li key={index}>
-                        Request a refund at the latest{" "}
-                        <span className={classes.titleDetail}>
-                          {item?.dayRange} day(s)
-                        </span>{" "}
-                        before your selected visit date to get up to{" "}
-                        <span className={classes.titleDetail}>
-                          {item?.moneyRate}%{" "}
-                        </span>{" "}
-                        refund.
-                      </li>
+                      <li
+                        key={index}
+                        className={classes.itemPolicy}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_detail_tour_and_terms_conditions_tour_reschedule_content",
+                            {
+                              dayRange: item?.dayRange,
+                              moneyRate: item?.moneyRate,
+                            }
+                          ),
+                        }}
+                      ></li>
                     ))}
                   </ul>
                 ) : (
-                  <p>This booking cannot be rescheduled.</p>
+                  <p>
+                    {t(
+                      "popup_detail_tour_and_terms_conditions_tour_no_reschedule"
+                    )}
+                  </p>
                 )}
 
-                <p className={classes.titleDetail}>- Refund Policy: </p>
+                <p className={classes.titleDetail}>
+                  -{" "}
+                  {t(
+                    "popup_detail_tour_and_terms_conditions_tour_refund_title"
+                  )}
+                  :{" "}
+                </p>
                 {policyType[1]?.length ? (
                   <ul>
                     {policyType[1]?.map((item, index) => (
-                      <li key={index}>
-                        Request a refund at the latest{" "}
-                        <span className={classes.titleDetail}>
-                          {item?.dayRange} day(s)
-                        </span>{" "}
-                        before your selected visit date to get up to{" "}
-                        <span className={classes.titleDetail}>
-                          {item?.moneyRate}%{" "}
-                        </span>{" "}
-                        refund.
-                      </li>
+                      <li
+                        key={index}
+                        className={classes.itemPolicy}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_detail_tour_and_terms_conditions_tour_refund_content",
+                            {
+                              dayRange: item?.dayRange,
+                              moneyRate: item?.moneyRate,
+                            }
+                          ),
+                        }}
+                      ></li>
                     ))}
                   </ul>
                 ) : (
-                  <p>This booking cannot be rescheduled.</p>
+                  <p>
+                    {t("popup_detail_tour_and_terms_conditions_tour_no_refund")}
+                  </p>
                 )}
               </Grid>
             </Grid>

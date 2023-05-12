@@ -1,23 +1,9 @@
-import { memo, useMemo, useEffect, useState } from "react";
-import {
-  Modal,
-  Row,
-  Col,
-  ModalFooter,
-  ModalHeader,
-  ModalBody,
-} from "reactstrap";
+import { memo, useEffect, useState } from "react";
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import classes from "./styles.module.scss";
 import moment from "moment";
-import clsx from "clsx";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import { useDispatch } from "react-redux";
-import { setLoading } from "redux/reducers/Status/actionTypes";
 import { TourBill } from "models/tourBill";
-import { fCurrency2VND } from "utils/formatNumber";
-import Button, { BtnType } from "components/common/buttons/Button";
-import QRCode from "react-qr-code";
 import { Tour, TourPrice } from "models/tour";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { Grid } from "@mui/material";
@@ -25,6 +11,7 @@ import { setSelectChangeDateReducer } from "redux/reducers/Normal/actionTypes";
 import { useRouter } from "next/router";
 import ReportIcon from "@mui/icons-material/Report";
 import { EServicePolicyType } from "models/general";
+import { useTranslation } from "react-i18next";
 interface Props {
   onClose: () => void;
   isOpen: boolean;
@@ -35,12 +22,7 @@ interface Props {
 const PopupSelectDate = memo(({ onClose, isOpen, tour, tourBill }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
-
-  const dayValid = useMemo(() => {
-    return tour?.tourOnSales?.map((item) => {
-      return item.startDate;
-    });
-  }, [tour]);
+  const { t, i18n } = useTranslation("common");
 
   const yesterday = moment().subtract(1, "day");
   const dateReschedule = new Date();
@@ -90,12 +72,12 @@ const PopupSelectDate = memo(({ onClose, isOpen, tour, tourBill }: Props) => {
       className={classes.modal}
     >
       <ModalHeader isOpen={isOpen} toggle={onClose} className={classes.title}>
-        Select date
+        {t("popup_change_date_payment_history_title")}
       </ModalHeader>
       {isValidReschedule ? (
         <ModalBody>
           <Grid className={classes.boxDate}>
-            <p>Date available: </p>
+            <p>{t("popup_change_date_payment_history_date_available")}: </p>
             <Grid container>
               {tour?.tourOnSales?.map((item, index) =>
                 moment(item?.startDate) < yesterday ||
@@ -115,29 +97,19 @@ const PopupSelectDate = memo(({ onClose, isOpen, tour, tourBill }: Props) => {
           </Grid>
           <Grid className={classes.boxNote}>
             <NotificationsActiveIcon />
-            <p>Notification: </p>
+            <p>{t("popup_change_date_payment_history_notification")}: </p>
           </Grid>
           <ul className={classes.boxContentNote}>
-            <li>
-              You will not be able to re-select the date you previously booked{" "}
-            </li>
-            <li>
-              You will not receive a discount on the number of tickets booked{" "}
-            </li>
-            <li>
-              You may incur additional costs for rescheduling according to our
-              policy
-            </li>
+            <li>{t("popup_change_date_payment_history_not_1")}</li>
+            <li>{t("popup_change_date_payment_history_not_2")}</li>
+            <li>{t("popup_change_date_payment_history_not_3")}</li>
           </ul>
         </ModalBody>
       ) : (
         <ModalBody>
           <Grid className={classes.noDate}>
             <ReportIcon />
-            <span>
-              There is no suitable date, maybe the time you can reschedule has
-              expired, please check the invoice again!
-            </span>
+            <span>{t("popup_change_date_payment_history_no_date")}</span>
           </Grid>
         </ModalBody>
       )}

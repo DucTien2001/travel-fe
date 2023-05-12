@@ -35,7 +35,7 @@ interface InputsProps extends OutlinedInputProps {
   rootProps?: FormControlProps;
 }
 const InputTextfield = memo((props: InputsProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   const [toggleEyes, setToggleEyes] = useState(false);
   const {
@@ -71,7 +71,9 @@ const InputTextfield = memo((props: InputsProps) => {
         <label className={classes.title}>
           {title}
           {optional ? (
-            <span className={classes.optional}>&nbsp;(optional)</span>
+            <span className={classes.optional}>
+              &nbsp;{t("common_optional")}
+            </span>
           ) : (
             ""
           )}

@@ -31,7 +31,7 @@ const BookTour = memo(() => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { page } = router.query;
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
 
   const [modal, setModal] = useState(false);
   const [tour, setTour] = useState<any>();
@@ -41,15 +41,15 @@ const BookTour = memo(() => {
     return [
       {
         id: EStep.BOOKING,
-        name: "Booking",
+        name: t("book_page_step_title_booking"),
       },
       {
         id: EStep.REVIEW,
-        name: "Review",
+        name: t("review_page_step_title_review"),
       },
       {
         id: EStep.PAYMENT,
-        name: "Pay",
+        name: t("payment_page_step_title_payment"),
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,7 +122,7 @@ const BookTour = memo(() => {
       <div className={clsx("wrapper", classes.root)}>
         <SectionHeader
           className={classes.sectionHeader}
-          title="BOOK TOUR"
+          title={t("book_page_step_title_hero_booking")}
           src={images.bgbook.src}
         />
         <Grid className={classes.rootContent}>

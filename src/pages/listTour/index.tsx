@@ -37,6 +37,7 @@ import { DataPagination, sortType } from "models/general";
 import { Grid, Pagination } from "@mui/material";
 import { NormalGetTours, Tour } from "models/tour";
 import useDebounce from "hooks/useDebounce";
+import { useTranslation } from "react-i18next";
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 interface SearchData {
@@ -46,6 +47,8 @@ interface SearchData {
 }
 
 const ListTours: NextPage = () => {
+  const { t, i18n } = useTranslation("common");
+
   const dispatch = useDispatch();
   const [changeViewLayout, setChangeViewLayout] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState([10000, 3000000]);
@@ -71,7 +74,7 @@ const ListTours: NextPage = () => {
       sortType: yup.object().required("This field is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -207,10 +210,6 @@ const ListTours: NextPage = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [tags, selectedPrice, selectedRating]);
 
-  useEffect(() => {
-    Aos.init({ duration: 500 });
-  }, []);
-
   //sort by
   // const watchSortType = watch("sortType");
   // useEffect(() => {
@@ -235,14 +234,19 @@ const ListTours: NextPage = () => {
 
   useEffect(() => {
     fetchData();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  console.log(
+    data?.data[0]?.tourOnSales.length
+      ? Math.min(...data?.data[0]?.tourOnSales?.map((price) => price?.discount))
+      : "99"
+  );
 
   return (
     <>
       <SectionHeader
-        title="MULTI-TOURS"
+        title={t("list_tours_section_title_hero")}
         src={images.imagesListTour.src}
         className={classes.imgHeader}
       />
@@ -253,24 +257,21 @@ const ListTours: NextPage = () => {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img alt="anh" src={images.iconSearch.src}></img>
             </div>
-            <h1>BROWSE OUR MULTI-COUNTRY TOURS</h1>
+            <h1>{t("list_tours_section_title")}</h1>
             <div className={classes.divider}></div>
-            <p data-aos="fade-up">
-              Choose from our portfolio of unforgettable multi-country tours of
-              Asia and embark on the journey of a lifetime. Each private tour is
-              tailor-made to show the very best that Asia has to offer.
-            </p>
+            <p>{t("list_tours_section_sub_title")}</p>
           </Row>
           <Row className={classes.containerSearch}>
             <div className={classes.boxControlSearch}>
               <div className={classes.boxTitleSearch}>
                 <p>
-                  Tours / <span>Search Results</span>
+                  {t("list_tours_header_search_title")} /{" "}
+                  <span>{t("list_tours_header_search_results")}</span>
                 </p>
               </div>
               <div>
                 <InputRecentSearch
-                  placeholder="Search tour"
+                  placeholder={t("list_tours_header_search_placeholder")}
                   autoComplete="off"
                   value={keyword || ""}
                   onChange={onSearch}
@@ -304,7 +305,7 @@ const ListTours: NextPage = () => {
               <Grid className={classes.rowResult}>
                 <Grid className={classes.controlSelect}>
                   <Grid>
-                    <h5>SORT BY: </h5>
+                    <h5>{t("list_tours_sort_by")}: </h5>
                   </Grid>
                   {/* <CustomSelect
                     className={classes.inputSelect}
@@ -323,7 +324,7 @@ const ListTours: NextPage = () => {
                 </Grid>
                 <Grid>
                   <h5>
-                    RESULTS-FOUND: <span>{data?.data?.length}</span>
+                    {t("list_tours_result")} <span>{data?.data?.length}</span>
                   </h5>
                 </Grid>
               </Grid>
@@ -335,7 +336,8 @@ const ListTours: NextPage = () => {
                 btnType={BtnType.Primary}
                 className={classes.btnResetOption}
               >
-                <FontAwesomeIcon icon={faArrowsRotate} /> reset filter
+                <FontAwesomeIcon icon={faArrowsRotate} />{" "}
+                {t("list_tours_reset_filter")}
               </Button>
               {/* <BoxSmallLeft title="Search tours">
                 <InputTextField
@@ -383,22 +385,12 @@ const ListTours: NextPage = () => {
                         district={tour?.district?.name}
                         city={tour?.city?.name}
                         price={
-                          tour?.tourOnSales.length
-                            ? Math.min(
-                                ...tour?.tourOnSales?.map(
-                                  (price) => price?.adultPrice
-                                )
-                              )
-                            : 0
+                          tour?.tourOnSales.length &&
+                          tour?.tourOnSales[0]?.adultPrice
                         }
                         discount={
-                          tour?.tourOnSales.length
-                            ? Math.min(
-                                ...tour?.tourOnSales?.map(
-                                  (price) => price?.discount
-                                )
-                              )
-                            : 0
+                          tour?.tourOnSales.length &&
+                          tour?.tourOnSales[0]?.discount
                         }
                         rate={Math.floor(tour?.rate)}
                         numberOfReviewers={tour?.numberOfReviewer}
@@ -423,22 +415,12 @@ const ListTours: NextPage = () => {
                         district={tour?.district?.name}
                         city={tour?.city?.name}
                         price={
-                          tour?.tourOnSales.length
-                            ? Math.min(
-                                ...tour?.tourOnSales?.map(
-                                  (price) => price?.adultPrice
-                                )
-                              )
-                            : 0
+                          tour?.tourOnSales.length &&
+                          tour?.tourOnSales[0]?.adultPrice
                         }
                         discount={
-                          tour?.tourOnSales.length
-                            ? Math.min(
-                                ...tour?.tourOnSales?.map(
-                                  (price) => price?.discount
-                                )
-                              )
-                            : 0
+                          tour?.tourOnSales.length &&
+                          tour?.tourOnSales[0]?.discount
                         }
                         rate={Math.floor(tour?.rate)}
                         numberOfReviewers={tour?.numberOfReviewer}
@@ -448,7 +430,7 @@ const ListTours: NextPage = () => {
                 )}
                 {!data?.data?.length && (
                   <div>
-                    <SearchNotFound mess="No tour found" />
+                    <SearchNotFound mess={t("common_not_found")} />
                   </div>
                 )}
               </div>
@@ -475,5 +457,5 @@ export default ListTours;
 //     props: {
 //       ...(await serverSideTranslations(locale)),
 //     }
-//   } 
+//   }
 // }

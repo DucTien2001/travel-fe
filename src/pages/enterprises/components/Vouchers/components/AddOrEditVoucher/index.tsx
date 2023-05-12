@@ -70,7 +70,7 @@ interface Props {
 const AddOrEditVoucher = memo((props: Props) => {
   const { voucherId } = props;
   const dispatch = useDispatch();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
   const router = useRouter();
   let lang;
   if (typeof window !== "undefined") {
@@ -87,14 +87,33 @@ const AddOrEditVoucher = memo((props: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      startTime: yup.date().required("Start time is required"),
+      startTime: yup
+        .date()
+        .required(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_start_time_validate"
+          )
+        ),
       endTime: yup
         .date()
-        .min(yup.ref("startTime"), "End time can't be before start time")
-        .required("End time is required"),
+        .min(
+          yup.ref("startTime"),
+          t(
+            "enterprise_management_section_add_or_edit_voucher_end_time_validate_min"
+          )
+        )
+        .required(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_end_time_validate"
+          )
+        ),
       discountType: yup
         .object()
-        .typeError("Discount type is required.")
+        .typeError(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_discount_type_validate"
+          )
+        )
         .shape({
           id: yup.number().required("Discount type is required"),
           name: yup.string().required(),
@@ -102,21 +121,49 @@ const AddOrEditVoucher = memo((props: Props) => {
         .required(),
       discountValue: yup
         .number()
-        .typeError("Discount value is required.")
-        .positive("Discount value must be a positive number")
-        .required("Discount value is required."),
+        .typeError(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_discount_value_validate"
+          )
+        )
+        .positive(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_discount_value_validate_error"
+          )
+        )
+        .required(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_discount_value_validate"
+          )
+        ),
       minOder: yup
         .number()
-        .typeError("Min order is required.")
-        .positive("Min order must be a positive number")
+        .typeError(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_min_order_validate"
+          )
+        )
+        .positive(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_min_order_validate_error"
+          )
+        )
         .notRequired(),
       maxDiscount: yup.number().when("discountType", {
         is: (type: OptionItem) => type?.id === EDiscountType.PERCENT,
         then: yup
           .number()
-          .typeError("Max discount is required.")
+          .typeError(
+            t(
+              "enterprise_management_section_add_or_edit_voucher_max_discount_validate"
+            )
+          )
           .nullable()
-          .positive("Max discount must be a positive number")
+          .positive(
+            t(
+              "enterprise_management_section_add_or_edit_voucher_max_discount_validate_error"
+            )
+          )
           .notRequired()
           .transform((_, val) => (val !== "" ? Number(val) : null)),
         otherwise: yup.number().nullable().notRequired().default(0),
@@ -125,15 +172,33 @@ const AddOrEditVoucher = memo((props: Props) => {
         is: (isQuantityLimit: boolean) => !!isQuantityLimit,
         then: yup
           .number()
-          .typeError("Number of codes must be number")
-          .positive("Number of codes  must be a integer number")
-          .required("Number of codes  is required."),
+          .typeError(
+            t(
+              "enterprise_management_section_add_or_edit_voucher_number_code_validate"
+            )
+          )
+          .positive(
+            t(
+              "enterprise_management_section_add_or_edit_voucher_number_code_validate"
+            )
+          )
+          .required(
+            t(
+              "enterprise_management_section_add_or_edit_voucher_number_code_validate_error"
+            )
+          ),
         otherwise: yup.number().nullable().notRequired().default(0),
       }),
-      isQuantityLimit: yup.boolean().required("Quantity limit is required"),
+      isQuantityLimit: yup
+        .boolean()
+        .required(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_number_code_quantity_limit"
+          )
+        ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -308,7 +373,7 @@ const AddOrEditVoucher = memo((props: Props) => {
     if (voucher) {
       VoucherService.update(voucher.id, formData)
         .then(async () => {
-          dispatch(setSuccessMess("Update voucher successfully"));
+          dispatch(setSuccessMess(t("common_update_success")));
           onBack();
           await fetchData();
         })
@@ -317,7 +382,7 @@ const AddOrEditVoucher = memo((props: Props) => {
     } else {
       VoucherService.create(formData)
         .then((res) => {
-          dispatch(setSuccessMess("Create voucher successfully"));
+          dispatch(setSuccessMess(t("common_create_success")));
           onBack();
         })
         .catch((e) => dispatch(setErrorMess(e)))
@@ -351,9 +416,21 @@ const AddOrEditVoucher = memo((props: Props) => {
     <>
       <div className={classes.root}>
         <Container className={clsx(classes.rowHeaderBox, classes.title)}>
-          {!voucherId ? <h3>Create voucher</h3> : <h3>Edit voucher</h3>}
+          {!voucherId ? (
+            <h3>
+              {t(
+                "enterprise_management_section_add_or_edit_voucher_title_create"
+              )}
+            </h3>
+          ) : (
+            <h3>
+              {t(
+                "enterprise_management_section_add_or_edit_voucher_title_edit"
+              )}
+            </h3>
+          )}
           <Button onClick={onBack} btnType={BtnType.Primary}>
-            Back
+            {t("common_back")}
           </Button>
         </Container>
         <Container>
@@ -367,7 +444,9 @@ const AddOrEditVoucher = memo((props: Props) => {
                 <InputDatePicker
                   name={`startTime`}
                   control={control}
-                  label="Start time"
+                  label={t(
+                    "enterprise_management_section_add_or_edit_voucher_start_time"
+                  )}
                   timeConstraints={{
                     minutes: { min: 0, max: 59, step: 5 },
                   }}
@@ -380,7 +459,9 @@ const AddOrEditVoucher = memo((props: Props) => {
                 <InputDatePicker
                   name={`endTime`}
                   control={control}
-                  label="End time"
+                  label={t(
+                    "enterprise_management_section_add_or_edit_voucher_end_time"
+                  )}
                   timeConstraints={{
                     minutes: { min: 0, max: 59, step: 5 },
                   }}
@@ -390,14 +471,20 @@ const AddOrEditVoucher = memo((props: Props) => {
                 />
               </Grid>
               <Grid item xs={6}>
-                <p className={classes.titleSelect}>Select tours</p>
+                <p className={classes.titleSelect}>
+                  {t(
+                    "enterprise_management_section_add_or_edit_voucher_select_tour"
+                  )}
+                </p>
                 <Button
                   sx={{ width: { xs: "100%", sm: "auto" }, maxHeight: "36px" }}
                   className={classes.selectTourBtn}
                   btnType={BtnType.Outlined}
                   onClick={handleClickMenuChooseTour}
                 >
-                  Select tours
+                  {t(
+                    "enterprise_management_section_add_or_edit_voucher_select_tour"
+                  )}
                   <KeyboardArrowDown
                     sx={{
                       color: "var(--gray-80)",
@@ -406,7 +493,11 @@ const AddOrEditVoucher = memo((props: Props) => {
                   />
                 </Button>
                 {isEmptyTourSelect && (
-                  <ErrorMessage>Select tours is required</ErrorMessage>
+                  <ErrorMessage>
+                    {t(
+                      "enterprise_management_section_add_or_edit_voucher_select_tour_error"
+                    )}
+                  </ErrorMessage>
                 )}
                 <Menu
                   anchorEl={anchorElMenuChooseTour}
@@ -449,7 +540,7 @@ const AddOrEditVoucher = memo((props: Props) => {
                       translation-key="common_cancel"
                       onClick={handleCloseMenuChooseTour}
                     >
-                      Cancel
+                      {t("common_cancel")}
                     </Button>
                     <Button
                       btnType={BtnType.Primary}
@@ -457,7 +548,7 @@ const AddOrEditVoucher = memo((props: Props) => {
                       className={classes.btnSave}
                       onClick={onSubmitChooseProjectTour}
                     >
-                      Done
+                      {t("common_save")}
                     </Button>
                   </Grid>
                 </Menu>
@@ -477,12 +568,16 @@ const AddOrEditVoucher = memo((props: Props) => {
               <Grid item xs={12} sm={6}>
                 <InputSelect
                   fullWidth
-                  title="Discount Type"
+                  title={t(
+                    "enterprise_management_section_add_or_edit_voucher_discount_type"
+                  )}
                   name="discountType"
                   control={control}
                   selectProps={{
                     options: discountType,
-                    placeholder: "-- Discount type --",
+                    placeholder: t(
+                      "enterprise_management_section_add_or_edit_voucher_discount_type_placeholder"
+                    ),
                   }}
                   errorMessage={(errors.discountType as any)?.message}
                 />
@@ -490,8 +585,12 @@ const AddOrEditVoucher = memo((props: Props) => {
               {watch("discountType")?.value === EDiscountType.PERCENT && (
                 <Grid item xs={12} sm={6}>
                   <InputTextfield
-                    title="Max discount"
-                    placeholder="Ex: 100 000 VND"
+                    title={t(
+                      "enterprise_management_section_add_or_edit_voucher_max_discount"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_add_or_edit_voucher_max_discount_placeholder"
+                    )}
                     autoComplete="off"
                     name="maxDiscount"
                     optional
@@ -503,8 +602,12 @@ const AddOrEditVoucher = memo((props: Props) => {
               )}
               <Grid item xs={12} sm={6}>
                 <InputTextfield
-                  title="Discount value"
-                  placeholder="Enter discount value"
+                  title={t(
+                    "enterprise_management_section_add_or_edit_voucher_discount_value"
+                  )}
+                  placeholder={t(
+                    "enterprise_management_section_add_or_edit_voucher_discount_value"
+                  )}
                   autoComplete="off"
                   name="discountValue"
                   type="number"
@@ -514,8 +617,12 @@ const AddOrEditVoucher = memo((props: Props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <InputTextfield
-                  title="Min Order"
-                  placeholder="Ex: 3 order"
+                  title={t(
+                    "enterprise_management_section_add_or_edit_voucher_min_order"
+                  )}
+                  placeholder={t(
+                    "enterprise_management_section_add_or_edit_voucher_min_order_placeholder"
+                  )}
                   autoComplete="off"
                   name="minOrder"
                   optional
@@ -539,14 +646,20 @@ const AddOrEditVoucher = memo((props: Props) => {
                       )}
                     />
                   }
-                  label="Enable Limit Quantity Code"
+                  label={t(
+                    "enterprise_management_section_add_or_edit_voucher_is_quantity"
+                  )}
                 />
               </Grid>
               {watch("isQuantityLimit") && (
                 <Grid item xs={12} sm={6}>
                   <InputTextfield
-                    title="Number of Codes"
-                    placeholder="Enter number of code"
+                    title={t(
+                      "enterprise_management_section_add_or_edit_voucher_number_code"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_add_or_edit_voucher_number_code"
+                    )}
                     autoComplete="off"
                     name="code"
                     type="number"
@@ -562,7 +675,7 @@ const AddOrEditVoucher = memo((props: Props) => {
                 type="submit"
                 className={classes.btnSave}
               >
-                Save
+                {t("common_save")}
               </Button>
             </Grid>
           </Grid>

@@ -57,27 +57,61 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import PopupAddTourComment from "pages/listTour/[tourId]/components/PopupAddTourComment";
 import { CommentService } from "services/normal/comment";
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "Invoice no.", label: "Invoice no.", sortable: false },
-  { name: "Tour name", label: "Tour name", sortable: false },
-  { name: "Booking date", label: "Booking date", sortable: false },
-  { name: "price", label: "Total bill", sortable: false },
-  { name: "statusPayment", label: "Status payment", sortable: false },
-  { name: "statusBill", label: "Status bill", sortable: false },
-  { name: "download", label: "Download / View", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
-];
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line react/display-name
 const Tour = memo(() => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t, i18n } = useTranslation("common");
+
+  const tableHeaders: TableHeaderLabel[] = [
+    {
+      name: t("payment_history_page_tour_invoice_no"),
+      label: t("payment_history_page_tour_invoice_no"),
+      sortable: false,
+    },
+    {
+      name: t("payment_history_page_tour_tour_name"),
+      label: t("payment_history_page_tour_tour_name"),
+      sortable: false,
+    },
+    {
+      name: t("payment_history_page_tour_booking_date"),
+      label: t("payment_history_page_tour_booking_date"),
+      sortable: false,
+    },
+    {
+      name: t("payment_history_page_tour_total_bill"),
+      label: t("payment_history_page_tour_total_bill"),
+      sortable: false,
+    },
+    {
+      name: t("payment_history_page_tour_status_payment"),
+      label: t("payment_history_page_tour_status_payment"),
+      sortable: false,
+    },
+    {
+      name: t("payment_history_page_tour_status_bill"),
+      label: t("payment_history_page_tour_status_bill"),
+      sortable: false,
+    },
+    {
+      name: t("payment_history_page_tour_status_download_view"),
+      label: t("payment_history_page_tour_status_download_view"),
+      sortable: false,
+    },
+    {
+      name: t("payment_history_page_tour_status_action"),
+      label: t("payment_history_page_tour_status_action"),
+      sortable: false,
+    },
+  ];
 
   const [modalDownloadTourBill, setModalDownloadTourBill] = useState(false);
   const [tourBill, setTourBill] = useState<TourBill>(null);
   const [openConfirmCancelBookTour, setOpenConfirmCancelBookTour] =
     useState(false);
-
   const [data, setData] = useState<DataPagination<TourBill>>();
   const [keyword, setKeyword] = useState<string>("");
   const [itemAction, setItemAction] = useState<TourBill>();
@@ -258,7 +292,7 @@ const Tour = memo(() => {
           <div className={classes.boxInputSearch}>
             <InputSearch
               autoComplete="off"
-              placeholder="Search ..."
+              placeholder={t("payment_history_page_search")}
               value={keyword || ""}
               onChange={onSearch}
             />
@@ -329,7 +363,7 @@ const Tour = memo(() => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={7}>
+                  <TableCell align="center" colSpan={8}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>
@@ -337,6 +371,18 @@ const Tour = memo(() => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={t("common_row_per_page")}
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
+              return t("common_row_of_page", {
+                from: from,
+                to: to,
+                count: count,
+              });
+            }}
             component="div"
             className={classes.pagination}
             count={data?.meta?.itemCount || 0}
@@ -367,7 +413,7 @@ const Tour = memo(() => {
                   sx={{ marginRight: "0.25rem" }}
                   fontSize="small"
                 />
-                <span>Reschedule</span>
+                <span>{t("payment_history_page_tour_action_reschedule")}</span>
               </Box>
             </MenuItem>
           )}
@@ -382,7 +428,7 @@ const Tour = memo(() => {
                   sx={{ marginRight: "0.25rem" }}
                   fontSize="small"
                 />
-                <span>Update contact information</span>
+                <span>{t("payment_history_page_tour_action_update")}</span>
               </Box>
             </MenuItem>
           )}
@@ -398,7 +444,7 @@ const Tour = memo(() => {
                   color="info"
                   fontSize="small"
                 />
-                <span>Pay</span>
+                <span>{t("payment_history_page_tour_action_pay")}</span>
               </Box>
             </MenuItem>
           )}
@@ -414,7 +460,7 @@ const Tour = memo(() => {
                   color="error"
                   fontSize="small"
                 />
-                <span>Cancel</span>
+                <span>{t("payment_history_page_tour_action_cancel")}</span>
               </Box>
             </MenuItem>
           )}
@@ -430,7 +476,7 @@ const Tour = memo(() => {
                   fontSize="small"
                   color="info"
                 />
-                <span>Rate</span>
+                <span>{t("payment_history_page_tour_action_rate")}</span>
               </Box>
             </MenuItem>
           )}

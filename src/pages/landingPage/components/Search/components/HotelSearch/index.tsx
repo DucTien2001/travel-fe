@@ -24,6 +24,7 @@ import { Col } from "reactstrap";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import { faCalendarDays } from "@fortawesome/free-regular-svg-icons";
 import Button, { BtnType } from "components/common/buttons/Button";
+import { useTranslation } from "react-i18next";
 
 interface FormSearch {
   location?: string;
@@ -33,6 +34,8 @@ interface FormSearch {
 
 // eslint-disable-next-line react/display-name
 const HotelSearch = memo(() => {
+  const { t, i18n } = useTranslation("common");
+
   const schema = useMemo(() => {
     return yup.object().shape({
       location: yup.string().required("Content search is required"),
@@ -46,7 +49,7 @@ const HotelSearch = memo(() => {
         .required("End datetime is required"),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -69,10 +72,14 @@ const HotelSearch = memo(() => {
     <>
       <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
         <Grid className={classes.boxItem}>
-          <p className={classes.titleInput}>Hotel</p>
+          <p className={classes.titleInput}>
+            {t("landing_page_section_search_stay_input_stay")}
+          </p>
           <InputTextfield
             className={classes.inputSearchLocation}
-            placeholder="Search tour"
+            placeholder={t(
+              "landing_page_section_search_stay_input_stay_placeholder"
+            )}
             name="location"
             startAdornment={<FontAwesomeIcon icon={faLocationDot} />}
             inputRef={"location"}
@@ -81,10 +88,14 @@ const HotelSearch = memo(() => {
         </Grid>
         <Grid container className={classes.boxDate}>
           <Grid xs={5} item className={classes.boxItem}>
-            <p className={classes.titleInput}>Start Time</p>
+            <p className={classes.titleInput}>
+              {t("landing_page_section_search_stay_input_start_time")}
+            </p>
             <InputDatePicker
               className={classes.inputSearchDate}
-              placeholder="Check-in"
+              placeholder={t(
+                "landing_page_section_search_stay_input_start_time_placeholder"
+              )}
               name="startDate"
               dateFormat="DD/MM/YYYY"
               timeFormat={false}
@@ -93,10 +104,14 @@ const HotelSearch = memo(() => {
             />
           </Grid>
           <Grid xs={5} item className={classes.boxItem}>
-            <p className={classes.titleInput}>Start Time</p>
+            <p className={classes.titleInput}>
+              {t("landing_page_section_search_stay_input_end_time")}
+            </p>
             <InputDatePicker
               className={classes.inputSearchDate}
-              placeholder="Check-out"
+              placeholder={t(
+                "landing_page_section_search_stay_input_end_time_placeholder"
+              )}
               name="endDate"
               dateFormat="DD/MM/YYYY"
               timeFormat={false}
@@ -106,7 +121,8 @@ const HotelSearch = memo(() => {
           </Grid>
           <Grid xs={2} item className={classes.boxItem}>
             <Button btnType={BtnType.Secondary} type="submit">
-              <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>Search hotel
+              <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+              {t("common_search")}
             </Button>
           </Grid>
         </Grid>

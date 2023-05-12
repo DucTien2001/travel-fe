@@ -22,6 +22,7 @@ import { IEvent } from "models/event";
 import moment from "moment";
 import { EDiscountType } from "models/general";
 import { fCurrency2VND } from "utils/formatNumber";
+import { useTranslation } from "react-i18next";
 
 interface Props extends ModalProps {
   isOpen: boolean;
@@ -32,57 +33,56 @@ interface Props extends ModalProps {
 // eslint-disable-next-line react/display-name
 const PopupTermAndCondition = memo((props: Props) => {
   const { isOpen, toggle, event } = props;
+  const { t, i18n } = useTranslation("common");
 
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} className={classes.root}>
         <ModalHeader toggle={toggle} className={classes.title}>
-          Terms and Conditions
+          {t("popup_detail_event_and_terms_conditions_title")}
         </ModalHeader>
 
         <ModalBody className={classes.modalBody}>
           <ul>
             <li>
-              1. Booking period:{" "}
-              <span>{moment(event?.startTime).format("DD/MM/YYYY")}</span> -{" "}
+              {t("popup_detail_event_and_terms_conditions_tip_1")}
+              <span>
+                {moment(event?.startTime).format("DD/MM/YYYY")}
+              </span> -{" "}
               <span>{moment(event?.endTime).format("DD/MM/YYYY")}</span>
             </li>
             {event?.discountType === EDiscountType.PERCENT ? (
-              <li>
-                2.{" "}
-                <span>
-                  Discount {event?.discountValue} up to{" "}
-                  {fCurrency2VND(event?.maxDiscount)}VND{" "}
-                </span>{" "}
-                when booking tour or hotel{" "}
-              </li>
+              <li
+                dangerouslySetInnerHTML={{
+                  __html: t("popup_detail_event_and_terms_conditions_tip_2", {
+                    discountValue: event?.discountValue,
+                    maxDiscount: fCurrency2VND(event?.maxDiscount),
+                  }),
+                }}
+              ></li>
             ) : (
-              <li>
-                2. Discount <span>{fCurrency2VND(event?.discountValue)}</span>{" "}
-                VND when booking tour or hotel
-              </li>
+              <li
+                dangerouslySetInnerHTML={{
+                  __html: t(
+                    "popup_detail_event_and_terms_conditions_tip_2_or",
+                    {
+                      discountValue: fCurrency2VND(event?.discountValue),
+                    }
+                  ),
+                }}
+              ></li>
             )}
-            <li>
-              3. You must place a minimum of <span>{event?.minOrder}</span>{" "}
-              orders to be able to apply this coupon
-            </li>
-            <li>
-              4. The number of coupon is limited. The program may end earlier
-              then expected without prior notice.
-            </li>
-            <li>
-              5. The number of e-vouchers is limited. The program may end sooner
-              than expected without prior notice.
-            </li>
-            <li>
-              6. Travelix will not be liable to offer a replacement coupon that
-              are discontinued, cancelled, or used improperly whether due to
-              fraud or technical issues.
-            </li>
-            <li>
-              7. Travelix reserves the right to change the terms and conditions
-              without prior notice.
-            </li>
+            <li
+              dangerouslySetInnerHTML={{
+                __html: t("popup_detail_event_and_terms_conditions_tip_3", {
+                  minOrder: fCurrency2VND(event?.minOrder),
+                }),
+              }}
+            ></li>
+            <li>{t("popup_detail_event_and_terms_conditions_tip_4")}</li>
+            <li>{t("popup_detail_event_and_terms_conditions_tip_5")}</li>
+            <li>{t("popup_detail_event_and_terms_conditions_tip_6")}</li>
+            <li>{t("popup_detail_event_and_terms_conditions_tip_7")}</li>
           </ul>
         </ModalBody>
       </Modal>

@@ -159,17 +159,21 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      firstName: yup.string().required("First name is required"),
-      lastName: yup.string().required("Last name is required"),
+      firstName: yup
+        .string()
+        .required(t("update_bill_contact_detail_first_name_validation")),
+      lastName: yup
+        .string()
+        .required(t("update_bill_contact_detail_last_name_validation")),
       email: yup
         .string()
-        .email("Please enter a valid email address")
-        .required("Email is required"),
+        .email(t("update_bill_contact_detail_email_validation"))
+        .required(t("update_bill_contact_detail_email_validation_error")),
       phoneNumber: yup
         .string()
-        .required("Phone is required")
+        .required(t("update_bill_contact_detail_phone_validation"))
         .matches(VALIDATION.phone, {
-          message: "Please enter a valid phone number.",
+          message: t("update_bill_contact_detail_phone_validation"),
           excludeEmptyString: true,
         }),
       startDate: yup.date().required(),
@@ -187,7 +191,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
         .required(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -444,7 +448,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
           <Grid container spacing={2} className={classes.rootContent}>
             <Grid xs={7} item className={classes.leftPanel}>
               <Grid item xs={12}>
-                <h4 className={classes.title}>Contact Details</h4>
+                <h4 className={classes.title}>
+                  {t("update_bill_contact_detail_title")}
+                </h4>
                 <Grid
                   sx={{
                     backgroundColor: "var(--white-color)",
@@ -460,8 +466,8 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   >
                     <Grid item xs={12} sm={6}>
                       <InputTextField
-                        title="First name"
-                        placeholder="First Name"
+                        title={t("update_bill_contact_detail_first_name")}
+                        placeholder={t("update_bill_contact_detail_first_name")}
                         inputRef={register("firstName")}
                         startAdornment={
                           <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
@@ -471,8 +477,8 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <InputTextField
-                        title="Last name"
-                        placeholder="Last Name"
+                        title={t("update_bill_contact_detail_last_name")}
+                        placeholder={t("update_bill_contact_detail_last_name")}
                         inputRef={register("lastName")}
                         startAdornment={
                           <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
@@ -483,8 +489,8 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   </Grid>
                   <Grid item xs={12}>
                     <InputTextField
-                      title="Email"
-                      placeholder="Email"
+                      title={t("update_bill_contact_detail_email")}
+                      placeholder={t("update_bill_contact_detail_email")}
                       inputRef={register("email")}
                       startAdornment={
                         <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
@@ -494,8 +500,8 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   </Grid>
                   <Grid item xs={12}>
                     <InputTextField
-                      title="Phone"
-                      placeholder="Phone"
+                      title={t("update_bill_contact_detail_phone")}
+                      placeholder={t("update_bill_contact_detail_phone")}
                       inputRef={register("phoneNumber")}
                       startAdornment={
                         <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
@@ -507,7 +513,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
               </Grid>
               <Grid container item spacing={2}>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>Special Request</h4>
+                  <h4 className={classes.title}>
+                    {t("update_bill_special_request_title")}
+                  </h4>
                   <Grid
                     sx={{
                       backgroundColor: "var(--white-color)",
@@ -516,13 +524,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       borderRadius: "10px",
                     }}
                   >
-                    <p>
-                      Special requests cannot be guaranteed – but the property
-                      will do its best to meet your needs. You can always make a
-                      special request after your booking is complete!
-                    </p>
+                    <p>{t("update_bill_special_request_sub_title")}</p>
                     <InputTextfield
-                      title="Please write your requests"
+                      title={t("update_bill_special_request_title_input")}
                       optional
                       multiline
                       rows={3}
@@ -537,7 +541,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>Price Detail</h4>
+                  <h4 className={classes.title}>
+                    {t("update_bill_price_detail_title")}
+                  </h4>
                   <Grid
                     sx={{
                       backgroundColor: "var(--white-color)",
@@ -558,7 +564,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       <Grid>
                         {" "}
                         <p className={classes.titlePrice}>
-                          Price you pay previously
+                          {t("update_bill_price_detail_price_you_pay")}
                         </p>
                       </Grid>
                       <Grid sx={{ display: "flex", alignItems: "center" }}>
@@ -583,7 +589,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                               alignItems: "center",
                             }}
                           >
-                            <p>Discount</p>
+                            <p>{t("update_bill_price_detail_discount")}</p>
                             {tourBill?.discount <= 100 ? (
                               <p>{fPercent(tourBill?.discount)} %</p>
                             ) : (
@@ -598,7 +604,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                             alignItems: "center",
                           }}
                         >
-                          <p>Adult ({tourBill?.amountAdult}x)</p>
+                          <p>
+                            {t("update_bill_price_detail_adult")} (
+                            {tourBill?.amountAdult}x)
+                          </p>
                         </Grid>
                         {tourBill?.amountChild !== 0 && (
                           <Grid
@@ -608,7 +617,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                               alignItems: "center",
                             }}
                           >
-                            <p>Child ({tourBill?.amountChild}x)</p>
+                            <p>
+                              {t("update_bill_price_detail_child")} (
+                              {tourBill?.amountChild}x)
+                            </p>
                           </Grid>
                         )}
                       </Grid>
@@ -626,7 +638,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       <Grid>
                         {" "}
                         <p className={classes.titlePrice}>
-                          Price you pay reschedule
+                          {t(
+                            "update_bill_price_detail_price_you_pay_reschedule"
+                          )}
                         </p>
                       </Grid>
                       <Grid sx={{ display: "flex", alignItems: "center" }}>
@@ -669,7 +683,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                               alignItems: "center",
                             }}
                           >
-                            <p>Discount</p>
+                            <p>{t("update_bill_price_detail_discount")}</p>
                             {priceAndAge?.discount <= 100 ? (
                               <p>{fPercent(priceAndAge?.discount)}</p>
                             ) : (
@@ -684,7 +698,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                             alignItems: "center",
                           }}
                         >
-                          <p>Adult ({_numberOfAdult}x)</p>
+                          <p>
+                            {t("update_bill_price_detail_adult")} (
+                            {_numberOfAdult}x)
+                          </p>
                           <p>
                             {" "}
                             {fCurrency2VND(
@@ -701,7 +718,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                               alignItems: "center",
                             }}
                           >
-                            <p>Child ({_numberOfChild}x)</p>
+                            <p>
+                              {t("update_bill_price_detail_child")} (
+                              {_numberOfChild}x)
+                            </p>
                             <p>
                               {" "}
                               {fCurrency2VND(
@@ -715,7 +735,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                     </Collapse>
                     <Grid>
                       <Grid className={classes.boxReschedule}>
-                        <p>You are reimbursed:</p>
+                        <p>
+                          {t("update_bill_price_detail_price_you_reimbursed")}:
+                        </p>
                         {tour?.tourPolicies.map((item, index) =>
                           dateReschedule?.setDate(dateReschedule?.getDate()) <=
                             new Date(tourBill?.createdAt)?.setDate(
@@ -733,7 +755,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         )}
                       </Grid>
                       <Grid className={classes.boxReschedule}>
-                        <p>You have to pay extra:</p>
+                        <p>{t("update_bill_price_detail_price_you_extra")}:</p>
                         {/* {tour?.tourPolicies.map((item, index) =>
                           dateReschedule?.setDate(dateReschedule?.getDate()) <
                             new Date(tourBill?.createdAt)?.setDate(
@@ -756,7 +778,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                     <Grid className={classes.containerVoucher}>
                       <Grid className={classes.titleVoucher}>
                         <MonetizationOnIcon />
-                        <p>Our discount code</p>
+                        <p>{t("update_bill_price_detail_discount_code")}</p>
                       </Grid>
                       <Grid sx={{ display: "flex", paddingTop: "14px" }}>
                         {voucher?.data?.length ? (
@@ -770,11 +792,13 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                                   })}
                                 >
                                   <span>
-                                    Deal {fPercent(item?.discountValue)}
+                                    {t("voucher_title_deal")}{" "}
+                                    {fPercent(item?.discountValue)}
                                   </span>
                                   {item?.maxDiscount !== 0 && (
                                     <span>
-                                      Max {fCurrency2VND(item?.maxDiscount)} VND
+                                      {t("voucher_title_max")}{" "}
+                                      {fCurrency2VND(item?.maxDiscount)} VND
                                     </span>
                                   )}
                                 </Grid>
@@ -785,7 +809,8 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                                       handleValidVoucher(item?.startTime),
                                   })}
                                 >
-                                  Deal {fShortenNumber(item?.discountValue)} VND
+                                  {t("voucher_title_deal")}{" "}
+                                  {fShortenNumber(item?.discountValue)} VND
                                 </Grid>
                               )}
                             </Grid>
@@ -793,7 +818,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         ) : (
                           <Grid>
                             <p style={{ fontWeight: "600" }}>
-                              There are currently no coupons available !
+                              {t("update_bill_price_detail_use_voucher_no")}
                             </p>
                           </Grid>
                         )}
@@ -802,7 +827,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         className={classes.btnChooseVoucher}
                         onClick={onOpenPopupVoucher}
                       >
-                        <p>Choose the voucher</p>
+                        <p>{t("update_bill_price_detail_choose_voucher")}</p>
                       </Grid>
                     </Grid>
                     <Grid
@@ -814,7 +839,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       className={classes.btnContinue}
                     >
                       <Button btnType={BtnType.Primary} type="submit">
-                        Continue to Payment
+                        {t("update_bill_price_detail_continue_to_pay")}
                       </Button>
                     </Grid>
                   </Grid>
@@ -830,7 +855,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
               <Grid className={classes.rootPanelRight}>
                 <Grid className={classes.boxTitle}>
                   <FontAwesomeIcon icon={faCircleCheck}></FontAwesomeIcon>
-                  <p>Booking summary</p>
+                  <p>{t("update_bill_booking_summary_title")}</p>
                 </Grid>
                 <Grid className={classes.boxProduct}>
                   <Grid>
@@ -838,11 +863,13 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   </Grid>
                   <Grid className={classes.product}>
                     <img src={tourBill?.tourData?.images[0]} alt="anh"></img>
-                    <p onClick={onOpenPopupDetailTour}>View detail</p>
+                    <p onClick={onOpenPopupDetailTour}>
+                      {t("update_bill_booking_summary_view_detail")}
+                    </p>
                   </Grid>
                 </Grid>
                 <Grid className={classes.boxSelect}>
-                  <p>When are you going?</p>
+                  <p>{t("update_bill_section_when")}</p>
                   <Grid sx={{ paddingTop: "14px" }}>
                     <InputDatePicker
                       control={control}
@@ -859,7 +886,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   </Grid>
                 </Grid>
                 <Grid className={classes.boxSelect} sx={{ paddingTop: "14px" }}>
-                  <p>Language options?</p>
+                  <p>{t("update_bill_section_language_option")}</p>
                   <InputSelect
                     className={classes.inputSelect}
                     control={control}
@@ -870,10 +897,14 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   />
                 </Grid>
                 <Grid className={classes.boxSelect}>
-                  <p>How many tickets?</p>
+                  <p>{t("update_bill_section_many_ticket")}</p>
                   <Grid className={classes.boxNumberTickets}>
                     <Grid>
-                      <p>Adult (age &gt; {priceAndAge?.childrenAgeMax})</p>
+                      <p>
+                        {t("update_bill_section_adult")} (
+                        {t("update_bill_section_age")} &gt;{" "}
+                        {priceAndAge?.childrenAgeMax})
+                      </p>
                       <span>{fCurrency2(priceAndAge?.adultPrice)} VND</span>
                     </Grid>
                     <Grid>
@@ -898,7 +929,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   <Grid className={classes.boxNumberTickets}>
                     <Grid>
                       <p>
-                        Child (age {priceAndAge?.childrenAgeMin}-
+                        {t("update_bill_section_child")} (
+                        {t("update_bill_section_age")}{" "}
+                        {priceAndAge?.childrenAgeMin}-
                         {priceAndAge?.childrenAgeMax})
                       </p>
                       <span>{fCurrency2(priceAndAge?.priceChildren)} VND</span>
@@ -925,13 +958,15 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                 </Grid>
                 <div className={classes.priceWrapper}>
                   <Grid>
-                    <p className={classes.discount}>
-                      Number of tickets left:{" "}
-                      <span>
-                        {priceAndAge?.quantity - priceAndAge.quantityOrdered}{" "}
-                      </span>
-                      tickets
-                    </p>
+                    <p
+                      className={classes.discount}
+                      dangerouslySetInnerHTML={{
+                        __html: t("update_bill_section_number_ticket_left", {
+                          number:
+                            priceAndAge?.quantity - priceAndAge.quantityOrdered,
+                        }),
+                      }}
+                    ></p>
                   </Grid>
                   <Grid
                     sx={{
@@ -940,9 +975,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       paddingTop: "10px",
                     }}
                   >
-                    <p>Duration: &nbsp;</p>
+                    <p>{t("update_bill_section_duration")}: &nbsp;</p>
                     <p>
-                      {tour?.numberOfDays} days - {tour?.numberOfNights} nights
+                      {tour?.numberOfDays} {t("update_bill_section_days")} -{" "}
+                      {tour?.numberOfNights} {t("update_bill_section_nights")}
                     </p>
                   </Grid>
                   <Grid
@@ -952,14 +988,14 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       paddingTop: "10px",
                     }}
                   >
-                    <p>Booking date: &nbsp;</p>
+                    <p>{t("update_bill_section_booking_date")}: &nbsp;</p>
                     <p>{moment(tourBill?.createdAt).format("DD-MM-YYYY")}</p>
                   </Grid>
                 </div>
               </Grid>
               <Grid className={classes.btnContinueMobile}>
                 <Button btnType={BtnType.Secondary} type="submit">
-                  Continue to Review
+                  {t("update_bill_price_detail_continue_to_pay")}
                 </Button>
               </Grid>
             </Grid>

@@ -1,26 +1,18 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Row } from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
-import { AdminGetTours, ETour } from "models/enterprise";
 import { useDispatch } from "react-redux";
 import {
   setErrorMess,
   setLoading,
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
-import { TourService } from "services/enterprise/tour";
 import SearchNotFound from "components/SearchNotFound";
-import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
 import {
-  Box,
   IconButton,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableContainer,
@@ -30,31 +22,14 @@ import {
   Paper,
 } from "@mui/material";
 import TableHeader from "components/Table/TableHeader";
-import {
-  DataPagination,
-  LangSupport,
-  langSupports,
-  TableHeaderLabel,
-} from "models/general";
-import {
-  EditOutlined,
-  DeleteOutlineOutlined,
-  ExpandMoreOutlined,
-} from "@mui/icons-material";
-import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
+import { DataPagination, TableHeaderLabel } from "models/general";
+import { DeleteOutlineOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
 import { FindAll, IStaff } from "models/enterprise/staff";
 import { StaffService } from "services/enterprise/staff";
-import { getRoleUser } from "utils/getOption";
-import StatusChip from "components/StatusChip";
-
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Id", sortable: false },
-  { name: "name", label: "Name", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
-];
+import { useTranslation } from "react-i18next";
 
 interface Props {
   handleTourEdit?: () => void;
@@ -63,6 +38,21 @@ interface Props {
 const Staff = memo(({ handleTourEdit }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t, i18n } = useTranslation("common");
+
+  const tableHeaders: TableHeaderLabel[] = [
+    { name: "id", label: "#", sortable: false },
+    {
+      name: "name",
+      label: t("enterprise_management_section_staff_header_table_code"),
+      sortable: false,
+    },
+    {
+      name: "actions",
+      label: t("enterprise_management_section_staff_header_table_action"),
+      sortable: false,
+    },
+  ];
 
   const [offerDelete, setOfferDelete] = useState<any>(null);
   const [keyword, setKeyword] = useState<string>("");
@@ -143,7 +133,7 @@ const Staff = memo(({ handleTourEdit }: Props) => {
     dispatch(setLoading(true));
     StaffService.cancelOffer(offerDelete?.id)
       .then(() => {
-        dispatch(setSuccessMess("Delete successfully"));
+        dispatch(setSuccessMess(t("common_delete_success")));
         fetchData();
       })
       .catch((e) => {
@@ -156,7 +146,6 @@ const Staff = memo(({ handleTourEdit }: Props) => {
 
   useEffect(() => {
     fetchData();
-    console.log(fetchData(), "-------------------------");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -164,19 +153,19 @@ const Staff = memo(({ handleTourEdit }: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Offer Staffs</h3>
+          <h3>{t("enterprise_management_section_staff_offer_title")}</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
             <InputSearch
               autoComplete="off"
-              placeholder="Search ..."
+              placeholder={t("common_search")}
               value={keyword || ""}
               onChange={onSearch}
             />
           </div>
           <Button btnType={BtnType.Primary} onClick={onBack}>
-            Back
+            {t("common_back")}
           </Button>
         </Row>
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
@@ -188,7 +177,7 @@ const Staff = memo(({ handleTourEdit }: Props) => {
                   return (
                     <TableRow key={index}>
                       <TableCell scope="row" className={classes.tableCell}>
-                        {item.id}
+                        {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <a
@@ -228,6 +217,18 @@ const Staff = memo(({ handleTourEdit }: Props) => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={t("common_row_per_page")}
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
+              return t("common_row_of_page", {
+                from: from,
+                to: to,
+                count: count,
+              });
+            }}
             component="div"
             className={classes.pagination}
             count={data?.meta?.itemCount || 0}
@@ -238,7 +239,7 @@ const Staff = memo(({ handleTourEdit }: Props) => {
           />
         </TableContainer>
         <PopupConfirmDelete
-          title="Are you sure delete this tour ?"
+          title={t("enterprise_management_section_staff_offer_confirm_delete")}
           isOpen={!!offerDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}

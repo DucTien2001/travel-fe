@@ -96,7 +96,7 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
       specialRequest: yup.string().notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,

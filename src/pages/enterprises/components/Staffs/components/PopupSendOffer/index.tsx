@@ -21,6 +21,7 @@ import {
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 interface Props extends ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -35,6 +36,7 @@ interface SendOfferForm {
 // eslint-disable-next-line react/display-name
 const PopupConfirmDeleteTour = memo((props: Props) => {
   const { isOpen, toggle, onClose, onYes } = props;
+  const { t, i18n } = useTranslation("common");
 
   const dispatch = useDispatch();
 
@@ -42,11 +44,19 @@ const PopupConfirmDeleteTour = memo((props: Props) => {
     return yup.object().shape({
       email: yup
         .string()
-        .email("Please enter a valid email address")
-        .required("Email is required"),
+        .email(
+          t(
+            "enterprise_management_section_staff_popup_send_staff_email_validate_error"
+          )
+        )
+        .required(
+          t(
+            "enterprise_management_section_staff_popup_send_staff_email_validate"
+          )
+        ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -75,7 +85,7 @@ const PopupConfirmDeleteTour = memo((props: Props) => {
     dispatch(setLoading(true));
     StaffService.sendOffer({ email: data?.email })
       .then(() => {
-        dispatch(setSuccessMess("Send offer successfully"));
+        dispatch(setSuccessMess(t("common_send_success")));
         onClose();
       })
       .catch((e) => {
@@ -91,12 +101,16 @@ const PopupConfirmDeleteTour = memo((props: Props) => {
       <Modal isOpen={isOpen} toggle={toggle} className={classes.root}>
         <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
           <ModalHeader toggle={toggle} className={classes.title}>
-            CREATE STAFF
+            {t("enterprise_management_section_staff_popup_send_staff_title")}
           </ModalHeader>
           <ModalBody>
             <InputTextfield
-              title="Email"
-              placeholder="Enter your email"
+              title={t(
+                "enterprise_management_section_staff_popup_send_staff_email"
+              )}
+              placeholder={t(
+                "enterprise_management_section_staff_popup_send_staff_email"
+              )}
               type="email"
               inputRef={register("email")}
               errorMessage={errors.email?.message}
@@ -108,10 +122,10 @@ const PopupConfirmDeleteTour = memo((props: Props) => {
               onClick={handleClose}
               className="mr-2"
             >
-              Cancel
+              {t("common_cancel")}
             </Button>
             <Button btnType={BtnType.Primary} type="submit">
-              Send
+              {t("common_send")}
             </Button>
           </ModalFooter>
         </Grid>

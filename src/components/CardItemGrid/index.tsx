@@ -1,23 +1,20 @@
 import React, { memo } from "react";
 import Link from "next/link";
 // reactstrap components
-import { Card, CardTitle, CardBody, Col, Badge } from "reactstrap";
+import { Col } from "reactstrap";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import "aos/dist/aos.css";
-import Button, { BtnType } from "components/common/buttons/Button";
 import Stars from "components/Stars";
-import { fCurrency2, fCurrency2VND } from "utils/formatNumber";
-import useAuth from "hooks/useAuth";
-import IconMain from "components/common/icons/IconMain";
+import { fCurrency2 } from "utils/formatNumber";
 import { Grid } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAnglesRight,
-  faChevronLeft,
   faLocationDot,
   faSignsPost,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
+
 interface Props {
   className?: string;
   linkView: string;
@@ -63,7 +60,23 @@ const ListServices = memo(
     isDelete,
     numberOfReviewers,
   }: Props) => {
-    const { user } = useAuth();
+    const { t, i18n } = useTranslation("common");
+
+    const getRateComment = (rate: number) => {
+      switch (rate) {
+        case 1:
+          return t("common_rate_worst");
+        case 2:
+          return t("common_rate_bad");
+        case 3:
+          return t("common_rate_normal");
+        case 4:
+          return t("common_rate_good");
+        case 5:
+          return t("common_rate_excellent");
+      }
+    };
+
     return (
       <>
         <Col
@@ -109,14 +122,21 @@ const ListServices = memo(
                   <Grid className={classes.boxTitle}>
                     <p>{title}</p>
                   </Grid>
+                  <Grid className={classes.boxTitle}>
+                    {rate !== 0 && (
+                      <Grid className={classes.boxReview}>
+                        <Stars numberOfStars={rate} />
+                      </Grid>
+                    )}
+                  </Grid>
                   <Grid sx={{ paddingTop: "28px" }}>
                     {rate !== 0 && (
                       <Grid className={classes.boxReview}>
                         <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
                         <span>
-                          {rate}{" "}
+                          {rate} {getRateComment(rate)}{" "}
                           <span className={classes.numberOfReviews}>
-                            ( {numberOfReviewers} reviews)
+                            | {numberOfReviewers} {t("common_reviews")}
                           </span>
                         </span>
                       </Grid>
@@ -126,7 +146,7 @@ const ListServices = memo(
                       <p>{fCurrency2((price * (100 - discount)) / 100)} VND</p>
                     </Grid>
                     <Grid className={classes.boxViewMore}>
-                      <p>View more</p>
+                      <p>{t("common_view_more")}</p>
                       <FontAwesomeIcon icon={faAnglesRight}></FontAwesomeIcon>
                     </Grid>
                   </Grid>

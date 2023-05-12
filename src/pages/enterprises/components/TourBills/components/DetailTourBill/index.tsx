@@ -11,6 +11,7 @@ import { TourBill } from "models/enterprise/tourBill";
 import { setErrorMess } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
 import { fCurrency2VND, fPercent } from "utils/formatNumber";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   tourBillId: number;
@@ -20,6 +21,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [tourBill, setTourBill] = useState<TourBill>(null);
+  const { t, i18n } = useTranslation("common");
 
   useEffect(() => {
     TourBillService.findOne(tourBillId)
@@ -34,14 +36,14 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
   return (
     <Grid className={classes.root}>
       <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-        <h3>Tour bills</h3>
+        <h3>{t("enterprise_management_section_tour_bill_title")}</h3>
         <Button
           onClick={() => {
             router.push("/enterprises/tourBills");
           }}
           btnType={BtnType.Primary}
         >
-          Back
+          {t("common_back")}
         </Button>
       </Row>
       <Grid className={clsx(classes.wrapper)} container spacing={1}>
@@ -49,7 +51,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           <h3 className={classes.titleBill}>Tour Bill</h3>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Name:
+              {t("enterprise_management_section_tour_bill_title_person_name")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.firstName} {tourBill?.lastName}
@@ -57,7 +59,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Email:
+              {t("enterprise_management_section_tour_bill_title_person_email")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.email}
@@ -65,7 +67,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Phone number:
+              {t("enterprise_management_section_tour_bill_title_person_phone")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.phoneNumber}
@@ -73,7 +75,10 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Purchase date:
+              {t(
+                "enterprise_management_section_tour_bill_title_person_purchase"
+              )}
+              :
             </Col>
             <Col xs={8} className={classes.info}>
               {moment(tourBill?.createdAt).format("DD/MM/YYYY")}
@@ -81,7 +86,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Adult price:
+              {t("enterprise_management_section_tour_bill_title_person_adult")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {fCurrency2VND(tourBill?.tourOnSaleData?.adultPrice)} VND/ticket
@@ -90,17 +95,25 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           {tourBill?.amountChild !== 0 && (
             <Row className={clsx("mb-1", classes.row)}>
               <Col xs={4} className={classes.titleInfo}>
-                Children price:
+                {t(
+                  "enterprise_management_section_tour_bill_title_person_child"
+                )}
+                :
               </Col>
               <Col xs={8} className={classes.info}>
-                {fCurrency2VND(tourBill?.tourOnSaleData?.childrenPrice)}{" "}
-                VND/ticket
+                {fCurrency2VND(tourBill?.tourOnSaleData?.childrenPrice)} VND/
+                {t(
+                  "enterprise_management_section_tour_bill_title_person_ticket"
+                )}
               </Col>
             </Row>
           )}
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Discount:
+              {t(
+                "enterprise_management_section_tour_bill_title_person_discount"
+              )}
+              :
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.discount <= 100 ? (
@@ -112,7 +125,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Adult:
+              {t("enterprise_management_section_tour_bill_title_person_adult")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.amountAdult}
@@ -121,7 +134,10 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           {tourBill?.amountChild !== 0 && (
             <Row className={clsx("mb-1", classes.row)}>
               <Col xs={4} className={classes.titleInfo}>
-                Children:
+                {t(
+                  "enterprise_management_section_tour_bill_title_person_child"
+                )}
+                :
               </Col>
               <Col xs={8} className={classes.info}>
                 {tourBill?.amountChild}
@@ -130,7 +146,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           )}
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Total bill:
+              {t("enterprise_management_section_tour_bill_title_person_total")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {fCurrency2VND(tourBill?.totalBill)} VND
@@ -141,7 +157,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           <h3 className={classes.titleBill}>Tour Information</h3>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Name:
+              {t("enterprise_management_section_tour_bill_title_tour_name")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.tourData?.title}
@@ -149,7 +165,8 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Location:
+              {t("enterprise_management_section_tour_bill_title_tour_location")}
+              :
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.tourData?.moreLocation},{" "}
@@ -160,7 +177,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Start date:
+              {t("enterprise_management_section_tour_bill_title_tour_start")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {moment(tourBill?.tourOnSaleData?.startDate).format("DD-MM-YYYY")}
@@ -168,7 +185,8 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Duration:
+              {t("enterprise_management_section_tour_bill_title_tour_duration")}
+              :
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.tourData?.numberOfDays} days -{" "}
@@ -177,7 +195,7 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
           </Row>
           <Row className={clsx("mb-1", classes.row)}>
             <Col xs={4} className={classes.titleInfo}>
-              Contact:
+              {t("enterprise_management_section_tour_bill_title_tour_contact")}:
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.tourData?.contact}

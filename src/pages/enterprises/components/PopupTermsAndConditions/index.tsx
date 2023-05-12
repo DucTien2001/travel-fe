@@ -25,6 +25,8 @@ import { CommissionService } from "services/enterprise/commission";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { fCurrency2VND } from "utils/formatNumber";
 import ApartmentIcon from "@mui/icons-material/Apartment";
+import { useTranslation } from "react-i18next";
+
 interface Props extends ModalProps {
   isOpen: boolean;
   onClose?: () => void;
@@ -34,6 +36,7 @@ interface Props extends ModalProps {
 // eslint-disable-next-line react/display-name
 const TermsAndCondition = memo((props: Props) => {
   const { isOpen, toggle, onClose } = props;
+  const { t, i18n } = useTranslation("common");
 
   const dispatch = useDispatch();
 
@@ -79,7 +82,7 @@ const TermsAndCondition = memo((props: Props) => {
     <>
       <Modal isOpen={isOpen} toggle={toggle} className={classes.root}>
         <ModalHeader toggle={toggle} className={classes.title}>
-          Terms and Conditions
+          {t("popup_enterprise_term_and_condition")}
         </ModalHeader>
 
         <ModalBody className={classes.modalBody}>
@@ -87,23 +90,30 @@ const TermsAndCondition = memo((props: Props) => {
             <Grid className={classes.rootOverview}>
               <Grid className={classes.boxTitle}>
                 <AirplaneTicketIcon />
-                <p>Tour</p>
+                <p>{t("popup_enterprise_term_and_condition_tour")}</p>
               </Grid>
               {dataTourCommission?.length ? (
                 dataTourCommission?.map((item, index) => (
                   <Grid className={classes.boxDuration} key={index}>
-                    <p className={classes.titleDetail}>
-                      - If the tour bill has the smallest value from{" "}
-                      <span>{fCurrency2VND(item?.minPrice)}</span> VND and the
-                      largest from <span>{fCurrency2VND(item?.maxPrice)}</span>{" "}
-                      VND, the discount amount is: <span>{item?.rate}</span> %
-                    </p>
+                    <p
+                      className={classes.titleDetail}
+                      dangerouslySetInnerHTML={{
+                        __html: t(
+                          "popup_enterprise_term_and_condition_content",
+                          {
+                            minPrice: fCurrency2VND(item?.minPrice),
+                            maxPrice: fCurrency2VND(item?.maxPrice),
+                            rate: item?.rate,
+                          }
+                        ),
+                      }}
+                    ></p>
                   </Grid>
                 ))
               ) : (
                 <Grid className={classes.boxDuration}>
                   <p className={classes.titleDetail}>
-                    No terms and conditions for tour
+                    {t("popup_enterprise_term_and_condition_no_terms")}
                   </p>
                 </Grid>
               )}
@@ -111,23 +121,30 @@ const TermsAndCondition = memo((props: Props) => {
             <Grid className={classes.rootOverview}>
               <Grid className={classes.boxTitle}>
                 <ApartmentIcon />
-                <p>Hotel</p>
+                <p>{t("popup_enterprise_term_and_condition_stay")}</p>
               </Grid>
               {dataHotelCommission?.length ? (
                 dataHotelCommission?.map((item, index) => (
                   <Grid className={classes.boxDuration} key={index}>
-                    <p className={classes.titleDetail}>
-                      - If the tour bill has the smallest value from{" "}
-                      <span>{fCurrency2VND(item?.minPrice)}</span> VND and the
-                      largest from <span>{fCurrency2VND(item?.maxPrice)}</span>{" "}
-                      VND, the commission is: <span>{item?.rate}</span> %
-                    </p>
+                    <p
+                      className={classes.titleDetail}
+                      dangerouslySetInnerHTML={{
+                        __html: t(
+                          "popup_enterprise_term_and_condition_content",
+                          {
+                            minPrice: fCurrency2VND(item?.minPrice),
+                            maxPrice: fCurrency2VND(item?.maxPrice),
+                            rate: item?.rate,
+                          }
+                        ),
+                      }}
+                    ></p>
                   </Grid>
                 ))
               ) : (
                 <Grid className={classes.boxDuration}>
                   <p className={classes.titleDetail}>
-                    No terms and conditions for tour
+                    {t("popup_enterprise_term_and_condition_no_terms")}
                   </p>
                 </Grid>
               )}
@@ -136,7 +153,7 @@ const TermsAndCondition = memo((props: Props) => {
         </ModalBody>
         <ModalFooter className={classes.footer}>
           <Button btnType={BtnType.Secondary} onClick={toggle} className="mr-2">
-            Cancel
+            {t("common_cancel")}
           </Button>
         </ModalFooter>
       </Modal>

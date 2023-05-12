@@ -29,6 +29,7 @@ import * as yup from "yup";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
 import { Grid } from "@mui/material";
 import { TourBillService } from "services/enterprise/tourBill";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   onClose: () => void;
@@ -44,23 +45,20 @@ interface ChangeStatus {
 const PopupChangeStatus = memo(
   ({ tourBillId, onClose, isOpen, fetchData }: Props) => {
     const dispatch = useDispatch();
+    const { t, i18n } = useTranslation("common");
 
     const schema = useMemo(() => {
       return yup.object().shape({
         status: yup.number().required(""),
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [i18n.language]);
 
     const {
-      register,
       handleSubmit,
       formState: { errors },
-      reset,
       control,
-      watch,
       setValue,
-      clearErrors,
     } = useForm<ChangeStatus>({
       resolver: yupResolver(schema),
       mode: "onChange",
@@ -70,7 +68,13 @@ const PopupChangeStatus = memo(
       dispatch(setLoading(true));
       TourBillService?.updateStatus(tourBillId, { status: data?.status })
         .then(() => {
-          dispatch(setSuccessMess("Change status successfully"));
+          dispatch(
+            setSuccessMess(
+              t(
+                "enterprise_management_section_tour_bill_action_change_status_success"
+              )
+            )
+          );
           fetchData();
           onClose();
         })
@@ -91,7 +95,9 @@ const PopupChangeStatus = memo(
         className={classes.modal}
       >
         <ModalHeader isOpen={isOpen} toggle={onClose} className={classes.title}>
-          Change status
+          {t(
+            "enterprise_management_section_tour_bill_popup_change_status_title"
+          )}
         </ModalHeader>
         <Grid component={"form"} onSubmit={handleSubmit(_onSubmit)}>
           <ModalBody>
@@ -102,7 +108,9 @@ const PopupChangeStatus = memo(
                 <>
                   <Grid sx={{ paddingRight: "14px" }}>
                     <InputCheckbox
-                      content="Reschedule"
+                      content={t(
+                        "enterprise_management_section_tour_bill_action_change_status_reschedule"
+                      )}
                       checked={field.value === EBillStatus.RESCHEDULED}
                       onChange={() => {
                         setValue("status", EBillStatus.RESCHEDULED);
@@ -111,7 +119,9 @@ const PopupChangeStatus = memo(
                   </Grid>
                   <Grid sx={{ paddingRight: "14px" }}>
                     <InputCheckbox
-                      content="Canceled"
+                      content={t(
+                        "enterprise_management_section_tour_bill_action_change_status_cancelled"
+                      )}
                       checked={field.value === EBillStatus.CANCELED}
                       onChange={() => {
                         setValue("status", EBillStatus.CANCELED);
@@ -120,7 +130,9 @@ const PopupChangeStatus = memo(
                   </Grid>
                   <Grid sx={{ paddingRight: "14px" }}>
                     <InputCheckbox
-                      content="Not contact yet"
+                      content={t(
+                        "enterprise_management_section_tour_bill_action_change_status_not_contact"
+                      )}
                       checked={field.value === EBillStatus.NOT_CONTACTED_YET}
                       onChange={() => {
                         setValue("status", EBillStatus.NOT_CONTACTED_YET);
@@ -129,7 +141,9 @@ const PopupChangeStatus = memo(
                   </Grid>
                   <Grid sx={{ paddingRight: "14px" }}>
                     <InputCheckbox
-                      content="Contacted"
+                      content={t(
+                        "enterprise_management_section_tour_bill_action_change_status_contacted"
+                      )}
                       checked={field.value === EBillStatus.CONTACTED}
                       onChange={() => {
                         setValue("status", EBillStatus.CONTACTED);
@@ -138,7 +152,9 @@ const PopupChangeStatus = memo(
                   </Grid>
                   <Grid sx={{ paddingRight: "14px" }}>
                     <InputCheckbox
-                      content="Used"
+                      content={t(
+                        "enterprise_management_section_tour_bill_action_change_status_used"
+                      )}
                       checked={field.value === EBillStatus.USED}
                       onChange={() => {
                         setValue("status", EBillStatus.USED);
@@ -147,7 +163,9 @@ const PopupChangeStatus = memo(
                   </Grid>
                   <Grid sx={{ paddingRight: "14px" }}>
                     <InputCheckbox
-                      content="Not use"
+                      content={t(
+                        "enterprise_management_section_tour_bill_action_change_status_not_used"
+                      )}
                       checked={field.value === EBillStatus.NOT_USE}
                       onChange={() => {
                         setValue("status", EBillStatus.NOT_USE);
@@ -164,10 +182,10 @@ const PopupChangeStatus = memo(
               btnType={BtnType.Secondary}
               className="mr-2"
             >
-              Cancel
+              {t("common_cancel")}
             </Button>
             <Button btnType={BtnType.Primary} type="submit">
-              Change status
+              {t("common_save")}
             </Button>
           </ModalFooter>
         </Grid>

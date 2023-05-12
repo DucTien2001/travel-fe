@@ -20,6 +20,7 @@ import { User } from "models/admin/user";
 import { EUserType } from "models/user";
 import { UserService } from "services/admin/user";
 import UseAuth from "hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 export interface RoleForm {
   role: number;
@@ -36,15 +37,21 @@ const EditRole = memo((props: Props) => {
   const { userEdit, fetchData, onCloseEditUser } = props;
   const dispatch = useDispatch();
   const { user } = UseAuth();
+
+  const { t, i18n } = useTranslation("common");
+
   const [anchorElMenuChangeRole, setAnchorElMenuChangeRole] =
     useState<null | HTMLElement>(null);
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      role: yup.number().typeError("Role is required").required(),
+      role: yup
+        .number()
+        .typeError(t("admin_management_tab_user_role_validate"))
+        .required(t("admin_management_tab_user_role_validate")),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const { handleSubmit, reset, control, setValue } = useForm<RoleForm>({
     resolver: yupResolver(schema),
@@ -69,7 +76,7 @@ const EditRole = memo((props: Props) => {
       role: data?.role,
     })
       .then(() => {
-        dispatch(setSuccessMess("Update role successfully"));
+        dispatch(setSuccessMess(t("common_update_success")));
         fetchData();
         handleCloseMenuChangeRole();
         onCloseEditUser();
@@ -136,7 +143,9 @@ const EditRole = memo((props: Props) => {
                           <>
                             <Grid sx={{ paddingRight: "14px" }}>
                               <InputCheckbox
-                                content="Super admin"
+                                content={t(
+                                  "admin_management_tab_user_edit_role_super_admin"
+                                )}
                                 checked={field.value === EUserType.SUPER_ADMIN}
                                 onChange={() => {
                                   setValue("role", EUserType.SUPER_ADMIN);
@@ -158,7 +167,9 @@ const EditRole = memo((props: Props) => {
                           <>
                             <Grid sx={{ paddingRight: "14px" }}>
                               <InputCheckbox
-                                content="Admin"
+                                content={t(
+                                  "admin_management_tab_user_edit_role_admin"
+                                )}
                                 checked={field.value === EUserType.ADMIN}
                                 onChange={() => {
                                   setValue("role", EUserType.ADMIN);
@@ -182,7 +193,9 @@ const EditRole = memo((props: Props) => {
                       <>
                         <Grid sx={{ paddingRight: "14px" }}>
                           <InputCheckbox
-                            content="Enterprise"
+                            content={t(
+                              "admin_management_tab_user_edit_role_enterprise"
+                            )}
                             checked={field.value === EUserType.ENTERPRISE}
                             onChange={() => {
                               setValue("role", EUserType.ENTERPRISE);
@@ -204,7 +217,9 @@ const EditRole = memo((props: Props) => {
                       <>
                         <Grid sx={{ paddingRight: "14px" }}>
                           <InputCheckbox
-                            content="Staff"
+                            content={t(
+                              "admin_management_tab_user_edit_role_staff"
+                            )}
                             checked={field.value === EUserType.STAFF}
                             onChange={() => {
                               setValue("role", EUserType.STAFF);
@@ -226,7 +241,9 @@ const EditRole = memo((props: Props) => {
                       <>
                         <Grid sx={{ paddingRight: "14px" }}>
                           <InputCheckbox
-                            content="User"
+                            content={t(
+                              "admin_management_tab_user_edit_role_user"
+                            )}
                             checked={field.value === EUserType.USER}
                             onChange={() => {
                               setValue("role", EUserType.USER);
@@ -246,7 +263,7 @@ const EditRole = memo((props: Props) => {
               translation-key="common_cancel"
               onClick={handleCloseMenuChangeRole}
             >
-              Cancel
+              {t("common_cancel")}
             </Button>
             <Button
               btnType={BtnType.Primary}
@@ -254,7 +271,7 @@ const EditRole = memo((props: Props) => {
               className={classes.btnSave}
               type="submit"
             >
-              Done
+              {t("common_done")}
             </Button>
           </Grid>
         </Grid>

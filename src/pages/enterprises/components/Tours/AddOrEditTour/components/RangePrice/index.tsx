@@ -2,10 +2,10 @@ import React, { useMemo, memo, useEffect, useState } from "react";
 import classes from "./styles.module.scss";
 import "aos/dist/aos.css";
 import * as yup from "yup";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import useAuth from "hooks/useAuth";
+
 import {
   setErrorMess,
   setLoading,
@@ -22,11 +22,12 @@ import moment from "moment";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import InputSelect from "components/common/inputs/InputSelect";
-import { OptionItem, currencyType } from "models/general";
-import { TourService } from "services/enterprise/tour";
+import { currencyType } from "models/general";
+
 import { ReducerType } from "redux/reducers";
 import { TourOnSaleService } from "services/enterprise/tourOnSale";
 import { getCurrency } from "utils/getOption";
+import { useTranslation } from "react-i18next";
 
 export interface SaleForm {
   sale: {
@@ -57,6 +58,7 @@ interface Props {
 // eslint-disable-next-line react/display-name
 const RangePriceComponent = memo((props: Props) => {
   const { value, index, tour, lang, handleNextStep } = props;
+  const { t, i18n } = useTranslation("common");
 
   const dispatch = useDispatch();
   const { tourInformation } = useSelector(
@@ -68,54 +70,144 @@ const RangePriceComponent = memo((props: Props) => {
       sale: yup.array(
         yup.object({
           id: yup.number().empty().notRequired(),
-          startDate: yup.date().required("Day is required"),
+          startDate: yup
+            .date()
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_range_price_start_date_validate"
+              )
+            ),
           quantity: yup
             .number()
-            .typeError("Quantity is required")
-            .positive("Quantity must be a positive number")
-            .required("Quantity is required"),
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_range_price_quantity_validate"
+              )
+            )
+            .positive(
+              t(
+                "enterprise_management_section_tour_tab_range_price_quantity_validate_error"
+              )
+            )
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_range_price_quantity_validate"
+              )
+            ),
           discount: yup
             .number()
-            .positive("Discount must be a positive number")
+            .positive(
+              t(
+                "enterprise_management_section_tour_tab_range_price_discount_validate"
+              )
+            )
             .transform((value) => (isNaN(value) ? undefined : value))
             .notRequired(),
           childrenAgeMin: yup
             .number()
-            .typeError("Children age min is required.")
-            .positive("Children age min must be a positive number")
-            .required("Children age min is required."),
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_age_min_validate"
+              )
+            )
+            .positive(
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_age_min_validate_error"
+              )
+            )
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_age_min_validate"
+              )
+            ),
           childrenAgeMax: yup
             .number()
-            .typeError("Children age max is required.")
-            .positive("Children age max  must be a positive number")
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_age_max_validate"
+              )
+            )
+            .positive(
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_age_max_validate_error"
+              )
+            )
             .min(
               yup.ref("childrenAgeMin"),
-              "Children age max must be rather than children age min"
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_age_max_validate_error_max"
+              )
             )
-            .required("Children age max  is required."),
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_age_max_validate"
+              )
+            ),
           childrenPrice: yup
             .number()
-            .typeError("Children price is required.")
-            .positive("Children price  must be a positive number")
-            .required("Children price  is required."),
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_price"
+              )
+            )
+            .positive(
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_price_error"
+              )
+            )
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_range_price_children_price"
+              )
+            ),
           adultPrice: yup
             .number()
-            .typeError("Adult price is required.")
-            .positive("Adult price must be a positive number")
-            .required("Adult price is required."),
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_range_price_adult_price"
+              )
+            )
+            .positive(
+              t(
+                "enterprise_management_section_tour_tab_range_price_adult_price_error"
+              )
+            )
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_range_price_adult_price"
+              )
+            ),
           currency: yup
             .object()
             .shape({
-              id: yup.number().required("Currency is required"),
-              name: yup.string().required("Currency is required"),
-              value: yup.string().required("Currency is required"),
+              id: yup
+                .number()
+                .required(
+                  t(
+                    "enterprise_management_section_tour_tab_range_price_currency"
+                  )
+                ),
+              name: yup
+                .string()
+                .required(
+                  t(
+                    "enterprise_management_section_tour_tab_range_price_currency"
+                  )
+                ),
+              value: yup
+                .string()
+                .required(
+                  t(
+                    "enterprise_management_section_tour_tab_range_price_currency"
+                  )
+                ),
             })
             .required(),
         })
       ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -194,7 +286,7 @@ const RangePriceComponent = memo((props: Props) => {
       }))
     )
       .then(() => {
-        dispatch(setSuccessMess("Create price of tour successfully"));
+        dispatch(setSuccessMess(t("common_create_success")));
         handleNextStep();
       })
       .catch((e) => {
@@ -246,13 +338,20 @@ const RangePriceComponent = memo((props: Props) => {
     >
       {value === index && (
         <Grid className={classes.root}>
-          <h3 className={classes.title}>Range Price and Date</h3>
+          <h3 className={classes.title}>
+            {t("enterprise_management_section_tour_tab_range_price_title")}
+          </h3>
           {!!fieldsSale?.length &&
             fieldsSale?.map((field, index) => (
               <Grid key={index} sx={{ paddingTop: "32px" }}>
                 <Grid className={classes.boxTitleItem}>
                   <Grid className={classes.titleItem}>
-                    <p>Price date available {index + 1}</p>
+                    <p>
+                      {t(
+                        "enterprise_management_section_tour_tab_range_price_available"
+                      )}{" "}
+                      {index + 1}
+                    </p>
                   </Grid>
 
                   <IconButton
@@ -277,8 +376,12 @@ const RangePriceComponent = memo((props: Props) => {
                     <InputDatePicker
                       name={`sale.${index}.startDate`}
                       control={control}
-                      label="Date"
-                      placeholder="Select date"
+                      label={t(
+                        "enterprise_management_section_tour_tab_range_price_date_title"
+                      )}
+                      placeholder={t(
+                        "enterprise_management_section_tour_tab_range_price_date_title"
+                      )}
                       closeOnSelect={true}
                       timeFormat={false}
                       errorMessage={errors.sale?.[index]?.startDate?.message}
@@ -288,12 +391,16 @@ const RangePriceComponent = memo((props: Props) => {
                   <Grid xs={2} sm={4} md={4} item>
                     <InputSelect
                       fullWidth
-                      title={"Currency"}
+                      title={t(
+                        "enterprise_management_section_tour_tab_range_price_currency_title"
+                      )}
                       name={`sale.${index}.currency`}
                       control={control}
                       selectProps={{
                         options: currencyType,
-                        placeholder: "--Currency--",
+                        placeholder: t(
+                          "enterprise_management_section_tour_tab_range_price_currency_placeholder"
+                        ),
                       }}
                       errorMessage={errors.sale?.[index]?.currency?.message}
                     />
@@ -301,8 +408,12 @@ const RangePriceComponent = memo((props: Props) => {
                   <Grid item xs={2} sm={4} md={4}></Grid>
                   <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
-                      title="Total ticket"
-                      placeholder="Enter total ticket"
+                      title={t(
+                        "enterprise_management_section_tour_tab_range_price_quantity_title"
+                      )}
+                      placeholder={t(
+                        "enterprise_management_section_tour_tab_range_price_quantity_title"
+                      )}
                       autoComplete="off"
                       type="number"
                       inputRef={register(`sale.${index}.quantity`)}
@@ -311,8 +422,12 @@ const RangePriceComponent = memo((props: Props) => {
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
-                      title="Discount"
-                      placeholder="Ex: 15%"
+                      title={t(
+                        "enterprise_management_section_tour_tab_range_price_discount_title"
+                      )}
+                      placeholder={t(
+                        "enterprise_management_section_tour_tab_range_price_discount_placeholder"
+                      )}
                       autoComplete="off"
                       type="number"
                       inputRef={register(`sale.${index}.discount`)}
@@ -321,8 +436,12 @@ const RangePriceComponent = memo((props: Props) => {
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
-                      title="Price for adult"
-                      placeholder="Enter price of adult"
+                      title={t(
+                        "enterprise_management_section_tour_tab_range_price_price_of_adult_title"
+                      )}
+                      placeholder={t(
+                        "enterprise_management_section_tour_tab_range_price_price_of_adult_title"
+                      )}
                       autoComplete="off"
                       type="number"
                       inputRef={register(`sale.${index}.adultPrice`)}
@@ -331,8 +450,12 @@ const RangePriceComponent = memo((props: Props) => {
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
-                      title="Children age min"
-                      placeholder="Enter children age min"
+                      title={t(
+                        "enterprise_management_section_tour_tab_range_price_children_age_min_title"
+                      )}
+                      placeholder={t(
+                        "enterprise_management_section_tour_tab_range_price_children_age_min_title"
+                      )}
                       autoComplete="off"
                       type="number"
                       inputRef={register(`sale.${index}.childrenAgeMin`)}
@@ -343,8 +466,12 @@ const RangePriceComponent = memo((props: Props) => {
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
-                      title="Children age max"
-                      placeholder="Enter children age max"
+                      title={t(
+                        "enterprise_management_section_tour_tab_range_price_children_age_max_title"
+                      )}
+                      placeholder={t(
+                        "enterprise_management_section_tour_tab_range_price_children_age_max_title"
+                      )}
                       autoComplete="off"
                       type="number"
                       inputRef={register(`sale.${index}.childrenAgeMax`)}
@@ -355,8 +482,12 @@ const RangePriceComponent = memo((props: Props) => {
                   </Grid>
                   <Grid item xs={2} sm={4} md={4}>
                     <InputTextfield
-                      title="Price for children"
-                      placeholder="Enter price of children"
+                      title={t(
+                        "enterprise_management_section_tour_tab_range_price_price_of_children_title"
+                      )}
+                      placeholder={t(
+                        "enterprise_management_section_tour_tab_range_price_price_of_children_title"
+                      )}
                       autoComplete="off"
                       type="number"
                       inputRef={register(`sale.${index}.childrenPrice`)}
@@ -370,12 +501,13 @@ const RangePriceComponent = memo((props: Props) => {
             ))}
           <Grid className={classes.boxAddDay}>
             <Button btnType={BtnType.Outlined} onClick={onAddSale}>
-              <AddCircleIcon /> Click add to price day
+              <AddCircleIcon />{" "}
+              {t("enterprise_management_section_tour_tab_range_price_add")}
             </Button>
           </Grid>
           <Grid className={classes.boxNextBtn}>
             <Button btnType={BtnType.Primary} type="submit">
-              Next Policy
+              {t("enterprise_management_section_tour_tab_range_price_next")}
               <ArrowRightAltIcon />
             </Button>
           </Grid>

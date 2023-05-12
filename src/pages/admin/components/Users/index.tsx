@@ -41,14 +41,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import EditRoleForm from "./EditRoleForm";
 import StatusChip from "components/StatusChip";
-
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Id", sortable: false },
-  { name: "name", label: "User Name", sortable: false },
-  { name: "role", label: "Role", sortable: false },
-  { name: "status", label: "Status", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
-];
+import { useTranslation } from "react-i18next";
 
 interface RoleForm {
   role: {
@@ -62,6 +55,31 @@ interface Props {}
 // eslint-disable-next-line react/display-name
 const User = memo(({}: Props) => {
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
+
+  const tableHeaders: TableHeaderLabel[] = [
+    { name: "#", label: "#", sortable: false },
+    {
+      name: "name",
+      label: t("admin_management_tab_user_header_table_name"),
+      sortable: false,
+    },
+    {
+      name: "role",
+      label: t("admin_management_tab_user_header_table_role"),
+      sortable: false,
+    },
+    {
+      name: "status",
+      label: t("admin_management_tab_user_header_table_status"),
+      sortable: false,
+    },
+    {
+      name: "actions",
+      label: t("admin_management_tab_user_header_table_actions"),
+      sortable: false,
+    },
+  ];
 
   const [itemAction, setItemAction] = useState<User>();
   const [userEdit, setUserEdit] = useState<User>();
@@ -87,7 +105,7 @@ const User = memo(({}: Props) => {
         .required(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {} = useForm<RoleForm>({
     resolver: yupResolver(schema),
@@ -184,7 +202,7 @@ const User = memo(({}: Props) => {
     dispatch(setLoading(true));
     UserService.delete(userDelete?.id)
       .then(() => {
-        dispatch(setSuccessMess("Delete successfully"));
+        dispatch(setSuccessMess(t("common_delete")));
         fetchData();
       })
       .catch((e) => {
@@ -205,13 +223,13 @@ const User = memo(({}: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Users</h3>
+          <h3>{t("admin_management_navbar_user")}</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
             <InputSearch
               autoComplete="off"
-              placeholder="Search ..."
+              placeholder={t("common_search")}
               value={keyword || ""}
               onChange={onSearch}
             />
@@ -275,6 +293,18 @@ const User = memo(({}: Props) => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={t("common_row_per_page")}
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
+              return t("common_row_of_page", {
+                from: from,
+                to: to,
+                count: count,
+              });
+            }}
             component="div"
             className={classes.pagination}
             count={dataUser?.meta?.itemCount || 0}
@@ -301,7 +331,7 @@ const User = memo(({}: Props) => {
           >
             <Box display="flex" alignItems={"center"}>
               <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
-              <span>Edit role</span>
+              <span>{t("common_edit")}</span>
             </Box>
           </MenuItem>
           <MenuItem
@@ -315,12 +345,12 @@ const User = memo(({}: Props) => {
                 color="error"
                 fontSize="small"
               />
-              <span>Delete</span>
+              <span>{t("common_delete")}</span>
             </Box>
           </MenuItem>
         </Menu>
         <PopupConfirmDelete
-          title="Are you sure delete this user ?"
+          title={t("admin_management_tab_user_confirm_delete")}
           isOpen={!!userDelete}
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}

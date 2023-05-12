@@ -24,6 +24,9 @@ import TourBills from "pages/enterprises/components/TourBills";
 import TourStatistic from "pages/enterprises/components/TourStatistic";
 import TourOnSaleStatistic from "pages/enterprises/components/TourStatistic/components/TourOnSaleStatistic";
 import PopupTermsAndConditions from "pages/enterprises/components/PopupTermsAndConditions";
+import { useTranslation } from "react-i18next";
+import { Grid } from "@mui/material";
+import BarChartIcon from "@mui/icons-material/BarChart";
 
 interface PropTypes {}
 
@@ -31,6 +34,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
   const router = useRouter();
   const { user } = useAuth();
   const { page, action, type } = router.query;
+  const { t, i18n } = useTranslation("common");
 
   const toursRef = useRef<HTMLDivElement>(null);
   const hotelsRef = useRef<HTMLDivElement>(null);
@@ -198,14 +202,16 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           <h4>TRAVELIX</h4>
         </div>
         <Nav tabs className={classes.nav}>
-          <span>Dashboard</span>
+          <span>{t("enterprise_management_navbar_dashboard")}</span>
           <NavItem
             onClick={() => gotoMenu("tours")}
             className={classes.navItem}
           >
             <NavLink className={renderClass("tours")}>
               <AttractionsIcon />
-              <span ref={toursRef}>Tours</span>
+              <span ref={toursRef}>
+                {t("enterprise_management_navbar_tour")}
+              </span>
             </NavLink>
           </NavItem>
           <NavItem
@@ -214,7 +220,9 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           >
             <NavLink className={renderClass("hotels")}>
               <ApartmentIcon />
-              <span ref={hotelsRef}>Hotels</span>
+              <span ref={hotelsRef}>
+                {t("enterprise_management_navbar_hotel")}
+              </span>
             </NavLink>
           </NavItem>
           <NavItem
@@ -223,7 +231,9 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           >
             <NavLink className={renderClass("vouchers")}>
               <AirplaneTicketIcon />
-              <span ref={staffsRef}>Vouchers</span>
+              <span ref={vouchersRef}>
+                {t("enterprise_management_navbar_voucher")}
+              </span>
             </NavLink>
           </NavItem>
           {user.role === EUserType.ENTERPRISE && (
@@ -233,30 +243,42 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             >
               <NavLink className={renderClass("staffs")}>
                 <PeopleAltIcon />
-                <span ref={staffsRef}>Staffs</span>
+                <span ref={staffsRef}>
+                  {t("enterprise_management_navbar_staff")}
+                </span>
               </NavLink>
             </NavItem>
           )}
-          <span>Order</span>
+          <span>{t("enterprise_management_navbar_order")}</span>
           <NavItem
             onClick={() => gotoMenu("tourBills")}
             className={classes.navItem}
           >
             <NavLink className={renderClass("tourBills")}>
               <TourIcon />
-              <span ref={vouchersRef}>Tour Bills</span>
+              <span ref={vouchersRef}>
+                {t("enterprise_management_navbar_tour_bill")}
+              </span>
             </NavLink>
           </NavItem>
-          <span>Statistic</span>
+          <span>{t("enterprise_management_navbar_statistic")}</span>
           <NavItem
             onClick={() => gotoMenu("tourStatistic")}
             className={classes.navItem}
           >
             <NavLink className={renderClass("tourStatistic")}>
-              <TourIcon />
-              <span ref={vouchersRef}>Tour</span>
+              <BarChartIcon />
+              <span ref={vouchersRef}>
+                {t("enterprise_management_navbar_tour")}
+              </span>
             </NavLink>
           </NavItem>
+          <Grid
+            className={classes.boxTerms}
+            onClick={onTogglePopupTermsAndConditions}
+          >
+            <span>{t("enterprise_management_navbar_term_and_condition")}</span>
+          </Grid>
         </Nav>
       </Col>
 

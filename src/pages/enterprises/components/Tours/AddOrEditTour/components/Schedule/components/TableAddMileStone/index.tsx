@@ -1,35 +1,22 @@
-import React, {
-  useMemo,
-  memo,
-  useEffect,
-  useState,
-  JSXElementConstructor,
-} from "react";
-import { Input } from "reactstrap";
+import React, { useMemo, memo, useEffect, useState } from "react";
 import classes from "./styles.module.scss";
-
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
-  Box,
   Grid,
   IconButton,
-  OutlinedInput,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
-  TableHead,
   TableRow,
-  TextField,
 } from "@mui/material";
-import TimePicker from "components/common/inputs/TimePicker";
+
 import InputTimePicker from "components/common/inputs/InputTimePicker";
 import Button, { BtnType } from "components/common/buttons/Button";
 import TableHeader from "components/Table/TableHeader";
 import { TableHeaderLabel } from "models/general";
 import { AddCircle, DeleteOutlineOutlined } from "@mui/icons-material";
-import InputLineTextField from "components/common/inputs/InputLineTextfield";
+
 import moment from "moment";
 import yup from "configs/yup.custom";
 import { useSelector } from "react-redux";
@@ -44,7 +31,7 @@ import { ETour, ScheduleItem } from "models/enterprise";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import { TourScheduleService } from "services/enterprise/tourSchedule";
-import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 const tableHeaders: TableHeaderLabel[] = [
   { name: "From", label: "From", sortable: false },
@@ -74,6 +61,39 @@ interface Props {
 const PopupAddMileStone = memo((props: Props) => {
   const { day, tour, scheduleEdit, lang, onGetAllSchedule } = props;
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
+
+  const tableHeaders: TableHeaderLabel[] = [
+    {
+      name: "From",
+      label: t(
+        "enterprise_management_section_tour_tab_schedule_header_table_from"
+      ),
+      sortable: false,
+    },
+    {
+      name: "To",
+      label: t(
+        "enterprise_management_section_tour_tab_schedule_header_table_to"
+      ),
+      sortable: false,
+    },
+    {
+      name: "Content",
+      label: t(
+        "enterprise_management_section_tour_tab_schedule_header_table_content"
+      ),
+      sortable: false,
+    },
+    {
+      name: "Action",
+      label: t(
+        "enterprise_management_section_tour_tab_schedule_header_table_action"
+      ),
+      sortable: false,
+    },
+  ];
+
   const { tourInformation } = useSelector(
     (state: ReducerType) => state.enterprise
   );
@@ -88,36 +108,65 @@ const PopupAddMileStone = memo((props: Props) => {
           id: yup.number().empty().notRequired(),
           startTime: yup
             .date()
-            .typeError("Start time is required")
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_schedule_start_time_validate"
+              )
+            )
             .startTime({
               lessThan: function (params: any) {
-                return `Start time must be less than End Time`;
+                return t(
+                  "enterprise_management_section_tour_tab_schedule_start_time_less_than"
+                );
               },
               between: function (params: any) {
-                return `Start time must be less than ${params.greaterThan}`;
+                return t(
+                  "enterprise_management_section_tour_tab_schedule_start_time_between",
+                  { greaterThan: params.greaterThan }
+                );
               },
             })
             .min(
               min,
-              `Start time must be greater than or equal to ${moment(min).format(
-                "mm:ss"
-              )}`
+              t(
+                "enterprise_management_section_tour_tab_schedule_start_time_min",
+                { min: min }
+              )
             )
-            .required("Start time is required"),
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_schedule_start_time_validate"
+              )
+            ),
           endTime: yup
             .date()
-            .typeError("End time is required")
+            .typeError(
+              t(
+                "enterprise_management_section_tour_tab_schedule_end_time_validate"
+              )
+            )
             // .max(yup.ref("startTime"), `End time must be greater than ${startTime}`)
             .endTime({
               moreThan: function (params: any) {
-                return `End time must be greater than Start Time`;
+                return t(
+                  "enterprise_management_section_tour_tab_schedule_end_time_more_than"
+                );
               },
               between: function (params: any) {
-                return `End time must be greater than ${params.lessThan}`;
+                return t(
+                  "enterprise_management_section_tour_tab_schedule_end_time_between",
+                  { lessThan: params.lessThan }
+                );
               },
             })
-            .required("End time is required"),
-          description: yup.string().required("Content is required"),
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_schedule_end_time_validate"
+              )
+            ),
+          description: yup
+            .string()
+            .required(t("enterprise_management_section_tour_tab_schedule_des")),
         })
       ),
     });
@@ -325,19 +374,23 @@ const PopupAddMileStone = memo((props: Props) => {
               scope="row"
               className={classes.boxAddRow}
             >
-              <AddCircle sx={{ fontSize: "16px !important" }} /> Add new
-              milestone
+              <AddCircle sx={{ fontSize: "16px !important" }} />{" "}
+              {t(
+                "enterprise_management_section_tour_tab_schedule_add_milestone"
+              )}
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
       <Grid className={classes.btnControl}>
         <Button btnType={BtnType.Primary} type="submit">
-          Save
+          {t("common_save")}
         </Button>
       </Grid>
       <PopupConfirmDelete
-        title="Are you sure delete this schedule?"
+        title={t(
+          "enterprise_management_section_tour_tab_schedule_confirm_delete"
+        )}
         isOpen={!!scheduleItemDelete}
         onClose={onClosePopupConfirmDeleteScheduleItem}
         toggle={onClosePopupConfirmDeleteScheduleItem}

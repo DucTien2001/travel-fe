@@ -2,65 +2,58 @@ import type { NextPage } from "next";
 import { Container, Row, Col } from "reactstrap";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import ListServices from "./components/Listservices";
-import About from "./components/About";
-import Search from "./components/Search";
-import Offer from "./components/Offer";
-import Testimonials from "./components/Testimonial";
-import Contact from "./components/Contact";
-import Social from "../../components/Social";
-import Footer from "components/Footer";
-import { images } from "configs/images";
-import Link from "next/link";
-import Button, { BtnType } from "components/common/buttons/Button";
-import Aos from "aos";
 import "aos/dist/aos.css";
-import { useEffect } from "react";
-import Events from "./components/Events";
+import { useTranslation } from "react-i18next";
+import dynamic from "next/dynamic";
+import { Grid } from "@mui/material";
+import { Fragment } from "react";
+const Events = dynamic(() => import("./components/Events"), { ssr: false });
+const Offer = dynamic(() => import("./components/Offer"), { ssr: false });
+const About = dynamic(() => import("./components/About"), { ssr: false });
+const Contact = dynamic(() => import("./components/Contact"), { ssr: false });
+const Social = dynamic(() => import("../../components/Social"), { ssr: false });
+const Search = dynamic(() => import("./components/Search"), { ssr: false });
 
 const LandingPage: NextPage = () => {
-  useEffect(() => {
-    Aos.init({ duration: 900 });
-  }, []);
+  const { t, i18n } = useTranslation("common");
+
   return (
-    <>
-      <div className="cd-section" id="headers">
-        <div className="header-2">
-          <div
+    <Fragment>
+      <Grid className="cd-section" id="headers">
+        <Grid className="header-2">
+          <Grid
             className={clsx("page-header header-filter", classes.pageHeadBox)}
           >
-            <div
+            <Grid
               className={clsx("page-header-image", classes.pageHeader)}
-            ></div>
+            ></Grid>
             <Container>
               <Row>
-                <Col
-                  className="ml-auto mr-auto text-center"
-                  md="12"
-                  data-aos="fade-up"
-                >
-                  <h1 className={clsx("title", classes.titleHome)}>
-                    Discover story-worthy travel moments
-                  </h1>
-                  <h4 className={classes.subTitle}>
+                <Col className="ml-auto mr-auto text-center" md="12">
+                  <Grid
+                    className={clsx("title", classes.titleHome)}
+                    // eslint-disable-next-line react/no-unknown-property
+                  >
+                    {/* {t("landing_page_section_search_title_hero")} */}
+                    DISCOVER STORY-WORTHY TRAVEL MOMENTS
+                  </Grid>
+                  <Grid className={classes.subTitle}>
+                    {/* {t("landing_page_section_search_sub_title_hero")} */}
                     It time for new adventures, escapes thrills & experiences
-                  </h4>
+                  </Grid>
                   <Search />
                 </Col>
               </Row>
-              <Row></Row>
             </Container>
-          </div>
-        </div>
-      </div>
-
+          </Grid>
+        </Grid>
+      </Grid>
       <Events />
       <Offer />
       <About />
-      {/* <Testimonials /> */}
       <Contact />
       <Social />
-    </>
+    </Fragment>
   );
 };
 

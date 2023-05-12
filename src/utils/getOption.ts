@@ -1,5 +1,7 @@
 import { EDiscountType, EPaymentStatus, EServicePolicyType, EServiceType } from "models/general";
 import { EUserType } from "models/user";
+import { useTranslation } from "react-i18next";
+
 
 export const getCurrency = (currency) => {
     switch (currency) {

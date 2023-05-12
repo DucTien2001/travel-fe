@@ -46,6 +46,7 @@ import { OptionItem } from "models/general";
 import { useDispatch } from "react-redux";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useTranslation } from "react-i18next";
 const AnyReactComponent = ({ text, lat, lng }) => <div>{text}</div>;
 export interface FormBookData {
   startDate: Date;
@@ -80,6 +81,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
   const { user } = useAuth();
   const router = useRouter();
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
 
   // Geocode.setApiKey("AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k");
 
@@ -137,7 +139,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
         .notRequired(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18n.language]);
 
   const {
     register,
@@ -280,7 +282,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
               <div className={classes.subProduct}>
                 <div className={classes.tags}>
                   <Badge pill className={classes.badgeTags}>
-                    tour
+                    {t("common_tour")}
                   </Badge>
                 </div>
                 {isLoading ? (
@@ -324,7 +326,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={tour?.images[2]} alt="anh" />
                     <div className={classes.modalImg}>
-                      <p>See All</p>
+                      <p> {t("common_see_all")}</p>
                     </div>
                   </div>
                 </Col>
@@ -333,8 +335,13 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
           </Row>
           <Row className={classes.content}>
             <Col xs={8} className={classes.leftContent}>
-              <h2 className={classes.leftTextTitle}>Product Details</h2>
-              <h5 className={classes.leftTextPanel}>Highlight</h5>
+              <h2 className={classes.leftTextTitle}>
+                {" "}
+                {t("tour_detail_section_product_detail")}
+              </h2>
+              <h5 className={classes.leftTextPanel}>
+                {t("tour_detail_section_highlight")}
+              </h5>
               {isLoading ? (
                 <Skeleton className={classes.highlightContent} />
               ) : (
@@ -348,12 +355,15 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                 <div className={classes.goodWrapper}>
                   <FontAwesomeIcon icon={faFaceSmile}></FontAwesomeIcon>
                   <p>
-                    <span>Good for:</span> {tour?.suitablePerson}
+                    <span>{t("tour_detail_section_good_for")}:</span>{" "}
+                    {tour?.suitablePerson}
                   </p>
                 </div>
               )}
               <div className={classes.itineraryBox}>
-                <h5 className={classes.leftTextPanel}>Tour Itinerary</h5>
+                <h5 className={classes.leftTextPanel}>
+                  {t("tour_detail_section_tour_itinerary")}
+                </h5>
                 <Box sx={{ width: "100%" }}>
                   <TabContext value={tab}>
                     <Box>
@@ -361,7 +371,9 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                         {daySchedule?.map((item, index) => (
                           <Tab
                             key={index}
-                            label={`Day ${item?.day}`}
+                            label={t("tour_detail_section_tour_day", {
+                              day: item?.day,
+                            })}
                             value={`${item?.day}`}
                           />
                         ))}
@@ -379,7 +391,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
               </div>
               <Grid sx={{ marginBottom: "24px" }}>
                 <h5 className={classes.leftTextPanel}>
-                  What You’ll Experience
+                  {t("tour_detail_section_des")}
                 </h5>
                 {isLoading ? (
                   <Skeleton width={100} className={classes.textDescription} />
@@ -391,7 +403,10 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                 )}
               </Grid>
               <div className={classes.mapBox}>
-                <h5 className={classes.leftTextPanel}> Location Detail</h5>
+                <h5 className={classes.leftTextPanel}>
+                  {" "}
+                  {t("tour_detail_section_location")}
+                </h5>
                 <Grid
                   sx={{
                     padding: "18px",
@@ -426,7 +441,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   </div> */}
                   <div className={classes.contactBox}>
                     <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
-                    <p>Contact Partner: </p>
+                    <p> {t("tour_detail_section_contact")}: </p>
                     {isLoading ? (
                       <Skeleton width={100} />
                     ) : (
@@ -445,7 +460,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
             </Col>
             <Col xs={4} className={classes.rightContent}>
               <Grid className={classes.boxSelect}>
-                <p>When are you going?</p>
+                <p>{t("tour_detail_section_when")}</p>
                 <Grid sx={{ paddingTop: "14px" }}>
                   <InputDatePicker
                     control={control}
@@ -466,7 +481,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                 </Grid> */}
               </Grid>
               <Grid className={classes.boxSelect} sx={{ paddingTop: "14px" }}>
-                <p>Language options?</p>
+                <p>{t("tour_detail_section_language_option")}</p>
                 <InputSelect
                   className={classes.inputSelect}
                   control={control}
@@ -477,10 +492,14 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                 />
               </Grid>
               <Grid className={classes.boxSelect}>
-                <p>How many tickets?</p>
+                <p>{t("tour_detail_section_many_ticket")}</p>
                 <Grid className={classes.boxNumberTickets}>
                   <Grid>
-                    <p>Adult (age &gt; {priceAndAge?.childrenAgeMax})</p>
+                    <p>
+                      {t("tour_detail_section_adult")} (
+                      {t("tour_detail_section_age")} &gt;{" "}
+                      {priceAndAge?.childrenAgeMax})
+                    </p>
                     <span>{fCurrency2(priceAndAge?.adultPrice)} VND</span>
                   </Grid>
                   <Grid>
@@ -504,7 +523,9 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                 <Grid className={classes.boxNumberTickets}>
                   <Grid>
                     <p>
-                      Child (age {priceAndAge?.childrenAgeMin}-
+                      {t("tour_detail_section_child")} (
+                      {t("tour_detail_section_age")}{" "}
+                      {priceAndAge?.childrenAgeMin}-
                       {priceAndAge?.childrenAgeMax})
                     </p>
                     <span>{fCurrency2(priceAndAge?.priceChildren)} VND</span>
@@ -530,13 +551,15 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
               </Grid>
               <div className={classes.priceWrapper}>
                 <Grid>
-                  <p className={classes.discount}>
-                    Number of tickets left:{" "}
-                    <span>
-                      {priceAndAge?.quantity - priceAndAge.quantityOrdered}{" "}
-                    </span>
-                    tickets
-                  </p>
+                  <p
+                    className={classes.discount}
+                    dangerouslySetInnerHTML={{
+                      __html: t("tour_detail_section_number_ticket_left", {
+                        number:
+                          priceAndAge?.quantity - priceAndAge.quantityOrdered,
+                      }),
+                    }}
+                  ></p>
                 </Grid>
                 <Grid
                   sx={{
@@ -545,7 +568,8 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                 >
                   {priceAndAge?.discount !== 0 && (
                     <p className={classes.discount}>
-                      Discount: <span>{priceAndAge?.discount} %</span>
+                      {t("tour_detail_section_discount")}:{" "}
+                      <span>{priceAndAge?.discount} %</span>
                     </p>
                   )}
                 </Grid>
@@ -556,7 +580,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                     paddingTop: "10px",
                   }}
                 >
-                  <p>Total Price &nbsp;</p>
+                  <p>{t("tour_detail_section_total_price")} &nbsp;</p>
                   <p className={classes.price}>
                     {fCurrency2VND(totalPrice)} VND
                   </p>
@@ -569,7 +593,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   className={classes.btnBookNow}
                   type="submit"
                 >
-                  Book Now
+                  {t("common_book_now")}
                 </Button>
               ) : (
                 <Link href={"/auth/login"}>
@@ -580,7 +604,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                       className={classes.btnBookNow}
                       type="submit"
                     >
-                      Book Now
+                      {t("common_book_now")}
                     </Button>
                   </a>
                 </Link>
@@ -588,35 +612,34 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
               <div className={classes.tipWrapper}>
                 <div className={classes.serviceTip}>
                   <FontAwesomeIcon icon={faClock}></FontAwesomeIcon>
-                  <p>
-                    Tour duration:{" "}
-                    {isLoading ? (
-                      <Skeleton width={100} />
-                    ) : (
-                      <span>
-                        {tour?.numberOfDays} days - {tour?.numberOfNights}{" "}
-                        nights
-                      </span>
-                    )}
-                  </p>
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: t("tour_detail_section_tour_duration", {
+                        day: tour?.numberOfDays,
+                        night: tour?.numberOfNights,
+                      }),
+                    }}
+                  ></p>
                 </div>
                 <div className={classes.serviceTip}>
                   <FontAwesomeIcon icon={faCalendar}></FontAwesomeIcon>
-                  <p>Available today</p>
+                  <p>{t("tour_detail_section_available")}</p>
                 </div>
                 <div className={classes.serviceTip}>
                   <FontAwesomeIcon icon={faBusinessTime}></FontAwesomeIcon>
-                  <p>Service Available in: Vietnamese</p>
+                  <p>{t("tour_detail_section_service_available")}</p>
                 </div>
               </div>
               <div className={classes.featureWrapper}>
-                <p className={classes.featureTitle}>Features</p>
+                <p className={classes.featureTitle}>
+                  {t("tour_detail_section_feature")}
+                </p>
                 <Button
                   btnType={BtnType.Outlined}
                   onClick={onOpenPopupDetailTour}
                   className={classes.btnSeeDetail}
                 >
-                  Terms and Conditions
+                  {t("common_terms_and_conditions")}
                 </Button>
               </div>
             </Col>

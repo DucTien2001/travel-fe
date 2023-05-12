@@ -33,7 +33,7 @@ interface InputsProps extends OutlinedInputProps {
   isShowError?: boolean;
 }
 const InputLineTextField = memo((props: InputsProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation("common");
 
   const [toggleEyes, setToggleEyes] = useState(false);
   const {

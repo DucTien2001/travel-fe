@@ -25,25 +25,26 @@ import { clsx } from "clsx";
 import { Col, Container } from "reactstrap";
 import Link from "next/link";
 import Button, { BtnType } from "components/common/buttons/Button";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line react/display-name
 const TourSearch = memo(() => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const { t, i18n } = useTranslation("common");
 
   return (
     <>
       <Grid className={classes.root} container spacing={2}>
         <Grid item xs={6}>
           <h3 className={classes.titleEvent}>
-            Find The Perfect Event Apply Your Order
+            {t("landing_page_section_event_title")}
           </h3>
           <p className={classes.subTitleEvent}>
-            A list of the top event apply for your tour in world for a perfect
-            holiday or a trip
+            {t("landing_page_section_event_sub_title")}
           </p>
           <Link href="/listEvents">
-            <Button btnType={BtnType.Primary}>View More</Button>
+            <Button btnType={BtnType.Primary}> {t("common_view_more")}</Button>
           </Link>
         </Grid>
         <Grid item xs={6}>

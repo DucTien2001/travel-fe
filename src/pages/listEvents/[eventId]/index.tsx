@@ -19,12 +19,15 @@ import { EventService } from "services/normal/event";
 import { useRouter } from "next/router";
 import { IEvent } from "models/event";
 import PopupTermAndCondition from "./components/PopupTermAndCondition";
-
+import { useTranslation } from "react-i18next";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 const EventPage = memo(() => {
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
+
   const router = useRouter();
   const [event, setEvent] = useState<IEvent>();
-  const [copyCode, setCopyCode] = useState("ENJOY NHA TRANG");
+  const [copyCode, setCopyCode] = useState("");
   const [openPopupTermAndCondition, setOpenPopupTermAndCondition] =
     useState(false);
 
@@ -65,12 +68,8 @@ const EventPage = memo(() => {
       <Row className={classes.containerBody}>
         <Container>
           <Grid className={classes.titleBody}>
-            <h1>🎉 Big new year promo for outbound hotels</h1>
-            <p>
-              🔥 Travel to anywhere in the world during this festive year end
-              super easily with diverse hotel recommendations and exciting deals
-              up to 400K from Travelix!
-            </p>
+            <h1>🎉 {t("event_detail_section_title")}</h1>
+            <p>🔥 {t("event_detail_section_sub_title")}</p>
           </Grid>
           <Grid
             container
@@ -89,18 +88,12 @@ const EventPage = memo(() => {
               </Grid>
               <Grid sx={{ paddingBottom: "10px" }}>
                 <InputTextfield
+                  onClick={handleCopyCode}
                   className={classes.inputCode}
                   value={copyCode}
                   disabled
-                  onChange={(e) => setCopyCode("ENJOY NHA TRANG")}
-                  endAdornment={
-                    <p
-                      className={classes.textCopyInput}
-                      onClick={handleCopyCode}
-                    >
-                      Copy
-                    </p>
-                  }
+                  onChange={(e) => setCopyCode("")}
+                  endAdornment={<ContentCopyIcon />}
                 />
               </Grid>
               <Grid className={classes.description}>
@@ -114,33 +107,29 @@ const EventPage = memo(() => {
                 className={classes.footTicket}
                 onClick={onOpenPopupTermAndCondition}
               >
-                <p>Read Terms and Conditions</p>
+                <p>{t("event_detail_section_read_terms")}</p>
               </Grid>
             </Grid>
             <Grid className={classes.textRemind}>
-              <p>Coupons are limited and refilled every day</p>
+              <p>{t("event_detail_section_limit_title")}</p>
             </Grid>
             <Grid sx={{ width: "100%" }}>
-              <Button btnType={BtnType.Primary} className={classes.btnFind}>
-                FIND SERVICE NOW
+              <Button
+                btnType={BtnType.Primary}
+                className={classes.btnFind}
+                onClick={() => {
+                  router.push("/listTour");
+                }}
+              >
+                {t("event_detail_section_find_service_btn")}
               </Button>
             </Grid>
             <Grid className={classes.boxTip}>
-              <p>
-                Book hotel for your holiday in VietNam with best ease on
-                Travelix!
-              </p>
+              <p>{t("event_detail_section_title_list_tip")}</p>
               <ul>
-                <li>
-                  Easily find popular to travelers and well located hotels
-                </li>
-                <li>
-                  The price you see is the price you pay, all costs are
-                  displayed in VND.
-                </li>
-                <li>
-                  More flexible with reasonably priced Pay upon Checkin options.
-                </li>
+                <li>{t("event_detail_section_title_item_tip_first")}</li>
+                <li>{t("event_detail_section_title_item_tip_second")}</li>
+                <li>{t("event_detail_section_title_item_tip_third")}</li>
               </ul>
             </Grid>
           </Grid>
