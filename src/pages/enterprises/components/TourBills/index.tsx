@@ -18,9 +18,11 @@ import {
   TableRow,
   TableCell,
   Paper,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import TableHeader from "components/Table/TableHeader";
-import { DataPagination, TableHeaderLabel } from "models/general";
+import { DataPagination, TableHeaderLabel, billStatusType } from "models/general";
 import { EditOutlined, ExpandMoreOutlined } from "@mui/icons-material";
 
 import { useRouter } from "next/router";
@@ -36,6 +38,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import PopupChangeStatus from "./components/PopupChangeStatus";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import { useTranslation } from "react-i18next";
+import InputSelect from "components/common/inputs/InputSelect";
+import { SelectOption } from "common/general";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
@@ -63,9 +67,7 @@ const Tour = memo(({}: Props) => {
     },
     {
       name: "booking date",
-      label: t(
-        "enterprise_management_section_tour_bill_header_table_booking_date"
-      ),
+      label: t("enterprise_management_section_tour_bill_header_table_booking_date"),
       sortable: false,
     },
     {
@@ -85,52 +87,80 @@ const Tour = memo(({}: Props) => {
   const [data, setData] = useState<DataPagination<TourBill>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [openPopupChangeStatus, setOpenPopupChangeStatus] = useState(false);
+  const [isTookPlace, setIsTookPlace] = useState<boolean>(false);
   const [tourBillId, setTourBillId] = useState(null);
+  const [tourOption, setTourOption] = useState<SelectOption[]>([]);
+  const [tourOnSaleOption, setTourOnSaleOption] = useState<SelectOption[]>([]);
+  const [tourFilter, setTourFilter] = useState<number>(-1);
+  const [tourOnSalesFilter, setTourOnSalesFilter] = useState<number[]>([-1]);
+  const [statusFilter, setStatusFilter] = useState<number>(-1);
+
+  useEffect(() => {
+    getFilterData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isTookPlace]);
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tourFilter, tourOnSalesFilter, isTookPlace]);
 
   const onClosePopupChangeStatus = () => {
     setOpenPopupChangeStatus(!openPopupChangeStatus);
   };
 
-  const handleAction = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    item: TourBill
-  ) => {
+  const handleAction = (event: React.MouseEvent<HTMLButtonElement>, item: TourBill) => {
     setItemAction(item);
     setActionAnchor(event.currentTarget);
   };
 
-  const handleChangePage = (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    newPage: number
-  ) => {
+  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => {
     fetchData({
       page: newPage + 1,
     });
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     fetchData({
       take: Number(event.target.value),
       page: 1,
     });
   };
 
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-    _onSearch(e.target.value);
+  const getFilterData = () => {
+    TourBillService.getFilters({ isPast: isTookPlace })
+      .then((res) => {
+        if (res?.success) {
+          setTourOption(
+            res.data.tour.map((item, index) => ({
+              id: index + 1,
+              name: item.title,
+              value: item.id,
+            }))
+          );
+          setTourOnSaleOption(
+            res.data.tourOnSale.map((item, index) => ({
+              id: index + 1,
+              name: moment(item.startDate).format("DD/MM/YYYY"),
+              value: item.tourOnSaleIds,
+            }))
+          );
+        }
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => dispatch(setLoading(false)));
   };
 
-  const fetchData = (value?: {
-    take?: number;
-    page?: number;
-    keyword?: string;
-  }) => {
+  const fetchData = (value?: { take?: number; page?: number; keyword?: string }) => {
     const params: FindAll = {
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
       keyword: keyword,
+      tourId: tourFilter || -1,
+      tourOnSaleIds: tourOnSalesFilter || [-1],
+      status: statusFilter || -1,
     };
     if (value?.keyword !== undefined) {
       params.keyword = value.keyword || undefined;
@@ -150,10 +180,7 @@ const Tour = memo(({}: Props) => {
       .finally(() => dispatch(setLoading(false)));
   };
 
-  const _onSearch = useDebounce(
-    (keyword: string) => fetchData({ keyword, page: 1 }),
-    500
-  );
+  const _onSearch = useDebounce((keyword: string) => fetchData({ keyword, page: 1 }), 500);
 
   const onCloseActionMenu = () => {
     setItemAction(null);
@@ -178,11 +205,6 @@ const Tour = memo(({}: Props) => {
     onCloseActionMenu();
   };
 
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <>
       <div className={classes.root}>
@@ -190,12 +212,52 @@ const Tour = memo(({}: Props) => {
           <h3>Tour bills</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
-          <div className={classes.boxInputSearch}>
+          {/* <div className={classes.boxInputSearch}>
             <InputSearch
               autoComplete="off"
               placeholder={t("common_search")}
               value={keyword || ""}
               onChange={onSearch}
+            />
+          </div> */}
+          <div>
+            <InputSelect
+              fullWidth
+              title={"Tour"}
+              selectProps={{
+                options: tourOption,
+                placeholder: "-- Tour --",
+              }}
+              onChange={(e) => setTourFilter(e?.value)}
+            />
+          </div>
+          <div>
+            <FormControlLabel
+              className={classes.checkBoxQuantity}
+              control={<Checkbox checked={isTookPlace} onChange={() => setIsTookPlace(!isTookPlace)} />}
+              label={"Tours have taken place"}
+            />
+          </div>
+          <div>
+            <InputSelect
+              fullWidth
+              title={"Date"}
+              selectProps={{
+                options: tourOnSaleOption,
+                placeholder: "-- Date --",
+              }}
+              onChange={(e) => setTourOnSalesFilter(e?.value)}
+            />
+          </div>
+          <div>
+            <InputSelect
+              fullWidth
+              title={"Status"}
+              selectProps={{
+                options: billStatusType,
+                placeholder: "-- Status --",
+              }}
+              onChange={(e) => setStatusFilter(e?.value)}
             />
           </div>
         </Row>
@@ -211,12 +273,7 @@ const Tour = memo(({}: Props) => {
                         {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <a
-                          href={`/listTour/:${item?.id}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={classes.tourName}
-                        >
+                        <a href={`/listTour/:${item?.id}`} target="_blank" rel="noreferrer" className={classes.tourName}>
                           {item?.tourData?.title}
                         </a>
                       </TableCell>
@@ -224,10 +281,7 @@ const Tour = memo(({}: Props) => {
                         {fCurrency2VND(item?.totalBill)} VND
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.amountAdult + item?.amountChild}{" "}
-                        {t(
-                          "enterprise_management_section_tour_bill_body_table_amount"
-                        )}
+                        {item?.amountAdult + item?.amountChild} {t("enterprise_management_section_tour_bill_body_table_amount")}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {moment(item?.createdAt).format("DD-MM-YYYY")}
@@ -260,11 +314,7 @@ const Tour = memo(({}: Props) => {
           </Table>
           <TablePagination
             labelRowsPerPage={t("common_row_per_page")}
-            labelDisplayedRows={function defaultLabelDisplayedRows({
-              from,
-              to,
-              count,
-            }) {
+            labelDisplayedRows={function defaultLabelDisplayedRows({ from, to, count }) {
               return t("common_row_of_page", {
                 from: from,
                 to: to,
@@ -290,46 +340,21 @@ const Tour = memo(({}: Props) => {
           open={Boolean(actionAnchor)}
           onClose={onCloseActionMenu}
         >
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            onClick={handleRedirect}
-            className={classes.menuItem}
-          >
+          <MenuItem sx={{ fontSize: "0.875rem" }} onClick={handleRedirect} className={classes.menuItem}>
             <Box display="flex" alignItems={"center"}>
-              <VisibilityIcon
-                sx={{ marginRight: "0.25rem" }}
-                fontSize="small"
-              />
-              <span>
-                {t("enterprise_management_section_tour_bill_action_view")}
-              </span>
+              <VisibilityIcon sx={{ marginRight: "0.25rem" }} fontSize="small" />
+              <span>{t("enterprise_management_section_tour_bill_action_view")}</span>
             </Box>
           </MenuItem>
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            onClick={onChangeStatus}
-            className={classes.menuItem}
-          >
+          <MenuItem sx={{ fontSize: "0.875rem" }} onClick={onChangeStatus} className={classes.menuItem}>
             <Box display="flex" alignItems={"center"}>
-              <PublishedWithChangesIcon
-                sx={{ marginRight: "0.25rem" }}
-                fontSize="small"
-              />
-              <span>
-                {t(
-                  "enterprise_management_section_tour_bill_action_change_status"
-                )}
-              </span>
+              <PublishedWithChangesIcon sx={{ marginRight: "0.25rem" }} fontSize="small" />
+              <span>{t("enterprise_management_section_tour_bill_action_change_status")}</span>
             </Box>
           </MenuItem>
         </Menu>
       </div>
-      <PopupChangeStatus
-        isOpen={openPopupChangeStatus}
-        onClose={onClosePopupChangeStatus}
-        tourBillId={tourBillId}
-        fetchData={fetchData}
-      />
+      <PopupChangeStatus isOpen={openPopupChangeStatus} onClose={onClosePopupChangeStatus} tourBillId={tourBillId} fetchData={fetchData} />
     </>
   );
 });
