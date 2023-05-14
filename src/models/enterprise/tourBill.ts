@@ -47,6 +47,12 @@ export interface StatisticAll {
   year: number;
 }
 
+export interface StatisticTourOnSale {
+  take: number;
+  page: number;
+}
+
+
 export interface ITourStatistic {
   tourId: number;
   numberOfBookings: number;

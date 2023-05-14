@@ -96,12 +96,13 @@ export enum EBillStatus {
 }
 
 export const billStatusType = [
-  { id: 1, name: "Reschedule", value: EBillStatus.RESCHEDULED },
-  { id: 2, name: "Canceled", value: EBillStatus.CANCELED},
-  { id: 3, name: "Not contacted yet", value: EBillStatus.NOT_CONTACTED_YET},
-  { id: 4, name: "Contacted", value: EBillStatus.CONTACTED},
-  { id: 5, name: "Used", value: EBillStatus.USED},
-  { id: 6, name: "Not used", value: EBillStatus.NOT_USE},
+  { id: 0, name: "All", value: -1, translation: "common_select_all" },
+  { id: 1, name: "Reschedule", value: EBillStatus.RESCHEDULED, translation: "bill_status_reschedule" },
+  { id: 2, name: "Canceled", value: EBillStatus.CANCELED, translation: "bill_status_canceled"},
+  { id: 3, name: "Not contacted yet", value: EBillStatus.NOT_CONTACTED_YET, translation: "bill_status_not_contact_yet"},
+  { id: 4, name: "Contacted", value: EBillStatus.CONTACTED, translation: "bill_status_contacted"},
+  { id: 5, name: "Used", value: EBillStatus.USED, translation: "bill_status_used"},
+  { id: 6, name: "Not used", value: EBillStatus.NOT_USE, translation: "bill_status_not_use"},
 ]
 
 export enum EDiscountType {
@@ -117,6 +118,11 @@ export const discountType = [
 export enum Lang {
   VI = 'vi',
   EN = 'en'
+}
+
+export enum EStatusService {
+  ACTIVE = 0,
+  IN_ACTIVE = 1,
 }
 export interface LangSupport {
   key: Lang,

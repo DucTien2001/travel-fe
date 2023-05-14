@@ -6,21 +6,16 @@ import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Row } from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
-import { AdminGetTours, ETour } from "models/enterprise";
 import { useDispatch } from "react-redux";
 import {
   setErrorMess,
   setLoading,
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
-import { TourService } from "services/enterprise/tour";
 import SearchNotFound from "components/SearchNotFound";
-import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
+
 import {
-  Box,
   IconButton,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableContainer,
@@ -42,14 +37,7 @@ import PopupSendOffer from "./components/PopupSendOffer";
 import { getRoleUser } from "utils/getOption";
 import StatusChip from "components/StatusChip";
 import { useTranslation } from "react-i18next";
-
-const tableHeaders: TableHeaderLabel[] = [
-  { name: "id", label: "Staff Id", sortable: false },
-  { name: "name", label: "Name", sortable: false },
-  { name: "role", label: "Role", sortable: false },
-  { name: "status", label: "Status", sortable: false },
-  { name: "actions", label: "Actions", sortable: false },
-];
+import moment from "moment";
 
 interface Props {
   handleTourEdit?: () => void;
@@ -65,6 +53,21 @@ const Staff = memo(({ handleTourEdit }: Props) => {
     {
       name: "name",
       label: t("enterprise_management_section_staff_header_table_name"),
+      sortable: false,
+    },
+    {
+      name: "address",
+      label: t("enterprise_management_section_staff_header_table_address"),
+      sortable: false,
+    },
+    {
+      name: "phoneNumber",
+      label: t("enterprise_management_section_staff_header_table_phone"),
+      sortable: false,
+    },
+    {
+      name: "dateBecome",
+      label: t("enterprise_management_section_staff_header_table_date_become"),
       sortable: false,
     },
     {
@@ -219,14 +222,16 @@ const Staff = memo(({ handleTourEdit }: Props) => {
                         {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <a
-                          href={`/listTour/:${item?.id}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={classes.tourName}
-                        >
-                          {item?.username}
-                        </a>
+                        {item?.username}
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.address ? item?.address : ""}
+                      </TableCell>{" "}
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.phoneNumber}
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {moment(item?.becomeStaffDate).format("DD-MM-YYYY")}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {getRoleUser(item?.role)}
@@ -254,7 +259,7 @@ const Staff = memo(({ handleTourEdit }: Props) => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={6}>
+                  <TableCell align="center" colSpan={8}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>

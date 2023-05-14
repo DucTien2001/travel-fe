@@ -7,6 +7,7 @@ export interface Voucher {
   hotelIds: number[];
   tourIds: number[];
   numberOfCodes: number;
+  numberOfCodesUsed?: number;
   discountType?: EDiscountType;
   discountValue?: number;
   minOrder?: number;

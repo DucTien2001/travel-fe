@@ -119,23 +119,65 @@ const AddOrEditVoucher = memo((props: Props) => {
           name: yup.string().required(),
         })
         .required(),
-      discountValue: yup
-        .number()
-        .typeError(
-          t(
-            "enterprise_management_section_add_or_edit_voucher_discount_value_validate"
-          )
-        )
-        .positive(
-          t(
-            "enterprise_management_section_add_or_edit_voucher_discount_value_validate_error"
-          )
-        )
-        .required(
-          t(
-            "enterprise_management_section_add_or_edit_voucher_discount_value_validate"
-          )
-        ),
+      discountValue:
+        // yup
+        //   .number()
+        //   .typeError(
+        //     t(
+        //       "enterprise_management_section_add_or_edit_voucher_discount_value_validate"
+        //     )
+        //   )
+        //   .positive(
+        //     t(
+        //       "enterprise_management_section_add_or_edit_voucher_discount_value_validate_error"
+        //     )
+        //   )
+        //   .required(
+        //     t(
+        //       "enterprise_management_section_add_or_edit_voucher_discount_value_validate"
+        //     )
+        //   ),
+        yup.number().when("discountType", {
+          is: (type: OptionItem) => type?.id === EDiscountType.PERCENT,
+          then: yup
+            .number()
+            .typeError(
+              t(
+                "enterprise_management_section_add_or_edit_voucher_max_discount_validate"
+              )
+            )
+            .positive(
+              t(
+                "enterprise_management_section_add_or_edit_voucher_max_discount_validate_error"
+              )
+            )
+            .max(
+              100,
+              t(
+                "enterprise_management_section_add_or_edit_voucher_max_discount_validate_error_max"
+              )
+            )
+            .required(
+              "enterprise_management_section_add_or_edit_voucher_max_discount_validate"
+            ),
+          otherwise: yup
+            .number()
+            .typeError(
+              t(
+                "enterprise_management_section_add_or_edit_voucher_max_discount_validate"
+              )
+            )
+            .positive(
+              t(
+                "enterprise_management_section_add_or_edit_voucher_max_discount_validate_error"
+              )
+            )
+            .required(
+              t(
+                "enterprise_management_section_add_or_edit_voucher_max_discount_validate"
+              )
+            ),
+        }),
       minOder: yup
         .number()
         .typeError(
@@ -166,7 +208,21 @@ const AddOrEditVoucher = memo((props: Props) => {
           )
           .notRequired()
           .transform((_, val) => (val !== "" ? Number(val) : null)),
-        otherwise: yup.number().nullable().notRequired().default(0),
+        otherwise: yup
+          .number()
+          .typeError(
+            t(
+              "enterprise_management_section_add_or_edit_voucher_max_discount_validate"
+            )
+          )
+          .nullable()
+          .notRequired()
+          .positive(
+            t(
+              "enterprise_management_section_add_or_edit_voucher_max_discount_validate_error"
+            )
+          )
+          .transform((_, val) => (val !== "" ? Number(val) : null)),
       }),
       numberOfCodes: yup.number().when(["isQuantityLimit"], {
         is: (isQuantityLimit: boolean) => !!isQuantityLimit,

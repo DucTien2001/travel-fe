@@ -29,10 +29,12 @@ import {
   TableRow,
   TableCell,
   Paper,
+  Grid,
 } from "@mui/material";
 import TableHeader from "components/Table/TableHeader";
 import {
   DataPagination,
+  EStatusService,
   LangSupport,
   langSupports,
   TableHeaderLabel,
@@ -49,10 +51,15 @@ import InputSearch from "components/common/inputs/InputSearch";
 import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useTranslation } from "react-i18next";
+import { fCurrency2VND } from "utils/formatNumber";
+import StatusChip from "components/StatusChip";
+import PopupConfirmWarning from "components/Popup/PopupConfirmWarning";
+import InputSelect from "components/common/inputs/InputSelect";
 
 interface Props {
   handleTourEdit?: () => void;
 }
+
 // eslint-disable-next-line react/display-name
 const Tour = memo(({ handleTourEdit }: Props) => {
   const dispatch = useDispatch();
@@ -67,13 +74,47 @@ const Tour = memo(({ handleTourEdit }: Props) => {
       sortable: false,
     },
     {
+      name: "duration",
+      label: t("enterprise_management_section_tour_header_duration"),
+      sortable: false,
+    },
+    {
+      name: "Number of tour on sale",
+      label: t("enterprise_management_section_tour_header_number_tour_on_sale"),
+      sortable: false,
+    },
+    {
+      name: "Price range",
+      label: t("enterprise_management_section_tour_header_price_range"),
+      sortable: false,
+    },
+    {
+      name: "status",
+      label: t("enterprise_management_section_tour_header_status"),
+      sortable: false,
+    },
+    {
       name: "languages",
       label: t("enterprise_management_section_tour_header_language"),
       sortable: false,
     },
     { name: "actions", label: t("common_action"), sortable: false },
   ];
-  const [isLoading, setIsLoading] = useState(true);
+
+  const tourFilterOption = [
+    { id: 0, name: t("common_select_all"), value: -1 },
+    {
+      id: 1,
+      name: t("enterprise_management_section_tour_filter_status_active"),
+      value: EStatusService.ACTIVE,
+    },
+    {
+      id: 2,
+      name: t("enterprise_management_section_tour_filter_status_in_active"),
+      value: EStatusService.IN_ACTIVE,
+    },
+  ];
+
   const [itemAction, setItemAction] = useState<ETour>();
   const [itemDelete, setItemDelete] = useState<ETour>(null);
   const [keyword, setKeyword] = useState<string>("");
@@ -82,6 +123,12 @@ const Tour = memo(({ handleTourEdit }: Props) => {
   const [languageAnchor, setLanguageAnchor] = useState<null | HTMLElement>(
     null
   );
+  const [openPopupWarning, setOpenPopupWarning] = useState(false);
+  const [tourFilter, setTourFilter] = useState<number>(-1);
+
+  const onTogglePopupWarning = () => {
+    setOpenPopupWarning(!openPopupWarning);
+  };
 
   const handleAction = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -123,23 +170,22 @@ const Tour = memo(({ handleTourEdit }: Props) => {
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
       keyword: keyword,
+      status: tourFilter || -1,
     };
     if (value?.keyword !== undefined) {
       params.keyword = value.keyword || undefined;
     }
     dispatch(setLoading(true));
-    setIsLoading(true);
+
     TourService.getTours(params)
       .then((res) => {
         setData({
           data: res.data,
           meta: res.meta,
         });
-        setIsLoading(false);
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
-        setIsLoading(false);
       })
       .finally(() => dispatch(setLoading(false)));
   };
@@ -182,7 +228,12 @@ const Tour = memo(({ handleTourEdit }: Props) => {
 
   const onShowConfirm = () => {
     if (!itemAction) return;
-    setItemDelete(itemAction);
+
+    if (itemAction?.isCanDelete === false) {
+      onTogglePopupWarning();
+    } else {
+      setItemDelete(itemAction);
+    }
     onCloseActionMenu();
   };
 
@@ -212,39 +263,42 @@ const Tour = memo(({ handleTourEdit }: Props) => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  }, [tourFilter, keyword]);
+  console.log(tourFilter);
   return (
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          {isLoading ? (
-            <Skeleton width={100} />
-          ) : (
-            <h3>{t("enterprise_management_section_tour_title")}</h3>
-          )}
+          <h3>{t("enterprise_management_section_tour_title")}</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
-          {isLoading ? (
-            <Skeleton width={100} />
-          ) : (
-            <div className={classes.boxInputSearch}>
+          <Grid className={classes.boxInputSearch} container spacing={2} xs={6}>
+            <Grid item>
               <InputSearch
                 autoComplete="off"
                 placeholder={t("common_search")}
                 value={keyword || ""}
                 onChange={onSearch}
               />
-            </div>
-          )}
-          {isLoading ? (
-            <Skeleton width={100} />
-          ) : (
-            <Button btnType={BtnType.Primary} onClick={onCreateTour}>
-              <FontAwesomeIcon icon={faPlus} />
-              {t("common_create")}
-            </Button>
-          )}
+            </Grid>
+            <Grid item xs={6}>
+              <InputSelect
+                fullWidth
+                selectProps={{
+                  options: tourFilterOption,
+                  placeholder: t(
+                    "enterprise_management_section_tour_header_status"
+                  ),
+                }}
+                onChange={(e) => setTourFilter(e?.value)}
+              />
+            </Grid>
+          </Grid>
+
+          <Button btnType={BtnType.Primary} onClick={onCreateTour}>
+            <FontAwesomeIcon icon={faPlus} />
+            {t("common_create")}
+          </Button>
         </Row>
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
           <Table className={classes.table}>
@@ -254,55 +308,60 @@ const Tour = memo(({ handleTourEdit }: Props) => {
                 data.data?.map((item, index) => {
                   return (
                     <TableRow key={index}>
-                      {isLoading ? (
-                        <Skeleton width={100} className={classes.tableCell} />
-                      ) : (
-                        <TableCell scope="row" className={classes.tableCell}>
-                          {index + 1}
-                        </TableCell>
-                      )}
-                      {isLoading ? (
-                        <Skeleton width={100} className={classes.tableCell} />
-                      ) : (
-                        <TableCell className={classes.tableCell} component="th">
-                          <a
-                            href={`/listTour/:${item?.id}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={classes.tourName}
-                          >
-                            {item?.title}
-                          </a>
-                        </TableCell>
-                      )}
-                      {isLoading ? (
-                        <Skeleton width={100} className={classes.tableCell} />
-                      ) : (
-                        <TableCell className={classes.tableCell} component="th">
-                          {item?.languages?.map((it) => it.language).join(", ")}
-                        </TableCell>
-                      )}
-                      {isLoading ? (
-                        <Skeleton width={100} className={classes.tableCell} />
-                      ) : (
-                        <TableCell className="text-center" component="th">
-                          <IconButton
-                            className={clsx(classes.actionButton)}
-                            color="primary"
-                            onClick={(event) => {
-                              handleAction(event, item);
-                            }}
-                          >
-                            <ExpandMoreOutlined />
-                          </IconButton>
-                        </TableCell>
-                      )}
+                      <TableCell scope="row" className={classes.tableCell}>
+                        {index + 1}
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        <a
+                          href={`/listTour/:${item?.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={classes.tourName}
+                        >
+                          {item?.title}
+                        </a>
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.numberOfDays}{" "}
+                        {t("enterprise_management_section_tour_body_day")} -{" "}
+                        {item?.numberOfNights}{" "}
+                        {t("enterprise_management_section_tour_body_night")}
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.numberOfTookPlaceTours}{" "}
+                        {t(
+                          "enterprise_management_section_tour_body_took_place"
+                        )}
+                        , {item?.numberOfUpcomingTours}
+                        {t("enterprise_management_section_tour_body_upcoming")}
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {fCurrency2VND(item?.minPrice)} -{" "}
+                        {fCurrency2VND(item?.maxPrice)} VND
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        <StatusChip status={!item?.isDeleted} />
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.languages?.map((it) => it.language).join(", ")}
+                      </TableCell>
+                      <TableCell className="text-center" component="th">
+                        <IconButton
+                          className={clsx(classes.actionButton)}
+                          color="primary"
+                          onClick={(event) => {
+                            handleAction(event, item);
+                          }}
+                        >
+                          <ExpandMoreOutlined />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   );
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={6}>
+                  <TableCell align="center" colSpan={8}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>
@@ -353,6 +412,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
               </span>
             </Box>
           </MenuItem>
+
           <MenuItem
             sx={{ fontSize: "0.875rem" }}
             className={classes.menuItem}
@@ -410,6 +470,14 @@ const Tour = memo(({ handleTourEdit }: Props) => {
           onClose={onClosePopupConfirmDelete}
           toggle={onClosePopupConfirmDelete}
           onYes={onYesDelete}
+        />
+        <PopupConfirmWarning
+          title={t(
+            "enterprise_management_section_tour_popup_confirm_delete_title"
+          )}
+          isOpen={openPopupWarning}
+          onClose={onTogglePopupWarning}
+          toggle={onTogglePopupWarning}
         />
       </div>
     </>

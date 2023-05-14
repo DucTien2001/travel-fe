@@ -48,8 +48,6 @@ export interface SaleForm {
 }
 
 interface Props {
-  value?: number;
-  index?: number;
   tour?: ETour;
   lang?: string;
   handleNextStep?: () => void;
@@ -57,7 +55,7 @@ interface Props {
 
 // eslint-disable-next-line react/display-name
 const RangePriceComponent = memo((props: Props) => {
-  const { value, index, tour, lang, handleNextStep } = props;
+  const { tour, lang, handleNextStep } = props;
   const { t, i18n } = useTranslation("common");
 
   const dispatch = useDispatch();
@@ -299,19 +297,28 @@ const RangePriceComponent = memo((props: Props) => {
 
   useEffect(() => {
     if (tour) {
-      reset({
-        sale: tour?.tourOnSales?.map((item) => ({
-          id: item.id,
-          discount: item.discount,
-          quantity: item.quantity,
-          startDate: new Date(item.startDate),
-          childrenAgeMin: item.childrenAgeMin,
-          childrenAgeMax: item.childrenAgeMax,
-          childrenPrice: item.childrenPrice,
-          adultPrice: item.adultPrice,
-          currency: getCurrency(item?.currency),
-        })),
-      });
+      TourOnSaleService.findAll(tour?.id)
+        .then((res) => {
+          if (res.success) {
+            reset({
+              sale: res.data?.map((item) => ({
+                id: item.id,
+                discount: item.discount,
+                quantity: item.quantity,
+                startDate: new Date(item.startDate),
+                childrenAgeMin: item.childrenAgeMin,
+                childrenAgeMax: item.childrenAgeMax,
+                childrenPrice: item.childrenPrice,
+                adultPrice: item.adultPrice,
+                currency: getCurrency(item?.currency),
+              })),
+            });
+          }
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => dispatch(setLoading(false)));
     }
   }, [tour]);
 
@@ -328,191 +335,173 @@ const RangePriceComponent = memo((props: Props) => {
   }, [tour]);
 
   return (
-    <Grid
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      component="form"
-      onSubmit={handleSubmit(_onSubmit)}
-    >
-      {value === index && (
-        <Grid className={classes.root}>
-          <h3 className={classes.title}>
-            {t("enterprise_management_section_tour_tab_range_price_title")}
-          </h3>
-          {!!fieldsSale?.length &&
-            fieldsSale?.map((field, index) => (
-              <Grid key={index} sx={{ paddingTop: "32px" }}>
-                <Grid className={classes.boxTitleItem}>
-                  <Grid className={classes.titleItem}>
-                    <p>
-                      {t(
-                        "enterprise_management_section_tour_tab_range_price_available"
-                      )}{" "}
-                      {index + 1}
-                    </p>
-                  </Grid>
-
-                  <IconButton
-                    sx={{ marginLeft: "24px" }}
-                    onClick={onDeleteSale(index)}
-                    disabled={fieldsSale?.length !== 1 ? false : true}
-                  >
-                    <DeleteOutlineOutlined
-                      sx={{ marginRight: "0.25rem" }}
-                      className={classes.iconDelete}
-                      color={fieldsSale?.length !== 1 ? "error" : "disabled"}
-                      fontSize="small"
-                    />
-                  </IconButton>
+    <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
+      <Grid className={classes.root}>
+        {!!fieldsSale?.length &&
+          fieldsSale?.map((field, index) => (
+            <Grid key={index} sx={{ paddingTop: "32px" }}>
+              <Grid className={classes.boxTitleItem}>
+                <Grid className={classes.titleItem}>
+                  <p>
+                    {t(
+                      "enterprise_management_section_tour_tab_range_price_available"
+                    )}{" "}
+                    {index + 1}
+                  </p>
                 </Grid>
-                <Grid
-                  spacing={{ xs: 2, md: 3 }}
-                  columns={{ xs: 4, sm: 8, md: 12 }}
-                  container
+
+                <IconButton
+                  sx={{ marginLeft: "24px" }}
+                  onClick={onDeleteSale(index)}
+                  disabled={fieldsSale?.length !== 1 ? false : true}
                 >
-                  <Grid xs={2} sm={4} md={4} item>
-                    <InputDatePicker
-                      name={`sale.${index}.startDate`}
-                      control={control}
-                      label={t(
-                        "enterprise_management_section_tour_tab_range_price_date_title"
-                      )}
-                      placeholder={t(
-                        "enterprise_management_section_tour_tab_range_price_date_title"
-                      )}
-                      closeOnSelect={true}
-                      timeFormat={false}
-                      errorMessage={errors.sale?.[index]?.startDate?.message}
-                      isValidDate={disablePastDt}
-                    />
-                  </Grid>
-                  <Grid xs={2} sm={4} md={4} item>
-                    <InputSelect
-                      fullWidth
-                      title={t(
-                        "enterprise_management_section_tour_tab_range_price_currency_title"
-                      )}
-                      name={`sale.${index}.currency`}
-                      control={control}
-                      selectProps={{
-                        options: currencyType,
-                        placeholder: t(
-                          "enterprise_management_section_tour_tab_range_price_currency_placeholder"
-                        ),
-                      }}
-                      errorMessage={errors.sale?.[index]?.currency?.message}
-                    />
-                  </Grid>
-                  <Grid item xs={2} sm={4} md={4}></Grid>
-                  <Grid item xs={2} sm={4} md={4}>
-                    <InputTextfield
-                      title={t(
-                        "enterprise_management_section_tour_tab_range_price_quantity_title"
-                      )}
-                      placeholder={t(
-                        "enterprise_management_section_tour_tab_range_price_quantity_title"
-                      )}
-                      autoComplete="off"
-                      type="number"
-                      inputRef={register(`sale.${index}.quantity`)}
-                      errorMessage={errors.sale?.[index]?.quantity?.message}
-                    />
-                  </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
-                    <InputTextfield
-                      title={t(
-                        "enterprise_management_section_tour_tab_range_price_discount_title"
-                      )}
-                      placeholder={t(
-                        "enterprise_management_section_tour_tab_range_price_discount_placeholder"
-                      )}
-                      autoComplete="off"
-                      type="number"
-                      inputRef={register(`sale.${index}.discount`)}
-                      errorMessage={errors.sale?.[index]?.discount?.message}
-                    />
-                  </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
-                    <InputTextfield
-                      title={t(
-                        "enterprise_management_section_tour_tab_range_price_price_of_adult_title"
-                      )}
-                      placeholder={t(
-                        "enterprise_management_section_tour_tab_range_price_price_of_adult_title"
-                      )}
-                      autoComplete="off"
-                      type="number"
-                      inputRef={register(`sale.${index}.adultPrice`)}
-                      errorMessage={errors.sale?.[index]?.adultPrice?.message}
-                    />
-                  </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
-                    <InputTextfield
-                      title={t(
-                        "enterprise_management_section_tour_tab_range_price_children_age_min_title"
-                      )}
-                      placeholder={t(
-                        "enterprise_management_section_tour_tab_range_price_children_age_min_title"
-                      )}
-                      autoComplete="off"
-                      type="number"
-                      inputRef={register(`sale.${index}.childrenAgeMin`)}
-                      errorMessage={
-                        errors.sale?.[index]?.childrenAgeMin?.message
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
-                    <InputTextfield
-                      title={t(
-                        "enterprise_management_section_tour_tab_range_price_children_age_max_title"
-                      )}
-                      placeholder={t(
-                        "enterprise_management_section_tour_tab_range_price_children_age_max_title"
-                      )}
-                      autoComplete="off"
-                      type="number"
-                      inputRef={register(`sale.${index}.childrenAgeMax`)}
-                      errorMessage={
-                        errors.sale?.[index]?.childrenAgeMax?.message
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={2} sm={4} md={4}>
-                    <InputTextfield
-                      title={t(
-                        "enterprise_management_section_tour_tab_range_price_price_of_children_title"
-                      )}
-                      placeholder={t(
-                        "enterprise_management_section_tour_tab_range_price_price_of_children_title"
-                      )}
-                      autoComplete="off"
-                      type="number"
-                      inputRef={register(`sale.${index}.childrenPrice`)}
-                      errorMessage={
-                        errors.sale?.[index]?.childrenPrice?.message
-                      }
-                    />
-                  </Grid>
+                  <DeleteOutlineOutlined
+                    sx={{ marginRight: "0.25rem" }}
+                    className={classes.iconDelete}
+                    color={fieldsSale?.length !== 1 ? "error" : "disabled"}
+                    fontSize="small"
+                  />
+                </IconButton>
+              </Grid>
+              <Grid
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                container
+              >
+                <Grid xs={2} sm={4} md={4} item>
+                  <InputDatePicker
+                    name={`sale.${index}.startDate`}
+                    control={control}
+                    label={t(
+                      "enterprise_management_section_tour_tab_range_price_date_title"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_range_price_date_title"
+                    )}
+                    closeOnSelect={true}
+                    timeFormat={false}
+                    errorMessage={errors.sale?.[index]?.startDate?.message}
+                    isValidDate={disablePastDt}
+                  />
+                </Grid>
+                <Grid xs={2} sm={4} md={4} item>
+                  <InputSelect
+                    fullWidth
+                    title={t(
+                      "enterprise_management_section_tour_tab_range_price_currency_title"
+                    )}
+                    name={`sale.${index}.currency`}
+                    control={control}
+                    selectProps={{
+                      options: currencyType,
+                      placeholder: t(
+                        "enterprise_management_section_tour_tab_range_price_currency_placeholder"
+                      ),
+                    }}
+                    errorMessage={errors.sale?.[index]?.currency?.message}
+                  />
+                </Grid>
+                <Grid item xs={2} sm={4} md={4}></Grid>
+                <Grid item xs={2} sm={4} md={4}>
+                  <InputTextfield
+                    title={t(
+                      "enterprise_management_section_tour_tab_range_price_quantity_title"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_range_price_quantity_title"
+                    )}
+                    autoComplete="off"
+                    type="number"
+                    inputRef={register(`sale.${index}.quantity`)}
+                    errorMessage={errors.sale?.[index]?.quantity?.message}
+                  />
+                </Grid>
+                <Grid item xs={2} sm={4} md={4}>
+                  <InputTextfield
+                    title={t(
+                      "enterprise_management_section_tour_tab_range_price_discount_title"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_range_price_discount_placeholder"
+                    )}
+                    autoComplete="off"
+                    type="number"
+                    inputRef={register(`sale.${index}.discount`)}
+                    errorMessage={errors.sale?.[index]?.discount?.message}
+                  />
+                </Grid>
+                <Grid item xs={2} sm={4} md={4}>
+                  <InputTextfield
+                    title={t(
+                      "enterprise_management_section_tour_tab_range_price_price_of_adult_title"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_range_price_price_of_adult_title"
+                    )}
+                    autoComplete="off"
+                    type="number"
+                    inputRef={register(`sale.${index}.adultPrice`)}
+                    errorMessage={errors.sale?.[index]?.adultPrice?.message}
+                  />
+                </Grid>
+                <Grid item xs={2} sm={4} md={4}>
+                  <InputTextfield
+                    title={t(
+                      "enterprise_management_section_tour_tab_range_price_children_age_min_title"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_range_price_children_age_min_title"
+                    )}
+                    autoComplete="off"
+                    type="number"
+                    inputRef={register(`sale.${index}.childrenAgeMin`)}
+                    errorMessage={errors.sale?.[index]?.childrenAgeMin?.message}
+                  />
+                </Grid>
+                <Grid item xs={2} sm={4} md={4}>
+                  <InputTextfield
+                    title={t(
+                      "enterprise_management_section_tour_tab_range_price_children_age_max_title"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_range_price_children_age_max_title"
+                    )}
+                    autoComplete="off"
+                    type="number"
+                    inputRef={register(`sale.${index}.childrenAgeMax`)}
+                    errorMessage={errors.sale?.[index]?.childrenAgeMax?.message}
+                  />
+                </Grid>
+                <Grid item xs={2} sm={4} md={4}>
+                  <InputTextfield
+                    title={t(
+                      "enterprise_management_section_tour_tab_range_price_price_of_children_title"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_tour_tab_range_price_price_of_children_title"
+                    )}
+                    autoComplete="off"
+                    type="number"
+                    inputRef={register(`sale.${index}.childrenPrice`)}
+                    errorMessage={errors.sale?.[index]?.childrenPrice?.message}
+                  />
                 </Grid>
               </Grid>
-            ))}
-          <Grid className={classes.boxAddDay}>
-            <Button btnType={BtnType.Outlined} onClick={onAddSale}>
-              <AddCircleIcon />{" "}
-              {t("enterprise_management_section_tour_tab_range_price_add")}
-            </Button>
-          </Grid>
-          <Grid className={classes.boxNextBtn}>
-            <Button btnType={BtnType.Primary} type="submit">
-              {t("enterprise_management_section_tour_tab_range_price_next")}
-              <ArrowRightAltIcon />
-            </Button>
-          </Grid>
+            </Grid>
+          ))}
+        <Grid className={classes.boxAddDay}>
+          <Button btnType={BtnType.Outlined} onClick={onAddSale}>
+            <AddCircleIcon />{" "}
+            {t("enterprise_management_section_tour_tab_range_price_add")}
+          </Button>
         </Grid>
-      )}
+        <Grid className={classes.boxNextBtn}>
+          <Button btnType={BtnType.Primary} type="submit">
+            {t("enterprise_management_section_tour_tab_range_price_next")}
+            <ArrowRightAltIcon />
+          </Button>
+        </Grid>
+      </Grid>
     </Grid>
   );
 });

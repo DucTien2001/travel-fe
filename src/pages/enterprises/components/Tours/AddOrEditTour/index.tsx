@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { Box, Tab, Tabs } from "@mui/material";
 import Information from "./components/Information";
 import Schedule from "./components/Schedule";
-import RangePrice from "./components/RangePrice";
+import RangePrice from "./components/TourOnSale/components/RangePrice";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
@@ -16,6 +16,7 @@ import QueryString from "query-string";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/enterprise/tour";
 import Policy from "./components/Policy";
+import TourOnSale from "./components/TourOnSale";
 
 export enum EStep {
   INFORMATION,
@@ -174,7 +175,7 @@ const AddOrEditTour = memo((props: Props) => {
             lang={lang}
             handleNextStep={() => onNextStep(EStep.PRICE)}
           />
-          <RangePrice
+          <TourOnSale
             value={activeStep}
             index={EStep.PRICE}
             tour={tour}

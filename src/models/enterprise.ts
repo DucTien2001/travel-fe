@@ -13,15 +13,20 @@ export interface ETour {
   suitablePerson?: string;
   numberOfDays?: number;
   numberOfNights?: number;
+  numberOfTookPlaceTours?: number;
+  numberOfUpcomingTours?: number;
+  maxPrice?: number;
+  minPrice?: number;
   rate?: number;
   images: File[];
   creator: number;
   contact: string;
-  isDeleted?: boolean;
   tourOnSales?: TourPrice[];
   languages?: ETour[];
   parentLanguage: number,
   language: string;
+  isCanDelete?: boolean;
+  isDeleted?: boolean;
 }
 
 export interface ScheduleItem {
@@ -45,6 +50,7 @@ export interface TourPrice {
   tourId?: number;
   discount: number;
   quantity: number;
+  quantityOrdered?: number;
   startDate: Date;
   childrenAgeMin: number;
   childrenAgeMax: number;
@@ -52,7 +58,11 @@ export interface TourPrice {
   adultPrice: number;
   currency: string;
 }
-
+export interface FindAll {
+  take: number;
+  page: number;
+  isPast: boolean;
+}
 
 export interface UpdateTourInformation {
   title: string;
@@ -90,6 +100,7 @@ export interface AdminGetTours {
   take: number;
   page: number;
   keyword?: string;
+  status?: number;
 }
 
 export interface EGetRoomsAvailable {

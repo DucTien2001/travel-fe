@@ -3,6 +3,7 @@ import { Chip, ChipProps } from "@mui/material";
 import { memo } from "react";
 import classes from "./styles.module.scss";
 import { EBillStatus, EPaymentStatus } from "models/general";
+import { useTranslation } from "react-i18next";
 
 interface StatusChipProps extends ChipProps {
   status: number;
@@ -11,33 +12,35 @@ interface StatusChipProps extends ChipProps {
 
 const StatusChip = memo((props: StatusChipProps) => {
   const { status, type, ...rest } = props;
+  const { t } = useTranslation("common");
+
   const getLabel = () => {
     switch (status) {
       case EPaymentStatus.PAID:
-        return "PAID";
+        return t("bill_status_paid");
       case EPaymentStatus.NOT_PAID:
-        return "NOT PAID";
+        return t("bill_status_not_paid");
       case EPaymentStatus.CANCEL:
-        return "CANCEL";
+        return t("bill_status_canceled");
       case EPaymentStatus.FAILED:
-        return "FAILED";
+        return t("bill_status_not_fail");
     }
   };
 
   const getLabelType = () => {
     switch (status) {
       case EBillStatus.RESCHEDULED:
-        return "RESCHEDULE";
+        return t("bill_status_reschedule");
       case EBillStatus.CANCELED:
-        return "CANCELED";
+        return t("bill_status_canceled");
       case EBillStatus.NOT_CONTACTED_YET:
-        return "NOT CONTACT YET";
+        return t("bill_status_not_contact_yet");
       case EBillStatus.CONTACTED:
-        return "CONTACTED";
+        return t("bill_status_contacted");
       case EBillStatus.USED:
-        return "USED";
+        return t("bill_status_used");
       case EBillStatus.NOT_USE:
-        return "NOTE USE";
+        return t("bill_status_not_use");
     }
   };
 

@@ -30,6 +30,9 @@
 }
 .rowHeaderBox {
     margin: 0;
+    .boxInputSearch {
+        display: flex;
+    }
     @media only screen and (max-width: 768px) {
         flex-direction: column;
         align-items: inherit !important;

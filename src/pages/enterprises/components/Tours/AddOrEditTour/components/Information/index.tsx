@@ -48,7 +48,7 @@ const modules = {
 
 export interface TourForm {
   title: string;
-  city: OptionItem;
+  province: OptionItem;
   district: OptionItem;
   commune: OptionItem;
   moreLocation?: string;
@@ -94,7 +94,7 @@ const InformationComponent = memo((props: Props) => {
             "enterprise_management_section_tour_tab_information_title_validation"
           )
         ),
-      city: yup
+      province: yup
         .object()
         .typeError(
           t(
@@ -102,13 +102,7 @@ const InformationComponent = memo((props: Props) => {
           )
         )
         .shape({
-          id: yup
-            .number()
-            .required(
-              t(
-                "enterprise_management_section_tour_tab_information_city_validation"
-              )
-            ),
+          id: yup.number().required(),
           name: yup.string().required(),
         })
         .required(),
@@ -225,7 +219,7 @@ const InformationComponent = memo((props: Props) => {
       images: yup.array(yup.mixed()),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
+  }, []);
 
   const {
     register,
@@ -242,7 +236,7 @@ const InformationComponent = memo((props: Props) => {
   const clearForm = () => {
     reset({
       title: "",
-      city: null,
+      province: null,
       district: null,
       commune: null,
       moreLocation: "",
@@ -286,7 +280,7 @@ const InformationComponent = memo((props: Props) => {
   };
 
   const fetchProvince = () => {
-    const _provinces = provinces.map((item) => {
+    const _provinces = provinces?.map((item) => {
       return {
         id: item.province_id,
         name: item.province_name,
@@ -295,7 +289,7 @@ const InformationComponent = memo((props: Props) => {
     return _provinces;
   };
 
-  const watchCity = watch("city");
+  const watchCity = watch("province");
 
   const fetchDistrict = () => {
     const _districts = districts?.map((item) => {
@@ -322,8 +316,8 @@ const InformationComponent = memo((props: Props) => {
   const _onSubmit = (data: TourForm) => {
     const formData = new FormData();
     formData.append("title", data.title);
-    formData.append("city[id]", `${data?.city?.id}`);
-    formData.append("city[name]", data?.city?.name);
+    formData.append("city[id]", `${data?.province?.id}`);
+    formData.append("city[name]", data?.province?.name);
     formData.append("district[id]", `${data?.district?.id}`);
     formData.append("district[name]", data?.district?.name);
     formData.append("commune[id]", `${data?.commune?.id}`);
@@ -343,8 +337,8 @@ const InformationComponent = memo((props: Props) => {
     if (tour) {
       const formDataEdit = new FormData();
       formDataEdit.append("title", data.title);
-      formDataEdit.append("city[id]", `${data?.city?.id}`);
-      formDataEdit.append("city[name]", data?.city?.name);
+      formDataEdit.append("city[id]", `${data?.province?.id}`);
+      formDataEdit.append("city[name]", data?.province?.name);
       formDataEdit.append("district[id]", `${data?.district?.id}`);
       formDataEdit.append("district[name]", data?.district?.name);
       formDataEdit.append("commune[id]", `${data?.commune?.id}`);
@@ -416,7 +410,7 @@ const InformationComponent = memo((props: Props) => {
     if (tour) {
       reset({
         title: tour?.title,
-        city: tour?.city,
+        province: tour?.city,
         district: tour?.district,
         commune: tour?.commune,
         moreLocation: tour?.moreLocation,
@@ -528,7 +522,7 @@ const InformationComponent = memo((props: Props) => {
                 title={t(
                   "enterprise_management_section_tour_tab_information_city"
                 )}
-                name="city"
+                name="province"
                 control={control}
                 selectProps={{
                   options: fetchProvince(),
@@ -536,7 +530,7 @@ const InformationComponent = memo((props: Props) => {
                     "enterprise_management_section_tour_tab_information_city_placeholder"
                   ),
                 }}
-                errorMessage={(errors.city as any)?.message}
+                errorMessage={(errors.province as any)?.message}
               />
             </Grid>
             <Grid item xs={6}>

@@ -24,7 +24,11 @@ import { DataPagination, TableHeaderLabel } from "models/general";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import { useRouter } from "next/router";
 import "react-loading-skeleton/dist/skeleton.css";
-import { StatisticAll, ITourOnSaleStatistic } from "models/enterprise/tourBill";
+import {
+  StatisticAll,
+  ITourOnSaleStatistic,
+  StatisticTourOnSale,
+} from "models/enterprise/tourBill";
 import { TourBillService } from "services/enterprise/tourBill";
 import { fCurrency2VND } from "utils/formatNumber";
 import moment, { Moment } from "moment";
@@ -33,10 +37,10 @@ import { ExpandMoreOutlined } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 interface Props {
-  tourId: number;
+  tourOnSaleId?: number;
 }
 // eslint-disable-next-line react/display-name
-const TourOnSaleStatistic = memo(({ tourId }: Props) => {
+const TourOnSaleStatistic = memo(({ tourOnSaleId }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { t, i18n } = useTranslation("common");
@@ -92,24 +96,9 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
       ),
       sortable: false,
     },
-    {
-      name: "actions",
-      label: t(
-        "enterprise_management_section_tour_statistic_header_table_action"
-      ),
-      sortable: false,
-    },
   ];
 
-  const [itemAction, setItemAction] = useState<ITourOnSaleStatistic>();
-  const [dateFilter, setDateFilter] = useState<Moment>(null);
-  const [data, setData] = useState<DataPagination<ITourOnSaleStatistic>>();
-  const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
-
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateFilter]);
+  const [data, setData] = useState<DataPagination<any>>();
 
   const handleChangePage = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -129,28 +118,18 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
     });
   };
 
-  const onChangeMonth = (date: Moment) => {
-    setDateFilter(date);
-  };
-
-  const onClear = () => {
-    setDateFilter(null);
-  };
-
   const onBack = () => {
-    router.push("/enterprises/tourStatistic");
+    router.push(`/enterprises/tourStatistic/${Number(router.query.action)}`);
   };
 
   const fetchData = (value?: { take?: number; page?: number }) => {
-    const params: StatisticAll = {
+    const params: StatisticTourOnSale = {
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
-      month: dateFilter ? dateFilter.month() + 1 : -1,
-      year: dateFilter ? dateFilter.year() : -1,
     };
     dispatch(setLoading(true));
 
-    TourBillService.statisticOneTour(tourId, params)
+    TourBillService.GetAllBillOfOneTourOnSale(tourOnSaleId, params)
       .then((res) => {
         if (res.success) {
           setData({
@@ -165,58 +144,22 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
       .finally(() => dispatch(setLoading(false)));
   };
 
-  const onCloseActionMenu = () => {
-    setItemAction(null);
-    setActionAnchor(null);
-  };
-
-  const handleAction = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    item: ITourOnSaleStatistic
-  ) => {
-    setItemAction(item);
-    setActionAnchor(event.currentTarget);
-  };
-
-  const handleRedirect = () => {
-    if (!itemAction) return;
-    onRedirectEdit(itemAction);
-    onCloseActionMenu();
-  };
-
-  const onRedirectEdit = (item: ITourOnSaleStatistic) => {
-    router.push({
-      pathname: `/enterprises/tourStatistic/${Number(router.query.action)}/${
-        item.tourOnSaleInfo.id
-      }`,
-    });
-  };
-
-  console.log(itemAction);
-
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3> {t("enterprise_management_section_tour_statistic_title")}</h3>
-        </Row>
-        <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
-          <Box className={classes.boxFilterControl}>
-            <InputDatePicker
-              value={dateFilter ? dateFilter : ""}
-              initialValue={dateFilter ? dateFilter : ""}
-              _onChange={(date) => onChangeMonth(date)}
-              placeholder={t(
-                "enterprise_management_section_tour_statistic_input_placeholder"
-              )}
-              closeOnSelect={true}
-              timeFormat={false}
-              dateFormat="M/YYYY"
-            />
-            <Button btnType={BtnType.Primary} onClick={onClear}>
-              {t("enterprise_management_section_tour_statistic_btn_clear")}
-            </Button>
-          </Box>
+          <h3>
+            {t(
+              "enterprise_management_section_tour_statistic_title_tour_on_sale"
+            )}
+            {moment(data?.data[0]?.tourOnSaleData?.startDate).format(
+              "DD-MM-YYYY"
+            )}
+          </h3>
           <Button btnType={BtnType.Primary} onClick={onBack}>
             {t("common_back")}
           </Button>
@@ -233,53 +176,34 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
                         {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <a
-                          href={`/listTour/:${item?.tourOnSaleInfo?.id}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={classes.tourName}
-                        >
-                          {moment(item?.tourOnSaleInfo?.startDate).format(
-                            "D/M/YYYY"
-                          )}
-                        </a>
+                        {moment(item?.tourOnSaleData?.startDate).format(
+                          "D/M/YYYY"
+                        )}{" "}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.tourOnSaleInfo?.quantity}
+                        {item?.tourOnSaleData?.quantity}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.numberOfBookings}
+                        {item?.tourOnSaleData?.quantityOrdered}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {Number(item?.totalAmountChild) +
-                          Number(item?.totalAmountAdult)}
+                        {Number(item?.amountAdult) + Number(item?.amountChild)}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {fCurrency2VND(item?.revenue)} VND
+                        {fCurrency2VND(item?.totalBill)} VND
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.commission)} VND
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {fCurrency2VND(item?.revenue - item?.commission)} VND
-                      </TableCell>
-                      <TableCell className="text-center" component="th">
-                        <IconButton
-                          className={clsx(classes.actionButton)}
-                          color="primary"
-                          onClick={(event) => {
-                            handleAction(event, item);
-                          }}
-                        >
-                          <ExpandMoreOutlined />
-                        </IconButton>
+                        {fCurrency2VND(item?.totalBill - item?.commission)} VND
                       </TableCell>
                     </TableRow>
                   );
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={9}>
+                  <TableCell align="center" colSpan={8}>
                     <SearchNotFound />
                   </TableCell>
                 </TableRow>
@@ -308,33 +232,6 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </TableContainer>
-        <Menu
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          anchorEl={actionAnchor}
-          keepMounted
-          open={Boolean(actionAnchor)}
-          onClose={onCloseActionMenu}
-        >
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            onClick={handleRedirect}
-            className={classes.menuItem}
-          >
-            <Box display="flex" alignItems={"center"}>
-              <VisibilityIcon
-                sx={{ marginRight: "0.25rem" }}
-                fontSize="small"
-                color="info"
-              />
-              <span>
-                {t("enterprise_management_section_tour_statistic_view_detail")}
-              </span>
-            </Box>
-          </MenuItem>
-        </Menu>
       </div>
     </>
   );

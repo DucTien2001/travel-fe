@@ -195,7 +195,7 @@ const TourStatistic = memo(({}: Props) => {
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Tour Statistics</h3>
+          <h3>{t("enterprise_management_section_tour_statistic_title")}</h3>
         </Row>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
@@ -243,7 +243,8 @@ const TourStatistic = memo(({}: Props) => {
                         </a>
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {`${item?.tourInfo?.numberOfDays} days ${item?.tourInfo?.numberOfNights} nights`}
+                        {item?.tourInfo?.numberOfDays} {t("common_days")}{" "}
+                        {item?.tourInfo?.numberOfNights} {t("common_nights")}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {item?.numberOfBookings}
@@ -325,6 +326,7 @@ const TourStatistic = memo(({}: Props) => {
               <VisibilityIcon
                 sx={{ marginRight: "0.25rem" }}
                 fontSize="small"
+                color="info"
               />
               <span>
                 {t("enterprise_management_section_tour_statistic_view_detail")}

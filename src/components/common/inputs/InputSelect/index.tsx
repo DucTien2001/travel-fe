@@ -1,6 +1,13 @@
 import { memo } from "react";
 import { FormControl } from "@mui/material";
-import Select, { components, DropdownIndicatorProps, GroupBase, OptionProps, SingleValueProps, StylesConfig } from "react-select";
+import Select, {
+  components,
+  DropdownIndicatorProps,
+  GroupBase,
+  OptionProps,
+  SingleValueProps,
+  StylesConfig,
+} from "react-select";
 import classes from "./styles.module.scss";
 import { Controller } from "react-hook-form";
 import { StateManagerProps } from "react-select/dist/declarations/src/stateManager";
@@ -10,7 +17,9 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useTranslation } from "react-i18next";
 
-const customStyles = (error?: boolean): StylesConfig<any, boolean, GroupBase<unknown>> => ({
+const customStyles = (
+  error?: boolean
+): StylesConfig<any, boolean, GroupBase<unknown>> => ({
   indicatorSeparator: () => ({
     display: "none",
   }),
@@ -32,7 +41,8 @@ const customStyles = (error?: boolean): StylesConfig<any, boolean, GroupBase<unk
     color: "var(--eerie-black)",
     padding: "14px 15px",
     cursor: state.isDisabled ? "not-allowed" : "pointer",
-    background: state.isSelected || state.isFocused ? "var(--gray-10)" : "#FFFFFF",
+    background:
+      state.isSelected || state.isFocused ? "var(--gray-10)" : "#FFFFFF",
   }),
   placeholder: (provided, state) => ({
     ...provided,
@@ -43,7 +53,7 @@ const customStyles = (error?: boolean): StylesConfig<any, boolean, GroupBase<unk
   }),
   valueContainer: (provided) => ({
     ...provided,
-    padding: "6px 0 6px 16px",
+    padding: "10px 0 6px 16px",
     minWidth: "50px",
     color: "var(--text-color)",
     div: {
@@ -62,7 +72,9 @@ const customStyles = (error?: boolean): StylesConfig<any, boolean, GroupBase<unk
     ...provided,
     cursor: state.isDisabled ? "not-allowed" : "pointer",
     background: state.isDisabled ? "var(--gray-5)" : "#FFFFFF",
-    border: state.isFocused ? "1px solid var(--primary-light-color)" : "1px solid #e3e3e3",
+    border: state.isFocused
+      ? "1px solid var(--primary-light-color)"
+      : "1px solid #e3e3e3",
     // borderColor:"var(--gray-40)",
     svg: {
       color: state.isFocused ? "" : "var(--gray-60)",
@@ -83,21 +95,29 @@ const customStyles = (error?: boolean): StylesConfig<any, boolean, GroupBase<unk
 const DropdownIndicator = (props: DropdownIndicatorProps) => {
   return (
     <components.DropdownIndicator {...props}>
-      {props.selectProps.menuIsOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+      {props.selectProps.menuIsOpen ? (
+        <KeyboardArrowUpIcon />
+      ) : (
+        <KeyboardArrowDownIcon />
+      )}
     </components.DropdownIndicator>
   );
 };
 
 const Option = ({ children, ...props }: OptionProps<any>) => (
   <components.Option {...props}>
-    {props.data?.img && <img src={props.data.img} alt="" className={classes.iconOption} />}
+    {props.data?.img && (
+      <img src={props.data.img} alt="" className={classes.iconOption} />
+    )}
     {children}
   </components.Option>
 );
 
 const SingleValue = ({ children, ...props }: SingleValueProps<any>) => (
   <components.SingleValue {...props}>
-    {props.data?.img && <img src={props.data.img} alt="" className={classes.iconValue} />}
+    {props.data?.img && (
+      <img src={props.data.img} alt="" className={classes.iconValue} />
+    )}
     {children}
   </components.SingleValue>
 );
@@ -117,8 +137,20 @@ interface InputSelectProps {
 }
 
 const InputSelect = memo((props: InputSelectProps) => {
-  const { className, title, errorMessage, name, control, bindKey, bindLabel, selectProps, fullWidth, optional, onChange } = props;
-  const { t } = useTranslation();
+  const {
+    className,
+    title,
+    errorMessage,
+    name,
+    control,
+    bindKey,
+    bindLabel,
+    selectProps,
+    fullWidth,
+    optional,
+    onChange,
+  } = props;
+  const { t } = useTranslation("common");
 
   const getOptionLabel = (option: any) => {
     switch (bindLabel || "name") {
@@ -130,7 +162,10 @@ const InputSelect = memo((props: InputSelectProps) => {
   };
 
   return (
-    <FormControl className={className} sx={{ width: fullWidth ? "100%" : "auto" }}>
+    <FormControl
+      className={className}
+      sx={{ width: fullWidth ? "100%" : "auto" }}
+    >
       {title && (
         <label className={classes.title}>
           {title} {optional && <span>({t("common_optional")})</span>}

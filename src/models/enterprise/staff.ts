@@ -15,6 +15,8 @@ export interface IStaff {
   username: string;
   lastName: string;
   firstName: string;
+  address?:string;
+  becomeStaffDate?: Date;
   role?:number;
   isVerified?: boolean;
   isDeleted?: boolean;

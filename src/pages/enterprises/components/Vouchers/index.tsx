@@ -45,8 +45,9 @@ import useDebounce from "hooks/useDebounce";
 import InputSearch from "components/common/inputs/InputSearch";
 import { FindAll, Voucher } from "models/enterprise/voucher";
 import { VoucherService } from "services/enterprise/voucher";
-import { fPercent, fShortenNumber } from "utils/formatNumber";
+import { fCurrency2VND, fPercent, fShortenNumber } from "utils/formatNumber";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
@@ -60,6 +61,49 @@ const Event = memo(({}: Props) => {
     {
       name: "name",
       label: t("enterprise_management_section_voucher_header_table_name"),
+      sortable: false,
+    },
+    {
+      name: "startTime",
+      label: t("enterprise_management_section_voucher_header_table_startTime"),
+      sortable: false,
+    },
+    {
+      name: "endTime",
+      label: t("enterprise_management_section_voucher_header_table_endTime"),
+      sortable: false,
+    },
+    {
+      name: "numberOfCodes",
+      label: t(
+        "enterprise_management_section_voucher_header_table_numberOfCode"
+      ),
+      sortable: false,
+    },
+    {
+      name: "numberOfCodesUsed",
+      label: t(
+        "enterprise_management_section_voucher_header_table_numberOfCodeUsed"
+      ),
+      sortable: false,
+    },
+    {
+      name: "discountValue",
+      label: t(
+        "enterprise_management_section_voucher_header_table_discount_value"
+      ),
+      sortable: false,
+    },
+    {
+      name: "minOrder",
+      label: t("enterprise_management_section_voucher_header_table_min_order"),
+      sortable: false,
+    },
+    {
+      name: "maxDiscount",
+      label: t(
+        "enterprise_management_section_voucher_header_table_max_discount"
+      ),
       sortable: false,
     },
     {
@@ -235,6 +279,43 @@ const Event = memo(({}: Props) => {
                           </>
                         )}
                       </TableCell>
+                      <TableCell scope="row" className={classes.tableCell}>
+                        {moment(item?.startTime).format("DD-MM-YYYY")}
+                      </TableCell>{" "}
+                      <TableCell scope="row" className={classes.tableCell}>
+                        {moment(item?.endTime).format("DD-MM-YYYY")}
+                      </TableCell>{" "}
+                      <TableCell scope="row" className={classes.tableCell}>
+                        {!item?.isQuantityLimit
+                          ? t(
+                              "enterprise_management_section_voucher_body_table_action"
+                            )
+                          : item?.numberOfCodes}
+                      </TableCell>{" "}
+                      <TableCell scope="row" className={classes.tableCell}>
+                        {item?.numberOfCodesUsed}
+                      </TableCell>{" "}
+                      <TableCell scope="row" className={classes.tableCell}>
+                        {item?.discountType === EDiscountType.PERCENT ? (
+                          <>{fPercent(item?.discountValue)} </>
+                        ) : (
+                          <>{fCurrency2VND(item?.discountValue)} VND</>
+                        )}
+                      </TableCell>{" "}
+                      <TableCell scope="row" className={classes.tableCell}>
+                        {item?.discountType === EDiscountType.PERCENT ? (
+                          <>{fCurrency2VND(item?.minOrder)} VND</>
+                        ) : (
+                          <>{fCurrency2VND(item?.minOrder)} VND</>
+                        )}
+                      </TableCell>
+                      <TableCell scope="row" className={classes.tableCell}>
+                        {item?.maxDiscount !== 0 ? (
+                          <>{fCurrency2VND(item?.maxDiscount)} VND</>
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
                       <TableCell className="text-center" component="th">
                         <IconButton
                           className={clsx(classes.actionButton)}
@@ -251,7 +332,7 @@ const Event = memo(({}: Props) => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={3}>
+                  <TableCell align="center" colSpan={10}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>

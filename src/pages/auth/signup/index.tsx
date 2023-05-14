@@ -102,25 +102,25 @@ const Login: NextPage = () => {
     setRegisterSuccess(!registerSuccess);
 
   const _onSubmit = (data: SignUpForm) => {
-    // if (checkTerms) {
-    dispatch(setLoading(true));
-    UserService.register({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      username: data.email,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-      phoneNumber: data.phoneNumber,
-      role: data.role,
-    })
-      .then(() => {
-        setRegisterSuccess(true);
+    if (checkTerms) {
+      dispatch(setLoading(true));
+      UserService.register({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        username: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        phoneNumber: data.phoneNumber,
+        role: data.role,
       })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => dispatch(setLoading(false)));
-    // }
+        .then(() => {
+          setRegisterSuccess(true);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => dispatch(setLoading(false)));
+    }
     // console.log(data);
 
     // clearForm();

@@ -27,6 +27,7 @@ import PopupTermsAndConditions from "pages/enterprises/components/PopupTermsAndC
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
+import DetailTourOnSaleStatistic from "pages/enterprises/components/TourStatistic/components/DetailTourOnSaleStatistic";
 
 interface PropTypes {}
 
@@ -50,135 +51,22 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
 
   const renderComponent = () => {
     switch (page) {
-      case "tours":
-        toursRef &&
-          toursRef.current &&
-          toursRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-          });
-        if (action === "create-tour") {
-          return (
-            <Col xs={10} className={classes.content}>
-              <TabContent className={classes.tabContent}>
-                <AddOrEditTour />
-              </TabContent>
-            </Col>
-          );
-        }
-        if (action) {
-          return (
-            <Col xs={10} className={classes.content}>
-              <TabContent className={classes.tabContent}>
-                <AddOrEditTour tourId={Number(action)} />
-              </TabContent>
-            </Col>
-          );
-        }
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <Tours />
-            </TabContent>
-          </Col>
-        );
-      case "hotels":
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <Hotels />
-            </TabContent>
-          </Col>
-        );
-      case "vouchers":
-        vouchersRef &&
-          vouchersRef.current &&
-          vouchersRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-          });
-        if (action === "create-voucher") {
-          return (
-            <Col xs={10} className={classes.content}>
-              <TabContent className={classes.tabContent}>
-                <AddOrEditVoucher />
-              </TabContent>
-            </Col>
-          );
-        }
-        if (action) {
-          return (
-            <Col xs={10} className={classes.content}>
-              <TabContent className={classes.tabContent}>
-                <AddOrEditVoucher voucherId={Number(action)} />
-              </TabContent>
-            </Col>
-          );
-        }
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <Vouchers />
-            </TabContent>
-          </Col>
-        );
-      case "staffs":
-        staffsRef &&
-          staffsRef.current &&
-          staffsRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-          });
-        if (action === "list-offers") {
-          return (
-            <Col xs={10} className={classes.content}>
-              <TabContent className={classes.tabContent}>
-                <OfferStaffs />
-              </TabContent>
-            </Col>
-          );
-        }
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <Staffs />
-            </TabContent>
-          </Col>
-        );
-      case "tourBills":
-        if (action) {
-          return (
-            <Col xs={10} className={classes.content}>
-              <TabContent className={classes.tabContent}>
-                <DetailTourBill tourBillId={Number(action)} />
-              </TabContent>
-            </Col>
-          );
-        }
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <TourBills />
-            </TabContent>
-          </Col>
-        );
       case "tourStatistic":
         if (action) {
-          return (
-            <Col xs={10} className={classes.content}>
-              <TabContent className={classes.tabContent}>
-                <TourOnSaleStatistic tourId={Number(action)} />
-              </TabContent>
-            </Col>
-          );
+          if (type) {
+            return (
+              <Col xs={10} className={classes.content}>
+                <TabContent className={classes.tabContent}>
+                  <DetailTourOnSaleStatistic tourOnSaleId={Number(type)} />
+                </TabContent>
+              </Col>
+            );
+          }
         }
         return (
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
-              <TourStatistic />
+              <DetailTourOnSaleStatistic />
             </TabContent>
           </Col>
         );

@@ -12,6 +12,7 @@ import { setErrorMess } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
 import { fCurrency2VND, fPercent } from "utils/formatNumber";
 import { useTranslation } from "react-i18next";
+import StatusPayment from "components/StatusPayment";
 
 interface Props {
   tourBillId: number;
@@ -36,7 +37,10 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
   return (
     <Grid className={classes.root}>
       <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-        <h3>{t("enterprise_management_section_tour_bill_title")}</h3>
+        <Grid sx={{ display: "flex" }}>
+          <h3>{t("enterprise_management_section_tour_bill_title")}</h3>
+          <StatusPayment status={tourBill?.status} type={true} />
+        </Grid>
         <Button
           onClick={() => {
             router.push("/enterprises/tourBills");
@@ -55,6 +59,26 @@ const DetailTourBill = memo(({ tourBillId }: Props) => {
             </Col>
             <Col xs={8} className={classes.info}>
               {tourBill?.firstName} {tourBill?.lastName}
+            </Col>
+          </Row>
+          <Row className={clsx("mb-1", classes.row)}>
+            <Col xs={4} className={classes.titleInfo}>
+              {t(
+                "enterprise_management_section_tour_bill_title_person_name_phone"
+              )}
+              :
+            </Col>
+            <Col xs={8} className={classes.info}>
+              {Array?.isArray(tourBill?.participantsInfo) ? (
+                tourBill?.participantsInfo?.map((item) => (
+                  <>
+                    {item?.fullName} - {item?.phoneNumber}
+                    <br />
+                  </>
+                ))
+              ) : (
+                <>No participants</>
+              )}
             </Col>
           </Row>
           <Row className={clsx("mb-1", classes.row)}>

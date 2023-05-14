@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { Filter, FindAll, StatisticAll, UpdateStatus } from "models/enterprise/tourBill";
+import { Filter, FindAll, StatisticAll, StatisticTourOnSale, UpdateStatus } from "models/enterprise/tourBill";
 import { EGetAllTourBillsAnyDate, IToursRevenueByMonth, IToursRevenueByYear, IVerifyBookTour, TourBill } from "models/tourBill";
 import api from "services/configApi";
 
@@ -62,6 +62,17 @@ export class TourBillService {
   static async statisticOneTour(tourId: number, data: StatisticAll): Promise<any> {
     return await api
       .get(`${API.ENTERPRISE.TOUR_BILL.STATISTIC}/${tourId}`, {params: data})
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async GetAllBillOfOneTourOnSale(tourOnSaleId: number, data: StatisticTourOnSale): Promise<any> {
+    return await api
+      .get(`${API.ENTERPRISE.TOUR_BILL.GET_ALL_BILL_STATISTICS}/${tourOnSaleId}`, {params: data})
       .then((res) => {
         return Promise.resolve(res.data);
       })

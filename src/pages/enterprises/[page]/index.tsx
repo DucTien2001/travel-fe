@@ -176,7 +176,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
               </span>
             </NavLink>
           </NavItem>
-          {user.role === EUserType.ENTERPRISE && (
+          {user?.role === EUserType.ENTERPRISE && (
             <NavItem
               onClick={() => gotoMenu("staffs")}
               className={classes.navItem}
