@@ -23,7 +23,7 @@ export interface OptionItem<T = number> {
   name: string;
   translation?: string;
   img?: string;
-  value?: T | string;
+  value?: T | T[] | string;
 }
 
 export interface OptionItemT<T> {
@@ -71,7 +71,6 @@ export const serviceType = [
 
 
 
-
 export const userType = [
   { id: 1, name: "Super Admin" },
   { id: 2, name: "Admin" },
@@ -96,6 +95,14 @@ export enum EBillStatus {
   NOT_USE =5,
 }
 
+export const billStatusType = [
+  { id: 1, name: "Reschedule", value: EBillStatus.RESCHEDULED },
+  { id: 2, name: "Canceled", value: EBillStatus.CANCELED},
+  { id: 3, name: "Not contacted yet", value: EBillStatus.NOT_CONTACTED_YET},
+  { id: 4, name: "Contacted", value: EBillStatus.CONTACTED},
+  { id: 5, name: "Used", value: EBillStatus.USED},
+  { id: 6, name: "Not used", value: EBillStatus.NOT_USE},
+]
 
 export enum EDiscountType {
   MONEY = 1,

@@ -9,3 +9,9 @@ export const reactQuillModules = {
     [{ color: [] }, { background: [] }],
   ],
 };
+
+export interface SelectOption {
+  id: number;
+  name: string;
+  value: any;
+}

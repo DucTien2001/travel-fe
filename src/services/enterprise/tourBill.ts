@@ -1,9 +1,20 @@
 import { API } from "configs/constants";
-import { FindAll, StatisticAll, UpdateStatus } from "models/enterprise/tourBill";
+import { Filter, FindAll, StatisticAll, UpdateStatus } from "models/enterprise/tourBill";
 import { EGetAllTourBillsAnyDate, IToursRevenueByMonth, IToursRevenueByYear, IVerifyBookTour, TourBill } from "models/tourBill";
 import api from "services/configApi";
 
 export class TourBillService {
+  static async getFilters(data: Filter): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.TOUR_BILL.FILTER, {params: data})
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
   static async findAll(data: FindAll): Promise<any> {
     return await api
       .get(API.ENTERPRISE.TOUR_BILL.DEFAULT, {params: data})

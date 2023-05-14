@@ -133,6 +133,7 @@ interface InputSelectProps {
   selectProps?: StateManagerProps;
   fullWidth?: boolean;
   optional?: boolean;
+  onChange?: (e: any) => void;
 }
 
 const InputSelect = memo((props: InputSelectProps) => {
@@ -147,6 +148,7 @@ const InputSelect = memo((props: InputSelectProps) => {
     selectProps,
     fullWidth,
     optional,
+    onChange,
   } = props;
   const { t } = useTranslation();
 
@@ -181,6 +183,7 @@ const InputSelect = memo((props: InputSelectProps) => {
                 getOptionValue={(option) => option[bindKey || "id"]}
                 getOptionLabel={(option) => getOptionLabel(option)}
                 components={{ DropdownIndicator, Option, SingleValue }}
+                onChange={(e) => onChange && onChange(e)}
                 {...selectProps}
               />
             )}
@@ -193,6 +196,7 @@ const InputSelect = memo((props: InputSelectProps) => {
             getOptionValue={(option) => option[bindKey || "id"]}
             getOptionLabel={(option) => getOptionLabel(option)}
             components={{ DropdownIndicator, Option, SingleValue }}
+            onChange={(e) => onChange && onChange(e)}
             {...selectProps}
           />
         </>

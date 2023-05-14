@@ -184,6 +184,7 @@ export const API = {
       GET_ONE: "/v1.0/enterprise/tour-bill/:id",
       UPDATE_STATUS: "/v1.0/enterprise/tour-bill/:id",
       STATISTIC: "/v1.0/enterprise/tour-bill/statistic",
+      FILTER: "/v1.0/enterprise/tour-bill/filter",
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",
       GET_TOURS_REVENUE_BY_YEAR: "/v1.0/tour-bill/get-tours-revenue-by-year",
       GET_ALL_BILLS_OF_ANY_TOUR: "/v1.0/tour-bill/get-all-tour-bills/:id",
