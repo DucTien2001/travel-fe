@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import Button, { BtnType } from "components/common/buttons/Button";
+import { Grid } from "@mui/material";
 
 interface InputsProps {
   className?: string;
@@ -41,7 +42,7 @@ const InputCounter = memo((props: InputsProps) => {
   };
 
   return (
-    <>
+    <Grid>
       {label && (
         <label className={classes.label}>
           {labelIcon} {label}
@@ -71,7 +72,7 @@ const InputCounter = memo((props: InputsProps) => {
         </Button>
       </div>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-    </>
+    </Grid>
   );
 });
 export default InputCounter;

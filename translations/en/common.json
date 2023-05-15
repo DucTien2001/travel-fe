@@ -122,6 +122,15 @@
   "tour_detail_section_comment_no_cmt": "No comment",
   "tour_detail_section_comment_popup_title_cmt": "Are you sure delete this comment?",
 
+  "popup_add_comment_tour_title": "What do you think about this tour?",
+  "popup_add_comment_tour_title_star_rating": "Star rating",
+  "popup_add_comment_tour_title_content": "Content",
+  "popup_add_comment_tour_title_content_validate": "Content is required",
+  "popup_add_comment_tour_title_upload_images": "Upload images",
+  "popup_add_comment_tour_title_image_preview": "Images preview",
+  "popup_add_comment_tour_title_no_image_preview": "No photos uploaded yet",
+  "popup_add_comment_tour_title_footer": "Your question will be posted on Travelix.com once it has been approved and answered",
+
   "event_detail_section_title": "Big promo in Travelix",
   "event_detail_section_sub_title": "Travel to anywhere in the world during this festive year end super easily with diverse hotel recommendations and exciting deals up to 400K from Travelix!",
   "event_detail_section_read_terms": "Read Terms and Conditions",
@@ -773,6 +782,7 @@
   "common_yes": "Yes",
   "common_back": "Back",
   "common_send": "Send",
+  "common_post": "Post",
   "common_done": "Done",
   "common_not_found": "Not found",
   "common_create_success": "Create successful",

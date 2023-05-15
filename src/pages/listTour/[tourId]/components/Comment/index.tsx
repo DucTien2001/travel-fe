@@ -156,7 +156,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
     if (comment) {
       CommentService?.updateCommentTour(comment?.id, data)
         .then(() => {
-          dispatch(setSuccessMess("Update rating successfully"));
+          dispatch(setSuccessMess(t("common_update_success")));
           onToggleAddComment();
           fetchData();
         })
@@ -169,7 +169,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
     } else {
       CommentService?.createCommentTour(data)
         .then(() => {
-          dispatch(setSuccessMess("Rating successfully"));
+          dispatch(setSuccessMess(t("common_send_success")));
           onToggleAddComment();
           fetchData();
         })
@@ -199,7 +199,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
     if (replyDelete) {
       CommentService.deleteCommentTour(replyDelete?.id)
         .then(() => {
-          dispatch(setSuccessMess("Delete reply successfully"));
+          dispatch(setSuccessMess(t("common_update_success")));
           onTogglePopupConfirmDelete();
           fetchData();
         })
@@ -212,7 +212,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
     } else {
       CommentService.deleteCommentTour(commentDelete?.id)
         .then(() => {
-          dispatch(setSuccessMess("Delete comment successfully"));
+          dispatch(setSuccessMess(t("common_update_success")));
           onTogglePopupConfirmDelete();
           fetchData();
         })
@@ -246,7 +246,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
         content: contentReply,
       })
         .then(() => {
-          dispatch(setSuccessMess("Update reply successfully"));
+          dispatch(setSuccessMess(t("common_update_success")));
           setReplyEdit(null);
           fetchData();
         })
@@ -262,7 +262,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
         content: contentReply,
       })
         .then(() => {
-          dispatch(setSuccessMess("Reply successfully"));
+          dispatch(setSuccessMess(t("common_send_success")));
           setReply(null);
           fetchData();
         })
@@ -523,7 +523,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
             sx={{ borderTop: "1px solid var(--gray-40)", padding: "16px 0" }}
           >
             <Grid xs={3} item className={classes.boxAvatar}>
-              <p>N{t("tour_detail_section_comment_no_cmt")}</p>
+              <p>{t("tour_detail_section_comment_no_cmt")}</p>
             </Grid>
           </Grid>
         )}
@@ -618,7 +618,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
           isOpen={openPopupAddComment}
           toggle={onToggleAddComment}
           tourBill={lastedBill}
-          onSubmit={onRate}
+          fetchComment={fetchData}
           commentEdit={comment}
         />
         <PopupConfirmDelete

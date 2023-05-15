@@ -38,6 +38,7 @@ import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { EServiceType } from "models/general";
 import { TourBill } from "models/tourBill";
+import { useTranslation } from "react-i18next";
 
 export interface CommentForm {
   content: string;
@@ -51,14 +52,14 @@ interface Props {
   tourBill?: TourBill;
   onClose?: () => void;
   toggle?: () => void;
-  onSubmit?: (data: any) => void;
+  fetchComment?: () => void;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddComment = memo((props: Props) => {
-  const { isOpen, commentEdit, toggle, tourBill, onSubmit } = props;
-  // const tourId = Number(router.query.tourId.slice(1));
+  const { isOpen, commentEdit, toggle, tourBill, fetchComment } = props;
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation("common");
 
   const [oldImages, setOldImages] = useState<any>([]);
   const [imagesDeleted, setImagesDeleted] = useState([]);
@@ -67,7 +68,9 @@ const PopupAddComment = memo((props: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      content: yup.string().required("Content is required"),
+      content: yup
+        .string()
+        .required(t("popup_add_comment_tour_title_content_validate")),
       numberOfStars: yup.number().required(),
       images: yup.array(yup.mixed()),
     });
@@ -137,9 +140,9 @@ const PopupAddComment = memo((props: Props) => {
       const formDataEdit = new FormData();
       formDataEdit.append("content", data?.content);
       formDataEdit.append("rate", `${data?.numberOfStars}`);
-      formDataEdit.append("serviceId", `${tourBill?.tourData?.id}`);
+      formDataEdit.append("serviceId", `${commentEdit?.serviceId}`);
       formDataEdit.append("serviceType", `${EServiceType?.TOUR}`);
-      formDataEdit.append("billId", `${tourBill?.id}`);
+      formDataEdit.append("billId", `${commentEdit?.billId}`);
       imagesUpload.forEach((item, index) => {
         if (typeof item === "object") {
           formDataEdit.append(`imageFiles${index}`, item);
@@ -155,10 +158,34 @@ const PopupAddComment = memo((props: Props) => {
           formDataEdit.append(`imagesDeleted[]`, item);
         }
       });
-      onSubmit(formDataEdit);
-      // console.log(imagesDeleted);
+      // onSubmit(formDataEdit);
+      // console.log(oldImages, "---old");
+      // console.log(imagesUpload, "---new");
+      CommentService?.updateCommentTour(commentEdit?.id, formDataEdit)
+        .then(() => {
+          dispatch(setSuccessMess(t("common_update_success")));
+          toggle();
+          fetchComment();
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
     } else {
-      onSubmit(dataForm);
+      CommentService?.createCommentTour(dataForm)
+        .then(() => {
+          dispatch(setSuccessMess(t("common_send_success")));
+          toggle();
+          fetchComment();
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
     }
   };
 
@@ -185,14 +212,19 @@ const PopupAddComment = memo((props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, commentEdit]);
 
+  console.log(commentEdit, "----");
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} className={classes.root}>
         <Form method="post" role="form" onSubmit={handleSubmit(_onSubmit)}>
           <ModalHeader toggle={toggle} className={classes.title}>
-            What do you think about this tour?
+            {t("popup_add_comment_tour_title")}
           </ModalHeader>
           <ModalBody>
+            <p className={classes.titleInput}>
+              {t("popup_add_comment_tour_title_star_rating")}
+            </p>
             <Controller
               name="numberOfStars"
               control={control}
@@ -200,7 +232,6 @@ const PopupAddComment = memo((props: Props) => {
                 <div className={classes.starContainer}>
                   <div className={classes.inputCounter}>
                     <InputCounter
-                      label="Star rating:"
                       max={5}
                       min={1}
                       onChange={field.onChange}
@@ -215,21 +246,25 @@ const PopupAddComment = memo((props: Props) => {
               )}
             />
             <InputTextfield
-              title="Content"
+              title={t("popup_add_comment_tour_title_content")}
               multiline
               rows={3}
               inputRef={register("content")}
               errorMessage={errors?.content?.message}
             />
-            <Grid item xs={12}>
-              <p className={classes.titleInput}>Upload images</p>
+            <Grid item xs={12} sx={{ marginTop: "16px" }}>
+              <p className={classes.titleInput}>
+                {t("popup_add_comment_tour_title_upload_images")}
+              </p>
               <div className={classes.containerUploadImg}>
                 <label htmlFor="file" className={classes.boxUpload}>
                   <div>
                     <AddPhotoAlternateOutlinedIcon
                       className={classes.imgAddPhoto}
                     />
-                    <p className={classes.selectImgTitle}>Upload images</p>
+                    <p className={classes.selectImgTitle}>
+                      {t("popup_add_comment_tour_title_upload_images")}
+                    </p>
                   </div>
                 </label>
                 <Input
@@ -242,26 +277,30 @@ const PopupAddComment = memo((props: Props) => {
                 />
               </div>
             </Grid>
-            <Grid item xs={12}>
-              <p className={classes.titleInput}>Images preview</p>
+            <Grid item xs={12} sx={{ marginTop: "16px" }}>
+              <p className={classes.titleInput}>
+                {t("popup_add_comment_tour_title_image_preview")}
+              </p>
               <Grid container spacing={2}>
                 {imagesPreview?.map((item, index) => {
                   return (
                     <Grid key={item} xs={4} className={classes.imgPreview} item>
                       <img src={item} alt="preview" />
-                      <IconButton
+                      <div
                         onClick={() => handleDeleteImage(item, index)}
                         title="Delete"
                         className={classes.iconDelete}
                       >
                         <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                      </IconButton>
+                      </div>
                     </Grid>
                   );
                 })}
                 {!imagesPreview?.length && (
                   <Col className={classes.noImg}>
-                    <h4>No photos uploaded yet</h4>
+                    <h4>
+                      {t("popup_add_comment_tour_title_no_image_preview")}
+                    </h4>
                   </Col>
                 )}
               </Grid>
@@ -274,16 +313,13 @@ const PopupAddComment = memo((props: Props) => {
                 onClick={toggle}
                 className="mr-2"
               >
-                Cancel
+                {t("common_cancel")}
               </Button>
               <Button btnType={BtnType.Primary} type="submit">
-                Post
+                {t("common_post")}
               </Button>{" "}
             </div>
-            <p>
-              Your question will be posted on Travelix.com once it has been
-              approved and answered
-            </p>
+            <p>{t("popup_add_comment_tour_title_footer")}</p>
           </ModalFooter>
         </Form>
       </Modal>

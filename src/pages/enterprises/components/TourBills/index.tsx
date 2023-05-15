@@ -434,6 +434,7 @@ const Tour = memo(({}: Props) => {
               <VisibilityIcon
                 sx={{ marginRight: "0.25rem" }}
                 fontSize="small"
+                color="info"
               />
               <span>
                 {t("enterprise_management_section_tour_bill_action_view")}
@@ -449,6 +450,7 @@ const Tour = memo(({}: Props) => {
               <PublishedWithChangesIcon
                 sx={{ marginRight: "0.25rem" }}
                 fontSize="small"
+                color="success"
               />
               <span>
                 {t(

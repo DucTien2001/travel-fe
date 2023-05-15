@@ -1,3 +1,4 @@
+import { Tour } from "./tour";
 import { User } from "./user";
 
 
@@ -27,7 +28,10 @@ export interface Comment {
   id?: number;
   content: string;
   rate: number;
+  serviceId?: number;
   tourId?: number;
+  billId?: number;
+  tourData?: Tour;
   roomId?: number;
   userId?: number;
   reviewer?: Reviewer;
