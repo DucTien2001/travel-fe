@@ -29,6 +29,7 @@ export interface Comment {
   content: string;
   rate: number;
   serviceId?: number;
+  serviceType?: number;
   tourId?: number;
   billId?: number;
   tourData?: Tour;

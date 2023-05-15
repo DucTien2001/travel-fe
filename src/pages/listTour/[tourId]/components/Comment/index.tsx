@@ -151,37 +151,6 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
       .finally(() => dispatch(setLoading(false)));
   };
 
-  const onRate = (data) => {
-    dispatch(setLoading(true));
-    if (comment) {
-      CommentService?.updateCommentTour(comment?.id, data)
-        .then(() => {
-          dispatch(setSuccessMess(t("common_update_success")));
-          onToggleAddComment();
-          fetchData();
-        })
-        .catch((e) => {
-          dispatch(setErrorMess(e));
-        })
-        .finally(() => {
-          dispatch(setLoading(false));
-        });
-    } else {
-      CommentService?.createCommentTour(data)
-        .then(() => {
-          dispatch(setSuccessMess(t("common_send_success")));
-          onToggleAddComment();
-          fetchData();
-        })
-        .catch((e) => {
-          dispatch(setErrorMess(e));
-        })
-        .finally(() => {
-          dispatch(setLoading(false));
-        });
-    }
-  };
-
   const onUpdateComment = () => {
     onToggleAddComment();
     onCloseActionMenu();

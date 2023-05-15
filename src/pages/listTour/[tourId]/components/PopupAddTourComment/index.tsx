@@ -141,7 +141,7 @@ const PopupAddComment = memo((props: Props) => {
       formDataEdit.append("content", data?.content);
       formDataEdit.append("rate", `${data?.numberOfStars}`);
       formDataEdit.append("serviceId", `${commentEdit?.serviceId}`);
-      formDataEdit.append("serviceType", `${EServiceType?.TOUR}`);
+      formDataEdit.append("serviceType", `${commentEdit?.serviceType}`);
       formDataEdit.append("billId", `${commentEdit?.billId}`);
       imagesUpload.forEach((item, index) => {
         if (typeof item === "object") {
@@ -158,9 +158,6 @@ const PopupAddComment = memo((props: Props) => {
           formDataEdit.append(`imagesDeleted[]`, item);
         }
       });
-      // onSubmit(formDataEdit);
-      // console.log(oldImages, "---old");
-      // console.log(imagesUpload, "---new");
       CommentService?.updateCommentTour(commentEdit?.id, formDataEdit)
         .then(() => {
           dispatch(setSuccessMess(t("common_update_success")));
@@ -212,7 +209,7 @@ const PopupAddComment = memo((props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, commentEdit]);
 
-  console.log(commentEdit, "----");
+  console.log(tourBill, "-----");
 
   return (
     <>
