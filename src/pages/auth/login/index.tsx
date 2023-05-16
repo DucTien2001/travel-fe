@@ -207,6 +207,17 @@ const Login: NextPage = () => {
                                       }}
                                     />
                                   </Grid>
+                                  <Grid sx={{ paddingRight: "14px" }}>
+                                    <InputCheckbox
+                                      content="Super Admin"
+                                      checked={
+                                        field.value === EUserType.SUPER_ADMIN
+                                      }
+                                      onChange={() => {
+                                        setValue("role", EUserType.SUPER_ADMIN);
+                                      }}
+                                    />
+                                  </Grid>
                                   <Grid>
                                     <InputCheckbox
                                       content="Enterprise"

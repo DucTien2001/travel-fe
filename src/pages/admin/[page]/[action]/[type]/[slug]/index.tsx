@@ -1,79 +1,55 @@
 import React, { memo, useRef } from "react";
 import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
 import { Col, Nav, NavItem, NavLink, TabContent } from "reactstrap";
 import classes from "./styles.module.scss";
 import { images } from "configs/images";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import useAuth from "hooks/useAuth";
 import EventIcon from "@mui/icons-material/Event";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import Users from "pages/admin/components/Users";
+import AddOrEditEvent from "pages/admin/components/Events/components/AddOrEditEvent";
+import AddOrEditCommission from "pages/admin/components/Commissions/components/AddOrEditCommission";
 import { useTranslation } from "react-i18next";
 import TourIcon from "@mui/icons-material/Tour";
-import useAuth from "hooks/useAuth";
 import { EUserType } from "models/user";
-const Users = dynamic(() => import("pages/admin/components/Users"));
-const Events = dynamic(() => import("pages/admin/components/Events"));
-const Commissions = dynamic(() => import("pages/admin/components/Commissions"));
-const StatisticTourBills = dynamic(
-  () => import("../components/StatisticTourBills")
-);
+import StatisticTourBills from "pages/admin/components/StatisticTourBills";
+import TourRevenue from "pages/admin/components/StatisticTourBills/components/TourRevenue";
+import TourOnSaleRevenue from "pages/admin/components/StatisticTourBills/components/TourOnSaleRevenue";
+import TourBillOnSale from "pages/admin/components/StatisticTourBills/components/TourBillOnSale";
 
 interface PropTypes {}
 
 const Admin = memo(({ ...props }: PropTypes) => {
   const router = useRouter();
-  const { page } = router.query;
   const { t, i18n } = useTranslation("common");
   const { user } = useAuth();
+
+  const { page, action, type, slug } = router.query;
 
   const usersRef = useRef<HTMLDivElement>(null);
   const eventsRef = useRef<HTMLDivElement>(null);
 
   const renderComponent = () => {
     switch (page) {
-      case "users":
-        usersRef &&
-          usersRef.current &&
-          usersRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-          });
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <Users />
-            </TabContent>
-          </Col>
-        );
-      case "events":
-        eventsRef &&
-          eventsRef.current &&
-          eventsRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-          });
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <Events />
-            </TabContent>
-          </Col>
-        );
-      case "commissions":
-        return (
-          <Col xs={10} className={classes.content}>
-            <TabContent className={classes.tabContent}>
-              <Commissions />
-            </TabContent>
-          </Col>
-        );
       case "statisticTourBills":
+        if (action) {
+          if (type) {
+            if (slug) {
+              return (
+                <Col xs={10} className={classes.content}>
+                  <TabContent className={classes.tabContent}>
+                    <TourBillOnSale tourOnSaleId={Number(slug)} />
+                  </TabContent>
+                </Col>
+              );
+            }
+          }
+        }
         return (
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
-              <StatisticTourBills />
+              <TourBillOnSale />
             </TabContent>
           </Col>
         );
@@ -122,7 +98,7 @@ const Admin = memo(({ ...props }: PropTypes) => {
           >
             <NavLink className={renderClass("commissions")}>
               <MonetizationOnIcon />
-              <span>{t("admin_management_navbar_statistic")}</span>
+              <span>{t("admin_management_navbar_commission")}</span>
             </NavLink>
           </NavItem>
           <span>{t("admin_management_navbar_statistic")}</span>

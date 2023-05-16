@@ -35,6 +35,9 @@ import { UserService } from "services/user";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { setLoading } from "redux/reducers/Status/actionTypes";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import ManageSearchIcon from "@mui/icons-material/ManageSearch";
+import AccountBoxOutlinedIcon from "@mui/icons-material/AccountBoxOutlined";
 const WhiteNavbar = memo(() => {
   const { isLoggedIn, logout, user } = UseAuth();
   const { t, i18n } = useTranslation("common");
@@ -218,8 +221,7 @@ const WhiteNavbar = memo(() => {
                         <DropdownItem className={classes.dropdownItem}>
                           <Link href="/profile" passHref>
                             <a>
-                              <FontAwesomeIcon
-                                icon={faAddressCard}
+                              <AccountBoxOutlinedIcon
                                 className={classes.iconNav}
                                 translation-key={"auth_profile"}
                               />
@@ -230,8 +232,7 @@ const WhiteNavbar = memo(() => {
                         <DropdownItem className={classes.dropdownItem}>
                           <Link href="/paymentHistory/tour" passHref>
                             <a>
-                              <FontAwesomeIcon
-                                icon={faCalendarCheck}
+                              <AddShoppingCartIcon
                                 className={classes.iconNav}
                                 translation-key={"auth_payment_history"}
                               />
@@ -244,8 +245,7 @@ const WhiteNavbar = memo(() => {
                           <DropdownItem className={classes.dropdownItem}>
                             <Link href="/enterprises/tours" passHref>
                               <a>
-                                <FontAwesomeIcon
-                                  icon={faBarsProgress}
+                                <ManageSearchIcon
                                   className={classes.iconNav}
                                   translation-key={"auth_management"}
                                 />

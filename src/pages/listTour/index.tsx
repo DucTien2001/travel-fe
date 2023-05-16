@@ -33,90 +33,44 @@ import FilterPanel from "../../components/FilterPanel";
 import ReactPaginate from "react-paginate";
 import CustomSelect from "components/common/CustomSelect";
 import InputSelect from "components/common/inputs/InputSelect";
-import { DataPagination, sortType } from "models/general";
+import {
+  DataPagination,
+  ESortOption,
+  sortOption,
+  sortType,
+} from "models/general";
 import { Grid, Pagination } from "@mui/material";
 import { NormalGetTours, Tour } from "models/tour";
 import useDebounce from "hooks/useDebounce";
 import { useTranslation } from "react-i18next";
+import InputSearch from "components/common/inputs/InputSearch";
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
-interface SearchData {
-  location?: string;
-  checkOptions?: boolean;
-  sortType?: any;
-}
+import { Moment } from "moment";
+import InputDatePicker from "components/common/inputs/InputDatePicker";
+import moment from "moment";
+import { useRouter } from "next/router";
 
 const ListTours: NextPage = () => {
   const { t, i18n } = useTranslation("common");
 
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const [changeViewLayout, setChangeViewLayout] = useState(false);
-  const [selectedPrice, setSelectedPrice] = useState([10000, 3000000]);
-  const [selectedRating, setSelectedRating] = useState(null);
   const [data, setData] = useState<DataPagination<Tour>>();
   const [keyword, setKeyword] = useState<string>("");
-
-  const [tags, setTags] = useState([
-    { id: 1, checked: false, label: "Shopping" },
-    { id: 2, checked: false, label: "Sea" },
-    { id: 3, checked: false, label: "Family" },
-    { id: 4, checked: false, label: "Mountain" },
-    { id: 5, checked: false, label: "Trekking" },
-    { id: 6, checked: false, label: "Music" },
-    { id: 7, checked: false, label: "Chill" },
-    { id: 8, checked: false, label: "Eat" },
-  ]);
-
-  const schema = useMemo(() => {
-    return yup.object().shape({
-      location: yup.string().notRequired(),
-      checkOptions: yup.boolean().notRequired(),
-      sortType: yup.object().required("This field is required"),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
-
-  const {
-    register,
-    getValues,
-    handleSubmit,
-    reset,
-    watch,
-    control,
-    formState: { errors },
-  } = useForm<SearchData>({
-    resolver: yupResolver(schema),
-    mode: "onChange",
-    defaultValues: {
-      sortType: sortType[0],
-    },
-  });
-
-  const clearForm = () => {
-    reset({
-      location: "",
-      checkOptions: false,
-    });
-  };
-
-  // const onClearOption = () => {
-  //   clearForm();
-  //   setTags([
-  //     { id: 1, checked: false, label: "Shopping" },
-  //     { id: 2, checked: false, label: "Sea" },
-  //     { id: 3, checked: false, label: "Family" },
-  //     { id: 4, checked: false, label: "Mountain" },
-  //     { id: 5, checked: false, label: "Trekking" },
-  //     { id: 6, checked: false, label: "Music" },
-  //     { id: 7, checked: false, label: "Chill" },
-  //     { id: 8, checked: false, label: "Eat" },
-  //   ]);
-  //   setSelectedRating(null);
-  //   setSelectedPrice([10000, 3000000]);
-  // };
+  const [dateStart, setDateStart] = useState<Moment>(null);
+  const [tourFilter, setTourFilter] = useState<number>(
+    ESortOption.LOWEST_PRICE
+  );
 
   const onChangeViewLayout = () => {
     setChangeViewLayout(!changeViewLayout);
+  };
+
+  const yesterday = moment().subtract(1, "day");
+  const disablePastDt = (current) => {
+    return current.isAfter(yesterday);
   };
 
   // const handleSelectRating = (event, value) =>
@@ -168,11 +122,14 @@ const ListTours: NextPage = () => {
     take?: number;
     page?: number;
     keyword?: string;
+    dateSearch?: Date;
   }) => {
     const params: NormalGetTours = {
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
       keyword: keyword,
+      dateSearch: dateStart?.toDate() || value?.dateSearch,
+      sort: tourFilter || -1,
     };
     if (value?.keyword !== undefined) {
       params.keyword = value.keyword || undefined;
@@ -205,6 +162,16 @@ const ListTours: NextPage = () => {
     });
   };
 
+  const onSearchDate = (e) => {
+    setDateStart(moment(e?._d));
+  };
+
+  const onClearFilter = () => {
+    setKeyword("");
+    setDateStart(null);
+    setTourFilter(-1);
+  };
+
   // useEffect(() => {
   //   applyFilters();
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -231,17 +198,20 @@ const ListTours: NextPage = () => {
   //     setListTours(listSortHighRate);
   //   }
   // }, [watchSortType]);
+  useEffect(() => {
+    if (router.query?.keyword) {
+      setKeyword(String(router.query?.keyword));
+    }
+    if (router.query?.dateSearch) {
+      setDateStart(moment(router.query?.dateSearch));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query]);
 
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  console.log(
-    data?.data[0]?.tourOnSales.length
-      ? Math.min(...data?.data[0]?.tourOnSales?.map((price) => price?.discount))
-      : "99"
-  );
+  }, [keyword, dateStart, tourFilter]);
 
   return (
     <>
@@ -269,18 +239,31 @@ const ListTours: NextPage = () => {
                   <span>{t("list_tours_header_search_results")}</span>
                 </p>
               </div>
-              <div>
-                <InputRecentSearch
+              <Grid className={classes.searchControlWrapper}>
+                <InputSearch
                   placeholder={t("list_tours_header_search_placeholder")}
                   autoComplete="off"
                   value={keyword || ""}
                   onChange={onSearch}
                 />
-              </div>
+                <InputDatePicker
+                  className={classes.inputSearchDate}
+                  placeholder={t(
+                    "landing_page_section_search_tour_input_start_time"
+                  )}
+                  dateFormat="DD/MM/YYYY"
+                  timeFormat={false}
+                  closeOnSelect
+                  isValidDate={disablePastDt}
+                  value={dateStart ? dateStart : ""}
+                  initialValue={dateStart ? dateStart : ""}
+                  _onChange={(e) => onSearchDate(e)}
+                />
+              </Grid>
             </div>
-            <div className={classes.boxResult}>
+            <Grid className={classes.boxResult} container>
               {/* ======================= RESULT DESKTOP ===================== */}
-              <Grid className={classes.boxControlLayout}>
+              <Grid className={classes.boxControlLayout} item xs={2}>
                 <Button
                   className={clsx(
                     !changeViewLayout ? "active" : null,
@@ -302,23 +285,20 @@ const ListTours: NextPage = () => {
                   <FontAwesomeIcon icon={faList} />
                 </Button>
               </Grid>
-              <Grid className={classes.rowResult}>
-                <Grid className={classes.controlSelect}>
-                  <Grid>
-                    <h5>{t("list_tours_sort_by")}: </h5>
-                  </Grid>
-                  {/* <CustomSelect
-                    className={classes.inputSelect}
-                    options={sortType}
-                    control={control}
-                    name="sortType"
-                    errorMessage={errors.sortType?.message}
-                  /> */}
-                  <Grid className={classes.inputSelect}>
+              <Grid className={classes.rowResult} container item xs={10}>
+                <Grid>
+                  <h5>{t("list_tours_sort_by")}: </h5>
+                </Grid>
+                <Grid className={classes.controlSelect} xs={4} item>
+                  <Grid sx={{ width: "100%" }}>
                     <InputSelect
+                      className={classes.inputSelect}
+                      bindLabel="translation"
                       selectProps={{
-                        options: sortType,
+                        options: sortOption,
+                        placeholder: t("list_tours_sort_by_placeholder"),
                       }}
+                      onChange={(e) => setTourFilter(e?.value)}
                     />
                   </Grid>
                 </Grid>
@@ -328,13 +308,14 @@ const ListTours: NextPage = () => {
                   </h5>
                 </Grid>
               </Grid>
-            </div>
+            </Grid>
           </Row>
           <Row className={classes.rowResultBody}>
             <Col xs={2} className={classes.btnResetWrapper}>
               <Button
                 btnType={BtnType.Primary}
                 className={classes.btnResetOption}
+                onClick={onClearFilter}
               >
                 <FontAwesomeIcon icon={faArrowsRotate} />{" "}
                 {t("list_tours_reset_filter")}

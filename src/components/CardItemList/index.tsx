@@ -146,7 +146,6 @@ const ListServices = memo(
                           {t("common_tour")}
                         </Grid>
                       )}
-                      <Stars numberOfStars={rate} />
                     </Grid>
                   ) : (
                     <Grid className={classes.boxRate}>

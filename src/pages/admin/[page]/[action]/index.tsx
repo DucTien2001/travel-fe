@@ -11,12 +11,17 @@ import Users from "pages/admin/components/Users";
 import AddOrEditEvent from "pages/admin/components/Events/components/AddOrEditEvent";
 import AddOrEditCommission from "pages/admin/components/Commissions/components/AddOrEditCommission";
 import { useTranslation } from "react-i18next";
+import TourIcon from "@mui/icons-material/Tour";
+import { EUserType } from "models/user";
+import StatisticTourBills from "pages/admin/components/StatisticTourBills";
+import TourRevenue from "pages/admin/components/StatisticTourBills/components/TourRevenue";
 
 interface PropTypes {}
 
 const Admin = memo(({ ...props }: PropTypes) => {
   const router = useRouter();
   const { t, i18n } = useTranslation("common");
+  const { user } = useAuth();
 
   const { page, action } = router.query;
 
@@ -57,6 +62,7 @@ const Admin = memo(({ ...props }: PropTypes) => {
             </Col>
           );
         }
+
         if (action) {
           return (
             <Col xs={10} className={classes.content}>
@@ -66,6 +72,13 @@ const Admin = memo(({ ...props }: PropTypes) => {
             </Col>
           );
         }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <AddOrEditEvent />
+            </TabContent>
+          </Col>
+        );
       case "commissions":
         if (action === "create-commission") {
           return (
@@ -85,6 +98,30 @@ const Admin = memo(({ ...props }: PropTypes) => {
             </Col>
           );
         }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <AddOrEditCommission />
+            </TabContent>
+          </Col>
+        );
+      case "statisticTourBills":
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <TourRevenue enterpriseId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <StatisticTourBills />
+            </TabContent>
+          </Col>
+        );
     }
   };
 
@@ -133,6 +170,18 @@ const Admin = memo(({ ...props }: PropTypes) => {
               <span>{t("admin_management_navbar_commission")}</span>
             </NavLink>
           </NavItem>
+          <span>{t("admin_management_navbar_statistic")}</span>
+          {user.role === EUserType.SUPER_ADMIN && (
+            <NavItem
+              onClick={() => gotoMenu("statisticTourBills")}
+              className={classes.navItem}
+            >
+              <NavLink className={renderClass("statisticTourBills")}>
+                <TourIcon />
+                <span>{t("admin_management_navbar_tour_bills")}</span>
+              </NavLink>
+            </NavItem>
+          )}
         </Nav>
       </Col>
       {renderComponent()}
