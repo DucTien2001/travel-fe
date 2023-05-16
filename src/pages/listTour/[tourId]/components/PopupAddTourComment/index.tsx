@@ -53,11 +53,13 @@ interface Props {
   onClose?: () => void;
   toggle?: () => void;
   fetchComment?: () => void;
+  onSubmit?: (data) => void;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupAddComment = memo((props: Props) => {
-  const { isOpen, commentEdit, toggle, tourBill, fetchComment } = props;
+  const { isOpen, commentEdit, toggle, tourBill, fetchComment, onSubmit } =
+    props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation("common");
 
@@ -171,6 +173,7 @@ const PopupAddComment = memo((props: Props) => {
           dispatch(setLoading(false));
         });
     } else {
+      onSubmit(data);
       CommentService?.createCommentTour(dataForm)
         .then(() => {
           dispatch(setSuccessMess(t("common_send_success")));
