@@ -89,12 +89,24 @@
         font-size: 14px;
         text-decoration: line-through;
         color: #C4C3C3;
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        text-overflow: ellipsis !important;
+        white-space: nowrap;
+        word-wrap: break-word;
     } 
     p {
         font-weight: 700;
-        font-size: 18px;
+        font-size: 16px;
         color: var(--orange-color);
         margin: 0;
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        text-overflow: ellipsis !important;
+        white-space: nowrap;
+        word-wrap: break-word;
     }
 }
 .wrapperPrice {

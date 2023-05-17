@@ -35,6 +35,9 @@ interface Props {
   isTemporarilyStopWorking?: boolean;
   isDelete?: boolean;
   numberOfReviewers?: number;
+  tourOnSale?: any;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 // eslint-disable-next-line react/display-name
@@ -59,6 +62,9 @@ const ListServices = memo(
     isTemporarilyStopWorking,
     isDelete,
     numberOfReviewers,
+    tourOnSale,
+    minPrice,
+    maxPrice,
   }: Props) => {
     const { t, i18n } = useTranslation("common");
 
@@ -121,7 +127,13 @@ const ListServices = memo(
                   <Grid className={classes.boxTitle}>
                     <p>{title}</p>
                   </Grid>
-                  <Grid sx={{ paddingTop: "28px" }}>
+                  <Grid
+                    sx={{
+                      display: "flex !important",
+                      flexDirection: "column !important",
+                      flex: "1",
+                    }}
+                  >
                     <Grid className={classes.boxReview}>
                       {rate !== 0 && (
                         <>
@@ -139,8 +151,15 @@ const ListServices = memo(
                     </Grid>
 
                     <Grid className={classes.boxPrice}>
-                      {discount !== 0 && <span>{fCurrency2(price)}VND</span>}
-                      <p>{fCurrency2((price * (100 - discount)) / 100)} VND</p>
+                      {discount !== 0 && (
+                        <span>
+                          {fCurrency2((minPrice * (100 - discount)) / 100)} ~{" "}
+                          {fCurrency2((maxPrice * (100 - discount)) / 100)} VND
+                        </span>
+                      )}
+                      <p>
+                        {fCurrency2(minPrice)} ~ {fCurrency2(maxPrice)} VND
+                      </p>
                     </Grid>
                     <Grid className={classes.boxViewMore}>
                       <p>{t("common_view_more")}</p>

@@ -49,6 +49,7 @@ import { Moment } from "moment";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import moment from "moment";
 import { useRouter } from "next/router";
+import _ from "lodash";
 
 const ListTours: NextPage = () => {
   const { t, i18n } = useTranslation("common");
@@ -129,7 +130,7 @@ const ListTours: NextPage = () => {
       page: value?.page || data?.meta?.page || 1,
       keyword: keyword,
       dateSearch: dateStart?.toDate() || value?.dateSearch,
-      sort: tourFilter || -1,
+      sort: tourFilter,
     };
     if (value?.keyword !== undefined) {
       params.keyword = value.keyword || undefined;
@@ -211,7 +212,11 @@ const ListTours: NextPage = () => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword, dateStart, tourFilter]);
+  }, [dateStart, tourFilter]);
+
+  console.log(data?.data, "----");
+
+  useEffect(() => {}, [data?.data]);
 
   return (
     <>
@@ -365,6 +370,8 @@ const ListTours: NextPage = () => {
                         commune={tour?.commune?.name}
                         district={tour?.district?.name}
                         city={tour?.city?.name}
+                        minPrice={tour?.minPrice}
+                        maxPrice={tour?.maxPrice}
                         price={
                           tour?.tourOnSales.length &&
                           tour?.tourOnSales[0]?.adultPrice
@@ -376,6 +383,12 @@ const ListTours: NextPage = () => {
                         rate={Math.floor(tour?.rate)}
                         numberOfReviewers={tour?.numberOfReviewer}
                         isDelete={tour.isDeleted}
+                        tourOnSale={
+                          tour?.tourOnSales.length &&
+                          _.sortBy(tour?.tourOnSales, function (o) {
+                            return o.adultPrice;
+                          })
+                        }
                       />
                     ))}
                   </Row>
@@ -403,6 +416,8 @@ const ListTours: NextPage = () => {
                           tour?.tourOnSales.length &&
                           tour?.tourOnSales[0]?.discount
                         }
+                        minPrice={tour?.minPrice}
+                        maxPrice={tour?.maxPrice}
                         rate={Math.floor(tour?.rate)}
                         numberOfReviewers={tour?.numberOfReviewer}
                       />

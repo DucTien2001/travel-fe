@@ -26,6 +26,8 @@ export interface Tour {
   parentLanguage: number,
   language: string;
   numberOfReviewer: number;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 export interface TourPrice {

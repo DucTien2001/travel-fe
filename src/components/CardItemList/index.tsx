@@ -39,6 +39,8 @@ interface Props {
   bookDates?: string;
   isHotel?: boolean;
   numberOfReviewers?: number;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 // eslint-disable-next-line react/display-name
@@ -65,6 +67,8 @@ const ListServices = memo(
     isDelete,
     isHotel,
     numberOfReviewers,
+    minPrice,
+    maxPrice,
   }: Props) => {
     const { t, i18n } = useTranslation("common");
 
@@ -200,10 +204,13 @@ const ListServices = memo(
                     <Grid className={classes.boxPrice}>
                       {discount !== 0 && (
                         <span>
-                          {fCurrency2((price * (100 - discount)) / 100)} VND
+                          {fCurrency2((minPrice * (100 - discount)) / 100)} ~{" "}
+                          {fCurrency2((maxPrice * (100 - discount)) / 100)} VND
                         </span>
                       )}
-                      <p>{fCurrency2(price)} VND</p>
+                      <p>
+                        {fCurrency2(minPrice)} ~ {fCurrency2(maxPrice)} VND
+                      </p>
                     </Grid>
                     <Grid className={classes.boxViewMore}>
                       <p>{t("common_view_more")}</p>

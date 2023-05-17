@@ -270,7 +270,7 @@ const CommissionTour = memo(({}: Props) => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={3}>
+                  <TableCell align="center" colSpan={4}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>

@@ -86,6 +86,18 @@ const TourSearch = memo(() => {
     });
   };
 
+  const handleKeyPress = (e) => {
+    var code = e.keyCode || e.which;
+    if (code === 13) {
+      router.push({
+        pathname: "/listTour",
+        search: `?keyword=${keyword || ""}&dateSearch=${
+          dateStart?.format("YYYY-MM-DD") || ""
+        }`,
+      });
+    }
+  };
+
   return (
     <>
       <Grid>
@@ -104,6 +116,7 @@ const TourSearch = memo(() => {
               autoComplete="off"
               value={keyword || ""}
               onChange={onSearch}
+              onKeyPress={handleKeyPress}
             />
           </Grid>
           <Grid xs={6} item className={classes.boxItem}>
@@ -122,6 +135,7 @@ const TourSearch = memo(() => {
               value={dateStart ? dateStart : ""}
               initialValue={dateStart ? dateStart : ""}
               _onChange={(e) => onSearchDate(e)}
+              onKeyPress={handleKeyPress}
             />
           </Grid>
         </Grid>

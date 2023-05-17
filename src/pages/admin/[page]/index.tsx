@@ -122,7 +122,7 @@ const Admin = memo(({ ...props }: PropTypes) => {
           >
             <NavLink className={renderClass("commissions")}>
               <MonetizationOnIcon />
-              <span>{t("admin_management_navbar_statistic")}</span>
+              <span>{t("admin_management_navbar_commission")}</span>
             </NavLink>
           </NavItem>
           <span>{t("admin_management_navbar_statistic")}</span>
