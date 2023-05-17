@@ -239,6 +239,7 @@
   "payment_history_page_search": "Search...",
   "payment_history_page_tour_invoice_no": "Invoice no.",
   "payment_history_page_tour_tour_name": "Tour name",
+  "payment_history_page_tour_departure_date": "Departure date",
   "payment_history_page_tour_booking_date": "Booking date",
   "payment_history_page_tour_total_bill": "Total bill",
   "payment_history_page_tour_status_payment": "Status payment",
