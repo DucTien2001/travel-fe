@@ -121,7 +121,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
     (state: ReducerType) => state.normal
   );
 
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
   const [tourBill, setTourBill] = useState<TourBill>(null);
   const [tour, setTour] = useState<Tour>();
   const [openPopupDetailTour, setOpenPopupDetailTour] = useState(false);

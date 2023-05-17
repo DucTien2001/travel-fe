@@ -215,6 +215,15 @@ export const API = {
       DEFAULT: "/v1.0/admin/commission",
       GET_ID: "/v1.0/admin/commission/:id",
     },
+    STATISTIC: {
+      TOUR: {
+        DEFAULT: "/v1.0/admin/tour-bill/statistic",
+        GET_TOUR: "/v1.0/admin/tour-bill/statistic/tour/:id",
+        GET_TOUR_ON_SALE_BILL:
+          "/v1.0/admin/tour-bill/statistic/tour-on-sale/get-bills/:id",
+        GET_TOUR_ON_SALE: "/v1.0/admin/tour-bill/statistic/tour-on-sale/:id",
+      },
+    },
     COMMENT: {
       HOTEL_COMMENT: {
         GET_COMMENT_NEED_DELETE:

@@ -92,7 +92,6 @@ const ListServices = memo(
             <a>
               <Grid
                 sx={{
-                  boxShadow: "var(--box-shadow-100)",
                   borderTopRightRadius: "10px",
                   borderTopLeftRadius: "10px",
                 }}
@@ -106,7 +105,7 @@ const ListServices = memo(
                     backgroundColor: "var(--white-color)",
                     borderBottomLeftRadius: "10px",
                     borderBottomRightRadius: "10px",
-                    boxShadow: "var(--bui-shadow-100)",
+                    boxShadow: "var(--box-shadow-100)",
                     minHeight: "225px",
                     flexGrow: "1",
                   }}
@@ -122,25 +121,23 @@ const ListServices = memo(
                   <Grid className={classes.boxTitle}>
                     <p>{title}</p>
                   </Grid>
-                  <Grid className={classes.boxTitle}>
-                    {rate !== 0 && (
-                      <Grid className={classes.boxReview}>
-                        <Stars numberOfStars={rate} />
-                      </Grid>
-                    )}
-                  </Grid>
                   <Grid sx={{ paddingTop: "28px" }}>
-                    {rate !== 0 && (
-                      <Grid className={classes.boxReview}>
-                        <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
-                        <span>
-                          {rate} {getRateComment(rate)}{" "}
-                          <span className={classes.numberOfReviews}>
-                            | {numberOfReviewers} {t("common_reviews")}
+                    <Grid className={classes.boxReview}>
+                      {rate !== 0 && (
+                        <>
+                          <FontAwesomeIcon
+                            icon={faLocationDot}
+                          ></FontAwesomeIcon>
+                          <span>
+                            {rate} {getRateComment(rate)}{" "}
+                            <span className={classes.numberOfReviews}>
+                              | {numberOfReviewers} {t("common_reviews")}
+                            </span>
                           </span>
-                        </span>
-                      </Grid>
-                    )}
+                        </>
+                      )}
+                    </Grid>
+
                     <Grid className={classes.boxPrice}>
                       {discount !== 0 && <span>{fCurrency2(price)}VND</span>}
                       <p>{fCurrency2((price * (100 - discount)) / 100)} VND</p>

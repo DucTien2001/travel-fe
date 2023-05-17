@@ -27,36 +27,25 @@ import InputDatePicker from "components/common/inputs/InputDatePicker";
 import Button, { BtnType } from "components/common/buttons/Button";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-interface FormSearch {
-  tour?: string;
-  startTime?: Date;
-}
+import { DataPagination } from "models/general";
+import { NormalGetTours, Tour } from "models/tour";
+import { useDispatch } from "react-redux";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { TourService } from "services/normal/tour";
+import { Moment } from "moment";
+import useDebounce from "hooks/useDebounce";
+import { useRouter } from "next/router";
 
 // eslint-disable-next-line react/display-name
 const TourSearch = memo(() => {
   const { t, i18n } = useTranslation("common");
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const schema = useMemo(() => {
-    return yup.object().shape({
-      tour: yup.string().required("Content search is required"),
-      startTime: yup.date().required("Date search is required"),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    control,
-    getValues,
-    watch,
-  } = useForm<FormSearch>({
-    resolver: yupResolver(schema),
-    mode: "onChange",
-  });
+  const [data, setData] = useState<DataPagination<Tour>>();
+  const [keyword, setKeyword] = useState<string>("");
+  const [dateStart, setDateStart] = useState<Moment>(null);
 
   const [focus, setFocus] = useState(false);
   const [recentSearch, setRecentSearch] = useState([]);
@@ -68,21 +57,9 @@ const TourSearch = memo(() => {
     });
   };
 
-  const watchSearch = watch("tour");
-
   const yesterday = moment().subtract(1, "day");
   const disablePastDt = (current) => {
     return current.isAfter(yesterday);
-  };
-
-  const handleKeyPress = (e) => {
-    var code = e.keyCode || e.which;
-    if (code === 13) {
-      //   const data = window.localStorage.setItem("")
-      if (getValues("tour") !== "" || getValues("tour") !== " ") {
-        addRecentSearch(getValues("tour"));
-      }
-    }
   };
 
   const onFocus = () => {
@@ -92,13 +69,26 @@ const TourSearch = memo(() => {
     setFocus(false);
   };
 
-  const _onSubmit = () => {
-    // console.log(getValues("tour"));
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+  };
+
+  const onSearchDate = (e) => {
+    setDateStart(moment(e?._d));
+  };
+
+  const onSubmitSearch = () => {
+    router.push({
+      pathname: "/listTour",
+      search: `?keyword=${keyword || ""}&dateSearch=${
+        dateStart?.format("YYYY-MM-DD") || ""
+      }`,
+    });
   };
 
   return (
     <>
-      <Grid component="form" onSubmit={handleSubmit(_onSubmit)}>
+      <Grid>
         <Grid container className={classes.root}>
           <Grid item xs={6} className={classes.boxItem}>
             <p className={classes.titleInput}>
@@ -111,11 +101,9 @@ const TourSearch = memo(() => {
               )}
               name="tour"
               startAdornment={<FontAwesomeIcon icon={faSearch} />}
-              inputRef={register("tour")}
-              onKeyPress={handleKeyPress}
               autoComplete="off"
-              onFocus={onFocus}
-              onBlur={onBlur}
+              value={keyword || ""}
+              onChange={onSearch}
             />
           </Grid>
           <Grid xs={6} item className={classes.boxItem}>
@@ -127,21 +115,23 @@ const TourSearch = memo(() => {
               placeholder={t(
                 "landing_page_section_search_tour_input_start_time"
               )}
-              name="startTime"
               dateFormat="DD/MM/YYYY"
               timeFormat={false}
+              closeOnSelect
               isValidDate={disablePastDt}
-              inputRef={register("startTime")}
+              value={dateStart ? dateStart : ""}
+              initialValue={dateStart ? dateStart : ""}
+              _onChange={(e) => onSearchDate(e)}
             />
           </Grid>
         </Grid>
         <Grid className={classes.boxItemButton}>
-          <Button btnType={BtnType.Secondary} type="submit">
+          <Button btnType={BtnType.Secondary} onClick={onSubmitSearch}>
             <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
             {t("common_search")}
           </Button>
         </Grid>
-        {focus && (
+        {/* {focus && (
           <Grid className={classes.recentSearchBox}>
             <Grid
               className={classes.recentSearch}
@@ -163,76 +153,7 @@ const TourSearch = memo(() => {
               </div>
             </Grid>
           </Grid>
-        )}
-        {/* <Grid className={classes.boxSuggest}>
-          <h4>Local Destinations to Explore</h4>
-          <p>Get ready to discover the best places on our radar</p>
-          <Swiper
-            slidesPerView={isMobile ? 1 : 4}
-            spaceBetween={10}
-            slidesPerGroup={isMobile ? 1 : 4}
-            loop={true}
-            loopFillGroupWithBlank={true}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            modules={[Pagination, Navigation]}
-            className={clsx("mySwiper", classes.swiper)}
-          >
-            <SwiperSlide>
-              <Col>
-                <Grid className={classes.itemSuggest}>
-                  <div>
-                    <img src={images.bgUser.src} alt="anh"></img>
-                  </div>
-
-                  <p>Nha Trang</p>
-                </Grid>
-              </Col>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Col>
-                <Grid className={classes.itemSuggest}>
-                  <div>
-                    <img src={images.bgUser.src} alt="anh"></img>
-                  </div>
-
-                  <p>Nha Trang</p>
-                </Grid>
-              </Col>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Col>
-                <Grid className={classes.itemSuggest}>
-                  <div>
-                    <img src={images.bgUser.src} alt="anh"></img>
-                  </div>
-
-                  <p>Nha Trang</p>
-                </Grid>
-              </Col>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Col>
-                <Grid className={classes.itemSuggest}>
-                  <div>
-                    <img src={images.bgUser.src} alt="anh"></img>
-                  </div>
-
-                  <p>Nha Trang</p>
-                </Grid>
-              </Col>
-            </SwiperSlide>
-          </Swiper>
-          <Grid className={classes.itemSuggest}>
-            <div>
-              <img src={images.bgUser.src} alt="anh"></img>
-            </div>
-
-            <p>Nha Trang</p>
-          </Grid>
-        </Grid> */}
+        )} */}
       </Grid>
     </>
   );

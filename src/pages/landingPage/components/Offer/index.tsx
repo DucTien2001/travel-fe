@@ -25,23 +25,15 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import { Card, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 
 // eslint-disable-next-line react/display-name
 const OfferComponent = memo(() => {
-  const { allTours, allHotels } = useSelector(
-    (state: ReducerType) => state.normal
-  );
+  const router = useRouter();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const { t, i18n } = useTranslation("common");
 
-  const listBestSeller = allTours.filter((item) => {
-    return item.discount;
-  });
-
-  const listHotelLove = allHotels.filter((item) => {
-    return item?.rate >= 4;
-  });
+  const [keyword, setKeyword] = useState("");
 
   return (
     <>
@@ -52,43 +44,106 @@ const OfferComponent = memo(() => {
           </h3>
           <Grid container spacing={1} className={classes.containerBoxCard}>
             <Grid item xs={5} sx={{ height: "100%", paddingBottom: "8px" }}>
-              <Card className={clsx(classes.card6)}>
+              <Card
+                className={clsx(classes.card6)}
+                onClick={() => {
+                  router.push({
+                    pathname: "/listTour",
+                    search: `?keyword=Phu Quoc
+                    `,
+                  });
+                }}
+              >
                 {t("landing_page_section_offer_title_Phu_Quoc")}
               </Card>
             </Grid>
             <Grid item xs={7} container spacing={1} sx={{ height: "100%" }}>
               <Grid xs={4} className={classes.col4} item container spacing={1}>
                 <Grid xs={8} item className={classes.col4Long}>
-                  <Card className={clsx(classes.card4Long)}>
+                  <Card
+                    className={clsx(classes.card4Long)}
+                    onClick={() => {
+                      router.push({
+                        pathname: "/listTour",
+                        search: `?keyword=Da Nang
+                                      `,
+                      });
+                    }}
+                  >
                     {t("landing_page_section_offer_title_Da_Nang")}
                   </Card>
                 </Grid>
                 <Grid xs={4} item className={classes.col4Short}>
-                  <Card className={clsx(classes.card4Short)}>
+                  <Card
+                    className={clsx(classes.card4Short)}
+                    onClick={() => {
+                      router.push({
+                        pathname: "/listTour",
+                        search: `?keyword=Nha Trang
+                        `,
+                      });
+                    }}
+                  >
                     {t("landing_page_section_offer_title_Nha_Trang")}
                   </Card>
                 </Grid>
               </Grid>
               <Grid xs={4} className={classes.col4} item container spacing={1}>
                 <Grid xs={6} item className={classes.col4Long}>
-                  <Card className={clsx(classes.card41Equal)}>
+                  <Card
+                    className={clsx(classes.card41Equal)}
+                    onClick={() => {
+                      router.push({
+                        pathname: "/listTour",
+                        search: `?keyword=Ha Long Bay
+                        `,
+                      });
+                    }}
+                  >
                     {t("landing_page_section_offer_title_Ha_Long_Bay")}
                   </Card>
                 </Grid>
                 <Grid xs={6} item className={classes.col4Short}>
-                  <Card className={clsx(classes.card42Equal)}>
+                  <Card
+                    className={clsx(classes.card42Equal)}
+                    onClick={() => {
+                      router.push({
+                        pathname: "/listTour",
+                        search: `?keyword=Da Lat
+                        `,
+                      });
+                    }}
+                  >
                     {t("landing_page_section_offer_title_Da_Lat")}
                   </Card>
                 </Grid>
               </Grid>
               <Grid xs={4} className={classes.col4} item container spacing={1}>
                 <Grid xs={4} item className={classes.col4Long}>
-                  <Card className={clsx(classes.card41Short)}>
+                  <Card
+                    className={clsx(classes.card41Short)}
+                    onClick={() => {
+                      router.push({
+                        pathname: "/listTour",
+                        search: `?keyword=Sa Pa
+                        `,
+                      });
+                    }}
+                  >
                     {t("landing_page_section_offer_title_Sa_Pa")}
                   </Card>
                 </Grid>
                 <Grid xs={8} item className={classes.col4Short}>
-                  <Card className={clsx(classes.card41Long)}>
+                  <Card
+                    className={clsx(classes.card41Long)}
+                    onClick={() => {
+                      router.push({
+                        pathname: "/listTour",
+                        search: `?keyword=Hue
+                                          `,
+                      });
+                    }}
+                  >
                     {t("landing_page_section_offer_title_Hue")}
                   </Card>
                 </Grid>

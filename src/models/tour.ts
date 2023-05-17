@@ -68,6 +68,8 @@ export interface ScheduleItem {
     take: number;
     page: number;
     keyword?: string;
+    dateSearch?: Date;
+    sort?: number; 
   }
   export interface Image {
     altText: string;

@@ -13,7 +13,7 @@
 }
 .datePickerInput {
   [class~="form-control"] {
-    padding: 12px 12px 12px 41px !important;
+    padding: 13px 12px 12px 41px !important;
   }
   [class~=rdtDay] {
     color: var(--text-color);
@@ -29,7 +29,7 @@
         width: 100%;
         min-width: 100px;
         background-color: transparent;
-        border: 1px solid #e3e3e3;
+        border: 1px solid #c4c4c4;
         border-radius: 4px;
         color: #2c2c2c;
         height: auto;
@@ -76,7 +76,7 @@
   }
   .icon {
     position: absolute;
-    top: 12px;
+    top: 14px;
     left: 14px;
     z-index: 10;
     svg {

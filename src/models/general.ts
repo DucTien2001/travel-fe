@@ -156,6 +156,18 @@ export const langOptions: OptionItem<string>[] = [
   }
 ]
 
+export enum ESortOption {
+  LOWEST_PRICE = 0,
+  HIGHEST_PRICE = 1,
+  HIGHEST_RATE = 2,
+}
+
+export const sortOption = [
+  { id: 1, name: "LOWEST PRICE", value: ESortOption.LOWEST_PRICE, translation: "sort_option_title_lowest_price" },
+  { id: 2, name: "HIGHEST PRICE", value: ESortOption.HIGHEST_PRICE, translation: "sort_option_title_highest_price"},
+  { id: 3, name: "HIGHEST RATE", value: ESortOption.HIGHEST_RATE, translation: "sort_option_title_highest_rate"},
+]
+
 export interface SortItem {
   sortedField: string;
   isDescending: boolean;
