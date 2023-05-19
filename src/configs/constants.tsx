@@ -36,6 +36,10 @@ export const API = {
       DEFAULT: "/v1.0/tour",
       DETAIL_TOUR: "/v1.0/tour/:id",
     },
+    STAY: {
+      DEFAULT: "/v1.0/stay",
+      DETAIL_STAY: "/v1.0/stay/:id",
+    },
     TOUR_SCHEDULE: {
       DEFAULT: "/v1.0/tour-schedule",
       GET_TOUR_SCHEDULE: "/v1.0/tour-schedule/:tourId",
@@ -166,8 +170,16 @@ export const API = {
       STOP_WORKING: "/v1.0/hotel/temporarily-stop-working/:id",
       WORK_AGAIN: "/v1.0/hotel/work-again/:id",
     },
+    STAY: {
+      DEFAULT: "/v1.0/enterprise/stay",
+      GET_STAY: "/v1.0/enterprise/stay/:id",
+      DELETE_STAY: "/v1.0/enterprise/stay/:id",
+    },
     ROOM: {
-      CREATE_ROOM: "/v1.0/room/create",
+      DEFAULT: "/v1.0/enterprise/room/",
+      GET_ROOM: "/v1.0/enterprise/room/:id",
+
+      CREATE_ROOM: "/v1.0/enterprise/room/",
       GET_ALL_ROOM: "/v1.0/room/get-all-rooms/:id",
       UPDATE_INFORMATION: "/v1.0/room/update-information/:id",
       UPDATE_PRICE: "/v1.0/room/update-price/:id",
@@ -179,6 +191,10 @@ export const API = {
       UPDATE_ROOM_OTHER_PRICE: "/v1.0/room-other-price/update/:id",
       DELETE_ROOM_OTHER_PRICE: "/v1.0/room-other-price/delete/:id",
       GET_ROOMS_AVAILABLE: "/v1.0/room/get-rooms-available",
+    },
+    ROOM_OTHER_PRICE: {
+      DEFAULT: "/v1.0/enterprise/room-other-price/",
+      GET_ROOM_OTHER_PRICE: "/v1.0/enterprise/room-other-price/:id",
     },
     TOUR_BILL: {
       DEFAULT: "/v1.0/enterprise/tour-bill",

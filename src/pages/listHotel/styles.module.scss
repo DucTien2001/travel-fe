@@ -80,6 +80,12 @@
           }
     }
 }
+.searchControlWrapper {
+    display: flex;
+    .inputSearchDate {
+        margin-left: 14px;
+    }
+}
 .boxResult {
     display: flex;
     background-color: var(--background-container-color);

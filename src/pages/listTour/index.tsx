@@ -214,10 +214,6 @@ const ListTours: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateStart, tourFilter]);
 
-  console.log(data?.data, "----");
-
-  useEffect(() => {}, [data?.data]);
-
   return (
     <>
       <SectionHeader

@@ -27,6 +27,7 @@ import {
 import { TourService } from "services/enterprise/tour";
 import { VoucherService } from "services/enterprise/voucher";
 import { FindAll, Voucher } from "models/enterprise/voucher";
+import { FindAll as FindAllStay, Stay } from "models/enterprise/stay";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import { Controller, useForm } from "react-hook-form";
 import ErrorMessage from "components/common/texts/ErrorMessage";
@@ -48,6 +49,7 @@ import moment from "moment";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
 import InputSelect from "components/common/inputs/InputSelect";
 import { getDiscountType } from "utils/getOption";
+import { StayService } from "services/enterprise/stay";
 
 export interface VoucherForm {
   startTime: Date;
@@ -78,12 +80,17 @@ const AddOrEditVoucher = memo((props: Props) => {
   }
 
   const [dataTour, setDataTour] = useState<DataPagination<ETour>>();
+  const [dataStay, setDataStay] = useState<DataPagination<Stay>>();
   const [voucher, setVoucher] = useState<Voucher>(null);
   const [dataVoucher, setDataVoucher] = useState<DataPagination<Voucher>>();
   const [anchorElMenuChooseTour, setAnchorElMenuChooseTour] =
     useState<null | HTMLElement>(null);
+  const [anchorElMenuChooseStay, setAnchorElMenuChooseStay] =
+    useState<null | HTMLElement>(null);
   const [tourSelected, setTourSelected] = useState<number[]>([]);
   const [isEmptyTourSelect, setIsEmptyTourSelect] = useState(false);
+  const [staySelected, setStaySelected] = useState<number[]>([]);
+  const [isEmptyStaySelect, setIsEmptyStaySelect] = useState(false);
 
   const schema = useMemo(() => {
     return yup.object().shape({
@@ -207,7 +214,7 @@ const AddOrEditVoucher = memo((props: Props) => {
             )
           )
           .notRequired()
-          .transform((_, val) => (val !== "" ? Number(val) : null)),
+          .transform((value) => (isNaN(value) ? undefined : value)),
         otherwise: yup
           .number()
           .typeError(
@@ -389,6 +396,58 @@ const AddOrEditVoucher = memo((props: Props) => {
     setTourSelected(_tourSelected);
   };
 
+  const fetchStay = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+  }) => {
+    const params: FindAllStay = {
+      take: value?.take || dataStay?.meta?.take || 10,
+      page: value?.page || dataStay?.meta?.page || 1,
+      keyword: "",
+      status: -1,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
+    }
+    dispatch(setLoading(true));
+    StayService.findAll(params)
+      .then((res) => {
+        setDataStay({
+          data: res.data,
+          meta: res.meta,
+        });
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  const handleClickMenuChooseStay = (
+    voucher: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorElMenuChooseStay(voucher.currentTarget);
+  };
+
+  const handleCloseMenuChooseStay = () => {
+    setAnchorElMenuChooseStay(null);
+  };
+
+  const onSubmitChooseProjectStay = () => {
+    handleCloseMenuChooseStay();
+  };
+
+  const onChangeChooseStay = (item: Stay) => {
+    let _staySelected = [...staySelected];
+    if (_staySelected.includes(item.id)) {
+      _staySelected = _staySelected.filter((it) => it !== item.id);
+    } else {
+      _staySelected.push(item.id);
+    }
+    setStaySelected(_staySelected);
+  };
+
   const onSubmit = (data: VoucherForm) => {
     dispatch(setLoading(true));
     const formData = new FormData();
@@ -422,10 +481,13 @@ const AddOrEditVoucher = memo((props: Props) => {
         formData.append(`tourIds[]`, `${item}`);
       });
     }
-    data.hotelIds?.forEach((item) => {
-      formData.append(`hotelIds[]`, `1`);
-    });
-
+    if (staySelected.length === 0) {
+      setIsEmptyStaySelect(true);
+    } else {
+      staySelected?.forEach((item) => {
+        formData.append(`hotelIds[]`, `${item}`);
+      });
+    }
     if (voucher) {
       VoucherService.update(voucher.id, formData)
         .then(async () => {
@@ -459,12 +521,14 @@ const AddOrEditVoucher = memo((props: Props) => {
         maxDiscount: voucher?.maxDiscount,
       });
       setTourSelected(voucher.tourIds);
+      setStaySelected(voucher.hotelIds);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [voucher]);
 
   useEffect(() => {
     fetchTour();
+    fetchStay();
     fetchVoucher();
   }, []);
 
@@ -610,16 +674,87 @@ const AddOrEditVoucher = memo((props: Props) => {
                 </Menu>
               </Grid>
               <Grid item xs={6}>
-                <InputCreatableSelect
-                  fullWidth
-                  title="Select hotels"
-                  name="hotelIds"
-                  control={control}
-                  selectProps={{
-                    options: [],
-                    placeholder: "-- Select Hotels --",
-                  }}
-                />
+                <p className={classes.titleSelect}>
+                  {t(
+                    "enterprise_management_section_add_or_edit_voucher_select_stay"
+                  )}
+                </p>
+                <Button
+                  sx={{ width: { xs: "100%", sm: "auto" }, maxHeight: "36px" }}
+                  className={classes.selectTourBtn}
+                  btnType={BtnType.Outlined}
+                  onClick={handleClickMenuChooseStay}
+                >
+                  {t(
+                    "enterprise_management_section_add_or_edit_voucher_select_stay"
+                  )}
+                  <KeyboardArrowDown
+                    sx={{
+                      color: "var(--gray-80)",
+                      marginRight: "0px !important",
+                    }}
+                  />
+                </Button>
+                {isEmptyStaySelect && (
+                  <ErrorMessage>
+                    {t(
+                      "enterprise_management_section_add_or_edit_voucher_select_tour_error"
+                    )}
+                  </ErrorMessage>
+                )}
+                <Menu
+                  anchorEl={anchorElMenuChooseStay}
+                  open={Boolean(anchorElMenuChooseStay)}
+                  onClose={handleCloseMenuChooseStay}
+                  sx={{ mt: 1 }}
+                >
+                  <Grid className={classes.menuChooseTour}>
+                    {dataStay?.data.map((item, index) => (
+                      <MenuItem
+                        key={index}
+                        classes={{
+                          root: clsx(classes.rootMenuItemChooseStay),
+                        }}
+                        onClick={() => onChangeChooseStay(item)}
+                      >
+                        <Grid
+                          className={clsx(classes.menuItemFlex, {
+                            [classes.listFlexChecked]: staySelected.includes(
+                              item?.id
+                            ),
+                          })}
+                        >
+                          <Grid>
+                            <InputCheckbox
+                              checked={staySelected.includes(item?.id)}
+                              classes={{ root: classes.rootMenuCheckbox }}
+                            />
+                          </Grid>
+                          <Grid item className={classes.listTextLeft}>
+                            <p>{item.name}</p>
+                          </Grid>
+                        </Grid>
+                      </MenuItem>
+                    ))}
+                  </Grid>
+                  <Grid className={classes.menuChooseTourAction}>
+                    <Button
+                      btnType={BtnType.Outlined}
+                      translation-key="common_cancel"
+                      onClick={handleCloseMenuChooseStay}
+                    >
+                      {t("common_cancel")}
+                    </Button>
+                    <Button
+                      btnType={BtnType.Primary}
+                      translation-key="common_done"
+                      className={classes.btnSave}
+                      onClick={onSubmitChooseProjectStay}
+                    >
+                      {t("common_save")}
+                    </Button>
+                  </Grid>
+                </Menu>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <InputSelect

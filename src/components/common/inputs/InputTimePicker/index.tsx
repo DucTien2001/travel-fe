@@ -55,7 +55,7 @@ const TimePicker = memo(
     return (
       <FormControl className={clsx(classes.root, root)}>
         {title && (
-          <p>
+          <p className={classes.title}>
             {title}
             {optional ? (
               <span className={classes.optional}>

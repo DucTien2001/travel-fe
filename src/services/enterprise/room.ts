@@ -2,8 +2,57 @@ import { API } from "configs/constants";
 import { EGetRoomsAvailable } from "models/enterprise";
 import { ECreateRoomOtherPrice, EditRoomInformation, EditRoomPrice, ICreateRoom } from "models/room";
 import api from "../configApi";
+import { FindAll, FindOne } from "models/enterprise/room";
 
 export class RoomService {
+  static async findAll(data: FindAll): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.ROOM.DEFAULT, { params: data })
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async create(data: FormData): Promise<any> {
+    return await api
+      .post(API.ENTERPRISE.ROOM.DEFAULT, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async getRoom(roomId, data?: FindOne): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.ROOM.GET_ROOM.replace(":id", `${roomId}`), {params: data})
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async update(roomId: number, data?: FormData): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.ROOM.GET_ROOM.replace(":id", `${roomId}`), data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  //--------------------------------------
   static async createRoom(data: ICreateRoom): Promise<any> {
     return await api
       .post(API.ENTERPRISE.ROOM.CREATE_ROOM, data)

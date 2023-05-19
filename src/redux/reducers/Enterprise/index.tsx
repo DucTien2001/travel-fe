@@ -1,6 +1,7 @@
 import produce from "immer";
 import { OptionItem } from "models/general";
 import * as types from "./actionTypes";
+import { CreateStay } from "models/enterprise/stay";
 
 export interface ITour {
   id?: number;
@@ -54,16 +55,19 @@ export interface IRoom {
   hotelId: number;
   isTemporarilyStopWorking?: boolean;
 }
+
 export interface EnterpriseState {
   allTours: ITour[];
   allHotels: IHotel[];
   tourInformation: ITour;
+  stayInformation: CreateStay;
 }
 
 const initial: EnterpriseState = {
   allTours: [],
   allHotels: [],
   tourInformation: null,
+  stayInformation: null,
 };
 
 export const enterpriseReducer = (state = initial, action: any) =>
@@ -77,6 +81,9 @@ export const enterpriseReducer = (state = initial, action: any) =>
         break;
       case types.SET_TOUR_INFORMATION_REDUCER:
         draft.tourInformation = action.data;
+        break;
+      case types.SET_STAY_INFORMATION_REDUCER:
+        draft.stayInformation = action.data;
         break;
       default:
         return state;

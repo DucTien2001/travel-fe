@@ -25,8 +25,6 @@ export enum EActiveNav {
 // eslint-disable-next-line react/display-name
 const TourOnSaleStatistic = memo(
   ({ value, index, tour, lang, handleNextStep }: Props) => {
-    const dispatch = useDispatch();
-    const router = useRouter();
     const { t, i18n } = useTranslation("common");
 
     const [verticalTabs, setVerticalTabs] = React.useState(EActiveNav.Past);

@@ -36,4 +36,6 @@ export class TourOnSaleService {
             return Promise.reject(e?.response?.data);
           });
       }
+
+
 }

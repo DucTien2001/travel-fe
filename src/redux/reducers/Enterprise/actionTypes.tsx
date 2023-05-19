@@ -10,6 +10,10 @@ export const SET_HOTELS_REDUCER = "SET_HOTELS_REDUCER";
 export const GET_TOUR_INFORMATION_REQUEST = "GET_TOUR_INFORMATION_REQUEST";
 export const SET_TOUR_INFORMATION_REDUCER = "SET_TOUR_INFORMATION_REDUCER";
 
+//STAY
+export const GET_STAY_INFORMATION_REQUEST = "GET_STAY_INFORMATION_REQUEST";
+export const SET_STAY_INFORMATION_REDUCER = "SET_STAY_INFORMATION_REDUCER";
+
 // ********** tour **********
 export const getAllTours = (userId: number) => {
   return {
@@ -48,6 +52,21 @@ export const getAllHotels = (userId: number) => {
 export const setAllHotelsReducer = (data: any) => {
   return {
     type: SET_HOTELS_REDUCER,
+    data: data,
+  };
+};
+
+//stay
+export const getStay = (id: number) => {
+  return {
+    type: GET_STAY_INFORMATION_REQUEST,
+    id,
+  };
+};
+
+export const setStayReducer = (data: any) => {
+  return {
+    type: SET_STAY_INFORMATION_REDUCER,
     data: data,
   };
 };

@@ -2,8 +2,23 @@ import { API } from "configs/constants";
 import { ETour, EUpdateTour, IHotel } from "models/enterprise";
 import { ICreateHotel, IUpdateHotel } from "models/hotel";
 import api from "../configApi";
+import { FindAll } from "models/enterprise/stay";
 
 export class HotelService {
+  static async findAll(data: FindAll): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.STAY.DEFAULT, { params: data })
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+
+
+  //--------------------------------------------------------
   static async createHotel(data: ICreateHotel): Promise<any> {
     return await api
       .post(API.ENTERPRISE.HOTEL.CREATE_HOTEL, data)

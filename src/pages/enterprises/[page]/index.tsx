@@ -15,7 +15,7 @@ import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import TourIcon from "@mui/icons-material/Tour";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import Tours from "../components/Tours";
-import Hotels from "../components/Hotels";
+import Stays from "../components/Stays";
 import Vouchers from "../components/Vouchers";
 import Staffs from "../components/Staffs";
 import TourBills from "../components/TourBills";
@@ -33,7 +33,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
   const { t, i18n } = useTranslation("common");
 
   const toursRef = useRef<HTMLDivElement>(null);
-  const hotelsRef = useRef<HTMLDivElement>(null);
+  const staysRef = useRef<HTMLDivElement>(null);
   const vouchersRef = useRef<HTMLDivElement>(null);
   const staffsRef = useRef<HTMLDivElement>(null);
 
@@ -61,10 +61,10 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
-      case "hotels":
-        hotelsRef &&
-          hotelsRef.current &&
-          hotelsRef.current?.scrollIntoView({
+      case "stays":
+        staysRef &&
+          staysRef.current &&
+          staysRef.current?.scrollIntoView({
             behavior: "smooth",
             block: "nearest",
             inline: "center",
@@ -72,7 +72,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
         return (
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
-              <Hotels />
+              <Stays />
             </TabContent>
           </Col>
         );
@@ -155,12 +155,12 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </NavLink>
           </NavItem>
           <NavItem
-            onClick={() => gotoMenu("hotels")}
+            onClick={() => gotoMenu("stays")}
             className={classes.navItem}
           >
-            <NavLink className={renderClass("hotels")}>
+            <NavLink className={renderClass("stays")}>
               <ApartmentIcon />
-              <span ref={hotelsRef}>
+              <span ref={staysRef}>
                 {t("enterprise_management_navbar_hotel")}
               </span>
             </NavLink>

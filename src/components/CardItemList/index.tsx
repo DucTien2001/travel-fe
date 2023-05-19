@@ -24,8 +24,8 @@ interface Props {
   title: string;
   description?: string;
   businessHours?: string[];
-  checkInTime?: string;
-  checkOutTime?: string;
+  checkInTime?: number;
+  checkOutTime?: number;
   contact?: string;
   city?: string;
   district?: string;

@@ -4,7 +4,7 @@ import {
   IGetAllHotelComments,
   IGetAllTourComments,
   IReplyHotelComment,
-  IReplyTourComment,
+  // IReplyTourComment,
   IRequestDeleteHotelComment,
   IRequestDeleteTourComment,
   IUpdateHotelComment,
@@ -23,7 +23,7 @@ export class CommentService {
       });
   }
 
-  static async replyTourComment(commentId: number, data: IReplyTourComment): Promise<any> {
+  static async replyTourComment(commentId: number, data: IGetAllTourComments): Promise<any> {
     return await api
       .put(API.ENTERPRISE.COMMENT.TOUR_COMMENT.REPLY.replace(":id", `${commentId}`), data)
       .then((res) => {

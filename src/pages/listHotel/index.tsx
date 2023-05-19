@@ -37,194 +37,123 @@ import SearchNotFound from "components/SearchNotFound";
 import FilterPanel from "components/FilterPanel";
 import InputSelect from "components/common/inputs/InputSelect";
 import { useTranslation } from "react-i18next";
-
-interface SearchData {
-  location?: string;
-  // departure?: Date;
-  // return?: Date;
-  // numberOfRoom: number;
-  checkOptions?: boolean;
-  sortType?: any;
-}
+import { NormalGetStay, Stay } from "models/stay";
+import { DataPagination, ESortOption, sortOption } from "models/general";
+import { Moment } from "moment";
+import { StayService } from "services/normal/stay";
+import useDebounce from "hooks/useDebounce";
+import { Grid } from "@mui/material";
+import InputSearch from "components/common/inputs/InputSearch";
+import InputDatePicker from "components/common/inputs/InputDatePicker";
+import moment from "moment";
+import { useRouter } from "next/router";
 
 const ListHotels: NextPage = () => {
   const dispatch = useDispatch();
-  const { allHotels } = useSelector((state: ReducerType) => state.normal);
   const { t, i18n } = useTranslation("common");
+  const router = useRouter();
 
-  const [changeViewLayout, setChangeViewLayout] = useState(false);
-  const [listHotels, setListHotels] = useState([]);
-  const [selectedRating, setSelectedRating] = useState(null);
-  const sortType = [
-    { id: 1, name: "Lowest price", value: "Lowest price" },
-    { id: 2, name: "Highest price", value: "Highest price" },
-    { id: 3, name: "Highest rating", value: "Highest rating" },
-  ];
-  const [tags, setTags] = useState([
-    { id: 1, checked: false, label: "Shopping" },
-    { id: 2, checked: false, label: "Sea" },
-    { id: 3, checked: false, label: "Family" },
-    { id: 4, checked: false, label: "Mountain" },
-    { id: 5, checked: false, label: "Trekking" },
-    { id: 6, checked: false, label: "Music" },
-    { id: 7, checked: false, label: "Chill" },
-    { id: 8, checked: false, label: "Eat" },
+  const [data, setData] = useState<DataPagination<Stay>>();
+  const [keyword, setKeyword] = useState<string>("");
+  const [dateStart, setDateStart] = useState<Moment>(null);
+  const [dateEnd, setDateEnd] = useState<Moment>(null);
+  const [numberOfAdult, setNumberOfAdult] = useState(null);
+  const [numberOfChild, setNumberOfChild] = useState(null);
+  const [numberOfRoom, setNumberOfRoom] = useState(null);
+
+  const [stayFilter, setStayFilter] = useState<number>(
+    ESortOption.LOWEST_PRICE
+  );
+
+  const fetchData = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+    startDate?: Date;
+    endDate?: Date;
+  }) => {
+    const params: NormalGetStay = {
+      take: value?.take || data?.meta?.take || 10,
+      page: value?.page || data?.meta?.page || 1,
+      keyword: keyword,
+      startDate: dateStart?.toDate() || value?.startDate,
+      endDate: dateEnd?.toDate() || value?.endDate,
+      sort: stayFilter,
+      numberOfAdult: numberOfAdult || 1,
+      numberOfChildren: numberOfChild || 1,
+      numberOfRoom: numberOfRoom || 1,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
+    }
+    dispatch(setLoading(true));
+    StayService.findAll(params)
+      .then((res) => {
+        setData({
+          data: res.data,
+          meta: res.meta,
+        });
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    _onSearch(e.target.value);
+  };
+
+  const _onSearch = useDebounce(
+    (keyword: string) => fetchData({ keyword, page: 1 }),
+    500
+  );
+
+  const yesterday = moment().subtract(1, "day");
+  const disablePastDt = (current) => {
+    return current.isAfter(yesterday);
+  };
+
+  const onSearchStartDate = (e) => {
+    setDateStart(moment(e?._d));
+  };
+
+  const onSearchEndDate = (e) => {
+    setDateEnd(moment(e?._d));
+  };
+
+  useEffect(() => {
+    if (router.query?.keyword) {
+      setKeyword(String(router.query?.keyword));
+    }
+    if (router.query?.dateStart) {
+      setDateStart(moment(router.query?.dateStart));
+    }
+    if (router.query?.dateEnd) {
+      setDateEnd(moment(router.query?.dateEnd));
+    }
+    if (router.query?.numberOfAdult) {
+      setNumberOfAdult(moment(router.query?.numberOfAdult));
+    }
+    if (router.query?.numberOfChild) {
+      setNumberOfChild(moment(router.query?.numberOfChild));
+    }
+    if (router.query?.numberOfRoom) {
+      setNumberOfRoom(moment(router.query?.numberOfRoom));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query]);
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    dateStart,
+    dateEnd,
+    stayFilter,
+    numberOfAdult,
+    numberOfChild,
+    numberOfRoom,
   ]);
-
-  const schema = useMemo(() => {
-    return yup.object().shape({
-      location: yup.string().notRequired(),
-      sortType: yup.object().required("This field is required"),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language]);
-
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    reset,
-    control,
-    watch,
-    formState: { errors },
-  } = useForm<SearchData>({
-    resolver: yupResolver(schema),
-    mode: "onChange",
-    defaultValues: {
-      sortType: sortType[0],
-    },
-  });
-
-  const clearForm = () => {
-    reset({
-      location: "",
-      checkOptions: false,
-    });
-  };
-
-  const onClearOption = () => {
-    clearForm();
-    getAllHotelsDefault();
-    setTags([
-      { id: 1, checked: false, label: "Shopping" },
-      { id: 2, checked: false, label: "Sea" },
-      { id: 3, checked: false, label: "Family" },
-      { id: 4, checked: false, label: "Mountain" },
-      { id: 5, checked: false, label: "Trekking" },
-      { id: 6, checked: false, label: "Music" },
-      { id: 7, checked: false, label: "Chill" },
-      { id: 8, checked: false, label: "Eat" },
-    ]);
-    setSelectedRating(null);
-  };
-
-  useEffect(() => {
-    setListHotels(allHotels);
-  }, [allHotels]);
-
-  const onChangeViewLayout = () => {
-    setChangeViewLayout(!changeViewLayout);
-  };
-
-  const handleSearch = () => {
-    dispatch(setLoading(true));
-    HotelService.searchLocationHotels(getValues("location"))
-      .then((res) => {
-        setListHotels(res?.data);
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
-  };
-
-  const getAllHotelsDefault = () => {
-    dispatch(setLoading(true));
-    HotelService.getAllHotelsByPage(1)
-      .then((res) => {
-        setListHotels(res?.data);
-      })
-      .catch((e) => {
-        dispatch(setErrorMess(e));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
-  };
-
-  const handleKeyPress = (e) => {
-    var code = e.keyCode || e.which;
-    if (code === 13) {
-      handleSearch();
-    }
-  };
-  const handleSelectRating = (event, value) =>
-    !value ? null : setSelectedRating(value);
-
-  const handleChangeChecked = (id) => {
-    const tagStateList = tags;
-    const changeCheckedTags = tagStateList.map((item) =>
-      item.id === id ? { ...item, checked: !item.checked } : item
-    );
-    setTags(changeCheckedTags);
-  };
-
-  const applyFilters = () => {
-    let updatedList = allHotels;
-    // Rating Filter
-    if (selectedRating) {
-      updatedList = updatedList.filter(
-        (item) => Math.floor(item?.rate) === parseInt(selectedRating)
-      );
-    }
-    //Tag filter
-    const tagsChecked = tags
-      .filter((item) => item.checked)
-      .map((item) => item.label.toLowerCase());
-    if (tagsChecked.length) {
-      updatedList = updatedList.filter((item) =>
-        tagsChecked.every((filterTag) =>
-          item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
-        )
-      );
-    }
-
-    setListHotels(updatedList);
-  };
-
-  const handleChangePage = (e, page: number) => {
-    dispatch(setLoading(true));
-    HotelService.getAllHotelsByPage(page + 1)
-      .then((res) => {
-        setListHotels(res?.data);
-      })
-      .catch((err) => {
-        dispatch(setErrorMess(err));
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
-  };
-  useEffect(() => {
-    HotelService.getAllHotelsByPage(1)
-      .then((res) => {
-        setListHotels(res?.data);
-      })
-      .catch((err) => {
-        dispatch(setErrorMess(err));
-      })
-      .finally(() => {});
-  }, [dispatch]);
-
-  useEffect(() => {
-    applyFilters();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tags, selectedRating]);
-
-  const numberOfPage = Math.ceil(allHotels.length / 9);
-  //sort by
 
   return (
     <>
@@ -252,89 +181,100 @@ const ListHotels: NextPage = () => {
                   <span>{t("list_hotels_header_search_results")}</span>
                 </p>
               </div>
-              <div>
-                <InputTextfield
-                  className={classes.inputSearch}
-                  startAdornment={<FontAwesomeIcon icon={faSearch} />}
-                  placeholder={t("list_hotels_header_search_placeholder")}
-                  name="location"
-                  onKeyPress={handleKeyPress}
-                  inputRef={register("location")}
+              <Grid className={classes.searchControlWrapper}>
+                <InputSearch
+                  placeholder={t("list_tours_header_search_placeholder")}
+                  autoComplete="off"
+                  value={keyword || ""}
+                  onChange={onSearch}
                 />
-              </div>
+                <InputDatePicker
+                  className={classes.inputSearchDate}
+                  placeholder={t(
+                    "landing_page_section_search_tour_input_start_time"
+                  )}
+                  dateFormat="DD/MM/YYYY"
+                  timeFormat={false}
+                  closeOnSelect
+                  isValidDate={disablePastDt}
+                  value={dateStart ? dateStart : ""}
+                  initialValue={dateStart ? dateStart : ""}
+                  _onChange={(e) => onSearchStartDate(e)}
+                />
+                <InputDatePicker
+                  className={classes.inputSearchDate}
+                  placeholder={t(
+                    "landing_page_section_search_tour_input_start_time"
+                  )}
+                  dateFormat="DD/MM/YYYY"
+                  timeFormat={false}
+                  closeOnSelect
+                  isValidDate={disablePastDt}
+                  value={dateEnd ? dateEnd : ""}
+                  initialValue={dateEnd ? dateEnd : ""}
+                  _onChange={(e) => onSearchEndDate(e)}
+                />
+              </Grid>
             </div>
-            <div className={classes.boxResult}>
+            <Grid className={classes.boxResult} container>
               {/* ======================= RESULT DESKTOP ===================== */}
-              <Col xs={2} className={classes.boxControlLayout}>
-                <Button
-                  btnType={BtnType.Primary}
-                  className={classes.btnResetOption}
-                  onClick={onClearOption}
-                >
-                  <FontAwesomeIcon icon={faArrowsRotate} />{" "}
-                  {t("list_hotels_reset_filter")}
-                </Button>
-              </Col>
-              <Col xs={10} className={classes.rowResult}>
-                <div className={classes.controlSelect}>
-                  <h5>{t("list_hotels_sort_by")}: </h5>
-                  <InputSelect
-                    className={classes.inputSelect}
-                    selectProps={{
-                      options: sortType,
-                    }}
-                  />
-                </div>
-                <h5>
-                  {t("list_hotels_result")} <span>{listHotels?.length}</span>
-                </h5>
-              </Col>
-            </div>
+              <Grid className={classes.rowResult} container item xs={10}>
+                <Grid>
+                  <h5>{t("list_tours_sort_by")}: </h5>
+                </Grid>
+                <Grid className={classes.controlSelect} xs={4} item>
+                  <Grid sx={{ width: "100%" }}>
+                    <InputSelect
+                      className={classes.inputSelect}
+                      bindLabel="translation"
+                      selectProps={{
+                        options: sortOption,
+                        placeholder: t("list_tours_sort_by_placeholder"),
+                      }}
+                      onChange={(e) => setStayFilter(e?.value)}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid>
+                  <h5>
+                    {t("list_tours_result")} <span>{data?.data?.length}</span>
+                  </h5>
+                </Grid>
+              </Grid>
+            </Grid>
           </Row>
           <Row className={classes.rowResultBody}>
-            <Col xs={2} className={classes.btnResetWrapper}>
-              <FilterPanel
-                // selectedCategory={selectedCategory}
-                // selectCategory={handleSelectCategory}
-                selectedRating={selectedRating}
-                selectRating={handleSelectRating}
-                tags={tags}
-                changeChecked={handleChangeChecked}
-                // changePrice={handleChangePrice}
-              />
-            </Col>
             <Col xs={10} className={classes.list}>
               <div className={classes.containerListHotel}>
                 {/* ==================== List view ===================== */}
                 <div>
-                  {listHotels.map((hotel, index) => (
+                  {data?.data?.map((stay, index) => (
                     <CardItemList
                       key={index}
                       linkView="listHotel"
                       linkBook="/book/hotel"
-                      id={hotel.id}
-                      src={hotel.images[0]}
-                      title={hotel.name}
-                      description={hotel.description}
-                      checkInTime={hotel.checkInTime}
-                      checkOutTime={hotel.checkOutTime}
-                      // location={hotel.location}
-                      contact={hotel.contact}
-                      // tags={hotel.tags}
-                      rate={Math.floor(hotel?.rate)}
-                      // creator={hotel.creator}
-                      isTemporarilyStopWorking={hotel.isTemporarilyStopWorking}
+                      id={stay.id}
+                      src={stay.images[0]}
+                      title={stay.name}
+                      description={stay.description}
+                      checkInTime={stay.checkInTime}
+                      checkOutTime={stay.checkOutTime}
+                      // location={stay.location}
+                      contact={stay.contact}
+                      // tags={stay.tags}
+                      // rate={Math.floor(stay?.rate)}
+                      // creator={stay.creator}
                       isHotel={true}
                     />
                   ))}
                 </div>
-                {!listHotels?.length && (
+                {!data?.data?.length && (
                   <div>
                     <SearchNotFound mess={t("common_not_found")} />
                   </div>
                 )}
               </div>
-              <Row className={classes.pigination}>
+              {/* <Row className={classes.pigination}>
                 <Pagination>
                   <PaginationItem>
                     <PaginationLink>
@@ -361,7 +301,7 @@ const ListHotels: NextPage = () => {
                     </PaginationLink>
                   </PaginationItem>
                 </Pagination>
-              </Row>
+              </Row> */}
             </Col>
           </Row>
         </Container>

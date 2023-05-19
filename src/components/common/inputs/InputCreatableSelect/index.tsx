@@ -31,7 +31,7 @@ const customStyles = (error?: boolean) => ({
   }),
   valueContainer: (provided) => ({
     ...provided,
-    padding: "4px 16px",
+    padding: "7px 16px",
   }),
   control: (provided: any) => ({
     ...provided,

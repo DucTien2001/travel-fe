@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { Col, Nav, NavItem, NavLink, TabContent } from "reactstrap";
 import classes from "./styles.module.scss";
 import { images } from "configs/images";
-import Hotels from "pages/enterprises/components/Hotels";
+import Stays from "pages/enterprises/components/Stays";
 
 import OfferStaffs from "pages/enterprises/components/Staffs/components/OfferStaffs";
 import { EUserType } from "models/user";
@@ -27,6 +27,7 @@ import PopupTermsAndConditions from "pages/enterprises/components/PopupTermsAndC
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
+import AddOrEditStay from "pages/enterprises/components/Stays/AddOrEditStay";
 
 interface PropTypes {}
 
@@ -37,7 +38,7 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
   const { t, i18n } = useTranslation("common");
 
   const toursRef = useRef<HTMLDivElement>(null);
-  const hotelsRef = useRef<HTMLDivElement>(null);
+  const staysRef = useRef<HTMLDivElement>(null);
   const vouchersRef = useRef<HTMLDivElement>(null);
   const staffsRef = useRef<HTMLDivElement>(null);
 
@@ -83,11 +84,29 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
-      case "hotels":
+      case "stays":
+        if (action === "create-stay") {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <AddOrEditStay />
+              </TabContent>
+            </Col>
+          );
+        }
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <AddOrEditStay stayId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
         return (
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
-              <Hotels />
+              <Stays />
             </TabContent>
           </Col>
         );
@@ -215,12 +234,12 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </NavLink>
           </NavItem>
           <NavItem
-            onClick={() => gotoMenu("hotels")}
+            onClick={() => gotoMenu("stays")}
             className={classes.navItem}
           >
-            <NavLink className={renderClass("hotels")}>
+            <NavLink className={renderClass("stays")}>
               <ApartmentIcon />
-              <span ref={hotelsRef}>
+              <span ref={staysRef}>
                 {t("enterprise_management_navbar_hotel")}
               </span>
             </NavLink>
