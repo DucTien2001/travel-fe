@@ -41,7 +41,11 @@ const RoomOtherPrice = memo(({ room, lang, handleNextStep }: Props) => {
     <>
       <Grid className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>Special day</h3>
+          <h3>
+            {t(
+              "enterprise_management_section_stay_header_table_room_other_price_title"
+            )}
+          </h3>
           {room && (
             <Nav tabs className={classes.nav}>
               <NavItem>
