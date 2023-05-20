@@ -41,6 +41,8 @@
     margin-top: 14px;
     display: flex;
     flex-direction: column;
+    background-color: rgb(236, 248, 255);
+    padding: 8px 16px;
 }
 .titleVoucher {
     display: flex;
@@ -121,6 +123,7 @@
 }
 .inputCoupon {
     display: flex;
+    margin-top: 0px;
 }
 
 .btnUseCoupon {
