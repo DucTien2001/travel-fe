@@ -41,6 +41,7 @@ const customStyles = (
     color: "var(--eerie-black)",
     padding: "14px 15px",
     cursor: state.isDisabled ? "not-allowed" : "pointer",
+    zIndex: "10 !important",
     background:
       state.isSelected || state.isFocused ? "var(--gray-10)" : "#FFFFFF",
   }),
@@ -74,7 +75,7 @@ const customStyles = (
     background: state.isDisabled ? "var(--gray-5)" : "#FFFFFF",
     border: state.isFocused
       ? "1px solid var(--primary-light-color)"
-      : "1px solid #e3e3e3",
+      : "1px solid #c4c4c4",
     // borderColor:"var(--gray-40)",
     svg: {
       color: state.isFocused ? "" : "var(--gray-60)",

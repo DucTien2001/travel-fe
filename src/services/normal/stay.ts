@@ -13,4 +13,14 @@ export class StayService {
         return Promise.reject(e?.response?.data);
       });
   }
+  static async findOne(id: number): Promise<any> {
+    return await api
+      .get(API.NORMAL.STAY.DETAIL_STAY.replace(":id", `${id}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
 }

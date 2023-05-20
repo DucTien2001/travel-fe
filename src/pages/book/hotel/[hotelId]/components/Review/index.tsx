@@ -43,25 +43,54 @@ import { IUserInformationBookRoom } from "redux/reducers/Normal";
 import { sumPrice } from "utils/totalPrice";
 import moment from "moment";
 import { PAYMENT_HOTEL_SECTION } from "models/payment";
+import { RoomBillConfirm } from "models/roomBill";
+import { fDuration, fTime } from "utils/formatTime";
+import { StayService } from "services/normal/stay";
+import { Stay } from "models/stay";
+import _ from "lodash";
 
 interface Props {
-  userInformation?: IUserInformationBookRoom;
+  dataRoomBook?: RoomBillConfirm;
+  handleChangeStep?: () => void;
 }
-const Review = memo(({ userInformation }: Props) => {
-  const { roomBillConfirm } = useSelector((state: ReducerType) => state.normal);
+const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
+  const { t, i18n } = useTranslation("common");
+  const router = useRouter();
+  const dispatch = useDispatch();
 
+  const [stay, setStay] = useState<Stay>(null);
   const [open, setOpen] = useState(true);
   const [readMore, setReadMore] = useState(false);
 
   const totalPrice = [];
 
-  roomBillConfirm?.rooms.forEach((room) => {
-    room?.priceDetail.map((price) => {
+  dataRoomBook?.rooms.forEach((room) => {
+    room?.prices.map((price) => {
       const _price =
         (price?.price * room?.amount * (100 - room?.discount)) / 100;
       totalPrice.push(_price);
     });
   });
+
+  const policyType = useMemo(() => {
+    return _.toArray(_.groupBy(stay?.stayPolicies, "policyType"));
+  }, [stay]);
+
+  useEffect(() => {
+    if (router) {
+      StayService.findOne(Number(router.query.hotelId.slice(1)))
+        .then((res) => {
+          setStay(res.data);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
 
   return (
     <Grid component="form">
@@ -75,10 +104,11 @@ const Review = memo(({ userInformation }: Props) => {
           <Grid xs={8} item className={classes.leftPanel}>
             <Grid container item spacing={2}>
               <Grid item xs={12}>
-                <h4 className={classes.title}>Please Review Your Booking </h4>
+                <h4 className={classes.title}>
+                  {t("review_page_title_review")}{" "}
+                </h4>
                 <p className={classes.subTitle}>
-                  Please review your booking details before continuing to
-                  payment
+                  {t("review_page_sub_title_review")}
                 </p>
 
                 <Grid
@@ -97,47 +127,54 @@ const Review = memo(({ userInformation }: Props) => {
                     }}
                   >
                     <Grid item xs={3} className={classes.boxImgHotel}>
-                      <img
-                        src={roomBillConfirm?.hotel?.images[0]}
-                        alt="anh"
-                      ></img>
+                      <img src={dataRoomBook?.stay?.images[0]} alt="anh"></img>
                     </Grid>
                     <Grid item xs={9}>
                       <Grid className={classes.boxProductName}>
                         <FontAwesomeIcon icon={faHotel}></FontAwesomeIcon>
-                        <p>{roomBillConfirm?.hotel?.name}</p>
+                        <p>{dataRoomBook?.stay?.name}</p>
                       </Grid>
                       <Grid container spacing={2} sx={{ paddingTop: "16px" }}>
                         <Grid item xs={4} className={classes.boxInforTime}>
-                          <p className={classes.textTitle}>Check-in</p>
+                          <p className={classes.textTitle}>
+                            {t("book_page_booking_check_in")}
+                          </p>
                           <p className={classes.textDate}>
-                            {moment(roomBillConfirm?.startDate).format(
+                            {moment(dataRoomBook?.startDate).format(
                               "DD/MM/YYYY"
                             )}
                           </p>
                           <p className={classes.textTime}>
-                            From {roomBillConfirm?.hotel?.checkInTime}
+                            From {fTime(dataRoomBook?.stay?.checkInTime)}
                           </p>
                         </Grid>
                         <Grid item xs={4} className={classes.boxInforTime}>
-                          <p className={classes.textTitle}>Check-out</p>
+                          <p className={classes.textTitle}>
+                            {t("book_page_booking_check_out")}
+                          </p>
                           <p className={classes.textDate}>
-                            {moment(roomBillConfirm?.endDate).format(
-                              "DD/MM/YYYY"
-                            )}
+                            {moment(dataRoomBook?.endDate).format("DD/MM/YYYY")}
                           </p>
                           <p className={classes.textTime}>
-                            Before {roomBillConfirm?.hotel?.checkOutTime}
+                            Before {fTime(dataRoomBook?.stay?.checkOutTime)}
                           </p>
                         </Grid>
                         <Grid item xs={4} className={classes.boxInforTime}>
-                          <p className={classes.textTitle}>Duration</p>
-                          <p className={classes.textDate}>1 Night</p>
+                          <p className={classes.textTitle}>
+                            {t("book_page_booking_duration")}
+                          </p>
+                          <p className={classes.textDate}>
+                            {fDuration(
+                              dataRoomBook?.startDate,
+                              dataRoomBook?.endDate
+                            )}{" "}
+                            {t("review_page_night")}
+                          </p>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                  {roomBillConfirm?.rooms.map((room, index) => (
+                  {dataRoomBook?.rooms.map((room, index) => (
                     <Grid sx={{ paddingTop: "16px" }} key={index}>
                       <Grid className={classes.boxNameRoom}>
                         <p>{room?.title}</p>
@@ -146,25 +183,39 @@ const Review = memo(({ userInformation }: Props) => {
                         <Grid xs={6} item>
                           <Grid className={classes.boxInfoPerson} container>
                             <Grid item xs={6}>
-                              <p>Guest per room</p>
+                              <p>{t("review_page_guest_per_room")}</p>
                             </Grid>
                             <Grid item xs={6}>
-                              <span>2 Guest(s)</span>
+                              <span>
+                                {room?.numberOfAdult}{" "}
+                                {t("book_page_section_price_detail_adult")},{" "}
+                                {room?.numberOfChildren}{" "}
+                                {t("book_page_section_price_detail_child")}{" "}
+                              </span>
                             </Grid>
                           </Grid>
                           <Grid className={classes.boxInfoPerson} container>
                             <Grid item xs={6}>
-                              <p>Number of bed</p>
+                              <p>
+                                {t(
+                                  "enterprise_management_section_add_or_edit_stay_tab_list_header_number_of_bed"
+                                )}
+                              </p>
                             </Grid>{" "}
                             <Grid>
-                              <span>{room?.numberOfBed} bed(s)</span>
+                              <span>
+                                {room?.numberOfBed}{" "}
+                                {t(
+                                  "enterprise_management_section_add_or_edit_stay_tab_list_body_bed"
+                                )}
+                              </span>
                             </Grid>
                           </Grid>
                         </Grid>
                         <Grid xs={6} item>
                           <Grid container>
                             <Grid item xs={4} className={classes.boxImgRoom}>
-                              <img src={images.bgUser.src} alt="anh"></img>
+                              <img src={room?.images[0]} alt="anh"></img>
                             </Grid>
                             <Grid item sx={{ paddingLeft: "14px" }} xs={8}>
                               <Grid className={classes.boxService}>
@@ -196,7 +247,9 @@ const Review = memo(({ userInformation }: Props) => {
                       borderBottom: "1px solid var(--gray-20)",
                     }}
                   >
-                    <h5 className={classes.title}>Hotel & Room Policy</h5>
+                    <h5 className={classes.title}>
+                      {t("review_page_hotel_policy")}
+                    </h5>
                   </Grid>
                   <Grid
                     sx={{
@@ -210,7 +263,7 @@ const Review = memo(({ userInformation }: Props) => {
                   >
                     <Grid className={classes.boxSubTitle}>
                       <ReceiptLong />
-                      <p>Cancellation & Reschedule Policy</p>
+                      <p>{t("review_page_section_cancellation_sub_title")}</p>
                     </Grid>
                     <Grid>
                       {open ? (
@@ -221,10 +274,81 @@ const Review = memo(({ userInformation }: Props) => {
                     </Grid>
                   </Grid>
                   <Collapse in={open} timeout="auto" unmountOnExit>
-                    <Grid className={classes.boxContentPolicy}>
-                      <p>
-                        This reservation is non-refundable & non-reschedulable.
-                      </p>
+                    <Grid className={classes.rootOverview}>
+                      <Grid className={classes.boxTitle}>
+                        <p>
+                          {t(
+                            "review_page_section_cancellation_tour_reschedule_refund_title"
+                          )}
+                        </p>
+                      </Grid>
+                      <Grid className={classes.boxDuration}>
+                        <p className={classes.titleDetail}>
+                          -{" "}
+                          {t(
+                            "review_page_section_cancellation_tour_reschedule_title"
+                          )}
+                          :{" "}
+                        </p>
+                        {policyType[0]?.length ? (
+                          <ul>
+                            {policyType[0]?.map((item, index) => (
+                              <li
+                                key={index}
+                                className={classes.itemPolicy}
+                                dangerouslySetInnerHTML={{
+                                  __html: t(
+                                    "review_page_section_cancellation_tour_reschedule_content",
+                                    {
+                                      dayRange: item?.dayRange,
+                                      moneyRate: item?.moneyRate,
+                                    }
+                                  ),
+                                }}
+                              ></li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p>
+                            {t(
+                              "review_page_section_cancellation_tour_no_refund"
+                            )}
+                          </p>
+                        )}
+
+                        <p className={classes.titleDetail}>
+                          -{" "}
+                          {t(
+                            "review_page_section_cancellation_tour_refund_title"
+                          )}
+                          :{" "}
+                        </p>
+                        {policyType[1]?.length ? (
+                          <ul>
+                            {policyType[1]?.map((item, index) => (
+                              <li
+                                className={classes.itemPolicy}
+                                key={index}
+                                dangerouslySetInnerHTML={{
+                                  __html: t(
+                                    "review_page_section_cancellation_tour_refund_content",
+                                    {
+                                      dayRange: item?.dayRange,
+                                      moneyRate: item?.moneyRate,
+                                    }
+                                  ),
+                                }}
+                              ></li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p>
+                            {t(
+                              "review_page_section_cancellation_tour_no_refund"
+                            )}
+                          </p>
+                        )}
+                      </Grid>
                     </Grid>
                   </Collapse>
                 </Grid>
@@ -244,14 +368,16 @@ const Review = memo(({ userInformation }: Props) => {
                       borderBottom: "1px solid var(--gray-20)",
                     }}
                   >
-                    <h5 className={classes.title}>Accommodation Policies</h5>
+                    <h5 className={classes.title}>
+                      {t("review_page_accom_policy")}
+                    </h5>
                   </Grid>
                   <Grid>
                     <Grid className={classes.boxSubTitlePolicy}>
                       <AccessTime />
                       <Grid xs={8}>
                         <Grid sx={{ paddingBottom: "8px" }}>
-                          <p>Check-in/Check-out Time</p>
+                          <p>{t("review_page_check_in_out")}</p>
                         </Grid>
                         <Grid
                           sx={{
@@ -261,19 +387,27 @@ const Review = memo(({ userInformation }: Props) => {
                         >
                           <Grid container>
                             <Grid item xs={6}>
-                              <p className={classes.textCheck}>Check-in:</p>
+                              <p className={classes.textCheck}>
+                                {t("book_page_booking_check_in")}:
+                              </p>
                             </Grid>
                             <Grid item xs={6}>
-                              <p>From {roomBillConfirm?.hotel?.checkInTime}</p>
+                              <p>
+                                {t("stay_detail_section_stay_from_review")}{" "}
+                                {fTime(dataRoomBook?.stay?.checkInTime)}
+                              </p>
                             </Grid>
                           </Grid>
                           <Grid container>
                             <Grid item xs={6}>
-                              <p className={classes.textCheck}>Check-out:</p>
+                              <p className={classes.textCheck}>
+                                {t("book_page_booking_check_out")}:
+                              </p>
                             </Grid>
                             <Grid item xs={6}>
                               <p>
-                                Before {roomBillConfirm?.hotel?.checkOutTime}
+                                {t("book_page_booking_before")}{" "}
+                                {fTime(dataRoomBook?.stay?.checkOutTime)}
                               </p>
                             </Grid>
                           </Grid>
@@ -284,36 +418,20 @@ const Review = memo(({ userInformation }: Props) => {
                       <Receipt />
                       <Grid xs={11}>
                         <Grid sx={{ padding: "4px 0 8px 0" }}>
-                          <p>Required Documents</p>
+                          <p>{t("book_page_booking_required_doc")}</p>
                         </Grid>
                         <Collapse in={readMore} timeout="auto" unmountOnExit>
                           <Grid
                             sx={{
                               display: "flex",
-                              justifyContent: "space-around",
                             }}
                           >
-                            <p className={classes.textContentPolicy}>
-                              Whether you are a couple looking for a romantic
-                              getaway or a family seeking for a beach holiday
-                              trip, our hotel constitutes a perfect holiday
-                              option for enjoying Danang lifestyle and
-                              experiencing its unique glamor. Enjoy the most
-                              memorable nights with your loved one by staying at
-                              Seashore Hotel & Apartment. With Son Tra Mountain
-                              on the side and Man Thai Beach on the opposite,
-                              taking in the views from room’s windows or soaking
-                              up the sun at the top swimming pool will leave a
-                              lasting impression on all of our guests. Extra
-                              charge for children: - Children under 6 years old
-                              will: FREE - Children from 6 - 11 years old and
-                              sharing the same bed with parents will be charged
-                              extra breakfast at VND 150,000/night/pax. -
-                              Children from 12 years and over are considered as
-                              adults, compulsory extra bed is required VND
-                              300,000/night/pax. Extra bed is subject to
-                              availability upon check-in
-                            </p>
+                            <p
+                              className={classes.textContentPolicy}
+                              dangerouslySetInnerHTML={{
+                                __html: stay?.termsAndCondition,
+                              }}
+                            ></p>
                           </Grid>
                         </Collapse>
                       </Grid>
@@ -322,13 +440,19 @@ const Review = memo(({ userInformation }: Props) => {
                       className={classes.boxSeeMore}
                       onClick={() => setReadMore(!readMore)}
                     >
-                      {readMore ? <p>Read All</p> : <p>Read Less</p>}
+                      {readMore ? (
+                        <p>{t("book_page_booking_read_all")}</p>
+                      ) : (
+                        <p>{t("book_page_booking_read_less")}</p>
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <h4 className={classes.title}>Price Detail</h4>
+                <h4 className={classes.title}>
+                  {t("review_page_section_price_detail_title")}
+                </h4>
                 <Grid
                   sx={{
                     backgroundColor: "var(--white-color)",
@@ -344,7 +468,9 @@ const Review = memo(({ userInformation }: Props) => {
                   >
                     <Grid>
                       {" "}
-                      <p className={classes.titlePrice}>Total</p>
+                      <p className={classes.titlePrice}>
+                        {t("review_page_section_price_detail_price_you_pay")}
+                      </p>
                     </Grid>
                     <Grid className={classes.priceTotal}>
                       <h4 className={classes.price}>
@@ -359,7 +485,7 @@ const Review = memo(({ userInformation }: Props) => {
                   </Grid>
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <Grid className={classes.boxPriceDetail}>
-                      {roomBillConfirm?.rooms.map((room, index) => (
+                      {dataRoomBook?.rooms.map((room, index) => (
                         <Grid sx={{ padding: "0 0 14px 0" }} key={index}>
                           <Grid
                             sx={{
@@ -368,19 +494,43 @@ const Review = memo(({ userInformation }: Props) => {
                               alignItems: "center",
                             }}
                           >
-                            <p>{room?.title} </p>
-
-                            {room?.priceDetail.map((price, index) => (
+                            <p>{t("book_page_booking_room_name")}: </p>{" "}
+                            <p>{room?.title}</p>
+                          </Grid>{" "}
+                          <Grid
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <p>{t("book_page_booking_price")}: </p>
+                            {room?.prices.map((price, index) => (
                               <p key={index}>
-                                {fCurrency2VND(
-                                  (price?.price *
-                                    room?.amount *
-                                    (100 - room?.discount)) /
-                                    100
-                                )}{" "}
-                                VND
+                                {fCurrency2VND(price?.price)} VND
                               </p>
                             ))}
+                          </Grid>
+                          {room?.discount !== 0 && (
+                            <Grid
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                              }}
+                            >
+                              <p>{t("book_page_booking_discount")}: </p>{" "}
+                              <p>{room?.discount}%</p>
+                            </Grid>
+                          )}
+                          <Grid
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            {/* <p>Amount: </p> <p>{room?.amount}</p> */}
                           </Grid>
                         </Grid>
                       ))}
@@ -416,22 +566,24 @@ const Review = memo(({ userInformation }: Props) => {
                     borderBottom: "1px solid var(--gray-20)",
                   }}
                 >
-                  <h5 className={classes.title}>Contact Details</h5>
+                  <h5 className={classes.title}>
+                    {t("review_page_contact_detail")}
+                  </h5>
                 </Grid>
                 <Grid sx={{ padding: "16px" }}>
                   <Grid className={classes.boxInfoPerson}>
                     <Person />
                     <p>
-                      {userInformation?.lastName} {userInformation?.firstName}
+                      {dataRoomBook?.lastName} {dataRoomBook?.firstName}
                     </p>
                   </Grid>
                   <Grid className={classes.boxInfoPerson}>
                     <Email />
-                    <p>{userInformation?.email}</p>
+                    <p>{dataRoomBook?.email}</p>
                   </Grid>
                   <Grid className={classes.boxInfoPerson}>
                     <Phone />
-                    <p>+ {userInformation?.phoneNumber}</p>
+                    <p>+ {dataRoomBook?.phoneNumber}</p>
                   </Grid>
                 </Grid>
               </Grid>
@@ -442,31 +594,34 @@ const Review = memo(({ userInformation }: Props) => {
                     borderBottom: "1px solid var(--gray-20)",
                   }}
                 >
-                  <h5 className={classes.title}>Guest Details</h5>
+                  <h5 className={classes.title}>
+                    {t("review_page_guest_detail")}
+                  </h5>
                 </Grid>
                 <Grid sx={{ padding: "16px" }}>
                   <Grid
                     className={classes.boxInfoGuest}
                     sx={{ paddingBottom: "14px" }}
                   >
-                    <p className={classes.guestTitle}>Gest Name</p>
+                    <p className={classes.guestTitle}>
+                      {t("review_page_guest_name")}
+                    </p>
                     <p>
-                      {userInformation?.lastName} {userInformation?.firstName}
+                      {dataRoomBook?.lastName} {dataRoomBook?.firstName}
                     </p>
                   </Grid>
                   <Grid className={classes.boxInfoGuest}>
-                    <p className={classes.guestTitle}>Special Request</p>
-                    {userInformation?.specialRequest ? (
-                      <p>{userInformation?.specialRequest}</p>
+                    <p className={classes.guestTitle}>
+                      {t("review_page_special_request_title")}
+                    </p>
+                    {dataRoomBook?.specialRequest ? (
+                      <p>{dataRoomBook?.specialRequest}</p>
                     ) : (
                       <p>-</p>
                     )}
                   </Grid>
                   <Grid className={classes.boxAdvice}>
-                    <p>
-                      Special requests are subject to availability and are not
-                      guaranteed. Some requests may incur charges.
-                    </p>
+                    <p>{t("review_page_special_request_sub_title")}</p>
                   </Grid>
                 </Grid>
               </Grid>

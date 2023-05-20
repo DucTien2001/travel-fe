@@ -14,6 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
 import { ReceiptLong } from "@mui/icons-material";
+import { StayType } from "models/enterprise/stay";
 
 interface Props {
   className?: string;
@@ -41,6 +42,7 @@ interface Props {
   numberOfReviewers?: number;
   minPrice?: number;
   maxPrice?: number;
+  type?: number;
 }
 
 // eslint-disable-next-line react/display-name
@@ -69,6 +71,7 @@ const ListServices = memo(
     numberOfReviewers,
     minPrice,
     maxPrice,
+    type,
   }: Props) => {
     const { t, i18n } = useTranslation("common");
 
@@ -86,8 +89,18 @@ const ListServices = memo(
           return t("common_rate_excellent");
       }
     };
-
-    console.log(discount, "-----");
+    const getTypeState = (type: number) => {
+      switch (type) {
+        case StayType.HOTEL:
+          return t("enterprise_management_section_stay_status_option_hotel");
+        case StayType.HOMES_TAY:
+          return t(
+            "enterprise_management_section_stay_status_option_home_stay"
+          );
+        case StayType.RESORT:
+          return t("enterprise_management_section_stay_status_option_resort");
+      }
+    };
     return (
       <Grid className={classes.linkView}>
         <Link href={`/${linkView}/:${id}`}>
@@ -143,7 +156,7 @@ const ListServices = memo(
                     <Grid className={classes.boxRate}>
                       {isHotel ? (
                         <Grid className={classes.badge}>
-                          {t("common_stay")}
+                          {getTypeState(type)}
                         </Grid>
                       ) : (
                         <Grid className={classes.badge}>
@@ -155,7 +168,7 @@ const ListServices = memo(
                     <Grid className={classes.boxRate}>
                       {isHotel ? (
                         <Grid className={classes.badge}>
-                          {t("common_stay")}
+                          {getTypeState(type)}
                         </Grid>
                       ) : (
                         <Grid className={classes.badge}>

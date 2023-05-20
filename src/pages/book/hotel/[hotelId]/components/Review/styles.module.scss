@@ -13,7 +13,26 @@
       }
 }
 
-
+.rootOverview {
+    padding-top: 24px;
+    .titleDetail {
+        font-weight: 700;
+    }
+    .boxTitle {
+        display: flex;
+        padding-bottom: 14px;
+        svg {
+            margin-right: 8px;
+            color: var(--primary-light-color-1);
+        }
+        p{
+            font-weight: 700;
+        }
+    }
+    .boxDuration {
+        font-weight: 500;
+    }
+}
 .title {
     margin: 0;
     font-weight: 700;
@@ -151,6 +170,9 @@
         text-align: justify;
         line-height: 1.5;
         font-weight: 500;
+        ul {
+            padding: 0;
+        }
     }
 }
 

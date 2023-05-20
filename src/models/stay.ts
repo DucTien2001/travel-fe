@@ -1,3 +1,5 @@
+import { EServicePolicyType, EServiceType } from "./general";
+
 export interface NormalGetStay {
     take: number;
     page: number;
@@ -34,4 +36,17 @@ export interface NormalGetStay {
     languages?: Stay[];
     language?: string;
     isDeleted?: boolean;
+    rate?: number;
+    numberOfReviewer?: number;
+    stayPolicies?: StayPolicies[];
+    owner?: number;
+  }
+
+  export interface StayPolicies {
+    id: number;
+    dayRange: number;
+    moneyRate: number;
+    policyType: EServicePolicyType;
+    serviceId: number;
+    serviceType: EServiceType;
   }

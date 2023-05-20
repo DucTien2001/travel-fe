@@ -98,6 +98,8 @@ export const API = {
       GET_ALL_HOTELS_BY_PAGE: "/v1.0/hotel/get-all-hotels-by-page/:page",
     },
     ROOM: {
+      DEFAULT: "/v1.0/room/",
+
       GET_ROOM: "/v1.0/room/get-room/:id",
       GET_ROOMS: "/v1.0/room/get-all-rooms/:id",
       GET_ROOMS_AVAILABLE: "/v1.0/room/get-rooms-available",

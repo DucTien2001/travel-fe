@@ -31,12 +31,13 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import clsx from "clsx";
 import { Grid, useMediaQuery, useTheme } from "@mui/material";
+import { Stay } from "models/stay";
 interface Props {
-  hotel: IHotel;
+  stay: Stay;
 }
 
 // eslint-disable-next-line react/display-name
-const Comments = memo(({ hotel }: Props) => {
+const Comments = memo(({ stay }: Props) => {
   return (
     <Grid
       sx={{ backgroundColor: "#f6f2f2", padding: "32px 0 8px 0" }}

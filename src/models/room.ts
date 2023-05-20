@@ -1,3 +1,44 @@
+export interface NormalGetRoom {
+  take: number;
+  page: number;
+  stayId: number;
+  startDate: Date;
+  endDate: Date;
+  numberOfAdult?: number;
+  numberOfChildren?: number;
+  numberOfRoom?: number;
+  sort?: number;    //ESortOption
+}
+
+export interface Room {
+  id?: number;
+  amount?: number;
+  title: string;
+  description: string;
+  utility: string[];
+  numberOfAdult: number;
+  numberOfChildren: number;
+  numberOfBed: number;
+  numberOfRoom: number;
+  discount: number;
+  mondayPrice: number;
+  tuesdayPrice: number;
+  wednesdayPrice: number;
+  thursdayPrice: number;
+  fridayPrice: number;
+  saturdayPrice: number;
+  sundayPrice: number;
+  isDeleted?: boolean;
+  languages?: Room[];
+  language?: string;
+  images?: string[];
+  prices?: {
+    date?: Date,
+    price?: number,
+  }[];
+}
+
+
 export interface HistoryBookRoom {
   id: number;
   date: Date;

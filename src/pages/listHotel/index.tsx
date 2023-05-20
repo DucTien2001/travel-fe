@@ -1,47 +1,25 @@
-import React, { useEffect, useState, useMemo } from "react";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
+
 // reactstrap components
-import {
-  Container,
-  Row,
-  Col,
-  PaginationItem,
-  PaginationLink,
-  Pagination,
-} from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSearch,
-  faChevronLeft,
-  faChevronRight,
-  faArrowsRotate,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { NextPage } from "next";
 import { images } from "configs/images";
 import classes from "./styles.module.scss";
 import Social from "components/Social";
-import InputCheckbox from "components/common/inputs/InputCheckbox";
-import InputTextfield from "components/common/inputs/InputTextfield";
 import Button, { BtnType } from "components/common/buttons/Button";
 import SectionHeader from "components/Header/SectionHeader";
 import CardItemList from "components/CardItemList";
-import BoxSmallLeft from "components/BoxSmallLeft";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
-import { ReducerType } from "redux/reducers";
-import { HotelService } from "services/normal/hotel";
+import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import SearchNotFound from "components/SearchNotFound";
-import FilterPanel from "components/FilterPanel";
 import InputSelect from "components/common/inputs/InputSelect";
 import { useTranslation } from "react-i18next";
 import { NormalGetStay, Stay } from "models/stay";
 import { DataPagination, ESortOption, sortOption } from "models/general";
 import { Moment } from "moment";
 import { StayService } from "services/normal/stay";
-import useDebounce from "hooks/useDebounce";
 import { Grid } from "@mui/material";
 import InputSearch from "components/common/inputs/InputSearch";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
@@ -57,9 +35,9 @@ const ListHotels: NextPage = () => {
   const [keyword, setKeyword] = useState<string>("");
   const [dateStart, setDateStart] = useState<Moment>(null);
   const [dateEnd, setDateEnd] = useState<Moment>(null);
-  const [numberOfAdult, setNumberOfAdult] = useState(null);
-  const [numberOfChild, setNumberOfChild] = useState(null);
-  const [numberOfRoom, setNumberOfRoom] = useState(null);
+  const [numberOfAdult, setNumberOfAdult] = useState(1);
+  const [numberOfChild, setNumberOfChild] = useState(0);
+  const [numberOfRoom, setNumberOfRoom] = useState(1);
 
   const [stayFilter, setStayFilter] = useState<number>(
     ESortOption.LOWEST_PRICE
@@ -80,7 +58,7 @@ const ListHotels: NextPage = () => {
       endDate: dateEnd?.toDate() || value?.endDate,
       sort: stayFilter,
       numberOfAdult: numberOfAdult || 1,
-      numberOfChildren: numberOfChild || 1,
+      numberOfChildren: numberOfChild || 0,
       numberOfRoom: numberOfRoom || 1,
     };
     if (value?.keyword !== undefined) {
@@ -100,13 +78,7 @@ const ListHotels: NextPage = () => {
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
-    _onSearch(e.target.value);
   };
-
-  const _onSearch = useDebounce(
-    (keyword: string) => fetchData({ keyword, page: 1 }),
-    500
-  );
 
   const yesterday = moment().subtract(1, "day");
   const disablePastDt = (current) => {
@@ -121,6 +93,16 @@ const ListHotels: NextPage = () => {
     setDateEnd(moment(e?._d));
   };
 
+  const onClearFilter = () => {
+    setKeyword("");
+    setDateStart(null);
+    setDateEnd(null);
+    setStayFilter(null);
+    setNumberOfAdult(1);
+    setNumberOfChild(0);
+    setNumberOfRoom(1);
+  };
+
   useEffect(() => {
     if (router.query?.keyword) {
       setKeyword(String(router.query?.keyword));
@@ -132,13 +114,13 @@ const ListHotels: NextPage = () => {
       setDateEnd(moment(router.query?.dateEnd));
     }
     if (router.query?.numberOfAdult) {
-      setNumberOfAdult(moment(router.query?.numberOfAdult));
+      setNumberOfAdult(Number(router.query?.numberOfAdult));
     }
     if (router.query?.numberOfChild) {
-      setNumberOfChild(moment(router.query?.numberOfChild));
+      setNumberOfChild(Number(router.query?.numberOfChild));
     }
     if (router.query?.numberOfRoom) {
-      setNumberOfRoom(moment(router.query?.numberOfRoom));
+      setNumberOfRoom(Number(router.query?.numberOfRoom));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
@@ -153,6 +135,8 @@ const ListHotels: NextPage = () => {
     numberOfAdult,
     numberOfChild,
     numberOfRoom,
+    keyword,
+    router,
   ]);
 
   return (
@@ -217,6 +201,7 @@ const ListHotels: NextPage = () => {
               </Grid>
             </div>
             <Grid className={classes.boxResult} container>
+              <Grid className={classes.boxControlLayout} item xs={2}></Grid>
               {/* ======================= RESULT DESKTOP ===================== */}
               <Grid className={classes.rowResult} container item xs={10}>
                 <Grid>
@@ -244,6 +229,16 @@ const ListHotels: NextPage = () => {
             </Grid>
           </Row>
           <Row className={classes.rowResultBody}>
+            <Col xs={2} className={classes.btnResetWrapper}>
+              <Button
+                btnType={BtnType.Primary}
+                className={classes.btnResetOption}
+                onClick={onClearFilter}
+              >
+                <FontAwesomeIcon icon={faArrowsRotate} />{" "}
+                {t("list_tours_reset_filter")}
+              </Button>
+            </Col>
             <Col xs={10} className={classes.list}>
               <div className={classes.containerListHotel}>
                 {/* ==================== List view ===================== */}
@@ -254,15 +249,18 @@ const ListHotels: NextPage = () => {
                       linkView="listHotel"
                       linkBook="/book/hotel"
                       id={stay.id}
+                      type={stay?.type}
                       src={stay.images[0]}
                       title={stay.name}
                       description={stay.description}
                       checkInTime={stay.checkInTime}
                       checkOutTime={stay.checkOutTime}
-                      // location={stay.location}
+                      commune={stay?.commune?.name}
+                      district={stay?.district?.name}
+                      city={stay?.city?.name}
                       contact={stay.contact}
                       // tags={stay.tags}
-                      // rate={Math.floor(stay?.rate)}
+                      rate={Math.floor(stay?.rate)}
                       // creator={stay.creator}
                       isHotel={true}
                     />

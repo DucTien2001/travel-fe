@@ -1,9 +1,20 @@
 import { API } from "configs/constants";
 import { EGetRoomsAvailable } from "models/enterprise";
-import { EGetPrice } from "models/room";
+import { EGetPrice, NormalGetRoom } from "models/room";
 import api from "../configApi";
 
 export class RoomService {
+  static async findAll(data: NormalGetRoom): Promise<any> {
+    return await api
+      .get(API.NORMAL.ROOM.DEFAULT, { params: data })
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  //--------------------------
   static async getRoom(roomId: number): Promise<any> {
     return await api
       .get(API.NORMAL.ROOM.GET_ROOM.replace(":id", `${roomId}`))

@@ -321,32 +321,6 @@ const ListTours: NextPage = () => {
                 <FontAwesomeIcon icon={faArrowsRotate} />{" "}
                 {t("list_tours_reset_filter")}
               </Button>
-              {/* <BoxSmallLeft title="Search tours">
-                <InputTextField
-                  label="Search"
-                  className={classes.inputSearch}
-                  placeholder="Search"
-                  name="location"
-                  onKeyPress={handleKeyPress}
-                  startIcon={<FontAwesomeIcon icon={faSearch} />}
-                  inputRef={register("location")}
-                />
-                <Button
-                  btnType={BtnType.Primary}
-                  className={classes.btnSearch}
-                  onClick={() => handleSearch()}
-                >
-                  Search
-                </Button>
-              </BoxSmallLeft> */}
-              {/* <FilterPanel
-                selectedRating={selectedRating}
-                selectedPrice={selectedPrice}
-                selectRating={handleSelectRating}
-                tags={tags}
-                changeChecked={handleChangeChecked}
-                changePrice={handleChangePrice}
-              /> */}
             </Col>
             <Col xs={10} className={classes.listTours}>
               <div className={classes.containerListTour}>

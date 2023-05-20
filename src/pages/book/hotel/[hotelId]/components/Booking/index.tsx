@@ -7,7 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
-import { Grid, Link, useMediaQuery, useTheme, Collapse } from "@mui/material";
+import {
+  Grid,
+  Link,
+  useMediaQuery,
+  useTheme,
+  Collapse,
+  FormGroup,
+  FormControlLabel,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { useForm } from "react-hook-form";
@@ -38,12 +46,28 @@ import moment from "moment";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import InputTextfield from "components/common/inputs/InputTextfield";
-import { fCurrency2VND } from "utils/formatNumber";
+import { fCurrency2VND, fPercent, fShortenNumber } from "utils/formatNumber";
 import { sumPrice } from "utils/totalPrice";
 import { ReducerType } from "redux/reducers";
 import { IUserInformationBookRoom } from "redux/reducers/Normal";
 import PopupCheckReview from "components/Popup/PopupCheckReview";
 import { PAYMENT_HOTEL_SECTION } from "models/payment";
+import { StayService } from "services/normal/stay";
+import {
+  DataPagination,
+  EDiscountType,
+  EServicePolicyType,
+  EServiceType,
+} from "models/general";
+import { Stay } from "models/stay";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import { FindAll, GetVoucherValue, Voucher } from "models/voucher";
+import { IEvent } from "models/event";
+import { VoucherService } from "services/normal/voucher";
+import Toggle from "components/common/Switch";
+import ErrorMessage from "components/common/texts/ErrorMessage";
+import PopupVoucher from "pages/book/tour/[tourId]/components/PopopVoucher";
+import { RoomBillConfirm } from "models/roomBill";
 
 const CHARACTER_LIMIT = 100;
 
@@ -60,11 +84,10 @@ export interface BookForm {
   specialRequest?: string;
 }
 interface Props {
-  onSubmit?: (data: IUserInformationBookRoom) => void;
-  handleChangeStep?: () => void;
+  onSubmit?: (data: RoomBillConfirm) => void;
 }
 // eslint-disable-next-line react/display-name
-const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
+const BookingComponent = memo(({ onSubmit }: Props) => {
   const dispatch = useDispatch();
   const { roomBillConfirm } = useSelector((state: ReducerType) => state.normal);
 
@@ -72,25 +95,48 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down(600));
   const { user } = UseAuth();
   const router = useRouter();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
 
   const [open, setOpen] = useState(true);
-  const [hotel, setHotel] = useState<any>();
+  const [stay, setStay] = useState<Stay>();
   const [modal, setModal] = useState(false);
+  const [openPopupDetailStay, setOpenPopupDetailStay] = useState(false);
+  const [dateValidRefund, setDateValidRefund] = useState<Date>(new Date());
+  const [voucher, setVoucher] = useState<DataPagination<Voucher>>();
+  const [voucherChoose, setVoucherChoose] = useState({
+    discountType: null,
+    voucherValue: 0,
+  });
+  const [addCoupon, setAddCoupon] = useState(false);
+  const [inputValueCode, setInputValueCode] = useState(null);
+  const [valueEvent, setValueEvent] = useState<IEvent>(null);
+  const [totalFinal, setTotalFinal] = useState(0);
+  const [isErrorUseEvent, setIsErrorUseEvent] = useState(false);
+  const [openPopupVoucher, setOpenPopupVoucher] = useState(false);
+
+  const policyRefund = useMemo(() => {
+    return stay?.stayPolicies.map((item) => {
+      if (item.policyType === EServicePolicyType.REFUND) return item.dayRange;
+    });
+  }, [stay]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      firstName: yup.string().required("First name is required"),
-      lastName: yup.string().required("Last name is required"),
+      firstName: yup
+        .string()
+        .required(t("book_page_section_contact_detail_first_name_validation")),
+      lastName: yup
+        .string()
+        .required(t("book_page_section_contact_detail_last_name_validation")),
       email: yup
         .string()
-        .email("Please enter a valid email address")
-        .required("Email is required"),
+        .email(t("book_page_section_contact_detail_email_validation"))
+        .required(t("book_page_section_contact_detail_email_validation_error")),
       phoneNumber: yup
         .string()
-        .required("Phone is required")
+        .required(t("book_page_section_contact_detail_phone_validation"))
         .matches(VALIDATION.phone, {
-          message: "Please enter a valid phone number.",
+          message: t("book_page_section_contact_detail_phone_validation"),
           excludeEmptyString: true,
         }),
       specialRequest: yup.string().notRequired(),
@@ -116,28 +162,17 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
   const totalPrice = [];
 
   roomBillConfirm?.rooms.forEach((room) => {
-    room?.priceDetail.map((price) => {
+    room?.prices.map((price) => {
       const _price =
         (price?.price * room?.amount * (100 - room?.discount)) / 100;
       totalPrice.push(_price);
     });
   });
 
-  useEffect(() => {
-    if (router) {
-      HotelService.getHotel(Number(router.query.hotelId.slice(1)))
-        .then((res) => {
-          setHotel(res.data);
-        })
-        .catch((e) => {
-          dispatch(setErrorMess(e));
-        })
-        .finally(() => {
-          dispatch(setLoading(false));
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]);
+  const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
+
+  const onOpenPopupDetailStay = () =>
+    setOpenPopupDetailStay(!openPopupDetailStay);
 
   const _onSubmit = (data: BookForm) => {
     if (user) {
@@ -148,49 +183,86 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
         firstName: data?.firstName,
         lastName: data?.lastName,
         specialRequest: data?.specialRequest,
+        stay: roomBillConfirm?.stay,
+        rooms: roomBillConfirm?.rooms,
+        startDate: roomBillConfirm?.startDate,
+        endDate: roomBillConfirm?.endDate,
       });
     }
-
-    // dispatch(setLoading(true));
-    //   if(user) {
-    //     TourBillService.create({
-    //       userId: user?.id,
-    //       userMail: data?.email,
-    //       tourId: tour?.id,
-    //       amount: data.amount,
-    //       price: tour?.price,
-    //       discount: tour?.discount,
-    //       email: data?.email,
-    //       phoneNumber: data?.phoneNumber,
-    //       firstName: data?.firstName,
-    //       lastName: data?.lastName,
-    //     })
-    //     .then(() => {
-    //       dispatch(setSuccessMess("Book tour successfully"));
-    //     })
-    //     .catch((e) => {
-    //       dispatch(setErrorMess(e));
-    //     })
-    //     .finally(() => {
-    //       toggle();
-    //       dispatch(setLoading(false));
-    //     });
-    //   }
-    // dispatch(
-    //   setConfirmBookTourReducer({
-    //     userId: user?.id,
-    //     userMail: data?.email,
-    //     tourId: tour?.id,
-    //     amount: data.amount,
-    //     price: tour?.price,
-    //     discount: tour?.discount,
-    //     email: data?.email,
-    //     phoneNumber: data?.phoneNumber,
-    //     firstName: data?.firstName,
-    //     lastName: data?.lastName,
-    //   })
-    // );
   };
+
+  const onGetVoucher = (data: GetVoucherValue) => {
+    setVoucherChoose({
+      discountType: data?.discountType,
+      voucherValue: data?.voucherValue,
+    });
+  };
+
+  const fetchVoucher = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+    owner?: number;
+  }) => {
+    const params: FindAll = {
+      take: value?.take || voucher?.meta?.take || 10,
+      page: value?.page || voucher?.meta?.page || 1,
+      keyword: undefined,
+      owner: roomBillConfirm?.stay?.owner,
+      serviceType: EServiceType.HOTEL,
+      serviceId: roomBillConfirm?.stay?.id,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
+    }
+    dispatch(setLoading(true));
+    VoucherService.getAllVouchers(params)
+      .then((res) => {
+        setVoucher({
+          data: res.data,
+          meta: res.meta,
+        });
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  const handleValidVoucher = (startTime) => {
+    var bookDate = new Date();
+    let isValid = false;
+    if (bookDate < new Date(startTime)) {
+      isValid = true;
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  };
+
+  useEffect(() => {
+    let max_val = policyRefund?.reduce(function (accumulator, element) {
+      return accumulator > element ? accumulator : element;
+    });
+    const dateBookStay = new Date();
+    setDateValidRefund(
+      new Date(dateBookStay?.setDate(dateBookStay.getDate() + max_val))
+    );
+  }, [policyRefund]);
+
+  useEffect(() => {
+    if (router) {
+      StayService.findOne(Number(router.query.hotelId.slice(1)))
+        .then((res) => {
+          setStay(res.data);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
 
   useEffect(() => {
     if (user) {
@@ -210,6 +282,10 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, dispatch]);
 
+  useEffect(() => {
+    fetchVoucher();
+  }, [roomBillConfirm]);
+
   return (
     <>
       <Grid
@@ -222,24 +298,29 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
             <Grid xs={7} item className={classes.leftPanel}>
               <Grid container item spacing={2}>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>Contact Details</h4>
+                  <h4 className={classes.title}>
+                    {t("book_page_section_contact_detail_title")}
+                  </h4>
                   <Grid
                     sx={{
                       backgroundColor: "var(--white-color)",
                       padding: "24px 16px",
                       boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25);",
                       borderRadius: "10px",
+                      marginTop: "0px !important",
                     }}
+                    container
+                    rowSpacing={3}
                   >
-                    <Grid
-                      container
-                      columnSpacing={isMobile ? 0 : 1}
-                      rowSpacing={3}
-                    >
+                    <Grid container columnSpacing={isMobile ? 0 : 1}>
                       <Grid item xs={12} sm={6}>
                         <InputTextField
-                          title="First name"
-                          placeholder="First Name"
+                          title={t(
+                            "book_page_section_contact_detail_first_name"
+                          )}
+                          placeholder={t(
+                            "book_page_section_contact_detail_first_name"
+                          )}
                           inputRef={register("firstName")}
                           startAdornment={
                             <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
@@ -249,8 +330,12 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <InputTextField
-                          title="Last name"
-                          placeholder="Last Name"
+                          title={t(
+                            "book_page_section_contact_detail_last_name"
+                          )}
+                          placeholder={t(
+                            "book_page_section_contact_detail_last_name"
+                          )}
                           inputRef={register("lastName")}
                           startAdornment={
                             <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
@@ -261,8 +346,10 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                     </Grid>
                     <Grid item xs={12}>
                       <InputTextField
-                        title="Email"
-                        placeholder="Email"
+                        title={t("book_page_section_contact_detail_email")}
+                        placeholder={t(
+                          "book_page_section_contact_detail_email"
+                        )}
                         inputRef={register("email")}
                         startAdornment={
                           <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
@@ -272,8 +359,10 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                     </Grid>
                     <Grid item xs={12}>
                       <InputTextField
-                        title="Phone"
-                        placeholder="Phone"
+                        title={t("book_page_section_contact_detail_phone")}
+                        placeholder={t(
+                          "book_page_section_contact_detail_phone"
+                        )}
                         inputRef={register("phoneNumber")}
                         startAdornment={
                           <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
@@ -284,7 +373,9 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>Special Request</h4>
+                  <h4 className={classes.title}>
+                    {t("book_page_section_special_request_title")}
+                  </h4>
                   <Grid
                     sx={{
                       backgroundColor: "var(--white-color)",
@@ -293,17 +384,15 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                       borderRadius: "10px",
                     }}
                   >
-                    <p>
-                      Special requests cannot be guaranteed – but the property
-                      will do its best to meet your needs. You can always make a
-                      special request after your booking is complete!
-                    </p>
+                    <p>{t("book_page_section_special_request_sub_title")}</p>
                     <InputTextfield
-                      title="Please write your requests"
+                      title={t("book_page_section_special_request_title_input")}
                       optional
                       multiline
                       rows={3}
-                      infor={`${specialRequest?.length}/${CHARACTER_LIMIT}`}
+                      infor={`${
+                        specialRequest?.length || 0
+                      }/${CHARACTER_LIMIT}`}
                       inputRef={register("specialRequest")}
                       inputProps={{
                         maxLength: CHARACTER_LIMIT,
@@ -312,40 +401,9 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>Cancellation Policy</h4>
-                  <Grid
-                    sx={{
-                      backgroundColor: "var(--white-color)",
-                      padding: "24px 16px",
-                      boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25);",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    <p>
-                      This reservation is non-refundable & non-reschedulable.
-                    </p>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12}>
-                  <h4 className={classes.title}>Location Detail</h4>
-                  <Grid
-                    sx={{
-                      backgroundColor: "var(--white-color)",
-                      padding: "24px 16px",
-                      boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25);",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    <p>
-                      143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh
-                      Kiên Giang, Vietnam{" "}
-                    </p>
-                    <Grid className={classes.mabBox}></Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <h4 className={classes.title}>Price Detail</h4>
+                  <h4 className={classes.title}>
+                    {t("book_page_section_price_detail_title")}
+                  </h4>
                   <Grid
                     sx={{
                       backgroundColor: "var(--white-color)",
@@ -361,7 +419,9 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                     >
                       <Grid>
                         {" "}
-                        <p className={classes.titlePrice}>Price you pay</p>
+                        <p className={classes.titlePrice}>
+                          {t("book_page_section_price_detail_price_you_pay")}
+                        </p>
                       </Grid>
                       <Grid className={classes.priceTotal}>
                         <h4 className={classes.price}>
@@ -376,18 +436,13 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                     </Grid>
                     <Grid className={classes.boxInforPrice}>
                       <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>
-                      <p>
-                        Taxes and fees, are recovery charges which Traveloka
-                        pays to the property. If you have any questions
-                        regarding tax and invoice, please refer to Traveloka
-                        Terms and Condition
-                      </p>
+                      <p>{t("book_page_booking_tax")}</p>
                     </Grid>
 
                     <Collapse in={open} timeout="auto" unmountOnExit>
                       <Grid className={classes.boxPriceDetail}>
                         {roomBillConfirm?.rooms.map((room, index) => (
-                          <Grid sx={{ padding: "0 0 14px 0" }} key={index}>
+                          <Grid sx={{ padding: "0 0 14px 16px" }} key={index}>
                             <Grid
                               sx={{
                                 display: "flex",
@@ -395,7 +450,8 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                                 alignItems: "center",
                               }}
                             >
-                              <p>Room name: </p> <p>{room?.title}</p>
+                              <p>{t("book_page_booking_room_name")}: </p>{" "}
+                              <p>{room?.title}</p>
                             </Grid>{" "}
                             <Grid
                               sx={{
@@ -404,16 +460,10 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                                 alignItems: "center",
                               }}
                             >
-                              <p>Price: </p>
-                              {room?.priceDetail.map((price, index) => (
+                              <p>{t("book_page_booking_price")}: </p>
+                              {room?.prices.map((price, index) => (
                                 <p key={index}>
-                                  {fCurrency2VND(
-                                    (price?.price *
-                                      room?.amount *
-                                      (100 - room?.discount)) /
-                                      100
-                                  )}{" "}
-                                  VND
+                                  {fCurrency2VND(price?.price)} VND
                                 </p>
                               ))}
                             </Grid>
@@ -425,7 +475,8 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                                   alignItems: "center",
                                 }}
                               >
-                                <p>Discount: </p> <p>{room?.discount}%</p>
+                                <p>{t("book_page_booking_discount")}: </p>{" "}
+                                <p>{room?.discount}%</p>
                               </Grid>
                             )}
                             <Grid
@@ -435,18 +486,118 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                                 alignItems: "center",
                               }}
                             >
-                              <p>Amount: </p> <p>{room?.amount}</p>
+                              {/* <p>Amount: </p> <p>{room?.amount}</p> */}
                             </Grid>
                           </Grid>
                         ))}
                       </Grid>
                     </Collapse>
+                    <Grid className={classes.containerVoucher}>
+                      <Grid className={classes.titleVoucher}>
+                        <MonetizationOnIcon />
+                        <p>
+                          {t("book_page_section_price_detail_discount_code")}
+                        </p>
+                      </Grid>
+                      <Grid sx={{ display: "flex", paddingTop: "14px" }}>
+                        {voucher?.data?.length &&
+                          voucher?.data?.map((item, index) => (
+                            <Grid key={index}>
+                              {item?.discountType === EDiscountType.PERCENT ? (
+                                <Grid
+                                  className={clsx(classes.boxVoucher, {
+                                    [classes.boxVoucherInValid]:
+                                      handleValidVoucher(item?.startTime),
+                                  })}
+                                >
+                                  <span>
+                                    {t("voucher_title_deal")}{" "}
+                                    {fPercent(item?.discountValue)}
+                                  </span>
+                                  {item?.maxDiscount !== 0 && (
+                                    <span>
+                                      {t("voucher_title_max")}{" "}
+                                      {fCurrency2VND(item?.maxDiscount)} VND
+                                    </span>
+                                  )}
+                                </Grid>
+                              ) : (
+                                <Grid
+                                  className={clsx(classes.boxVoucher, {
+                                    [classes.boxVoucherInValid]:
+                                      handleValidVoucher(item?.startTime),
+                                  })}
+                                >
+                                  {t("voucher_title_deal")}{" "}
+                                  {fShortenNumber(item?.discountValue)} VND
+                                </Grid>
+                              )}
+                            </Grid>
+                          ))}
+                      </Grid>
+                      <Grid
+                        className={classes.btnChooseVoucher}
+                        onClick={onOpenPopupVoucher}
+                      >
+                        <p>
+                          {t("book_page_section_price_detail_choose_voucher")}
+                        </p>
+                      </Grid>
+                    </Grid>
+                    <Grid>
+                      <FormGroup>
+                        <FormControlLabel
+                          className={classes.boxToggle}
+                          control={
+                            <Toggle
+                              checked={addCoupon}
+                              onChange={() => setAddCoupon(!addCoupon)}
+                            />
+                          }
+                          label={t("book_page_section_price_detail_add_coupon")}
+                        />
+                      </FormGroup>
+                      {addCoupon && (
+                        <Grid
+                          className={classes.inputCoupon}
+                          container
+                          spacing={2}
+                        >
+                          <Grid item xs={8}>
+                            <InputTextfield
+                              placeholder="Example: CHEAPTRAVEL"
+                              type="text"
+                              onChange={(e) =>
+                                setInputValueCode(e.target.value)
+                              }
+                            />
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Button
+                              btnType={BtnType.Primary}
+                              className={classes.btnUseCoupon}
+                              // onClick={onUseCoupon}
+                            >
+                              {t(
+                                "book_page_section_price_detail_use_coupon_btn"
+                              )}
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      )}
+                      {isErrorUseEvent && (
+                        <ErrorMessage>
+                          {t("book_page_section_price_detail_use_coupon_error")}{" "}
+                          {fCurrency2VND(valueEvent?.minOrder)} VND
+                        </ErrorMessage>
+                      )}
+                    </Grid>
                     <Grid
                       sx={{ display: "flex", justifyContent: "flex-end" }}
                       className={classes.btnContinue}
                     >
                       <Button btnType={BtnType.Secondary} type="submit">
-                        Continue to Review
+                        {t("book_page_section_price_detail_continue_review")}
                       </Button>
                     </Grid>
                   </Grid>
@@ -462,12 +613,12 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
               <Grid className={classes.rootPanelRight}>
                 <Grid className={classes.boxTitle}>
                   <FontAwesomeIcon icon={faHotel}></FontAwesomeIcon>
-                  <p>{hotel?.name}</p>
+                  <p>{stay?.name}</p>
                 </Grid>
                 <Grid className={classes.boxInfoPerson}>
                   <Grid className={classes.information}>
                     <Grid>
-                      <span>Check-in</span>
+                      <span>{t("book_page_booking_check_in")}</span>
                     </Grid>
                     <Grid>
                       <p>
@@ -479,7 +630,7 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                   </Grid>
                   <Grid className={classes.information}>
                     <Grid>
-                      <span>Check-out</span>
+                      <span>{t("book_page_booking_check_out")}</span>
                     </Grid>
                     <Grid>
                       <p>
@@ -505,10 +656,14 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                     <Grid
                       sx={{ display: "flex", justifyContent: "space-between" }}
                     >
-                      <p>Guest per room</p> <span>4</span>
+                      <p>Guest per room</p>{" "}
+                      <span>
+                        {room?.numberOfAdult} adult, {room?.numberOfChildren}{" "}
+                        children
+                      </span>
                     </Grid>
                     <Grid className={classes.product}>
-                      <img src={images.bgUser.src} alt="anh"></img>
+                      <img src={room?.images[0]} alt="anh"></img>
                       <Grid
                         sx={{
                           paddingLeft: "12px",
@@ -523,10 +678,9 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                         <Grid className={classes.boxConvenient}>
                           <Wifi /> Free wifi
                         </Grid>
-
-                        <Link href={`/listTour/:${hotel?.id}`}>
-                          View detail
-                        </Link>
+                        <p onClick={onOpenPopupDetailStay}>
+                          {t("book_page_booking_summary_view_detail")}
+                        </p>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -535,32 +689,45 @@ const BookingComponent = memo(({ onSubmit, handleChangeStep }: Props) => {
                 <Grid className={classes.boxTip}>
                   <Grid className={classes.tip}>
                     <FontAwesomeIcon icon={faCalendarDays}></FontAwesomeIcon>
-                    <p>Valid on 05 Apr 2023</p>
+                    <p>
+                      {t("book_page_booking_summary_valid_date")}{" "}
+                      {moment(roomBillConfirm?.startDate).format("MMMM Do YY")}
+                    </p>
                   </Grid>
                   <Grid className={clsx(classes.tipRequest, classes.tip)}>
                     <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
-                    <p>No Reservation Needed</p>
+                    <p>{t("book_page_booking_summary_no_needed")}</p>
                   </Grid>
                   <Grid className={clsx(classes.tipRequest, classes.tip)}>
                     <FontAwesomeIcon icon={faRotateLeft}></FontAwesomeIcon>
-                    <p>Refundable until 3 Apr 2023</p>
+                    <p>
+                      {dateValidRefund ? (
+                        <>{t("book_page_booking_summary_no_refund")}</>
+                      ) : (
+                        <>
+                          {t("book_page_booking_summary_refund")}{" "}
+                          {moment(dateValidRefund).format("MMM Do YY")}
+                        </>
+                      )}
+                    </p>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid className={classes.btnContinueMobile}>
                 <Button btnType={BtnType.Secondary} type="submit">
-                  Continue to Review
+                  {t("book_page_section_price_detail_continue_review")}
                 </Button>
               </Grid>
             </Grid>
           </Grid>
         </Container>
-        {/* <PopupCheckReview
-        isOpen={modal}
-        onClose={toggle}
-        toggle={toggle}
-        onClick={handleChangeStep}
-      /> */}
+        <PopupVoucher
+          isOpen={openPopupVoucher}
+          toggle={onOpenPopupVoucher}
+          voucher={voucher?.data}
+          totalBill={sumPrice(totalPrice)}
+          onGetVoucher={onGetVoucher}
+        />
       </Grid>
     </>
   );

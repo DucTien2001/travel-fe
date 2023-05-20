@@ -43,12 +43,50 @@
         margin-left: 16px;
     }
 }
-
-.inputDateContainer {
-    padding: 16px;
-    .inputSearchDate {
-        margin-right: 16px;
+.titleInput {
+    font-size: 14px;
+    color: var(--white-color);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.boxItem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+        margin-bottom: 14px;
     }
+}
+.boxGuest {
+    position: relative;
+}
+.containerChooseGuest {
+    position: absolute;
+    top: 80px;
+    background-color: var(--white-color);
+    padding: 16px;
+    min-width: 280px;
+    border-radius: 4px;
+    box-shadow: var(--box-shadow-100);
+}
+
+.boxTitleCounter {
+    display: flex;
+    align-items: center;
+    svg {
+        color: var(--primary-color);
+        margin-right: 8px;
+    }
+    p {
+        margin: 0;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+}
+.inputDateContainer {
+    padding-bottom: 16px;
+    margin: 0;
     @media only screen and (max-width: 768px) {
         flex-direction: column; 
         padding-left: 32px;
@@ -58,7 +96,14 @@
         }
      }
 }
-
+.inputSelect {
+    width: 100%;
+}
+.boxResetFilter {
+    button {
+        margin-left: auto;
+    }
+}
 .leftPanel {
     position: relative;
     .boxLeftItem {
@@ -79,6 +124,7 @@
         color: var(--success-color);
         border: 8px;
         border: none;
+        margin-right: 8px;
     }
     .btnSeeRoom {
         width: 100%;

@@ -43,30 +43,12 @@ const TourSearch = memo(() => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [data, setData] = useState<DataPagination<Tour>>();
   const [keyword, setKeyword] = useState<string>("");
   const [dateStart, setDateStart] = useState<Moment>(null);
-
-  const [focus, setFocus] = useState(false);
-  const [recentSearch, setRecentSearch] = useState([]);
-
-  const addRecentSearch = (contentSearch) => {
-    setRecentSearch((prev) => {
-      const newRecentSearch = [...prev, contentSearch];
-      return newRecentSearch;
-    });
-  };
 
   const yesterday = moment().subtract(1, "day");
   const disablePastDt = (current) => {
     return current.isAfter(yesterday);
-  };
-
-  const onFocus = () => {
-    setFocus(true);
-  };
-  const onBlur = () => {
-    setFocus(false);
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,18 +66,6 @@ const TourSearch = memo(() => {
         dateStart?.format("YYYY-MM-DD") || ""
       }`,
     });
-  };
-
-  const handleKeyPress = (e) => {
-    var code = e.keyCode || e.which;
-    if (code === 13) {
-      router.push({
-        pathname: "/listTour",
-        search: `?keyword=${keyword || ""}&dateSearch=${
-          dateStart?.format("YYYY-MM-DD") || ""
-        }`,
-      });
-    }
   };
 
   return (
@@ -116,7 +86,6 @@ const TourSearch = memo(() => {
               autoComplete="off"
               value={keyword || ""}
               onChange={onSearch}
-              onKeyPress={handleKeyPress}
             />
           </Grid>
           <Grid xs={6} item className={classes.boxItem}>
@@ -135,7 +104,6 @@ const TourSearch = memo(() => {
               value={dateStart ? dateStart : ""}
               initialValue={dateStart ? dateStart : ""}
               _onChange={(e) => onSearchDate(e)}
-              onKeyPress={handleKeyPress}
             />
           </Grid>
         </Grid>

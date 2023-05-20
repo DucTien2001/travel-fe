@@ -8,3 +8,9 @@ export function fTime(sec: number ) {
     const sDisplay = s > 0 ? `${s.toString().length > 1 ? `${s}` : `${0}${s}`}` : '00';
     return `${hDisplay}:${mDisplay}`;
   }
+
+export const fDuration = (d1: Date, d2: Date) => {
+  let ms1 = d1?.getTime();
+  let ms2 = d2?.getTime();
+  return Math.ceil((ms2 - ms1) / (24*60*60*1000));
+};

@@ -32,8 +32,7 @@ import { Controller, useForm } from "react-hook-form";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import { yupResolver } from "@hookform/resolvers/yup";
 import dynamic from "next/dynamic";
-
-import InputCreatableSelect from "components/common/inputs/InputCreatableSelect";
+import { NormalGetStay } from "models/stay";
 import { AdminGetTours, ETour } from "models/enterprise";
 import {
   DataPagination,
@@ -51,6 +50,8 @@ import InputCheckbox from "components/common/inputs/InputCheckbox";
 import InputSelect from "components/common/inputs/InputSelect";
 import { TourService } from "services/normal/tour";
 import { getDiscountType } from "utils/getOption";
+import { Stay } from "models/enterprise/stay";
+import { StayService } from "services/normal/stay";
 const PHOTO_SIZE = 10 * 1000000; // bytes
 const FILE_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
@@ -107,7 +108,11 @@ const AddOrEditEvent = memo((props: Props) => {
     useState<null | HTMLElement>(null);
   const [tourSelected, setTourSelected] = useState<number[]>([]);
   const [isEmptyTourSelect, setIsEmptyTourSelect] = useState(false);
-
+  const [dataStay, setDataStay] = useState<DataPagination<Stay>>();
+  const [anchorElMenuChooseStay, setAnchorElMenuChooseStay] =
+    useState<null | HTMLElement>(null);
+  const [staySelected, setStaySelected] = useState<number[]>([]);
+  const [isEmptyStaySelect, setIsEmptyStaySelect] = useState(false);
   const schema = useMemo(() => {
     return yup.object().shape({
       name: yup
@@ -436,6 +441,57 @@ const AddOrEditEvent = memo((props: Props) => {
     setTourSelected(_tourSelected);
   };
 
+  const fetchStay = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+  }) => {
+    const params: NormalGetStay = {
+      take: value?.take || dataStay?.meta?.take || 10,
+      page: value?.page || dataStay?.meta?.page || 1,
+      keyword: null,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
+    }
+    dispatch(setLoading(true));
+    StayService.findAll(params)
+      .then((res) => {
+        setDataStay({
+          data: res.data,
+          meta: res.meta,
+        });
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  const handleClickMenuChooseStay = (
+    voucher: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorElMenuChooseStay(voucher.currentTarget);
+  };
+
+  const handleCloseMenuChooseStay = () => {
+    setAnchorElMenuChooseStay(null);
+  };
+
+  const onSubmitChooseProjectStay = () => {
+    handleCloseMenuChooseStay();
+  };
+
+  const onChangeChooseStay = (item: Stay) => {
+    let _staySelected = [...staySelected];
+    if (_staySelected.includes(item.id)) {
+      _staySelected = _staySelected.filter((it) => it !== item.id);
+    } else {
+      _staySelected.push(item.id);
+    }
+    setStaySelected(_staySelected);
+  };
+
   const watchCode = watch("code");
 
   const handleCheckCode = () => {
@@ -480,9 +536,13 @@ const AddOrEditEvent = memo((props: Props) => {
         formData.append(`tourIds[]`, `${item}`);
       });
     }
-    data.hotelIds?.forEach((item) => {
-      formData.append(`hotelIds[]`, `1`);
-    });
+    if (staySelected.length === 0) {
+      setIsEmptyStaySelect(true);
+    } else {
+      staySelected?.forEach((item) => {
+        formData.append(`hotelIds[]`, `${item}`);
+      });
+    }
     if (data.banner && typeof data.banner === "object")
       formData.append("banner", data.banner);
     if (event) {
@@ -541,12 +601,14 @@ const AddOrEditEvent = memo((props: Props) => {
         maxDiscount: event?.maxDiscount,
       });
       setTourSelected(event.tourIds);
+      setStaySelected(event.hotelIds);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event]);
 
   useEffect(() => {
     fetchTour();
+    fetchStay();
     fetchEvent();
   }, []);
 
@@ -689,25 +751,93 @@ const AddOrEditEvent = memo((props: Props) => {
                       className={classes.btnSave}
                       onClick={onSubmitChooseProjectTour}
                     >
-                      {t(
-                        "admin_managemcommon_doneent_section_add_or_edit_event_event_name"
-                      )}
+                      {t("common_done")}
                     </Button>
                   </Grid>
                 </Menu>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <InputCreatableSelect
-                  fullWidth
-                  title="Select hotels"
-                  name="hotelIds"
-                  control={control}
-                  selectProps={{
-                    options: [],
-                    placeholder: "-- Select Hotels --",
-                  }}
-                  errorMessage={(errors.hotelIds as any)?.message}
-                />
+              <Grid item xs={6}>
+                <p className={classes.titleSelect}>
+                  {t(
+                    "enterprise_management_section_add_or_edit_voucher_select_stay"
+                  )}
+                </p>
+                <Button
+                  sx={{ width: { xs: "100%", sm: "auto" }, maxHeight: "36px" }}
+                  className={classes.selectTourBtn}
+                  btnType={BtnType.Outlined}
+                  onClick={handleClickMenuChooseStay}
+                >
+                  {t(
+                    "enterprise_management_section_add_or_edit_voucher_select_stay"
+                  )}
+                  <KeyboardArrowDown
+                    sx={{
+                      color: "var(--gray-80)",
+                      marginRight: "0px !important",
+                    }}
+                  />
+                </Button>
+                {isEmptyStaySelect && (
+                  <ErrorMessage>
+                    {t(
+                      "enterprise_management_section_add_or_edit_voucher_select_tour_error"
+                    )}
+                  </ErrorMessage>
+                )}
+                <Menu
+                  anchorEl={anchorElMenuChooseStay}
+                  open={Boolean(anchorElMenuChooseStay)}
+                  onClose={handleCloseMenuChooseStay}
+                  sx={{ mt: 1 }}
+                >
+                  <Grid className={classes.menuChooseTour}>
+                    {dataStay?.data.map((item, index) => (
+                      <MenuItem
+                        key={index}
+                        classes={{
+                          root: clsx(classes.rootMenuItemChooseStay),
+                        }}
+                        onClick={() => onChangeChooseStay(item)}
+                      >
+                        <Grid
+                          className={clsx(classes.menuItemFlex, {
+                            [classes.listFlexChecked]: staySelected.includes(
+                              item?.id
+                            ),
+                          })}
+                        >
+                          <Grid>
+                            <InputCheckbox
+                              checked={staySelected.includes(item?.id)}
+                              classes={{ root: classes.rootMenuCheckbox }}
+                            />
+                          </Grid>
+                          <Grid item className={classes.listTextLeft}>
+                            <p>{item.name}</p>
+                          </Grid>
+                        </Grid>
+                      </MenuItem>
+                    ))}
+                  </Grid>
+                  <Grid className={classes.menuChooseTourAction}>
+                    <Button
+                      btnType={BtnType.Outlined}
+                      translation-key="common_cancel"
+                      onClick={handleCloseMenuChooseStay}
+                    >
+                      {t("common_cancel")}
+                    </Button>
+                    <Button
+                      btnType={BtnType.Primary}
+                      translation-key="common_done"
+                      className={classes.btnSave}
+                      onClick={onSubmitChooseProjectStay}
+                    >
+                      {t("common_save")}
+                    </Button>
+                  </Grid>
+                </Menu>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <InputSelect

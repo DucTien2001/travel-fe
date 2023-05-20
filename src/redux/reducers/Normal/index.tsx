@@ -3,6 +3,8 @@ import { Comment } from "models/comment";
 import { TourBill } from "models/tourBill";
 import * as types from "./actionTypes";
 import { TourPrice } from "models/tour";
+import { Stay } from "models/stay";
+import { Room } from "models/room";
 
 export interface ITour {
   id?: number;
@@ -47,16 +49,16 @@ export interface IRoom {
   images: string[];
   numberOfBed: number;
   numberOfRoom: number;
-  hotelId?: number;
+  stayId?: number;
   amount?: number;
   priceDetail?: any;
 }
 
 export interface IRoomBillConfirm {
-  hotel: IHotel;
-  rooms: IRoom[];
-  startDate: string;
-  endDate: string;
+  stay: Stay;
+  rooms: Room[];
+  startDate: Date;
+  endDate: Date;
 }
 export interface IConfirmBookTour {
   tourId: number;

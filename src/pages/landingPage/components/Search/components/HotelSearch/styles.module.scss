@@ -35,6 +35,16 @@
         padding-top: 0;
     }
 }
+.boxItemLocation {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+        margin-bottom: 14px;
+    }
+}
 .boxItem {
     display: flex;
     flex-direction: column;
@@ -53,9 +63,7 @@
 }
 
 .boxItem:last-child {
-    padding-left: 16px;
-    padding-top: 28px;
-    
+    padding-left: 16px;    
     button {
         height:100%;
     }
@@ -65,5 +73,50 @@
         button {
            width: 100%;
         }
+    }
+}
+
+.boxItemBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 28px;
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+        margin-bottom: 14px;
+    }
+}
+.boxGuest {
+    position: relative;
+}
+.containerChooseGuest {
+    position: absolute;
+    top: 80px;
+    background-color: var(--white-color);
+    padding: 16px;
+    min-width: 280px;
+    border-radius: 4px;
+}
+
+.boxTitleCounter {
+    display: flex;
+    align-items: center;
+    svg {
+        color: var(--primary-color);
+        margin-right: 8px;
+    }
+    p {
+        margin: 0;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+}
+.boxBtnSearch{
+    display: flex;
+    align-items: flex-end;
+    margin-top: 16px;
+    
+    .btnSearch {
+        margin-left: auto;
     }
 }

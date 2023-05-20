@@ -6,16 +6,7 @@ import { HOTEL_SECTION, ICreateHotel, IHotel } from "models/hotel";
 import useAuth from "hooks/useAuth";
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBusinessTime,
-  faCalendar,
-  faClock,
-  faFaceSmile,
-  faLocationDot,
-  faPhone,
-  faSquareParking,
-  faWallet,
-} from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Stars from "components/Stars";
 import PopupModalImages from "components/Popup/PopupModalImages";
 import { Grid } from "@mui/material";
@@ -25,38 +16,19 @@ import PoolIcon from "@mui/icons-material/Pool";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import ElevatorIcon from "@mui/icons-material/Elevator";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
+import { Stay } from "models/stay";
+import { StayType } from "models/enterprise/stay";
+import { useTranslation } from "react-i18next";
+import { fCurrency2VND } from "utils/formatNumber";
 interface Props {
-  hotel: IHotel;
+  stay: Stay;
 }
-const listFacilities = [
-  {
-    icon: <AcUnitIcon />,
-    name: "AC",
-  },
-  {
-    icon: <RestaurantIcon />,
-    name: "Restaurant",
-  },
-  {
-    icon: <PoolIcon />,
-    name: "Swimming Pool",
-  },
-  {
-    icon: <AccessAlarmIcon />,
-    name: "24h Front-Desk",
-  },
-  {
-    icon: <LocalParkingIcon />,
-    name: "Parking",
-  },
-  {
-    icon: <ElevatorIcon />,
-    name: "Elevator",
-  },
-];
+
 // eslint-disable-next-line react/display-name
-const SectionTour = memo(({ hotel }: Props) => {
+const SectionTour = memo(({ stay }: Props) => {
   const { user } = useAuth();
+  const { t, i18n } = useTranslation("common");
+
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
 
   const onOpenPopupModalImages = () =>
@@ -69,6 +41,17 @@ const SectionTour = memo(({ hotel }: Props) => {
     window.scrollTo({ top: scrollDiv - 90, behavior: "smooth" });
   };
 
+  const getTypeState = (type: number) => {
+    switch (type) {
+      case StayType.HOTEL:
+        return t("enterprise_management_section_stay_status_option_hotel");
+      case StayType.HOMES_TAY:
+        return t("enterprise_management_section_stay_status_option_home_stay");
+      case StayType.RESORT:
+        return t("enterprise_management_section_stay_status_option_resort");
+    }
+  };
+
   return (
     <>
       <div
@@ -79,20 +62,18 @@ const SectionTour = memo(({ hotel }: Props) => {
           <Grid>
             <Col className={classes.rootImg}>
               <h2 className={`title ${classes.nameHotel}`}>
-                {hotel?.name} - {hotel?.location}
+                {stay?.name} - {stay?.city.name}
               </h2>
               <div className={classes.subProduct}>
                 <div className={classes.tags}>
-                  {hotel?.tags?.map((item, index) => (
-                    <Badge pill className={classes.badgeTags} key={index}>
-                      {item}
-                    </Badge>
-                  ))}
+                  <Badge pill className={classes.badgeTags}>
+                    {getTypeState(stay?.type)}
+                  </Badge>
                 </div>
                 <div className={classes.locationRate}>
-                  {hotel?.rate !== 0 && (
+                  {stay?.rate !== 0 && (
                     <Stars
-                      numberOfStars={Math.floor(hotel?.rate)}
+                      numberOfStars={Math.floor(stay?.rate)}
                       className={classes.starRating}
                     />
                   )}
@@ -101,8 +82,7 @@ const SectionTour = memo(({ hotel }: Props) => {
               <Grid className={classes.boxLocation}>
                 <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
                 <p>
-                  962 Ngo Quyen, An Hai Tay Ward, Son Tra District, Da Nang,
-                  Vietnam
+                  {stay?.commune.name}, {stay?.district.name}, {stay?.city.name}
                 </p>
               </Grid>
               <Row
@@ -114,7 +94,7 @@ const SectionTour = memo(({ hotel }: Props) => {
                   md="8"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={hotel?.images[0]} alt="anh" />
+                  <img src={stay?.images[0]} alt="anh" />
                 </Col>
                 <Col
                   className={clsx(classes.wrapperImg, classes.wrapperImg1)}
@@ -122,13 +102,13 @@ const SectionTour = memo(({ hotel }: Props) => {
                 >
                   <div className={clsx(classes.rowImg, classes.mobileImg)}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={hotel?.images[1]} alt="anh" />
+                    <img src={stay?.images[1]} alt="anh" />
                   </div>
                   <div className={clsx(classes.rowImg, classes.moreImg)}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={hotel?.images[1]} alt="anh" />
+                    <img src={stay?.images[2]} alt="anh" />
                     <div className={classes.modalImg}>
-                      <p>See All</p>
+                      <p>{t("common_see_all")}</p>
                     </div>
                   </div>
                 </Col>
@@ -147,59 +127,48 @@ const SectionTour = memo(({ hotel }: Props) => {
               <Grid className={classes.review}>
                 <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
                 <p>
-                  {hotel?.rate.toFixed(2)} From {hotel?.numberOfReviewer}{" "}
-                  reviews
+                  {stay?.rate.toFixed(2)}{" "}
+                  {t("stay_detail_section_stay_from_review")}{" "}
+                  {stay?.numberOfReviewer}{" "}
+                  {t("stay_detail_section_stay_reviews")}
                 </p>
               </Grid>
             </Grid>
             <Grid className={classes.boxPrice}>
-              <p>Price/room/night start from</p>
-              <h5>763,000 VND</h5>
+              <p>{t("stay_detail_section_stay_price_room_night")}</p>
+              <h5>
+                {fCurrency2VND(stay?.minPrice)} ~{" "}
+                {fCurrency2VND(stay?.maxPrice)} VND
+              </h5>
               <Button btnType={BtnType.Primary} onClick={scrollToElement}>
-                Select Room
+                {t("stay_detail_section_stay_select_room")}
               </Button>
             </Grid>
           </Grid>
           <Grid sx={{ padding: "24px 24px 0 24px" }}>
-            <h5>What about our hotel ?</h5>
-            <p>
-              Ba Na Hills is the most significant resort and recreational
-              complex in and of Vietnam. Take a full day tour at Ba Na Hills to
-              enjoy cool air and fantastic natural landscape, and max out the
-              fun with foods, numerous festivities, as well as recreational
-              activities offered on top of the world.
-            </p>
+            <h5>{t("stay_detail_section_stay_select_des")}</h5>
+
+            <p
+              dangerouslySetInnerHTML={{ __html: stay?.description }}
+              className={classes.text}
+            ></p>
           </Grid>
           <Grid className={classes.boxFacilities}>
-            <h5>Facilities</h5>
-            <Grid
-              container
-              spacing={{ xs: 2, md: 3 }}
-              columns={{ xs: 4, sm: 8, md: 12 }}
-              sx={{ justifyContent: "center", alignItems: "center" }}
-            >
-              {listFacilities?.map((item, index) => (
-                <Grid
-                  item
-                  xs={2}
-                  sm={4}
-                  md={4}
-                  className={classes.itemFacilities}
-                  key={index}
-                >
-                  {item?.icon}
-                  <p>{item?.name}</p>
-                </Grid>
-              ))}
-            </Grid>
-            <Grid className={classes.boxSeeMore}>
-              <p>See More Facilities</p>
+            <h5>{t("stay_detail_section_stay_select_facilities")}</h5>
+            <Grid>
+              <ul>
+                {stay?.convenient?.map((item, index) => (
+                  <li key={index} className={classes.text}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </Grid>
           </Grid>
           <PopupModalImages
             isOpen={openPopupModalImages}
             toggle={onOpenPopupModalImages}
-            images={hotel?.images}
+            images={stay?.images}
           />
         </Container>
       </div>

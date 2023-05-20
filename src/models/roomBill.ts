@@ -1,5 +1,19 @@
 import { IHotel } from "./hotel";
-import { IRoom } from "./room";
+import { IRoom, Room } from "./room";
+import { Stay } from "./stay";
+
+export interface RoomBillConfirm {
+  userId?: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName:string;
+  specialRequest: string;
+  stay: Stay;
+  rooms: Room[];
+  startDate: Date;
+  endDate: Date;
+}
 
 export interface IRoomBillConfirm {
   hotel: IHotel;

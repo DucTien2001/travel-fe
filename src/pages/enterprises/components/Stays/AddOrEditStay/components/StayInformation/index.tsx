@@ -33,6 +33,7 @@ import moment from "moment";
 import InputCreatableSelect from "components/common/inputs/InputCreatableSelect";
 import { StayService } from "services/enterprise/stay";
 import InputTimePicker from "components/common/inputs/InputTimePicker";
+import TimePicker from "components/common/inputs/TimePicker";
 
 const ReactQuill = dynamic(async () => await import("react-quill"), {
   ssr: false,
@@ -660,6 +661,7 @@ const InformationComponent = memo((props: Props) => {
                 title={t(
                   "enterprise_management_section_tour_tab_information_city"
                 )}
+                className={classes.selectLocation}
                 name="province"
                 control={control}
                 selectProps={{
@@ -694,6 +696,7 @@ const InformationComponent = memo((props: Props) => {
                 title={t(
                   "enterprise_management_section_tour_tab_information_commune"
                 )}
+                className={classes.selectLocation}
                 name="commune"
                 control={control}
                 selectProps={{
@@ -724,8 +727,8 @@ const InformationComponent = memo((props: Props) => {
                 name={`checkInTime`}
                 control={control}
                 render={({ field }) => (
-                  <InputTimePicker
-                    title={t(
+                  <TimePicker
+                    label={t(
                       "enterprise_management_section_add_or_edit_stay_tab_information_check_in_title"
                     )}
                     value={field.value as any}
@@ -741,8 +744,8 @@ const InformationComponent = memo((props: Props) => {
                 name={`checkOutTime`}
                 control={control}
                 render={({ field }) => (
-                  <InputTimePicker
-                    title={t(
+                  <TimePicker
+                    label={t(
                       "enterprise_management_section_add_or_edit_stay_tab_information_check_out_title"
                     )}
                     value={field.value as any}
