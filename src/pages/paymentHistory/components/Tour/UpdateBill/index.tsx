@@ -1,73 +1,44 @@
 import React, { memo, useEffect, useState, useMemo } from "react";
-import { images } from "configs/images";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import { Container, Form } from "reactstrap";
+import { Container } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
-import {
-  Collapse,
-  Grid,
-  Link,
-  Popover,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import { Collapse, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { Controller, useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faEnvelope,
-  faPhone,
-  faCircleCheck,
-  faCalendarDays,
-  faRotateLeft,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUser, faEnvelope, faPhone, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputTextField from "components/common/inputs/InputTextfield";
 import { VALIDATION } from "configs/constants";
-import UseAuth from "hooks/useAuth";
-import { setConfirmBookTourReducer } from "redux/reducers/Normal/actionTypes";
-import { UserService } from "services/user";
 import * as yup from "yup";
-import { ITour } from "redux/reducers/Normal";
 import PopupDetailTour from "pages/listTour/[tourId]/components/SectionTour/components/PopupDetailTour";
 import { BookTourReview, Tour } from "models/tour";
 import { ReducerType } from "redux/reducers";
 import moment from "moment";
-import {
-  fCurrency2,
-  fCurrency2VND,
-  fPercent,
-  fShortenNumber,
-} from "utils/formatNumber";
+import { fCurrency2, fCurrency2VND, fPercent, fShortenNumber } from "utils/formatNumber";
 import _ from "lodash";
-import {
-  DataPagination,
-  EDiscountType,
-  EPaymentStatus,
-  EServicePolicyType,
-  OptionItem,
-} from "models/general";
-import { FindAll, GetVoucherValue, Voucher } from "models/voucher";
+import { DataPagination, EDiscountType, EServicePolicyType, EServiceType, OptionItem } from "models/general";
+import { FindAll, Voucher } from "models/voucher";
 import { VoucherService } from "services/normal/voucher";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 import InputTextfield from "components/common/inputs/InputTextfield";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { TourBillService } from "services/normal/tourBill";
 import { TourBill } from "models/tourBill";
 import InputCounter from "components/common/inputs/InputCounter";
 import InputSelect from "components/common/inputs/InputSelect";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
-import PopupVoucher from "pages/book/tour/[tourId]/components/PopopVoucher";
-import { use } from "i18next";
+import { BillHelper } from "helpers/bill";
+import PopupVoucherNew from "pages/book/tour/[tourId]/components/PopopVoucherNew";
+import { EventService } from "services/normal/event";
+import { IEvent } from "models/event";
 var isEmpty = require("lodash.isempty");
 
 const CHARACTER_LIMIT = 100;
@@ -117,22 +88,17 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down(600));
-  const { getSelectChangeDate } = useSelector(
-    (state: ReducerType) => state.normal
-  );
+  const { getSelectChangeDate } = useSelector((state: ReducerType) => state.normal);
 
   const { t, i18n } = useTranslation("common");
+
   const [tourBill, setTourBill] = useState<TourBill>(null);
   const [tour, setTour] = useState<Tour>();
   const [openPopupDetailTour, setOpenPopupDetailTour] = useState(false);
   const [openPopupVoucher, setOpenPopupVoucher] = useState(false);
   const [voucher, setVoucher] = useState<DataPagination<Voucher>>();
-  const [openCollapse, setOpenCollapse] = useState(false);
   const [openCollapseReschedule, setOpenCollapseReschedule] = useState(false);
-  const [voucherChoose, setVoucherChoose] = useState({
-    discountType: null,
-    voucherValue: null,
-  });
+  const [voucherChoose, setVoucherChoose] = useState<Voucher>();
   const [priceAndAge, setPriceAndAge] = useState<PriceAndAge>({
     tourOnSaleId: null,
     childrenAgeMin: null,
@@ -144,27 +110,30 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
     quantityOrdered: null,
   });
   const [totalBillReschedule, setTotalBillReschedule] = useState(null);
+  const [voucherDiscount, setVoucherDiscount] = useState(0);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [totalBillAfterDiscount, setTotalBillAfterDiscount] = useState(0);
   const [isValidQuantity, setIsValidQuantity] = useState(false);
   const [priceMustPay, setPriceMustPay] = useState(null);
+  const [inputValueCode, setInputValueCode] = useState(null);
+  const [valueEvent, setValueEvent] = useState<IEvent>(null);
 
   const dayValid = useMemo(() => {
     return tour?.tourOnSales?.map((item) => {
       return moment(item.startDate).format("DD/MM/YYYY");
     });
   }, [tour]);
-
-  const policyRefund = useMemo(() => {
-    return [];
-  }, [tour]);
+  const refundRate = useMemo(() => {
+    return BillHelper.getRefundRate(tourBill?.tourOnSaleData?.startDate, EServicePolicyType.REFUND, tourBill?.tourData?.tourPolicies) || 0;
+  }, [tourBill]);
+  const priceRefund = useMemo(() => {
+    return (tourBill?.totalBill * refundRate) / 100 || 0;
+  }, [tourBill, refundRate]);
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      firstName: yup
-        .string()
-        .required(t("update_bill_contact_detail_first_name_validation")),
-      lastName: yup
-        .string()
-        .required(t("update_bill_contact_detail_last_name_validation")),
+      firstName: yup.string().required(t("update_bill_contact_detail_first_name_validation")),
+      lastName: yup.string().required(t("update_bill_contact_detail_last_name_validation")),
       email: yup
         .string()
         .email(t("update_bill_contact_detail_email_validation"))
@@ -195,6 +164,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
     reset,
@@ -208,115 +178,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
     },
   });
 
-  const onOpenPopupDetailTour = () =>
-    setOpenPopupDetailTour(!openPopupDetailTour);
-
-  const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
-
-  const _onSubmit = (data: BookForm) => {
-    TourBillService.reSchedule(tourBill?.id, {
-      tourId: tour?.id,
-      tourOnSaleId: priceAndAge?.tourOnSaleId,
-      amountChild: data?.numberOfChild,
-      amountAdult: data?.numberOfAdult,
-      price: totalBillReschedule,
-      discount: priceAndAge?.discount,
-      totalBill: priceMustPay,
-      email: data?.email,
-      phoneNumber: data?.phoneNumber,
-      firstName: data?.firstName,
-      lastName: data?.lastName,
-    })
-      .then((res) => {
-        router.push(res?.data?.checkoutUrl);
-      })
-      .catch((err) => {
-        dispatch(setErrorMess(err));
-      });
-  };
-
   const specialRequest = watch("specialRequest");
-
-  const fetchVoucher = (value?: {
-    take?: number;
-    page?: number;
-    keyword?: string;
-    owner?: number;
-  }) => {
-    const params: FindAll = {
-      take: value?.take || voucher?.meta?.take || 10,
-      page: value?.page || voucher?.meta?.page || 1,
-      keyword: undefined,
-      owner: tour?.owner,
-    };
-    if (value?.keyword !== undefined) {
-      params.keyword = value.keyword || undefined;
-    }
-
-    VoucherService.getAllVouchers(params)
-      .then((res) => {
-        setVoucher({
-          data: res.data,
-          meta: res.meta,
-        });
-      })
-      .catch((err) => {
-        dispatch(setErrorMess(err));
-      });
-  };
-
-  const onGetVoucher = (data: GetVoucherValue) => {
-    setVoucherChoose({
-      discountType: data?.discountType,
-      voucherValue: data?.voucherValue,
-    });
-  };
-
-  const handleValidVoucher = (startTime) => {
-    var bookDate = new Date();
-    let isValid = false;
-    if (bookDate < new Date(startTime)) {
-      isValid = true;
-    } else {
-      isValid = false;
-    }
-    return isValid;
-  };
-
-  const yesterday = moment().subtract(1, "day");
-
-  const disableCustomDt = (current) => {
-    return (
-      dayValid?.includes(current.format("DD/MM/YYYY")) &&
-      current.isAfter(yesterday) &&
-      !current.isSame(tourBill?.tourOnSaleData?.startDate)
-    );
-  };
-
-  const handleChangeStartDate = (e) => {
-    tour?.tourOnSales.forEach((item) => {
-      if (
-        moment(item.startDate).format("DD/MM/YYYY") ===
-        moment(e._d).format("DD/MM/YYYY")
-      ) {
-        setPriceAndAge({
-          tourOnSaleId: item?.id,
-          childrenAgeMin: item.childrenAgeMin,
-          childrenAgeMax: item.childrenAgeMax,
-          priceChildren: item.childrenPrice,
-          adultPrice: item.adultPrice,
-          discount: item.discount,
-          quantity: item.quantity,
-          quantityOrdered: item.quantityOrdered,
-        });
-      }
-    });
-  };
-
   const _numberOfChild = watch("numberOfChild");
   const _numberOfAdult = watch("numberOfAdult");
   const _startDate = watch("startDate");
-  const dateReschedule = new Date();
 
   useEffect(() => {
     if (tourBillId && !isNaN(Number(tourBillId))) {
@@ -328,12 +193,14 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
           dispatch(setErrorMess(err));
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tourBillId]);
 
   useEffect(() => {
     if (_startDate) {
       handleChangeStartDate(_startDate);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_startDate]);
 
   useEffect(() => {
@@ -356,6 +223,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
       numberOfAdult: tourBill?.amountAdult,
       numberOfChild: tourBill?.amountChild,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tourBill]);
 
   useEffect(() => {
@@ -372,74 +240,189 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
   }, [getSelectChangeDate]);
 
   useEffect(() => {
-    if (!isEmpty(tour)) {
+    if (!isEmpty(tour) && !isEmpty(tour.tourOnSales)) {
       fetchVoucher();
+      for (let item of tour.tourOnSales) {
+        if (moment(item.startDate).format("DD/MM/YYYY") !== moment(tourBill.tourOnSaleData.startDate).format("DD/MM/YYYY")) {
+          setValue("startDate", new Date(item.startDate));
+          handleChangeStartDate(moment(item.startDate));
+          break;
+        }
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tour]);
 
   useEffect(() => {
-    if (
-      _numberOfAdult + _numberOfChild >=
-      priceAndAge.quantity - priceAndAge.quantityOrdered
-    ) {
+    console.log(priceAndAge?.priceChildren, _numberOfChild);
+    if (_numberOfAdult + _numberOfChild >= priceAndAge.quantity - priceAndAge.quantityOrdered) {
       setIsValidQuantity(true);
     } else {
       setIsValidQuantity(false);
     }
+    setTotalBillReschedule(
+      ((_numberOfChild * priceAndAge?.priceChildren + _numberOfAdult * priceAndAge?.adultPrice) * (100 - priceAndAge?.discount)) / 100
+    );
   }, [priceAndAge, _numberOfAdult, _numberOfChild]);
 
   useEffect(() => {
-    if (priceAndAge?.discount <= 100) {
-      setTotalBillReschedule(
-        ((_numberOfChild * priceAndAge?.priceChildren +
-          _numberOfAdult * priceAndAge?.adultPrice) *
-          (100 - priceAndAge?.discount)) /
-          100
-      );
+    let discount = 0;
+    if (voucherChoose) {
+      if (voucherChoose?.discountType === EDiscountType.PERCENT) {
+        discount = (totalBillReschedule * voucherChoose.discountValue) / 100;
+        if (!!voucherChoose.maxDiscount && discount > voucherChoose.maxDiscount) {
+          discount = voucherChoose.maxDiscount;
+        }
+      } else {
+        discount = voucherChoose.discountValue;
+      }
+    }
+    setVoucherDiscount(discount);
+  }, [totalBillReschedule, voucherChoose]);
+
+  useEffect(() => {
+    let discount = 0;
+    if (valueEvent) {
+      if (!valueEvent?.minOrder || totalBillReschedule >= valueEvent?.minOrder) {
+        if (valueEvent?.discountType === EDiscountType.PERCENT) {
+          discount = (totalBillReschedule * valueEvent.discountValue) / 100;
+          if (!!valueEvent.maxDiscount && discount > valueEvent.maxDiscount) {
+            discount = valueEvent.maxDiscount;
+          }
+        } else {
+          discount = valueEvent.discountValue;
+        }
+        dispatch(setSuccessMess(t("update_bill_price_apply_coupon_success")));
+      } else {
+        dispatch(
+          setErrorMess({ message: t("update_bill_price_apply_coupon_min_price", { minPrice: fCurrency2VND(valueEvent?.minOrder) }) })
+        );
+      }
+    }
+    setCouponDiscount(discount);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalBillReschedule, valueEvent]);
+
+  useEffect(() => {
+    setTotalBillAfterDiscount(totalBillReschedule - voucherDiscount - couponDiscount);
+  }, [totalBillReschedule, voucherDiscount, couponDiscount]);
+
+  useEffect(() => {
+    setPriceMustPay(totalBillAfterDiscount - priceRefund);
+  }, [totalBillAfterDiscount, priceRefund]);
+
+  const onOpenPopupDetailTour = () => setOpenPopupDetailTour(!openPopupDetailTour);
+
+  const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
+
+  const _onSubmit = (data: BookForm) => {
+    const price = totalBillReschedule / (1 - priceAndAge?.discount / 100);
+    TourBillService.reSchedule(tourBill?.id, {
+      tourId: tour?.id,
+      tourOnSaleId: priceAndAge?.tourOnSaleId,
+      amountChild: data?.numberOfChild,
+      amountAdult: data?.numberOfAdult,
+      price: price,
+      discount: price - totalBillAfterDiscount,
+      totalBill: totalBillAfterDiscount,
+      email: data?.email,
+      phoneNumber: data?.phoneNumber,
+      firstName: data?.firstName,
+      lastName: data?.lastName,
+      extraPay: priceMustPay >= 0 ? priceMustPay : null,
+      moneyRefund: priceMustPay < 0 ? -priceMustPay : null,
+    })
+      .then((res) => {
+        if (priceMustPay >= 0) {
+          router.push(res?.data?.checkoutUrl);
+        } else {
+          router.push("/paymentHistory/tour");
+        }
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      });
+  };
+
+  const fetchVoucher = (value?: { take?: number; page?: number; keyword?: string; owner?: number }) => {
+    const params: FindAll = {
+      take: value?.take || voucher?.meta?.take || 10,
+      page: value?.page || voucher?.meta?.page || 1,
+      keyword: undefined,
+      owner: tour?.owner,
+      serviceType: EServiceType.TOUR,
+      serviceId: tour?.id,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
+    }
+
+    VoucherService.getAllVouchers(params)
+      .then((res) => {
+        setVoucher({
+          data: res.data,
+          meta: res.meta,
+        });
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
+      });
+  };
+
+  const onChooseVoucher = (data: Voucher) => {
+    setVoucherChoose(data);
+    setOpenPopupVoucher(false);
+  };
+
+  const handleValidVoucher = (startTime) => {
+    var bookDate = new Date();
+    let isValid = false;
+    if (bookDate < new Date(startTime)) {
+      isValid = true;
     } else {
-      setTotalBillReschedule(
-        _numberOfChild * priceAndAge?.priceChildren +
-          _numberOfAdult * priceAndAge?.adultPrice -
-          priceAndAge?.discount
-      );
+      isValid = false;
     }
-  }, [priceAndAge, _numberOfAdult, _numberOfChild]);
+    return isValid;
+  };
 
-  useEffect(() => {
-    {
-      tour?.tourPolicies.map((item, index) =>
-        dateReschedule?.setDate(dateReschedule?.getDate()) <
-          new Date(tourBill?.createdAt)?.setDate(
-            new Date(tourBill?.createdAt)?.getDate() + item?.dayRange
-          ) && item?.policyType === EServicePolicyType.RESCHEDULE
-          ? voucherChoose?.discountType === EDiscountType.PERCENT
-            ? voucherChoose.voucherValue <= 100
-              ? setPriceMustPay(
-                  (totalBillReschedule * (100 - voucherChoose.voucherValue)) /
-                    100 -
-                    tourBill?.totalBill * (item?.moneyRate / 100)
-                )
-              : setPriceMustPay(
-                  totalBillReschedule -
-                    voucherChoose.voucherValue -
-                    tourBill?.totalBill * (item?.moneyRate / 100)
-                )
-            : setPriceMustPay(
-                totalBillReschedule -
-                  voucherChoose.voucherValue -
-                  tourBill?.totalBill * (item?.moneyRate / 100)
-              )
-          : null
-      );
-    }
-  }, [
-    tour,
-    tourBill,
-    totalBillReschedule,
-    voucherChoose,
-    _numberOfAdult,
-    _numberOfChild,
-  ]);
+  const onUseCoupon = () => {
+    dispatch(setLoading(true));
+    EventService.findByCode(inputValueCode)
+      .then((res) => {
+        setValueEvent(res?.data);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess({ message: t("update_bill_price_apply_coupon_fail") }));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
+
+  const yesterday = moment().subtract(1, "day");
+
+  const disableCustomDt = (current) => {
+    return (
+      dayValid?.includes(current.format("DD/MM/YYYY")) && current.isAfter(yesterday) && !current.isSame(tourBill?.tourOnSaleData?.startDate)
+    );
+  };
+
+  const handleChangeStartDate = (e) => {
+    tour?.tourOnSales.forEach((item) => {
+      if (moment(item.startDate).format("DD/MM/YYYY") === moment(e._d).format("DD/MM/YYYY")) {
+        setPriceAndAge({
+          tourOnSaleId: item?.id,
+          childrenAgeMin: item.childrenAgeMin,
+          childrenAgeMax: item.childrenAgeMax,
+          priceChildren: item.childrenPrice,
+          adultPrice: item.adultPrice,
+          discount: item.discount,
+          quantity: item.quantity,
+          quantityOrdered: item.quantityOrdered,
+        });
+      }
+    });
+  };
 
   return (
     <>
@@ -448,9 +431,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
           <Grid container spacing={2} className={classes.rootContent}>
             <Grid xs={7} item className={classes.leftPanel}>
               <Grid item xs={12}>
-                <h4 className={classes.title}>
-                  {t("update_bill_contact_detail_title")}
-                </h4>
+                <h4 className={classes.title}>{t("update_bill_contact_detail_title")}</h4>
                 <Grid
                   sx={{
                     backgroundColor: "var(--white-color)",
@@ -459,19 +440,13 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                     borderRadius: "10px",
                   }}
                 >
-                  <Grid
-                    container
-                    columnSpacing={isMobile ? 0 : 1}
-                    rowSpacing={3}
-                  >
+                  <Grid container columnSpacing={isMobile ? 0 : 1} rowSpacing={3}>
                     <Grid item xs={12} sm={6}>
                       <InputTextField
                         title={t("update_bill_contact_detail_first_name")}
                         placeholder={t("update_bill_contact_detail_first_name")}
                         inputRef={register("firstName")}
-                        startAdornment={
-                          <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-                        }
+                        startAdornment={<FontAwesomeIcon icon={faUser}></FontAwesomeIcon>}
                         errorMessage={errors?.firstName?.message}
                       />
                     </Grid>
@@ -480,9 +455,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         title={t("update_bill_contact_detail_last_name")}
                         placeholder={t("update_bill_contact_detail_last_name")}
                         inputRef={register("lastName")}
-                        startAdornment={
-                          <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-                        }
+                        startAdornment={<FontAwesomeIcon icon={faUser}></FontAwesomeIcon>}
                         errorMessage={errors?.lastName?.message}
                       />
                     </Grid>
@@ -492,9 +465,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       title={t("update_bill_contact_detail_email")}
                       placeholder={t("update_bill_contact_detail_email")}
                       inputRef={register("email")}
-                      startAdornment={
-                        <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
-                      }
+                      startAdornment={<FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>}
                       errorMessage={errors?.email?.message}
                     />
                   </Grid>
@@ -503,9 +474,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       title={t("update_bill_contact_detail_phone")}
                       placeholder={t("update_bill_contact_detail_phone")}
                       inputRef={register("phoneNumber")}
-                      startAdornment={
-                        <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
-                      }
+                      startAdornment={<FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>}
                       errorMessage={errors?.phoneNumber?.message}
                     />
                   </Grid>
@@ -513,9 +482,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
               </Grid>
               <Grid container item spacing={2}>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>
-                    {t("update_bill_special_request_title")}
-                  </h4>
+                  <h4 className={classes.title}>{t("update_bill_special_request_title")}</h4>
                   <Grid
                     sx={{
                       backgroundColor: "var(--white-color)",
@@ -530,9 +497,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       optional
                       multiline
                       rows={3}
-                      infor={`${
-                        specialRequest?.length || 0
-                      }/${CHARACTER_LIMIT}`}
+                      infor={`${specialRequest?.length || 0}/${CHARACTER_LIMIT}`}
                       inputRef={register("specialRequest")}
                       inputProps={{
                         maxLength: CHARACTER_LIMIT,
@@ -541,9 +506,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>
-                    {t("update_bill_price_detail_title")}
-                  </h4>
+                  <h4 className={classes.title}>{t("update_bill_price_detail_title")}</h4>
                   <Grid
                     sx={{
                       backgroundColor: "var(--white-color)",
@@ -554,127 +517,53 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                     }}
                   >
                     <Grid
-                      className={classes.boxPrice}
+                      // className={classes.boxPrice}
                       sx={{
                         borderBottom: "1px solid Var(--gray-10)",
                         paddingBottom: "14px",
                       }}
-                      onClick={() => setOpenCollapse(!openCollapse)}
                     >
-                      <Grid>
-                        {" "}
-                        <p className={classes.titlePrice}>
-                          {t("update_bill_price_detail_price_you_pay")}
-                        </p>
-                      </Grid>
-                      <Grid sx={{ display: "flex", alignItems: "center" }}>
-                        <h4 className={classes.price}>
+                      <Grid className={classes.boxReschedule}>
+                        <p className={classes.titlePrice}>{t("update_bill_price_detail_price_you_pay")}:</p>
+                        <p>
                           {fCurrency2VND(tourBill?.totalBill)}
                           VND
-                        </h4>
-                        {openCollapse ? (
-                          <KeyboardArrowUpIcon />
-                        ) : (
-                          <KeyboardArrowDownIcon />
-                        )}
+                        </p>
+                      </Grid>
+                      <Grid className={classes.boxReschedule}>
+                        <p>
+                          {t("update_bill_price_detail_price_reimbursed")} ({refundRate}%):
+                        </p>
+                        <p>{fCurrency2VND(priceRefund)} VND</p>
                       </Grid>
                     </Grid>
-                    <Collapse in={openCollapse} timeout="auto" unmountOnExit>
-                      <Grid className={classes.boxPriceDetail}>
-                        {tourBill?.discount !== 0 && (
-                          <Grid
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <p>{t("update_bill_price_detail_discount")}</p>
-                            {tourBill?.discount <= 100 ? (
-                              <p>{fPercent(tourBill?.discount)} %</p>
-                            ) : (
-                              <p>{fCurrency2VND(tourBill?.discount)} VND</p>
-                            )}
-                          </Grid>
-                        )}
-                        <Grid
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <p>
-                            {t("update_bill_price_detail_adult")} (
-                            {tourBill?.amountAdult}x)
-                          </p>
-                        </Grid>
-                        {tourBill?.amountChild !== 0 && (
-                          <Grid
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <p>
-                              {t("update_bill_price_detail_child")} (
-                              {tourBill?.amountChild}x)
-                            </p>
-                          </Grid>
-                        )}
-                      </Grid>
-                    </Collapse>
                     <Grid
                       className={classes.boxPrice}
                       sx={{
                         borderBottom: "1px solid Var(--gray-10)",
                         padding: "14px 0",
                       }}
-                      onClick={() =>
-                        setOpenCollapseReschedule(!openCollapseReschedule)
-                      }
+                      onClick={() => setOpenCollapseReschedule(!openCollapseReschedule)}
                     >
                       <Grid>
                         {" "}
-                        <p className={classes.titlePrice}>
-                          {t(
-                            "update_bill_price_detail_price_you_pay_reschedule"
-                          )}
-                        </p>
+                        <p className={classes.titlePrice}>{t("update_bill_price_detail_price_you_pay_reschedule")}</p>
                       </Grid>
                       <Grid sx={{ display: "flex", alignItems: "center" }}>
                         <h4 className={classes.price}>
-                          {voucherChoose?.discountType === EDiscountType.PERCENT
-                            ? voucherChoose.voucherValue <= 100
-                              ? fCurrency2VND(
-                                  (totalBillReschedule *
-                                    (100 - voucherChoose.voucherValue)) /
-                                    100
-                                )
-                              : fCurrency2VND(
-                                  totalBillReschedule -
-                                    voucherChoose.voucherValue
-                                )
-                            : fCurrency2VND(
-                                totalBillReschedule - voucherChoose.voucherValue
-                              )}
-                          {/* {totalBillReschedule} */}
+                          {fCurrency2VND(totalBillReschedule)}
                           VND
                         </h4>
-                        {openCollapseReschedule ? (
-                          <KeyboardArrowUpIcon />
-                        ) : (
-                          <KeyboardArrowDownIcon />
-                        )}
+                        {openCollapseReschedule ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                       </Grid>
                     </Grid>
-                    <Collapse
-                      in={openCollapseReschedule}
-                      timeout="auto"
-                      unmountOnExit
-                    >
-                      <Grid className={classes.boxPriceDetail}>
+                    <Collapse in={openCollapseReschedule} timeout="auto" unmountOnExit>
+                      <Grid
+                        className={classes.boxPriceDetail}
+                        sx={{
+                          borderBottom: "1px solid Var(--gray-10)",
+                        }}
+                      >
                         {priceAndAge?.discount !== 0 && (
                           <Grid
                             sx={{
@@ -699,16 +588,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                           }}
                         >
                           <p>
-                            {t("update_bill_price_detail_adult")} (
-                            {_numberOfAdult}x)
+                            {t("update_bill_price_detail_adult")} ({_numberOfAdult}x)
                           </p>
-                          <p>
-                            {" "}
-                            {fCurrency2VND(
-                              priceAndAge?.adultPrice * _numberOfAdult
-                            )}{" "}
-                            VND
-                          </p>
+                          <p> {fCurrency2VND(priceAndAge?.adultPrice * _numberOfAdult)} VND</p>
                         </Grid>
                         {_numberOfChild !== 0 && (
                           <Grid
@@ -719,116 +601,100 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                             }}
                           >
                             <p>
-                              {t("update_bill_price_detail_child")} (
-                              {_numberOfChild}x)
+                              {t("update_bill_price_detail_child")} ({_numberOfChild}x)
                             </p>
-                            <p>
-                              {" "}
-                              {fCurrency2VND(
-                                priceAndAge?.priceChildren * _numberOfChild
-                              )}{" "}
-                              VND
-                            </p>
+                            <p> {fCurrency2VND(priceAndAge?.priceChildren * _numberOfChild)} VND</p>
                           </Grid>
                         )}
                       </Grid>
                     </Collapse>
-                    <Grid>
-                      <Grid className={classes.boxReschedule}>
-                        <p>
-                          {t("update_bill_price_detail_price_you_reimbursed")}:
-                        </p>
-                        {tour?.tourPolicies.map((item, index) =>
-                          dateReschedule?.setDate(dateReschedule?.getDate()) <=
-                            new Date(tourBill?.createdAt)?.setDate(
-                              new Date(tourBill?.createdAt)?.getDate() +
-                                item?.dayRange
-                            ) &&
-                          item?.policyType === EServicePolicyType.RESCHEDULE ? (
-                            <p>
-                              {fCurrency2VND(
-                                tourBill?.totalBill * (item?.moneyRate / 100)
-                              )}{" "}
-                              VND
-                            </p>
-                          ) : null
-                        )}
-                      </Grid>
-                      <Grid className={classes.boxReschedule}>
-                        <p>{t("update_bill_price_detail_price_you_extra")}:</p>
-                        {/* {tour?.tourPolicies.map((item, index) =>
-                          dateReschedule?.setDate(dateReschedule?.getDate()) <
-                            new Date(tourBill?.createdAt)?.setDate(
-                              new Date(tourBill?.createdAt)?.getDate() +
-                                item?.dayRange
-                            ) &&
-                          item?.policyType === EServicePolicyType.RESCHEDULE ? (
-                            <p>
-                              {fCurrency2VND(
-                                totalBillReschedule -
-                                  tourBill?.totalBill * (item?.moneyRate / 100)
-                              )}{" "}
-                              VND
-                            </p>
-                          ) : null
-                        )} */}
-                        <p>{fCurrency2VND(priceMustPay)} VND</p>
-                      </Grid>
-                    </Grid>
                     <Grid className={classes.containerVoucher}>
                       <Grid className={classes.titleVoucher}>
                         <MonetizationOnIcon />
                         <p>{t("update_bill_price_detail_discount_code")}</p>
                       </Grid>
-                      <Grid sx={{ display: "flex", paddingTop: "14px" }}>
-                        {voucher?.data?.length ? (
-                          voucher?.data?.map((item, index) => (
-                            <Grid key={index}>
-                              {item?.discountType === EDiscountType.PERCENT ? (
+                      <Grid className="d-flex">
+                        <Grid sx={{ display: "flex", paddingTop: "14px" }}>
+                          {voucherChoose ? (
+                            <Grid>
+                              {voucherChoose?.discountType === EDiscountType.PERCENT ? (
                                 <Grid
                                   className={clsx(classes.boxVoucher, {
-                                    [classes.boxVoucherInValid]:
-                                      handleValidVoucher(item?.startTime),
+                                    [classes.boxVoucherInValid]: handleValidVoucher(voucherChoose?.startTime),
                                   })}
                                 >
                                   <span>
-                                    {t("voucher_title_deal")}{" "}
-                                    {fPercent(item?.discountValue)}
+                                    {t("voucher_title_deal")} {fPercent(voucherChoose?.discountValue)}
                                   </span>
-                                  {item?.maxDiscount !== 0 && (
+                                  {voucherChoose?.maxDiscount !== 0 && (
                                     <span>
-                                      {t("voucher_title_max")}{" "}
-                                      {fCurrency2VND(item?.maxDiscount)} VND
+                                      {t("voucher_title_max")} {fCurrency2VND(voucherChoose?.maxDiscount)} VND
                                     </span>
                                   )}
                                 </Grid>
                               ) : (
                                 <Grid
                                   className={clsx(classes.boxVoucher, {
-                                    [classes.boxVoucherInValid]:
-                                      handleValidVoucher(item?.startTime),
+                                    [classes.boxVoucherInValid]: handleValidVoucher(voucherChoose?.startTime),
                                   })}
                                 >
-                                  {t("voucher_title_deal")}{" "}
-                                  {fShortenNumber(item?.discountValue)} VND
+                                  {t("voucher_title_deal")} {fShortenNumber(voucherChoose?.discountValue)} VND
                                 </Grid>
                               )}
                             </Grid>
-                          ))
-                        ) : (
-                          <Grid>
-                            <p style={{ fontWeight: "600" }}>
-                              {t("update_bill_price_detail_use_voucher_no")}
-                            </p>
-                          </Grid>
-                        )}
+                          ) : (
+                            <Grid>
+                              <p style={{ fontWeight: "600" }}>{t("update_bill_price_detail_no_use_voucher")}</p>
+                            </Grid>
+                          )}
+                        </Grid>
+                        <Grid className={classes.btnChooseVoucher} onClick={onOpenPopupVoucher}>
+                          <p>{t("update_bill_price_detail_choose_voucher")}</p>
+                        </Grid>
                       </Grid>
+                    </Grid>
+                    <Grid container spacing={2} sx={{ marginTop: "8px" }}>
+                      <Grid item xs={8}>
+                        <InputTextfield
+                          placeholder="Example: CHEAPTRAVEL"
+                          type="text"
+                          onChange={(e) => setInputValueCode(e.target.value)}
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Button btnType={BtnType.Primary} className={classes.btnUseCoupon} onClick={onUseCoupon}>
+                          {t("book_page_section_price_detail_use_coupon_btn")}
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    {(!!voucherDiscount || !!couponDiscount) && (
                       <Grid
-                        className={classes.btnChooseVoucher}
-                        onClick={onOpenPopupVoucher}
+                        sx={{
+                          borderBottom: "1px solid Var(--gray-10)",
+                        }}
                       >
-                        <p>{t("update_bill_price_detail_choose_voucher")}</p>
+                        <Grid className={classes.boxReschedule}>
+                          <p>{t("update_bill_price_detail_total_coupon_price")}:</p>
+                          <p>{fCurrency2VND(voucherDiscount + couponDiscount)} VND</p>
+                        </Grid>
+                        <Grid className={clsx(classes.boxReschedule, classes.boxPrice)}>
+                          <p>{t("update_bill_price_detail_price_after_apply_coupon")}:</p>
+                          <h4 className={classes.price}>{fCurrency2VND(totalBillAfterDiscount)} VND</h4>
+                        </Grid>
                       </Grid>
+                    )}
+                    <Grid>
+                      {priceMustPay >= 0 ? (
+                        <Grid className={classes.boxReschedule}>
+                          <p>{t("update_bill_price_detail_price_you_extra")}:</p>
+                          <p>{fCurrency2VND(priceMustPay)} VND</p>
+                        </Grid>
+                      ) : (
+                        <Grid className={classes.boxReschedule}>
+                          <p>{t("update_bill_price_detail_price_you_reimbursed")}:</p>
+                          <p>{fCurrency2VND(-priceMustPay)} VND</p>
+                        </Grid>
+                      )}
                     </Grid>
                     <Grid
                       sx={{
@@ -846,12 +712,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid
-              xs={5}
-              item
-              sx={{ marginTop: "40px" }}
-              className={classes.rightPanel}
-            >
+            <Grid xs={5} item sx={{ marginTop: "40px" }} className={classes.rightPanel}>
               <Grid className={classes.rootPanelRight}>
                 <Grid className={classes.boxTitle}>
                   <FontAwesomeIcon icon={faCircleCheck}></FontAwesomeIcon>
@@ -863,9 +724,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   </Grid>
                   <Grid className={classes.product}>
                     <img src={tourBill?.tourData?.images[0]} alt="anh"></img>
-                    <p onClick={onOpenPopupDetailTour}>
-                      {t("update_bill_booking_summary_view_detail")}
-                    </p>
+                    <p onClick={onOpenPopupDetailTour}>{t("update_bill_booking_summary_view_detail")}</p>
                   </Grid>
                 </Grid>
                 <Grid className={classes.boxSelect}>
@@ -901,9 +760,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   <Grid className={classes.boxNumberTickets}>
                     <Grid>
                       <p>
-                        {t("update_bill_section_adult")} (
-                        {t("update_bill_section_age")} &gt;{" "}
-                        {priceAndAge?.childrenAgeMax})
+                        {t("update_bill_section_adult")} ({t("update_bill_section_age")} &gt; {priceAndAge?.childrenAgeMax})
                       </p>
                       <span>{fCurrency2(priceAndAge?.adultPrice)} VND</span>
                     </Grid>
@@ -914,10 +771,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         render={({ field }) => (
                           <InputCounter
                             className={classes.inputCounter}
-                            max={
-                              priceAndAge?.quantity -
-                              priceAndAge.quantityOrdered
-                            }
+                            max={priceAndAge?.quantity - priceAndAge.quantityOrdered}
                             min={tourBill?.amountAdult}
                             onChange={field.onChange}
                             value={field.value}
@@ -929,9 +783,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   <Grid className={classes.boxNumberTickets}>
                     <Grid>
                       <p>
-                        {t("update_bill_section_child")} (
-                        {t("update_bill_section_age")}{" "}
-                        {priceAndAge?.childrenAgeMin}-
+                        {t("update_bill_section_child")} ({t("update_bill_section_age")} {priceAndAge?.childrenAgeMin}-
                         {priceAndAge?.childrenAgeMax})
                       </p>
                       <span>{fCurrency2(priceAndAge?.priceChildren)} VND</span>
@@ -943,10 +795,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         render={({ field }) => (
                           <InputCounter
                             className={classes.inputCounter}
-                            max={
-                              priceAndAge?.quantity -
-                              priceAndAge.quantityOrdered
-                            }
+                            max={priceAndAge?.quantity - priceAndAge.quantityOrdered}
                             min={tourBill?.amountChild}
                             onChange={field.onChange}
                             value={field.value}
@@ -962,8 +811,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       className={classes.discount}
                       dangerouslySetInnerHTML={{
                         __html: t("update_bill_section_number_ticket_left", {
-                          number:
-                            priceAndAge?.quantity - priceAndAge.quantityOrdered,
+                          number: priceAndAge?.quantity - priceAndAge.quantityOrdered,
                         }),
                       }}
                     ></p>
@@ -977,8 +825,7 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   >
                     <p>{t("update_bill_section_duration")}: &nbsp;</p>
                     <p>
-                      {tour?.numberOfDays} {t("update_bill_section_days")} -{" "}
-                      {tour?.numberOfNights} {t("update_bill_section_nights")}
+                      {tour?.numberOfDays} {t("update_bill_section_days")} - {tour?.numberOfNights} {t("update_bill_section_nights")}
                     </p>
                   </Grid>
                   <Grid
@@ -1002,17 +849,16 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
           </Grid>
         </Container>
       </Grid>
-      <PopupDetailTour
-        isOpen={openPopupDetailTour}
-        toggle={onOpenPopupDetailTour}
-        tour={tour}
-      />
-      <PopupVoucher
-        isOpen={openPopupVoucher}
-        toggle={onOpenPopupVoucher}
-        voucher={voucher?.data}
-        onGetVoucher={onGetVoucher}
-      />
+      <PopupDetailTour isOpen={openPopupDetailTour} toggle={onOpenPopupDetailTour} tour={tour} />
+      {openPopupVoucher && (
+        <PopupVoucherNew
+          isOpen={openPopupVoucher}
+          toggle={onOpenPopupVoucher}
+          vouchers={voucher?.data}
+          voucherUsing={voucherChoose}
+          onChooseVoucher={onChooseVoucher}
+        />
+      )}
     </>
   );
 });
