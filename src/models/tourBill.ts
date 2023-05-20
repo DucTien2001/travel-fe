@@ -68,6 +68,8 @@ export interface TourBill {
   firstName?: string;
   lastName?: string;
   specialRequest?: string;
+  oldBillData?: TourBill;
+  oldBillId?: number;
 }
 
 export interface IVerifyBookTour {

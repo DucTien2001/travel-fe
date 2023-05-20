@@ -9,11 +9,34 @@ import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
 import { fCurrency2VND } from "utils/formatNumber";
 import DownloadTourBill from "./DownloadTourBill";
-import { Box, IconButton, Menu, MenuItem, Paper, TableBody, TableCell, TableContainer, TablePagination, TableRow } from "@mui/material";
-import { DataPagination, EBillStatus, EPaymentStatus, EServicePolicyType, TableHeaderLabel } from "models/general";
+import {
+  Box,
+  Collapse,
+  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Paper,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TablePagination,
+  TableRow,
+} from "@mui/material";
+import {
+  DataPagination,
+  EBillStatus,
+  EPaymentStatus,
+  EServicePolicyType,
+  TableHeaderLabel,
+} from "models/general";
 import InputSearch from "components/common/inputs/InputSearch";
 import TableHeader from "components/Table/TableHeader";
-import { DeleteOutlineOutlined, EditOutlined, ExpandMoreOutlined } from "@mui/icons-material";
+import {
+  DeleteOutlineOutlined,
+  EditOutlined,
+  ExpandMoreOutlined,
+} from "@mui/icons-material";
 import { FindAll, TourBill } from "models/tourBill";
 import useDebounce from "hooks/useDebounce";
 import StatusPayment from "components/StatusPayment";
@@ -30,7 +53,15 @@ import AddCommentIcon from "@mui/icons-material/AddComment";
 import PopupAddTourComment from "pages/listTour/[tourId]/components/PopupAddTourComment";
 import { useTranslation } from "react-i18next";
 import { BillHelper } from "helpers/bill";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAnglesRight,
+  faLocationDot,
+  faSignsPost,
+} from "@fortawesome/free-solid-svg-icons";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 // eslint-disable-next-line react/display-name
 const Tour = memo(() => {
   const dispatch = useDispatch();
@@ -87,7 +118,8 @@ const Tour = memo(() => {
 
   const [modalDownloadTourBill, setModalDownloadTourBill] = useState(false);
   const [tourBill, setTourBill] = useState<TourBill>(null);
-  const [openConfirmCancelBookTour, setOpenConfirmCancelBookTour] = useState(false);
+  const [openConfirmCancelBookTour, setOpenConfirmCancelBookTour] =
+    useState(false);
   const [data, setData] = useState<DataPagination<TourBill>>();
   const [keyword, setKeyword] = useState<string>("");
   const [itemAction, setItemAction] = useState<TourBill>();
@@ -96,6 +128,7 @@ const Tour = memo(() => {
   const [tour, setTour] = useState<Tour>(null);
   const [openAddInformation, setOpenAddInformation] = useState(false);
   const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
+  const [open, setOpen] = useState(0);
 
   const onToggleAddComment = () => setOpenPopupAddComment(!openPopupAddComment);
 
@@ -113,7 +146,10 @@ const Tour = memo(() => {
     setOpenPopupSelectDate(!openPopupSelectDate);
   };
 
-  const handleAction = (event: React.MouseEvent<HTMLButtonElement>, item: TourBill) => {
+  const handleAction = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    item: TourBill
+  ) => {
     setItemAction(item);
     setActionAnchor(event.currentTarget);
   };
@@ -123,22 +159,32 @@ const Tour = memo(() => {
     setActionAnchor(null);
   };
 
-  const sortDataByDate = (first, second) => Number(Date.parse(second)) - Number(Date.parse(first));
+  const sortDataByDate = (first, second) =>
+    Number(Date.parse(second)) - Number(Date.parse(first));
 
-  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => {
+  const handleChangePage = (
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    newPage: number
+  ) => {
     fetchData({
       page: newPage + 1,
     });
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     fetchData({
       take: Number(event.target.value),
       page: 1,
     });
   };
 
-  const fetchData = (value?: { take?: number; page?: number; keyword?: string }) => {
+  const fetchData = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+  }) => {
     const params: FindAll = {
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
@@ -159,7 +205,10 @@ const Tour = memo(() => {
       .finally(() => dispatch(setLoading(false)));
   };
 
-  const _onSearch = useDebounce((keyword: string) => fetchData({ keyword, page: 1 }), 500);
+  const _onSearch = useDebounce(
+    (keyword: string) => fetchData({ keyword, page: 1 }),
+    500
+  );
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
@@ -177,9 +226,10 @@ const Tour = memo(() => {
       });
   };
 
-  const onDownloadBill = (event: React.MouseEvent<HTMLButtonElement>, bill: TourBill) => {
+  const onDownloadBill = () => {
     setModalDownloadTourBill(true);
-    setTourBill(bill);
+    setTourBill(itemAction);
+    onCloseActionMenu();
   };
 
   const onCloseModalDownloadTourBill = () => {
@@ -232,10 +282,15 @@ const Tour = memo(() => {
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
           <div className={classes.boxInputSearch}>
-            <InputSearch autoComplete="off" placeholder={t("payment_history_page_search")} value={keyword || ""} onChange={onSearch} />
+            <InputSearch
+              autoComplete="off"
+              placeholder={t("payment_history_page_search")}
+              value={keyword || ""}
+              onChange={onSearch}
+            />
           </div>
         </Row>
-        <TableContainer component={Paper}>
+        {/* <TableContainer component={Paper}>
           <Table className={classes.table}>
             <TableHeader headers={tableHeaders} />
             <TableBody>
@@ -246,11 +301,18 @@ const Tour = memo(() => {
                       <TableCell scope="row" className={classes.tableCell}>
                         TV{item?.id}
                       </TableCell>
-                      <TableCell className={clsx(classes.linkTour, classes.tableCell)} component="th">
-                        <Link href={`/listTour/:${item?.tourData?.id}`}>{item?.tourData?.title}</Link>
+                      <TableCell
+                        className={clsx(classes.linkTour, classes.tableCell)}
+                        component="th"
+                      >
+                        <Link href={`/listTour/:${item?.tourData?.id}`}>
+                          {item?.tourData?.title}
+                        </Link>
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {moment(item?.tourOnSaleData?.startDate).format("DD-MM-YYYY")}
+                        {moment(item?.tourOnSaleData?.startDate).format(
+                          "DD-MM-YYYY"
+                        )}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {moment(item?.createdAt).format("DD-MM-YYYY")}
@@ -262,7 +324,11 @@ const Tour = memo(() => {
                         <StatusPayment status={item?.paymentStatus} />
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.paymentStatus === EPaymentStatus.PAID ? <StatusPayment status={item?.status} type={true} /> : "-"}
+                        {item?.paymentStatus === EPaymentStatus.PAID ? (
+                          <StatusPayment status={item?.status} type={true} />
+                        ) : (
+                          "-"
+                        )}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <IconButton
@@ -303,7 +369,11 @@ const Tour = memo(() => {
           </Table>
           <TablePagination
             labelRowsPerPage={t("common_row_per_page")}
-            labelDisplayedRows={function defaultLabelDisplayedRows({ from, to, count }) {
+            labelDisplayedRows={function defaultLabelDisplayedRows({
+              from,
+              to,
+              count,
+            }) {
               return t("common_row_of_page", {
                 from: from,
                 to: to,
@@ -318,7 +388,250 @@ const Tour = memo(() => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </TableContainer>
+        </TableContainer> */}
+        <Grid>
+          {data?.data?.length ? (
+            data.data?.map((item, index) => {
+              return (
+                <Grid className={classes.linkView} key={index}>
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      minHeight: "200px",
+                      minWidth: "640px",
+                      paddingBottom: "24px",
+                      cursor: "pointer",
+                    }}
+                    className={classes.row}
+                  >
+                    <Grid
+                      container
+                      sx={{
+                        boxShadow: "var(--box-shadow-100)",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <Grid className={classes.boxImg} item xs={3}>
+                        <img
+                          src={item?.tourData?.images[0]}
+                          alt="anh"
+                          className={!item?.oldBillId ? classes.boxImgNew : ""}
+                        ></img>
+                      </Grid>
+                      <Grid
+                        sx={{
+                          flex: "1",
+                          padding: "14px",
+                          justifyContent: "space-between",
+                          backgroundColor: "var(--white-color)",
+                          boxShadow: "var(--bui-shadow-100)",
+                        }}
+                        item
+                        xs={5}
+                      >
+                        <Grid className={classes.boxTitle}>
+                          <p>{item?.tourData?.title}</p>
+                        </Grid>
+                        <Grid className={classes.boxTitle}>
+                          <p className={classes.textStatus}>
+                            Trạng thái thanh toán{" "}
+                            <StatusPayment status={item?.paymentStatus} />
+                          </p>
+                        </Grid>
+                        <Grid className={classes.boxTitle}>
+                          <p className={classes.textStatus}>
+                            Trạng thái hóa đơn{" "}
+                            {item?.paymentStatus === EPaymentStatus.PAID ? (
+                              <StatusPayment
+                                status={item?.status}
+                                type={true}
+                              />
+                            ) : (
+                              "-"
+                            )}
+                          </p>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={4} container>
+                        <Grid className={classes.containerPrice} container>
+                          <Grid item className={classes.boxMenu}>
+                            <IconButton
+                              className={clsx(classes.actionButton)}
+                              color="primary"
+                              onClick={(e) => {
+                                handleAction(e, item);
+                              }}
+                            >
+                              <MoreVertIcon />
+                            </IconButton>
+                          </Grid>
+                          <Grid container item xs={10}>
+                            {item?.oldBillId && item?.oldBillData && (
+                              <Grid item className={classes.boxSave}>
+                                <div className={classes.boxDate}>
+                                  <p>New tour bill:</p>
+                                </div>
+                              </Grid>
+                            )}
+                            <Grid item className={classes.boxSave}>
+                              <div className={classes.boxDate}>
+                                <p>
+                                  Ngày đặt:{" "}
+                                  <span>
+                                    {moment(item?.createdAt).format(
+                                      "DD-MM-YYYY"
+                                    )}
+                                  </span>
+                                </p>
+                              </div>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <div className={classes.boxDate}>
+                                <p>
+                                  Ngày khởi hành:{" "}
+                                  <span>
+                                    {moment(
+                                      item?.tourOnSaleData?.startDate
+                                    ).format("DD-MM-YYYY")}
+                                  </span>
+                                </p>
+                              </div>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <Grid className={classes.boxPrice}>
+                                <p>
+                                  Discount:{" "}
+                                  <span>
+                                    {fCurrency2VND(item?.discount)} VND
+                                  </span>
+                                </p>
+                              </Grid>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <Grid className={classes.boxPrice}>
+                                <p>
+                                  Quantity ticket:{" "}
+                                  <span>
+                                    {item?.amountAdult + item?.amountChild}{" "}
+                                    ticket(s)
+                                  </span>
+                                </p>
+                              </Grid>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <Grid className={classes.boxPrice}>
+                                <p>
+                                  Total Price:{" "}
+                                  <span>
+                                    {fCurrency2VND(item?.totalBill)} VND
+                                  </span>{" "}
+                                </p>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        {item?.oldBillId && item?.oldBillData && (
+                          <Grid container item className={classes.boxOldBill}>
+                            <Grid
+                              item
+                              className={classes.boxSave}
+                              onClick={() =>
+                                setOpen(open === index ? -1 : index)
+                              }
+                            >
+                              <div className={classes.boxDate}>
+                                <p>Old tour bill:</p>
+                                <div>
+                                  {open === index ? (
+                                    <KeyboardArrowUpIcon />
+                                  ) : (
+                                    <KeyboardArrowDownIcon />
+                                  )}
+                                </div>
+                              </div>
+                            </Grid>
+                            <Collapse
+                              in={open === index}
+                              timeout="auto"
+                              unmountOnExit
+                            >
+                              <Grid item className={classes.boxSave}>
+                                <div className={classes.boxDate}>
+                                  <p>
+                                    Ngày đặt:{" "}
+                                    <span>
+                                      {moment(
+                                        item?.oldBillData?.createdAt
+                                      ).format("DD-MM-YYYY")}
+                                    </span>
+                                  </p>
+                                </div>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <div className={classes.boxDate}>
+                                  <p>
+                                    Ngày khởi hành:{" "}
+                                    <span>
+                                      {moment(
+                                        item?.oldBillData?.tourOnSaleData
+                                          ?.startDate
+                                      ).format("DD-MM-YYYY")}
+                                    </span>
+                                  </p>
+                                </div>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <Grid className={classes.boxPrice}>
+                                  <p>
+                                    Discount:{" "}
+                                    <span>
+                                      {fCurrency2VND(
+                                        item?.oldBillData?.discount
+                                      )}{" "}
+                                      VND
+                                    </span>
+                                  </p>
+                                </Grid>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <Grid className={classes.boxPrice}>
+                                  <p>
+                                    Quantity ticket:{" "}
+                                    <span>
+                                      {item?.amountAdult + item?.amountChild}{" "}
+                                      ticket(s)
+                                    </span>
+                                  </p>
+                                </Grid>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <Grid className={classes.boxPrice}>
+                                  <p>
+                                    Total Price:{" "}
+                                    <span>
+                                      {fCurrency2VND(
+                                        item?.oldBillData?.totalBill
+                                      )}{" "}
+                                      VND
+                                    </span>{" "}
+                                  </p>
+                                </Grid>
+                              </Grid>
+                            </Collapse>
+                          </Grid>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              );
+            })
+          ) : (
+            <Grid>
+              <SearchNotFound searchQuery={keyword} />
+            </Grid>
+          )}
+        </Grid>
         <Menu
           transformOrigin={{
             vertical: "top",
@@ -329,6 +642,22 @@ const Tour = memo(() => {
           open={Boolean(actionAnchor)}
           onClose={onCloseActionMenu}
         >
+          <MenuItem
+            sx={{ fontSize: "0.875rem" }}
+            className={classes.menuItem}
+            onClick={onDownloadBill}
+          >
+            <Box display="flex" alignItems={"center"}>
+              <VisibilityIcon
+                sx={{
+                  fontSize: "28px",
+                  color: "var(--primary-color)",
+                  marginRight: "8px",
+                }}
+              />
+              <span>{t("payment_history_page_tour_status_download_view")}</span>
+            </Box>
+          </MenuItem>
           {itemAction?.paymentStatus === EPaymentStatus.PAID &&
             BillHelper.isCanReScheduleOrCancelBooking(
               itemAction.status,
@@ -336,25 +665,50 @@ const Tour = memo(() => {
               EServicePolicyType.RESCHEDULE,
               itemAction?.tourData?.tourPolicies
             ) && (
-              <MenuItem sx={{ fontSize: "0.875rem" }} className={classes.menuItem} onClick={onSelectDate}>
+              <MenuItem
+                sx={{ fontSize: "0.875rem" }}
+                className={classes.menuItem}
+                onClick={onSelectDate}
+              >
                 <Box display="flex" alignItems={"center"}>
-                  <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
-                  <span>{t("payment_history_page_tour_action_reschedule")}</span>
+                  <EditOutlined
+                    sx={{ marginRight: "0.25rem" }}
+                    fontSize="small"
+                  />
+                  <span>
+                    {t("payment_history_page_tour_action_reschedule")}
+                  </span>
                 </Box>
               </MenuItem>
             )}
+
           {itemAction?.paymentStatus === EPaymentStatus.PAID && (
-            <MenuItem sx={{ fontSize: "0.875rem" }} className={classes.menuItem} onClick={onUpdateInfo}>
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onUpdateInfo}
+            >
               <Box display="flex" alignItems={"center"}>
-                <EditOutlined sx={{ marginRight: "0.25rem" }} fontSize="small" />
+                <EditOutlined
+                  sx={{ marginRight: "0.25rem" }}
+                  fontSize="small"
+                />
                 <span>{t("payment_history_page_tour_action_update")}</span>
               </Box>
             </MenuItem>
           )}
           {itemAction?.paymentStatus !== EPaymentStatus.PAID && (
-            <MenuItem sx={{ fontSize: "0.875rem" }} className={classes.menuItem} onClick={onPaymentAgain}>
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onPaymentAgain}
+            >
               <Box display="flex" alignItems={"center"}>
-                <AddCardIcon sx={{ marginRight: "0.25rem" }} color="info" fontSize="small" />
+                <AddCardIcon
+                  sx={{ marginRight: "0.25rem" }}
+                  color="info"
+                  fontSize="small"
+                />
                 <span>{t("payment_history_page_tour_action_pay")}</span>
               </Box>
             </MenuItem>
@@ -366,25 +720,50 @@ const Tour = memo(() => {
               EServicePolicyType.REFUND,
               itemAction?.tourData?.tourPolicies
             ) && (
-              <MenuItem sx={{ fontSize: "0.875rem" }} className={classes.menuItem} onClick={onCancel}>
+              <MenuItem
+                sx={{ fontSize: "0.875rem" }}
+                className={classes.menuItem}
+                onClick={onCancel}
+              >
                 <Box display="flex" alignItems={"center"}>
-                  <DeleteOutlineOutlined sx={{ marginRight: "0.25rem" }} color="error" fontSize="small" />
+                  <DeleteOutlineOutlined
+                    sx={{ marginRight: "0.25rem" }}
+                    color="error"
+                    fontSize="small"
+                  />
                   <span>{t("payment_history_page_tour_action_cancel")}</span>
                 </Box>
               </MenuItem>
             )}
           {itemAction?.status === EBillStatus.USED && (
-            <MenuItem sx={{ fontSize: "0.875rem" }} className={classes.menuItem} onClick={onRate}>
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onRate}
+            >
               <Box display="flex" alignItems={"center"}>
-                <AddCommentIcon sx={{ marginRight: "0.25rem" }} fontSize="small" color="info" />
+                <AddCommentIcon
+                  sx={{ marginRight: "0.25rem" }}
+                  fontSize="small"
+                  color="info"
+                />
                 <span>{t("payment_history_page_tour_action_rate")}</span>
               </Box>
             </MenuItem>
           )}
         </Menu>
       </div>
-      <DownloadTourBill onClose={onCloseModalDownloadTourBill} isOpen={modalDownloadTourBill} tourBill={tourBill} />
-      <PopupSelectDate onClose={onTogglePopupSelectDate} isOpen={openPopupSelectDate} tour={tour} tourBill={tourBill} />
+      <DownloadTourBill
+        onClose={onCloseModalDownloadTourBill}
+        isOpen={modalDownloadTourBill}
+        tourBill={tourBill}
+      />
+      <PopupSelectDate
+        onClose={onTogglePopupSelectDate}
+        isOpen={openPopupSelectDate}
+        tour={tour}
+        tourBill={tourBill}
+      />
       {openConfirmCancelBookTour && (
         <PopupConfirmCancel
           isOpen={openConfirmCancelBookTour}
@@ -393,7 +772,12 @@ const Tour = memo(() => {
           tourBill={tourBill}
         />
       )}
-      <PopupAddInformation onClose={onToggleAddInformation} isOpen={openAddInformation} tourBill={tourBill} fetchDataTourBill={fetchData} />
+      <PopupAddInformation
+        onClose={onToggleAddInformation}
+        isOpen={openAddInformation}
+        tourBill={tourBill}
+        fetchDataTourBill={fetchData}
+      />
       <PopupAddTourComment
         isOpen={openPopupAddComment}
         // commentEdit={commentEdit}
