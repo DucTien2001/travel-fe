@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { Col, Nav, NavItem, NavLink, TabContent } from "reactstrap";
 import classes from "./styles.module.scss";
 import { images } from "configs/images";
-import Hotels from "pages/enterprises/components/Hotels";
 
 import OfferStaffs from "pages/enterprises/components/Staffs/components/OfferStaffs";
 import { EUserType } from "models/user";

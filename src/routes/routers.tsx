@@ -6,7 +6,6 @@ import { faUser, faArrowsRotate, faCreditCard, faArrowRightFromBracket,
 faPlaneDeparture, faBuilding
 } from '@fortawesome/free-solid-svg-icons';
 import Profile from "pages/profile";
-import Tours from "pages/enterprise/Tours";
 import Hotels from "pages/enterprise/Hotels"
 
 export interface Item {
@@ -26,6 +25,5 @@ export interface Item {
 ]; 
 
 export const enterpriseRoutes: Item[] = [
-  {id: "1", path: '/enterprise/Tours', name: 'Tours', icon: faPlaneDeparture, component: Tours},
   {id: "2", path: '/enterprise/Hotels', name: 'Hotels', icon: faBuilding, component: Hotels},
 ]; 
