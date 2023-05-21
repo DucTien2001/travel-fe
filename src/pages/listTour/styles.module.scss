@@ -109,6 +109,7 @@
     display: flex;
     justify-content: center !important;
     align-items: center !important;
+    border-radius: 4px;
     svg {
         color: #ffff;
         font-size: 16px;
@@ -137,11 +138,7 @@
         display: flex;
         align-items: center;
         padding-right: 12px !important;
-        .inputSelect {
-            padding-left: 8px;
-            font-size: 16px;
-            width: 100%;
-        }
+
         @media only screen and (max-width: 768px) {
             max-width: 100%;
             padding: 14px 0;
@@ -154,7 +151,10 @@
         align-items: flex-start;
       }
 }
-
+.inputSelect {
+    font-size: 16px;
+    width: 100% !important;
+}
 .dropDownResult {
     margin-right: 8px;
     .viewResult {
@@ -242,6 +242,7 @@
 .btnResetOption {
     font-weight: 700;
     text-transform: uppercase;
+    border-radius: 4px;
     svg {
         font-size: 16px;
         margin-right: 4px;

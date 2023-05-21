@@ -159,7 +159,7 @@ const ListTours: NextPage = () => {
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
     fetchData({
-      page: newPage + 1,
+      page: newPage,
     });
   };
 
@@ -287,22 +287,7 @@ const ListTours: NextPage = () => {
                 </Button>
               </Grid>
               <Grid className={classes.rowResult} container item xs={10}>
-                <Grid>
-                  <h5>{t("list_tours_sort_by")}: </h5>
-                </Grid>
-                <Grid className={classes.controlSelect} xs={4} item>
-                  <Grid sx={{ width: "100%" }}>
-                    <InputSelect
-                      className={classes.inputSelect}
-                      bindLabel="translation"
-                      selectProps={{
-                        options: sortOption,
-                        placeholder: t("list_tours_sort_by_placeholder"),
-                      }}
-                      onChange={(e) => setTourFilter(e?.value)}
-                    />
-                  </Grid>
-                </Grid>
+                <Grid className={classes.controlSelect} xs={4} item></Grid>
                 <Grid>
                   <h5>
                     {t("list_tours_result")} <span>{data?.data?.length}</span>
@@ -321,6 +306,17 @@ const ListTours: NextPage = () => {
                 <FontAwesomeIcon icon={faArrowsRotate} />{" "}
                 {t("list_tours_reset_filter")}
               </Button>
+              <Grid sx={{ width: "100%", marginTop: "14px" }}>
+                <InputSelect
+                  className={classes.inputSelect}
+                  bindLabel="translation"
+                  selectProps={{
+                    options: sortOption,
+                    placeholder: t("list_tours_sort_by_placeholder"),
+                  }}
+                  onChange={(e) => setTourFilter(e?.value)}
+                />
+              </Grid>
             </Col>
             <Col xs={10} className={classes.listTours}>
               <div className={classes.containerListTour}>
@@ -403,7 +399,7 @@ const ListTours: NextPage = () => {
               <Row className={classes.pigination}>
                 <Pagination
                   count={data?.meta?.pageCount || 0}
-                  page={data?.meta?.page ? data?.meta?.page - 1 : 0}
+                  page={data?.meta?.page}
                   onChange={handleChangePage}
                 />
               </Row>

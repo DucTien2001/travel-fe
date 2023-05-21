@@ -592,6 +592,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   isDot={true}
                   className={classes.btnBookNow}
                   type="submit"
+                  disabled={totalPrice === 0}
                 >
                   {t("common_book_now")}
                 </Button>
@@ -603,6 +604,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                       isDot={true}
                       className={classes.btnBookNow}
                       type="submit"
+                      disabled={totalPrice === 0}
                     >
                       {t("common_book_now")}
                     </Button>

@@ -215,7 +215,7 @@ const ListServices = memo(
                   </Grid>
                   <Grid item xs={6} className={classes.wrapperPrice}>
                     <Grid className={classes.boxPrice}>
-                      {discount !== 0 && (
+                      {discount !== 0 && discount && (
                         <span>
                           {fCurrency2((minPrice * (100 - discount)) / 100)} ~{" "}
                           {fCurrency2((maxPrice * (100 - discount)) / 100)} VND

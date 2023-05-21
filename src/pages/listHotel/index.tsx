@@ -20,7 +20,7 @@ import { NormalGetStay, Stay } from "models/stay";
 import { DataPagination, ESortOption, sortOption } from "models/general";
 import { Moment } from "moment";
 import { StayService } from "services/normal/stay";
-import { Grid } from "@mui/material";
+import { Grid, Pagination } from "@mui/material";
 import InputSearch from "components/common/inputs/InputSearch";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import moment from "moment";
@@ -101,6 +101,12 @@ const ListHotels: NextPage = () => {
     setNumberOfAdult(1);
     setNumberOfChild(0);
     setNumberOfRoom(1);
+  };
+
+  const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
+    fetchData({
+      page: newPage,
+    });
   };
 
   useEffect(() => {
@@ -204,22 +210,7 @@ const ListHotels: NextPage = () => {
               <Grid className={classes.boxControlLayout} item xs={2}></Grid>
               {/* ======================= RESULT DESKTOP ===================== */}
               <Grid className={classes.rowResult} container item xs={10}>
-                <Grid>
-                  <h5>{t("list_tours_sort_by")}: </h5>
-                </Grid>
-                <Grid className={classes.controlSelect} xs={4} item>
-                  <Grid sx={{ width: "100%" }}>
-                    <InputSelect
-                      className={classes.inputSelect}
-                      bindLabel="translation"
-                      selectProps={{
-                        options: sortOption,
-                        placeholder: t("list_tours_sort_by_placeholder"),
-                      }}
-                      onChange={(e) => setStayFilter(e?.value)}
-                    />
-                  </Grid>
-                </Grid>
+                <Grid className={classes.controlSelect} xs={4} item></Grid>
                 <Grid>
                   <h5>
                     {t("list_tours_result")} <span>{data?.data?.length}</span>
@@ -238,6 +229,17 @@ const ListHotels: NextPage = () => {
                 <FontAwesomeIcon icon={faArrowsRotate} />{" "}
                 {t("list_tours_reset_filter")}
               </Button>
+              <Grid sx={{ width: "100%", marginTop: "14px" }}>
+                <InputSelect
+                  className={classes.inputSelect}
+                  bindLabel="translation"
+                  selectProps={{
+                    options: sortOption,
+                    placeholder: t("list_tours_sort_by_placeholder"),
+                  }}
+                  onChange={(e) => setStayFilter(e?.value)}
+                />
+              </Grid>
             </Col>
             <Col xs={10} className={classes.list}>
               <div className={classes.containerListHotel}>
@@ -259,9 +261,9 @@ const ListHotels: NextPage = () => {
                       district={stay?.district?.name}
                       city={stay?.city?.name}
                       contact={stay.contact}
-                      // tags={stay.tags}
+                      minPrice={stay?.minPrice}
+                      maxPrice={stay?.maxPrice}
                       rate={Math.floor(stay?.rate)}
-                      // creator={stay.creator}
                       isHotel={true}
                     />
                   ))}
@@ -272,34 +274,13 @@ const ListHotels: NextPage = () => {
                   </div>
                 )}
               </div>
-              {/* <Row className={classes.pigination}>
-                <Pagination>
-                  <PaginationItem>
-                    <PaginationLink>
-                      <span aria-hidden={true}>
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                      </span>
-                    </PaginationLink>
-                  </PaginationItem>
-                  {[...Array(numberOfPage)].map((page, index) => {
-                    return (
-                      <PaginationItem
-                        key={index}
-                        onClick={(e) => handleChangePage(e, index)}
-                      >
-                        <PaginationLink>{index + 1}</PaginationLink>
-                      </PaginationItem>
-                    );
-                  })}
-                  <PaginationItem>
-                    <PaginationLink>
-                      <span aria-hidden={true}>
-                        <FontAwesomeIcon icon={faChevronRight} />
-                      </span>
-                    </PaginationLink>
-                  </PaginationItem>
-                </Pagination>
-              </Row> */}
+              <Row className={classes.pigination}>
+                <Pagination
+                  count={data?.meta?.pageCount || 0}
+                  page={data?.meta?.page}
+                  onChange={handleChangePage}
+                />
+              </Row>
             </Col>
           </Row>
         </Container>

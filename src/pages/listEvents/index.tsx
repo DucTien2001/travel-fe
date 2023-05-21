@@ -13,13 +13,14 @@ import SectionHeader from "components/Header/SectionHeader";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/normal/tour";
 import { DataPagination, sortType } from "models/general";
-import { Grid } from "@mui/material";
+import { Grid, Pagination } from "@mui/material";
 import Link from "next/link";
 import useDebounce from "hooks/useDebounce";
 import { FindAll, IEvent } from "models/event";
 import { useDispatch } from "react-redux";
 import { EventService } from "services/normal/event";
 import { useTranslation } from "react-i18next";
+import SearchNotFound from "components/SearchNotFound";
 
 const ListEvents: NextPage = () => {
   const dispatch = useDispatch();
@@ -65,7 +66,7 @@ const ListEvents: NextPage = () => {
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
     fetchData({
-      page: newPage + 1,
+      page: newPage,
     });
   };
 
@@ -129,6 +130,24 @@ const ListEvents: NextPage = () => {
                     </Grid>
                   </Link>
                 ))}
+                {!data?.data?.length && (
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      width: "100%",
+                    }}
+                  >
+                    <SearchNotFound mess={t("common_not_found")} />
+                  </Grid>
+                )}
+              </Grid>
+              <Grid sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Pagination
+                  count={data?.meta?.pageCount || 0}
+                  page={data?.meta?.page}
+                  onChange={handleChangePage}
+                />
               </Grid>
             </Grid>
           </Grid>

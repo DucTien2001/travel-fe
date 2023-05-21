@@ -62,12 +62,13 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Pagination from "@mui/material/Pagination";
 // eslint-disable-next-line react/display-name
 const Tour = memo(() => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { t, i18n } = useTranslation("common");
-
+  const [pageApi, setPageApi] = useState(1);
   const tableHeaders: TableHeaderLabel[] = [
     {
       name: t("payment_history_page_tour_invoice_no"),
@@ -162,21 +163,9 @@ const Tour = memo(() => {
   const sortDataByDate = (first, second) =>
     Number(Date.parse(second)) - Number(Date.parse(first));
 
-  const handleChangePage = (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    newPage: number
-  ) => {
+  const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
     fetchData({
-      page: newPage + 1,
-    });
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    fetchData({
-      take: Number(event.target.value),
-      page: 1,
+      page: newPage,
     });
   };
 
@@ -400,7 +389,6 @@ const Tour = memo(() => {
                       minHeight: "200px",
                       minWidth: "640px",
                       paddingBottom: "24px",
-                      cursor: "pointer",
                     }}
                     className={classes.row}
                   >
@@ -411,12 +399,14 @@ const Tour = memo(() => {
                         borderRadius: "10px",
                       }}
                     >
-                      <Grid className={classes.boxImg} item xs={3}>
-                        <img
-                          src={item?.tourData?.images[0]}
-                          alt="anh"
-                          className={!item?.oldBillId ? classes.boxImgNew : ""}
-                        ></img>
+                      <Grid
+                        className={clsx(classes.boxImg, {
+                          [classes.boxImgNew]: !item?.oldBillId,
+                        })}
+                        item
+                        xs={3}
+                      >
+                        <img src={item?.tourData?.images[0]} alt="anh"></img>
                       </Grid>
                       <Grid
                         sx={{
@@ -429,8 +419,12 @@ const Tour = memo(() => {
                         item
                         xs={5}
                       >
-                        <Grid className={classes.boxTitle}>
-                          <p>{item?.tourData?.title}</p>
+                        <Grid
+                          className={clsx(classes.boxTitle, classes.linkDetail)}
+                        >
+                          <Link href={`/listTour/:${item?.tourData.id}`}>
+                            <p>{item?.tourData?.title}</p>
+                          </Link>
                         </Grid>
                         <Grid className={classes.boxTitle}>
                           <p className={classes.textStatus}>
@@ -451,6 +445,23 @@ const Tour = memo(() => {
                             )}
                           </p>
                         </Grid>
+                        {item?.oldBillId && item?.extraPay && (
+                          <Grid className={classes.boxTitle}>
+                            <p className={classes.textStatus}>
+                              Tiền phải trả thêm {fCurrency2VND(item?.extraPay)}{" "}
+                              VND
+                            </p>
+                          </Grid>
+                        )}
+                        {item?.paymentStatus === EPaymentStatus.CANCEL &&
+                          item?.moneyRefund && (
+                            <Grid className={classes.boxTitle}>
+                              <p className={classes.textStatus}>
+                                Tiền phải trả thêm{" "}
+                                {fCurrency2VND(item?.moneyRefund)} VND
+                              </p>
+                            </Grid>
+                          )}
                       </Grid>
                       <Grid item xs={4} container>
                         <Grid className={classes.containerPrice} container>
@@ -631,6 +642,13 @@ const Tour = memo(() => {
               <SearchNotFound searchQuery={keyword} />
             </Grid>
           )}
+        </Grid>
+        <Grid sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Pagination
+            count={data?.meta?.pageCount || 0}
+            page={data?.meta?.page}
+            onChange={handleChangePage}
+          />
         </Grid>
         <Menu
           transformOrigin={{

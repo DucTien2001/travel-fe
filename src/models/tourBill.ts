@@ -70,6 +70,8 @@ export interface TourBill {
   specialRequest?: string;
   oldBillData?: TourBill;
   oldBillId?: number;
+  extraPay?: number;
+  moneyRefund?: number;
 }
 
 export interface IVerifyBookTour {

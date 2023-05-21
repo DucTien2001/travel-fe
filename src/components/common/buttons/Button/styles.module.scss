@@ -48,6 +48,17 @@
         border: 1px solid #cccc; 
         color: var(--gray-40) !important;
       }
+      .dotContainer {
+        span {
+          display: inline-block;
+          vertical-align: middle;
+          width: 5px;
+          height: 5px;
+          background: var(--eerie-black-40);
+          border-radius: 50%;
+          margin-right: 2px;
+        }
+    }
     }
     &[class~=active] {
       background-color: var(--violet-dark-color) !important;

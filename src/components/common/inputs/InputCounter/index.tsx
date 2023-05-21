@@ -13,7 +13,7 @@ interface InputsProps {
   max: number;
   min: number;
   value: number;
-  onChange: (value: number) => void;
+  onChange: (value) => void;
   errorMessage?: string;
 }
 // eslint-disable-next-line react/display-name
@@ -59,7 +59,22 @@ const InputCounter = memo((props: InputsProps) => {
           <i className="now-ui-icons ui-1_simple-delete"></i>
         </Button>
         <div className={classes.numberValue}>
-          <input value={value} readOnly />
+          <input
+            value={value}
+            onChange={(e) => {
+              let val = parseInt(e.target.value, 10);
+              if (isNaN(val)) {
+                onChange("");
+              } else if (val < min) {
+                onChange(min);
+              } else if (val > max) {
+                onChange(max);
+              } else {
+                val = val >= 0 ? val : 0;
+                onChange(Number(val));
+              }
+            }}
+          />
         </div>
         <Button
           className={classes.btnControl}

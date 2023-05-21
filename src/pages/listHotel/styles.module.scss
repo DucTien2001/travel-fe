@@ -114,8 +114,11 @@
     display: flex;
     justify-content: end;
     align-items: center;
+
     h5 {
         font-weight: 700;
+        font-size: 14px;
+
         color: var(--primary-color);
         margin:0;
         span {
@@ -206,15 +209,15 @@
     display: flex;
     align-items: center;
     padding-right: 12px !important;
-    .inputSelect {
-        padding-left: 8px;
-        font-size: 16px;
-        width: 100%;
-    }
+
     @media only screen and (max-width: 768px) {
         max-width: 100%;
         padding: 14px 0;
       }
+}
+.inputSelect {
+    font-size: 16px;
+    width: 100%;
 }
 .containerListHotel {
     min-height: 1248px;
@@ -252,6 +255,7 @@
 .btnResetOption {
     font-weight: 700;
     text-transform: uppercase;
+    border-radius: 4px;
     svg {
         font-size: 16px;
         margin-right: 4px;

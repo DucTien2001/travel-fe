@@ -702,7 +702,7 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
             <Button
               btnType={BtnType.Secondary}
               type="submit"
-              disabled={totalPrice === 0 && totalRoom === 0}
+              disabled={totalPrice === 0}
             >
               {t("stay_detail_section_stay_check_room_empty_book_now")}
             </Button>

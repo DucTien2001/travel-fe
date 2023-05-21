@@ -89,26 +89,38 @@
     width: 100%;
     a:hover {text-decoration: none !important;}
 }
-
+.linkDetail:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
 .boxImg {
     max-width: 300px;
     background-color: var(--white-color);
     border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
     img {
         width: 100%;
         height: 150px;
         object-fit: cover;
         object-position: center center;
         border-top-left-radius: 10px;
-        
+        border-bottom-left-radius: 10px;
     }
 }
 .boxImgNew {
-    width: 100%;
-    height: 100% !important;
-    object-fit: cover;
-    object-position: center center;
+
+    max-width: 300px;
+    background-color: var(--white-color);
+    border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
+    img {
+        width: 100%;
+        height: 100% !important;
+        object-fit: cover;
+        object-position: center center;
+        border-top-left-radius: 10px;
+        
+    }
 }
 .boxLocation {
     display: flex;
