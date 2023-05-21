@@ -346,6 +346,16 @@
   "popup_detail_event_and_terms_conditions_tip_6":"6. Travelix sẽ không chịu trách nhiệm cung cấp phiếu giảm giá thay thế bị ngừng, bị hủy hoặc sử dụng không đúng cách do gian lận hoặc sự cố kỹ thuật.",
   "popup_detail_event_and_terms_conditions_tip_7":"7. Travelix có quyền thay đổi các điều khoản và điều kiện mà không cần thông báo trước.",
 
+  "popup_detail_room_title_information": "Thông tin phòng",
+  "popup_detail_room_title_adult": "người lớn",
+  "popup_detail_room_title_child": "trẻ em",
+  "popup_detail_room_title_bed": "giường",
+  "popup_detail_room_title_room": "phòng",
+  "popup_detail_room_title_feature": "Các tiện ích của phòng mà bạn có thể thích",
+  "popup_detail_room_title_starting": "bắt đầu từ",
+  "popup_detail_room_title_night_room": "/ phòng / đêm",
+  "popup_detail_room_title_see_option": "Xem Lựa Chọn Phòng",
+  
   "popup_confirm_delete":"XÓA",
 
   "popup_download_view_tour_title":"Xem chi tiết đóa đơn",

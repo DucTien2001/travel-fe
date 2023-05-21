@@ -61,26 +61,33 @@ const PopupDetailTour = memo((props: Props) => {
             </Grid>
             <Grid xs={4} item sx={{ padding: "0 14px" }}>
               <Grid className={classes.boxGrid}>
-                <p className={classes.titleGrid}>Room Information</p>
+                <p className={classes.titleGrid}>
+                  {t("popup_detail_room_title_information")}
+                </p>
                 <Grid className={classes.boxItem}>
                   <PeopleAltIcon />
                   <p>
-                    {room?.numberOfAdult} adult, {room?.numberOfChildren}{" "}
-                    children
+                    {room?.numberOfAdult} {t("popup_detail_room_title_adult")},{" "}
+                    {room?.numberOfChildren}{" "}
+                    {t("popup_detail_room_title_child")}
                   </p>
                 </Grid>
                 <Grid className={classes.boxItem}>
                   <BedIcon />
-                  <p>{room?.numberOfBed} bed</p>
+                  <p>
+                    {room?.numberOfBed} {t("popup_detail_room_title_bed")}
+                  </p>
                 </Grid>
                 <Grid className={classes.boxItem}>
                   <MeetingRoomIcon />
-                  <p>{room?.numberOfRoom} room</p>
+                  <p>
+                    {room?.numberOfRoom} {t("popup_detail_room_title_room")}
+                  </p>
                 </Grid>
               </Grid>
               <Grid className={classes.boxGrid}>
                 <p className={classes.titleGrid}>
-                  Room Feature(s) You May Like
+                  {t("popup_detail_room_title_feature")}
                 </p>
                 <ul>
                   {room?.utility?.map((item, index) => (
@@ -89,15 +96,18 @@ const PopupDetailTour = memo((props: Props) => {
                 </ul>
               </Grid>
               <Grid className={classes.boxGridFooter}>
-                <p className={classes.titleGrid}>starting from</p>
+                <p className={classes.titleGrid}>
+                  {t("popup_detail_room_title_starting")}
+                </p>
                 <p className={classes.titlePrice}>
-                  {fCurrency2VND(minPrice)} VND <span>/ room / night(s)</span>
+                  {fCurrency2VND(minPrice)} VND{" "}
+                  <span>{t("popup_detail_room_title_night_room")}</span>
                 </p>
                 <Button
                   btnType={BtnType.Primary}
                   className={classes.btnSeeRoom}
                 >
-                  See Room Option
+                  {t("popup_detail_room_title_see_option")}
                 </Button>
               </Grid>
             </Grid>
