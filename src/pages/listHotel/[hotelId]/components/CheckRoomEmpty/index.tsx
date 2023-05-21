@@ -39,6 +39,7 @@ import { NormalGetRoom, Room } from "models/room";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { setRoomBillConfirmReducer } from "redux/reducers/Normal/actionTypes";
+import PopupDetailRoom from "../PopupDetailRoom";
 export interface CheckRoomForm {
   departure: Date;
   return: Date;
@@ -90,6 +91,8 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
     ESortOption.LOWEST_PRICE
   );
   const [data, setData] = useState<DataPagination<Room>>();
+  const [itemRoom, setItemRoom] = useState<Room>(null);
+  const [openPopupDetailRoom, setOpenPopupDetailRoom] = useState(false);
 
   const {
     register,
@@ -115,6 +118,15 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
 
   const onFocus = () => {
     setFocus(!focus);
+  };
+
+  const onTogglePopupDetailRoom = (e, item) => {
+    setItemRoom(item);
+  };
+
+  const onClosePopupDetailRoom = () => {
+    if (!itemRoom) return;
+    setItemRoom(null);
   };
 
   const fetchData = (value?: {
@@ -469,7 +481,12 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
             key={index}
             className={classes.containerCheckRoom}
           >
-            <Grid className={classes.leftPanel} item xs={3}>
+            <Grid
+              className={classes.leftPanel}
+              item
+              xs={3}
+              onClick={(e) => onTogglePopupDetailRoom(e, room)}
+            >
               <Grid className={classes.boxLeftItem}>
                 <Grid sx={{ position: "relative", cursor: "pointer" }}>
                   <img src={room?.images[0]} alt="anh"></img>
@@ -497,8 +514,9 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   <Button
                     btnType={BtnType.Outlined}
                     className={classes.btnSeeRoom}
+                    onClick={(e) => onTogglePopupDetailRoom(e, room)}
                   >
-                    See Room Detail
+                    {t("stay_detail_section_stay_check_room_empty_see_detail")}
                   </Button>
                 </Grid>
               </Grid>
@@ -688,6 +706,12 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                 </Grid>
               </Grid>
             </Grid>
+            <PopupDetailRoom
+              isOpen={!!itemRoom}
+              toggle={onClosePopupDetailRoom}
+              room={itemRoom}
+              minPrice={listMinPrice[index]}
+            />
           </Grid>
         ))}
         <Grid className={classes.footerRoom}>

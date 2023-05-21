@@ -154,6 +154,7 @@
   "stay_detail_section_stay_check_room_empty_number_of_room": "Số phòng",
   "stay_detail_section_stay_check_room_empty_total_price": "Tổng giá",
   "stay_detail_section_stay_check_room_empty_book_now": "Đặt ngay",
+  "stay_detail_section_stay_check_room_empty_see_detail": "Xem Chi Tiết Phòng",
 
   "popup_add_comment_tour_title": "Bạn nghĩ gì về gói du lịch này ?",
   "popup_add_comment_tour_title_star_rating": "Đánh giá số sao",
@@ -294,6 +295,9 @@
   "payment_history_page_tour_total_bill": "Tổng hóa đơn",
   "payment_history_page_tour_status_payment": "Trạng thái thanh toán",
   "payment_history_page_tour_status_bill": "Trạng thái hóa đơn",
+  "payment_history_page_tour_extra_pay": "Tiền trả thêm",
+  "payment_history_page_tour_money_refund": "Tiền được hoàn",
+  "payment_history_page_tour_new_bill": "Hóa đơn mới",
   "payment_history_page_tour_status_download_view": "Tải / Xem",
   "payment_history_page_tour_status_action": "Hoạt động",
   "payment_history_page_tour_action_reschedule": "Đổi lịch",
@@ -301,6 +305,9 @@
   "payment_history_page_tour_action_pay": "Thanh toán",
   "payment_history_page_tour_action_cancel": "Hủy đơn",
   "payment_history_page_tour_action_rate": "Đánh giá",
+  "payment_history_page_tour_discount": "Giảm giá",
+  "payment_history_page_tour_quantity": "Số lượng vé",
+  "payment_history_page_tour_old_bill": "Hóa đơn cũ",
 
   "voucher_title_deal": "Giảm",
   "voucher_title_max": "Tối đa",
