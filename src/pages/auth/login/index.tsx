@@ -1,13 +1,5 @@
 import type { NextPage } from "next";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  CardHeader,
-  CardBody,
-  Form,
-} from "reactstrap";
+import { Container, Row, Col, Card, CardHeader, CardBody, Form } from "reactstrap";
 import { useState, useMemo, useEffect } from "react";
 import clsx from "clsx";
 import * as yup from "yup";
@@ -19,11 +11,7 @@ import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder"
 import Google from "components/SocialButton/Google";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setErrorMess,
-  setLoading,
-  setSuccessMess,
-} from "redux/reducers/Status/actionTypes";
+import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
 import { UserService } from "services/user";
 import { EKey } from "models/general";
 import { setUserLogin } from "redux/reducers/User/actionTypes";
@@ -33,14 +21,8 @@ import { EUserType } from "models/user";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import PopupDefault from "components/Popup/PopupDefault";
-import {
-  getAllHotels,
-  getAllTours,
-} from "redux/reducers/Enterprise/actionTypes";
-import {
-  getAllRoomBills,
-  getAllTourBills,
-} from "redux/reducers/Normal/actionTypes";
+import { getAllHotels, getAllTours } from "redux/reducers/Enterprise/actionTypes";
+import { getAllRoomBills, getAllTourBills } from "redux/reducers/Normal/actionTypes";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import { Grid } from "@mui/material";
 
@@ -59,10 +41,7 @@ const Login: NextPage = () => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      email: yup
-        .string()
-        .email("Please enter a valid email address")
-        .required("Email is required"),
+      email: yup.string().email("Please enter a valid email address").required("Email is required"),
       password: yup.string().required("Password is required"),
       role: yup.number().required(),
     });
@@ -110,12 +89,6 @@ const Login: NextPage = () => {
       .then((res) => {
         localStorage.setItem(EKey.TOKEN, res.token);
         dispatch(setUserLogin(res.user));
-        if (res?.role === EUserType.ENTERPRISE) {
-          dispatch(getAllTours(res.user.id));
-          dispatch(getAllHotels(res.user.id));
-        }
-        dispatch(getAllTourBills(user?.id));
-        dispatch(getAllRoomBills(user?.id));
       })
       .catch((e) => {
         if (e?.detail === "notVerified") setIsNotVerified(true);
@@ -148,12 +121,7 @@ const Login: NextPage = () => {
                 <Col lg="5" md="7">
                   <Card className={clsx("shadow", classes.card)}>
                     <CardHeader>
-                      <div
-                        className={clsx(
-                          "mt-4 text-center",
-                          classes.headerLoginContainer
-                        )}
-                      >
+                      <div className={clsx("mt-4 text-center", classes.headerLoginContainer)}>
                         <p>Sign in</p>
                       </div>
                     </CardHeader>
@@ -178,10 +146,7 @@ const Login: NextPage = () => {
                             errorMessage={errors.password?.message}
                           />
                         </Grid>
-                        <Grid
-                          className={classes.boxTextRole}
-                          sx={{ marginTop: "16px" }}
-                        >
+                        <Grid className={classes.boxTextRole} sx={{ marginTop: "16px" }}>
                           <p className={classes.textYouAre}>You are: </p>
                           <div className={classes.boxCheckRole}>
                             <Controller
@@ -210,9 +175,7 @@ const Login: NextPage = () => {
                                   <Grid sx={{ paddingRight: "14px" }}>
                                     <InputCheckbox
                                       content="Super Admin"
-                                      checked={
-                                        field.value === EUserType.SUPER_ADMIN
-                                      }
+                                      checked={field.value === EUserType.SUPER_ADMIN}
                                       onChange={() => {
                                         setValue("role", EUserType.SUPER_ADMIN);
                                       }}
@@ -221,9 +184,7 @@ const Login: NextPage = () => {
                                   <Grid>
                                     <InputCheckbox
                                       content="Enterprise"
-                                      checked={
-                                        field.value === EUserType.ENTERPRISE
-                                      }
+                                      checked={field.value === EUserType.ENTERPRISE}
                                       onChange={() => {
                                         setValue("role", EUserType.ENTERPRISE);
                                       }}
@@ -245,9 +206,7 @@ const Login: NextPage = () => {
                         </Grid>
                         {errorSubmit && (
                           <div className={classes.boxError}>
-                            <ErrorMessage>
-                              Please enter a correct email and password.
-                            </ErrorMessage>
+                            <ErrorMessage>Please enter a correct email and password.</ErrorMessage>
                           </div>
                         )}
                         <div className={classes.btnLoginContainer}>
@@ -257,9 +216,7 @@ const Login: NextPage = () => {
                         </div>
                       </Form>
                       <div className={classes.separator}>
-                        <span className={classes.childrenSeparator}>
-                          or login with
-                        </span>
+                        <span className={classes.childrenSeparator}>or login with</span>
                       </div>
                       <Grid sx={{ display: "flex", justifyContent: "center" }}>
                         <Google />

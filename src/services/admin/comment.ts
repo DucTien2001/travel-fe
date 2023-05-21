@@ -1,13 +1,7 @@
 import { API } from "configs/constants";
 import {
-  ICreateHotelComment,
-  ICreateTourComment,
   IDeclineDeleteHotelComment,
   IDeclineDeleteTourComment,
-  IReplyHotelComment,
-  IReplyTourComment,
-  IUpdateHotelComment,
-  IUpdateTourComment,
 } from "models/comment";
 import api from "services/configApi";
 
