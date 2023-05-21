@@ -2,17 +2,43 @@ import { IHotel } from "./hotel";
 import { IRoom, Room } from "./room";
 import { Stay } from "./stay";
 
+export interface Create {
+  stayId: number;
+  rooms: {
+    roomId: number;
+    amount: number;
+    price: number;
+    bookedDate: Date;
+  }[];
+  startDate: Date;
+  endDate: Date;
+  price: number;
+  discount: number;
+  totalBill: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface Update {
+  paymentStatus: number;
+}
+
 export interface RoomBillConfirm {
   userId?: number;
   email: string;
   phoneNumber: string;
   firstName: string;
-  lastName:string;
+  lastName: string;
   specialRequest: string;
   stay: Stay;
   rooms: Room[];
   startDate: Date;
   endDate: Date;
+  price: number;
+  discount: number;
+  totalBill: number;
 }
 
 export interface IRoomBillConfirm {
@@ -41,7 +67,7 @@ export interface ICreateRoomBill {
   email: string;
   phoneNumber: string;
   firstName: string;
-  lastName: string;  
+  lastName: string;
   bankName: string;
   bankAccountName: string;
   bankNumber: string;

@@ -25,10 +25,7 @@ import LoadingScreen from "components/LoadingSrceen";
 import { EUserType } from "models/user";
 import { ReducerType } from "redux/reducers";
 import "../styles/globals.css";
-import {
-  getAllHotels as getAllHotelsOfEnterprise,
-  getAllTours as getAllToursOfEnterprise,
-} from "redux/reducers/Enterprise/actionTypes";
+import { getAllHotels as getAllHotelsOfEnterprise, getAllTours as getAllToursOfEnterprise } from "redux/reducers/Enterprise/actionTypes";
 
 import {
   getAllTours as getAllToursOfNormal,
@@ -63,20 +60,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     dispatch(getMe());
   }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(getAllToursOfNormal());
-    dispatch(getAllHotelsOfNormal());
-    if (user) {
-      if (user?.role === EUserType.ENTERPRISE) {
-        dispatch(getAllToursOfEnterprise(user?.id));
-        dispatch(getAllHotelsOfEnterprise(user?.id));
-      }
-      dispatch(getAllTourBills(user?.id));
-      dispatch(getAllRoomBills(user?.id));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, user]);
-
   const [loading, setLoading] = useState(false);
   Router.events.on("routeChangeStart", (url) => {
     setLoading(true);
@@ -87,18 +70,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   let allowed = true;
   const router = useRouter();
-  if (
-    router.pathname.startsWith("/enterprises") &&
-    user?.role !== EUserType.ENTERPRISE &&
-    user?.role !== EUserType.STAFF
-  ) {
+  if (router.pathname.startsWith("/enterprises") && user?.role !== EUserType.ENTERPRISE && user?.role !== EUserType.STAFF) {
     allowed = false;
   }
-  if (
-    router.pathname.startsWith("/admin") &&
-    user?.role !== EUserType.SUPER_ADMIN &&
-    user?.role !== EUserType.ADMIN
-  ) {
+  if (router.pathname.startsWith("/admin") && user?.role !== EUserType.SUPER_ADMIN && user?.role !== EUserType.ADMIN) {
     allowed = false;
   }
 
