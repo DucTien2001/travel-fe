@@ -154,6 +154,7 @@
   "stay_detail_section_stay_check_room_empty_number_of_room": "Number of room(s)",
   "stay_detail_section_stay_check_room_empty_total_price": "Total price",
   "stay_detail_section_stay_check_room_empty_book_now": "Book now",
+  "stay_detail_section_stay_check_room_empty_see_detail": "See Room Detail",
 
   "popup_add_comment_tour_title": "What do you think about this tour?",
   "popup_add_comment_tour_title_star_rating": "Star rating",
@@ -295,6 +296,9 @@
   "payment_history_page_tour_total_bill": "Total bill",
   "payment_history_page_tour_status_payment": "Status payment",
   "payment_history_page_tour_status_bill": "Status bill",
+  "payment_history_page_tour_extra_pay": "Extra pay",
+  "payment_history_page_tour_money_refund": "Money refund",
+  "payment_history_page_tour_new_bill": "New bill",
   "payment_history_page_tour_status_download_view": "Download / View",
   "payment_history_page_tour_status_action": "Action",
   "payment_history_page_tour_action_reschedule": "Reschedule",
@@ -302,6 +306,9 @@
   "payment_history_page_tour_action_pay": "Pay",
   "payment_history_page_tour_action_cancel": "Cancel",
   "payment_history_page_tour_action_rate": "Rate",
+  "payment_history_page_tour_discount": "Discount",
+  "payment_history_page_tour_quantity": "Quantity",
+  "payment_history_page_tour_old_bill": "Old bill",
 
   "voucher_title_deal": "Deal",
   "voucher_title_max": "Max",

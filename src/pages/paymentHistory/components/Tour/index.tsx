@@ -68,54 +68,6 @@ const Tour = memo(() => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { t, i18n } = useTranslation("common");
-  const [pageApi, setPageApi] = useState(1);
-  const tableHeaders: TableHeaderLabel[] = [
-    {
-      name: t("payment_history_page_tour_invoice_no"),
-      label: t("payment_history_page_tour_invoice_no"),
-      sortable: false,
-    },
-    {
-      name: t("payment_history_page_tour_tour_name"),
-      label: t("payment_history_page_tour_tour_name"),
-      sortable: false,
-    },
-    {
-      name: t("payment_history_page_tour_departure_date"),
-      label: t("payment_history_page_tour_departure_date"),
-      sortable: false,
-    },
-    {
-      name: t("payment_history_page_tour_booking_date"),
-      label: t("payment_history_page_tour_booking_date"),
-      sortable: false,
-    },
-    {
-      name: t("payment_history_page_tour_total_bill"),
-      label: t("payment_history_page_tour_total_bill"),
-      sortable: false,
-    },
-    {
-      name: t("payment_history_page_tour_status_payment"),
-      label: t("payment_history_page_tour_status_payment"),
-      sortable: false,
-    },
-    {
-      name: t("payment_history_page_tour_status_bill"),
-      label: t("payment_history_page_tour_status_bill"),
-      sortable: false,
-    },
-    {
-      name: t("payment_history_page_tour_status_download_view"),
-      label: t("payment_history_page_tour_status_download_view"),
-      sortable: false,
-    },
-    {
-      name: t("payment_history_page_tour_status_action"),
-      label: t("payment_history_page_tour_status_action"),
-      sortable: false,
-    },
-  ];
 
   const [modalDownloadTourBill, setModalDownloadTourBill] = useState(false);
   const [tourBill, setTourBill] = useState<TourBill>(null);
@@ -279,105 +231,6 @@ const Tour = memo(() => {
             />
           </div>
         </Row>
-        {/* <TableContainer component={Paper}>
-          <Table className={classes.table}>
-            <TableHeader headers={tableHeaders} />
-            <TableBody>
-              {data?.data?.length ? (
-                data.data?.map((item, index) => {
-                  return (
-                    <TableRow key={index}>
-                      <TableCell scope="row" className={classes.tableCell}>
-                        TV{item?.id}
-                      </TableCell>
-                      <TableCell
-                        className={clsx(classes.linkTour, classes.tableCell)}
-                        component="th"
-                      >
-                        <Link href={`/listTour/:${item?.tourData?.id}`}>
-                          {item?.tourData?.title}
-                        </Link>
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {moment(item?.tourOnSaleData?.startDate).format(
-                          "DD-MM-YYYY"
-                        )}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {moment(item?.createdAt).format("DD-MM-YYYY")}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {fCurrency2VND(item?.totalBill)} VND
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        <StatusPayment status={item?.paymentStatus} />
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {item?.paymentStatus === EPaymentStatus.PAID ? (
-                          <StatusPayment status={item?.status} type={true} />
-                        ) : (
-                          "-"
-                        )}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        <IconButton
-                          onClick={(e) => {
-                            onDownloadBill(e, item);
-                          }}
-                        >
-                          <VisibilityIcon
-                            sx={{
-                              fontSize: "28px",
-                              color: "var(--primary-color)",
-                            }}
-                          />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell className="text-center" component="th">
-                        <IconButton
-                          className={clsx(classes.actionButton)}
-                          color="primary"
-                          onClick={(e) => {
-                            handleAction(e, item);
-                          }}
-                        >
-                          <ExpandMoreOutlined />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <TableRow>
-                  <TableCell align="center" colSpan={8}>
-                    <SearchNotFound searchQuery={keyword} />
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-          <TablePagination
-            labelRowsPerPage={t("common_row_per_page")}
-            labelDisplayedRows={function defaultLabelDisplayedRows({
-              from,
-              to,
-              count,
-            }) {
-              return t("common_row_of_page", {
-                from: from,
-                to: to,
-                count: count,
-              });
-            }}
-            component="div"
-            className={classes.pagination}
-            count={data?.meta?.itemCount || 0}
-            rowsPerPage={data?.meta?.take || 10}
-            page={data?.meta?.page ? data?.meta?.page - 1 : 0}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </TableContainer> */}
         <Grid>
           {data?.data?.length ? (
             data.data?.map((item, index) => {
@@ -428,13 +281,13 @@ const Tour = memo(() => {
                         </Grid>
                         <Grid className={classes.boxTitle}>
                           <p className={classes.textStatus}>
-                            Trạng thái thanh toán{" "}
+                            {t("payment_history_page_tour_status_payment")}{" "}
                             <StatusPayment status={item?.paymentStatus} />
                           </p>
                         </Grid>
                         <Grid className={classes.boxTitle}>
                           <p className={classes.textStatus}>
-                            Trạng thái hóa đơn{" "}
+                            {t("payment_history_page_tour_status_bill")}{" "}
                             {item?.paymentStatus === EPaymentStatus.PAID ? (
                               <StatusPayment
                                 status={item?.status}
@@ -448,8 +301,8 @@ const Tour = memo(() => {
                         {item?.oldBillId && item?.extraPay && (
                           <Grid className={classes.boxTitle}>
                             <p className={classes.textStatus}>
-                              Tiền phải trả thêm {fCurrency2VND(item?.extraPay)}{" "}
-                              VND
+                              {t("payment_history_page_tour_extra_pay")}{" "}
+                              {fCurrency2VND(item?.extraPay)} VND
                             </p>
                           </Grid>
                         )}
@@ -457,7 +310,7 @@ const Tour = memo(() => {
                           item?.moneyRefund && (
                             <Grid className={classes.boxTitle}>
                               <p className={classes.textStatus}>
-                                Tiền phải trả thêm{" "}
+                                {t("payment_history_page_tour_money_refund")}{" "}
                                 {fCurrency2VND(item?.moneyRefund)} VND
                               </p>
                             </Grid>
@@ -480,14 +333,16 @@ const Tour = memo(() => {
                             {item?.oldBillId && item?.oldBillData && (
                               <Grid item className={classes.boxSave}>
                                 <div className={classes.boxDate}>
-                                  <p>New tour bill:</p>
+                                  <p>
+                                    {t("payment_history_page_tour_new_bill")}
+                                  </p>
                                 </div>
                               </Grid>
                             )}
                             <Grid item className={classes.boxSave}>
                               <div className={classes.boxDate}>
                                 <p>
-                                  Ngày đặt:{" "}
+                                  {t("payment_history_page_tour_booking_date")}:{" "}
                                   <span>
                                     {moment(item?.createdAt).format(
                                       "DD-MM-YYYY"
@@ -499,7 +354,10 @@ const Tour = memo(() => {
                             <Grid item className={classes.boxSave}>
                               <div className={classes.boxDate}>
                                 <p>
-                                  Ngày khởi hành:{" "}
+                                  {t(
+                                    "payment_history_page_tour_departure_date"
+                                  )}
+                                  :{" "}
                                   <span>
                                     {moment(
                                       item?.tourOnSaleData?.startDate
@@ -511,7 +369,7 @@ const Tour = memo(() => {
                             <Grid item className={classes.boxSave}>
                               <Grid className={classes.boxPrice}>
                                 <p>
-                                  Discount:{" "}
+                                  {t("payment_history_page_tour_discount")}:{" "}
                                   <span>
                                     {fCurrency2VND(item?.discount)} VND
                                   </span>
@@ -521,10 +379,9 @@ const Tour = memo(() => {
                             <Grid item className={classes.boxSave}>
                               <Grid className={classes.boxPrice}>
                                 <p>
-                                  Quantity ticket:{" "}
+                                  {t("payment_history_page_tour_quantity")}:{" "}
                                   <span>
                                     {item?.amountAdult + item?.amountChild}{" "}
-                                    ticket(s)
                                   </span>
                                 </p>
                               </Grid>
@@ -532,7 +389,7 @@ const Tour = memo(() => {
                             <Grid item className={classes.boxSave}>
                               <Grid className={classes.boxPrice}>
                                 <p>
-                                  Total Price:{" "}
+                                  {t("payment_history_page_tour_total_bill")}:{" "}
                                   <span>
                                     {fCurrency2VND(item?.totalBill)} VND
                                   </span>{" "}
@@ -551,7 +408,7 @@ const Tour = memo(() => {
                               }
                             >
                               <div className={classes.boxDate}>
-                                <p>Old tour bill:</p>
+                                <p>{t("payment_history_page_tour_old_bill")}</p>
                                 <div>
                                   {open === index ? (
                                     <KeyboardArrowUpIcon />
@@ -569,7 +426,10 @@ const Tour = memo(() => {
                               <Grid item className={classes.boxSave}>
                                 <div className={classes.boxDate}>
                                   <p>
-                                    Ngày đặt:{" "}
+                                    {t(
+                                      "payment_history_page_tour_booking_date"
+                                    )}
+                                    :{" "}
                                     <span>
                                       {moment(
                                         item?.oldBillData?.createdAt
@@ -581,7 +441,10 @@ const Tour = memo(() => {
                               <Grid item className={classes.boxSave}>
                                 <div className={classes.boxDate}>
                                   <p>
-                                    Ngày khởi hành:{" "}
+                                    {t(
+                                      "payment_history_page_tour_departure_date"
+                                    )}
+                                    :{" "}
                                     <span>
                                       {moment(
                                         item?.oldBillData?.tourOnSaleData
@@ -594,7 +457,7 @@ const Tour = memo(() => {
                               <Grid item className={classes.boxSave}>
                                 <Grid className={classes.boxPrice}>
                                   <p>
-                                    Discount:{" "}
+                                    {t("payment_history_page_tour_discount")}:{" "}
                                     <span>
                                       {fCurrency2VND(
                                         item?.oldBillData?.discount
@@ -607,7 +470,7 @@ const Tour = memo(() => {
                               <Grid item className={classes.boxSave}>
                                 <Grid className={classes.boxPrice}>
                                   <p>
-                                    Quantity ticket:{" "}
+                                    {t("payment_history_page_tour_quantity")}:{" "}
                                     <span>
                                       {item?.amountAdult + item?.amountChild}{" "}
                                       ticket(s)
@@ -618,7 +481,7 @@ const Tour = memo(() => {
                               <Grid item className={classes.boxSave}>
                                 <Grid className={classes.boxPrice}>
                                   <p>
-                                    Total Price:{" "}
+                                    {t("payment_history_page_tour_total_bill")}:{" "}
                                     <span>
                                       {fCurrency2VND(
                                         item?.oldBillData?.totalBill

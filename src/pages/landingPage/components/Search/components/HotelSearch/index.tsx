@@ -150,7 +150,6 @@ const HotelSearch = memo(() => {
                 name="people"
                 startAdornment={<FamilyRestroomIcon />}
                 onFocus={onFocus}
-                onBlur={onBlur}
                 value={`${numberOfAdult} ${t(
                   "landing_page_section_search_stay_input_adult_placeholder"
                 )}, ${numberOfChild} ${t(
@@ -243,6 +242,22 @@ const HotelSearch = memo(() => {
                           value={numberOfRoom}
                         />
                       </Grid>
+                    </Grid>
+                    <Grid
+                      item
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginBottom: "14px",
+                      }}
+                      xs={12}
+                    >
+                      <Button
+                        btnType={BtnType.Secondary}
+                        onClick={() => setFocus(!focus)}
+                      >
+                        {t("common_cancel")}
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
