@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { memo } from "react";
 import { Modal, ModalProps, ModalHeader, ModalBody } from "reactstrap";
 import classes from "./styles.module.scss";
 import { Grid } from "@mui/material";
@@ -17,19 +17,24 @@ import { clsx } from "clsx";
 import "swiper/swiper.min.css";
 import { fCurrency2VND } from "utils/formatNumber";
 import Button, { BtnType } from "components/common/buttons/Button";
+import { useRouter } from "next/router";
+import { Stay } from "models/stay";
+
 interface Props extends ModalProps {
   isOpen: boolean;
   onClose?: () => void;
   toggle?: () => void;
   room?: Room;
   minPrice?: number;
+  stay?: Stay;
 }
 
 // eslint-disable-next-line react/display-name
 const PopupDetailTour = memo((props: Props) => {
-  const { isOpen, toggle, onClose, room, minPrice } = props;
+  const { isOpen, toggle, onClose, room, minPrice, stay } = props;
   const { t, i18n } = useTranslation("common");
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const router = useRouter();
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle} className={classes.root}>
@@ -47,7 +52,6 @@ const PopupDetailTour = memo((props: Props) => {
                 navigation={true}
                 modules={[Pagination, Navigation]}
                 className={clsx("mySwiper", classes.swiper)}
-                thumbs={{ swiper: thumbsSwiper }}
               >
                 {room?.images?.map((img, index) => (
                   <SwiperSlide key={index}>
@@ -95,21 +99,36 @@ const PopupDetailTour = memo((props: Props) => {
                   ))}
                 </ul>
               </Grid>
-              <Grid className={classes.boxGridFooter}>
-                <p className={classes.titleGrid}>
-                  {t("popup_detail_room_title_starting")}
-                </p>
-                <p className={classes.titlePrice}>
-                  {fCurrency2VND(minPrice)} VND{" "}
-                  <span>{t("popup_detail_room_title_night_room")}</span>
-                </p>
-                <Button
-                  btnType={BtnType.Primary}
-                  className={classes.btnSeeRoom}
-                >
-                  {t("popup_detail_room_title_see_option")}
-                </Button>
-              </Grid>
+              {minPrice ? (
+                <Grid className={classes.boxGridFooter}>
+                  <p className={classes.titleGrid}>
+                    {t("popup_detail_room_title_starting")}
+                  </p>
+                  <p className={classes.titlePrice}>
+                    {fCurrency2VND(minPrice)} VND{" "}
+                    <span>{t("popup_detail_room_title_night_room")}</span>
+                  </p>
+                  <Button
+                    btnType={BtnType.Primary}
+                    className={classes.btnSeeRoom}
+                    onClick={toggle}
+                  >
+                    {t("popup_detail_room_title_see_option")}
+                  </Button>
+                </Grid>
+              ) : (
+                <Grid className={classes.boxGridFooter}>
+                  <Button
+                    btnType={BtnType.Primary}
+                    className={classes.btnSeeRoom}
+                    onClick={() => {
+                      router.push(`/listHotel/:${stay?.id}`);
+                    }}
+                  >
+                    {t("popup_detail_room_title_see_option")}
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           </Grid>
         </ModalBody>

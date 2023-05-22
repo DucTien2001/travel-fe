@@ -1,30 +1,38 @@
 import type { NextPage } from "next";
-import { Container, Row, Col, Card, CardHeader, CardBody, Form } from "reactstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  CardHeader,
+  CardBody,
+  Form,
+} from "reactstrap";
 import { useState, useMemo, useEffect } from "react";
 import clsx from "clsx";
 import * as yup from "yup";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import Google from "components/SocialButton/Google";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { UserService } from "services/user";
 import { EKey } from "models/general";
 import { setUserLogin } from "redux/reducers/User/actionTypes";
 import { ReducerType } from "redux/reducers";
 import Router from "next/router";
 import { EUserType } from "models/user";
-import InputCheckbox from "components/common/inputs/InputCheckbox";
 import ErrorMessage from "components/common/texts/ErrorMessage";
 import PopupDefault from "components/Popup/PopupDefault";
-import { getAllHotels, getAllTours } from "redux/reducers/Enterprise/actionTypes";
-import { getAllRoomBills, getAllTourBills } from "redux/reducers/Normal/actionTypes";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import { Grid } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface LoginForm {
   email: string;
@@ -39,10 +47,15 @@ const Login: NextPage = () => {
   const [errorSubmit, setErrorSubmit] = useState(false);
   const [isNotVerified, setIsNotVerified] = useState(false);
 
+  const { t } = useTranslation("common");
+
   const schema = useMemo(() => {
     return yup.object().shape({
-      email: yup.string().email("Please enter a valid email address").required("Email is required"),
-      password: yup.string().required("Password is required"),
+      email: yup
+        .string()
+        .email(t("auth_login_email_validate_error"))
+        .required(t("auth_login_email_validate")),
+      password: yup.string().required(t("auth_login_password_validate")),
       role: yup.number().required(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,7 +87,16 @@ const Login: NextPage = () => {
   }, [watch]);
 
   useEffect(() => {
-    if (user) {
+    if (
+      user?.role === EUserType.SUPER_ADMIN ||
+      user?.role === EUserType.ADMIN
+    ) {
+      Router.push("/admin/users");
+    }
+    if (user?.role === EUserType.ENTERPRISE || user?.role === EUserType.STAFF) {
+      Router.push("/enterprises/tours");
+    }
+    if (user?.role === EUserType.USER) {
       Router.push("/");
     }
   }, [user]);
@@ -84,7 +106,6 @@ const Login: NextPage = () => {
     UserService.login({
       username: data?.email,
       password: data?.password,
-      role: data?.role,
     })
       .then((res) => {
         localStorage.setItem(EKey.TOKEN, res.token);
@@ -106,7 +127,7 @@ const Login: NextPage = () => {
     dispatch(setLoading(true));
     UserService.reSendEmailVerifySignup(email)
       .then(() => {
-        dispatch(setSuccessMess("Resend successfully"));
+        dispatch(setSuccessMess(t("common_send_success")));
       })
       .catch((e) => dispatch(setErrorMess(e)))
       .finally(() => dispatch(setLoading(false)));
@@ -121,16 +142,21 @@ const Login: NextPage = () => {
                 <Col lg="5" md="7">
                   <Card className={clsx("shadow", classes.card)}>
                     <CardHeader>
-                      <div className={clsx("mt-4 text-center", classes.headerLoginContainer)}>
-                        <p>Sign in</p>
+                      <div
+                        className={clsx(
+                          "mt-4 text-center",
+                          classes.headerLoginContainer
+                        )}
+                      >
+                        <p>{t("auth_login")}</p>
                       </div>
                     </CardHeader>
                     <CardBody className="px-lg-5">
                       <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
                         <Grid>
                           <InputTextfield
-                            title="Email"
-                            placeholder="Enter your email"
+                            title={t("auth_login_email")}
+                            placeholder={t("auth_login_email")}
                             type="email"
                             inputRef={register("email")}
                             errorMessage={errors.email?.message}
@@ -138,101 +164,37 @@ const Login: NextPage = () => {
                         </Grid>
                         <Grid sx={{ marginTop: "16px" }}>
                           <InputTextfield
-                            title="Password"
-                            placeholder="Enter your password"
+                            title={t("auth_login_password")}
+                            placeholder={t("auth_login_password")}
                             type="password"
                             showEyes={true}
                             inputRef={register("password")}
                             errorMessage={errors.password?.message}
                           />
                         </Grid>
-                        <Grid className={classes.boxTextRole} sx={{ marginTop: "16px" }}>
-                          <p className={classes.textYouAre}>You are: </p>
-                          <div className={classes.boxCheckRole}>
-                            <Controller
-                              name="role"
-                              control={control}
-                              render={({ field }) => (
-                                <>
-                                  <Grid sx={{ paddingRight: "14px" }}>
-                                    <InputCheckbox
-                                      content="Normal"
-                                      checked={field.value === EUserType.USER}
-                                      onChange={() => {
-                                        setValue("role", EUserType.USER);
-                                      }}
-                                    />
-                                  </Grid>
-                                  <Grid sx={{ paddingRight: "14px" }}>
-                                    <InputCheckbox
-                                      content="Admin"
-                                      checked={field.value === EUserType.ADMIN}
-                                      onChange={() => {
-                                        setValue("role", EUserType.ADMIN);
-                                      }}
-                                    />
-                                  </Grid>
-                                  <Grid sx={{ paddingRight: "14px" }}>
-                                    <InputCheckbox
-                                      content="Super Admin"
-                                      checked={field.value === EUserType.SUPER_ADMIN}
-                                      onChange={() => {
-                                        setValue("role", EUserType.SUPER_ADMIN);
-                                      }}
-                                    />
-                                  </Grid>
-                                  <Grid>
-                                    <InputCheckbox
-                                      content="Enterprise"
-                                      checked={field.value === EUserType.ENTERPRISE}
-                                      onChange={() => {
-                                        setValue("role", EUserType.ENTERPRISE);
-                                      }}
-                                    />
-                                  </Grid>
-                                  <Grid>
-                                    <InputCheckbox
-                                      content="Staff"
-                                      checked={field.value === EUserType.STAFF}
-                                      onChange={() => {
-                                        setValue("role", EUserType.STAFF);
-                                      }}
-                                    />
-                                  </Grid>
-                                </>
-                              )}
-                            />
-                          </div>
-                        </Grid>
                         {errorSubmit && (
                           <div className={classes.boxError}>
-                            <ErrorMessage>Please enter a correct email and password.</ErrorMessage>
+                            <ErrorMessage>{t("auth_login_error")}</ErrorMessage>
                           </div>
                         )}
                         <div className={classes.btnLoginContainer}>
                           <Button btnType={BtnType.Linear} type="submit">
-                            Sign in
+                            {t("auth_login_btn_login")}
                           </Button>
                         </div>
                       </Form>
-                      <div className={classes.separator}>
-                        <span className={classes.childrenSeparator}>or login with</span>
-                      </div>
-                      <Grid sx={{ display: "flex", justifyContent: "center" }}>
-                        <Google />
-                      </Grid>
                       <Row className="mt-3">
                         <Col xs="6">
                           <Link href="/auth/forgotPassword">
                             <a>
-                              <span>Forgot password?</span>
+                              <span>{t("auth_login_btn_forgot_pass")}</span>
                             </a>
                           </Link>
                         </Col>
                         <Col className="text-right" xs="6">
                           <Link href="/auth/signup">
                             <a>
-                              <span>Create new account</span>
+                              <span>{t("auth_login_btn_create_acc")}</span>
                             </a>
                           </Link>
                         </Col>

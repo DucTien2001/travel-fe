@@ -27,6 +27,7 @@ import {
 import { UserService } from "services/user";
 import Router from "next/router";
 import { Grid } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface VerifyForgotPasswordForm {
   code: string;
@@ -36,22 +37,25 @@ interface VerifyForgotPasswordForm {
 
 const VerifyForgotPassword: NextPage = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation("common");
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      code: yup.string().required("Verify code is required"),
+      code: yup.string().required(t("auth_verify_forgot_validate")),
       newPassword: yup
         .string()
         .matches(VALIDATION.password, {
-          message:
-            "Password must contains at least 8 characters, including at least one letter and one number and a special character.",
+          message: t("auth_sign_up_password_validate_error"),
           excludeEmptyString: true,
         })
-        .required("New password is required"),
+        .required(t("auth_verify_forgot_new_pass_validate")),
       confirmNewPassword: yup
         .string()
-        .oneOf([yup.ref("newPassword")], "Passwords does not match")
-        .required("Confirm new password is required"),
+        .oneOf(
+          [yup.ref("newPassword")],
+          t("auth_sign_up_confirm_password_validate_error")
+        )
+        .required(t("auth_sign_up_confirm_password_validate")),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -78,7 +82,7 @@ const VerifyForgotPassword: NextPage = () => {
     })
       .then(() => {
         Router.push("/auth/login");
-        dispatch(setSuccessMess("Reset password successfully"));
+        dispatch(setSuccessMess(t("common_send_success")));
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
@@ -92,7 +96,9 @@ const VerifyForgotPassword: NextPage = () => {
           <div className="header-body mb-7">
             <Row className="justify-content-center">
               <Col lg="5" md="6">
-                <h1 className="text-white text-center">Welcome!</h1>
+                <h1 className="text-white text-center">
+                  {t("auth_sub_header_profile")}
+                </h1>
               </Col>
             </Row>
             <Container className="mt--8 pb-5">
@@ -106,10 +112,8 @@ const VerifyForgotPassword: NextPage = () => {
                           classes.headerContainer
                         )}
                       >
-                        <p>Verify forgot password</p>
-                        <span>
-                          Please enter verify code have been send your email.
-                        </span>
+                        <p>{t("auth_verify_forgot_title")}</p>
+                        <span>{t("auth_verify_forgot_title_sub")}</span>
                       </div>
                     </CardHeader>
                     <CardBody className="px-lg-5">
@@ -121,8 +125,8 @@ const VerifyForgotPassword: NextPage = () => {
                       >
                         <Grid item xs={12}>
                           <InputTextfield
-                            title="Verify code"
-                            placeholder="Enter verify code"
+                            title={t("auth_verify_forgot_validate_code")}
+                            placeholder={t("auth_verify_forgot_validate_code")}
                             type="text"
                             inputRef={register("code")}
                             errorMessage={errors.code?.message}
@@ -130,8 +134,8 @@ const VerifyForgotPassword: NextPage = () => {
                         </Grid>
                         <Grid item xs={12}>
                           <InputTextfield
-                            label="New password"
-                            placeholder="Enter your new password"
+                            label={t("auth_verify_forgot_new_pass")}
+                            placeholder={t("auth_verify_forgot_new_pass")}
                             type="password"
                             showEyes={true}
                             inputRef={register("newPassword")}
@@ -140,8 +144,8 @@ const VerifyForgotPassword: NextPage = () => {
                         </Grid>
                         <Grid item xs={12}>
                           <InputTextfield
-                            label="Confirm new password"
-                            placeholder="Enter confirm new password"
+                            label={t("auth_sign_up_confirm_password")}
+                            placeholder={t("auth_sign_up_confirm_password")}
                             type="password"
                             showEyes={true}
                             inputRef={register("confirmNewPassword")}
@@ -150,7 +154,7 @@ const VerifyForgotPassword: NextPage = () => {
                         </Grid>
                         <Grid className={classes.btnContainer} item xs={12}>
                           <Button btnType={BtnType.Linear} type="submit">
-                            Send
+                            {t("common_send")}
                           </Button>
                         </Grid>
                       </Grid>
@@ -166,6 +170,3 @@ const VerifyForgotPassword: NextPage = () => {
   );
 };
 export default VerifyForgotPassword;
-function setMessSuccess(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}

@@ -61,8 +61,14 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      departure: yup.date().max(yup.ref("return"), "Departure date can't be after return date").required("Start datetime is required"),
-      return: yup.date().min(yup.ref("departure"), "Return date can't be before departure date").required("End datetime is required"),
+      departure: yup
+        .date()
+        .max(yup.ref("return"), "Departure date can't be after return date")
+        .required("Start datetime is required"),
+      return: yup
+        .date()
+        .min(yup.ref("departure"), "Return date can't be before departure date")
+        .required("End datetime is required"),
       amountList: yup.array().of(
         yup.object().shape({
           amount: yup.number(),
@@ -75,14 +81,17 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
   const [focus, setFocus] = useState(false);
   const [open, setOpen] = useState(0);
   const [dateStart, setDateStart] = useState<Moment>(moment(new Date()));
-  const [dateEnd, setDateEnd] = useState<Moment>(moment(new Date(Date.now() + 3600 * 1000 * 24)));
+  const [dateEnd, setDateEnd] = useState<Moment>(
+    moment(new Date(Date.now() + 3600 * 1000 * 24))
+  );
   const [numberOfAdult, setNumberOfAdult] = useState(null);
   const [numberOfChild, setNumberOfChild] = useState(null);
   const [numberOfRoom, setNumberOfRoom] = useState(null);
-  const [roomFilter, setRoomFilter] = useState<number>(ESortOption.LOWEST_PRICE);
+  const [roomFilter, setRoomFilter] = useState<number>(
+    ESortOption.LOWEST_PRICE
+  );
   const [data, setData] = useState<DataPagination<Room>>();
   const [itemRoom, setItemRoom] = useState<Room>(null);
-  const [openPopupDetailRoom, setOpenPopupDetailRoom] = useState(false);
 
   const {
     register,
@@ -130,8 +139,14 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
       stayId: stay?.id || Number(router.query.hotelId.slice(1)),
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
-      startDate: dateStart?.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })?.toDate() || value?.startDate,
-      endDate: dateEnd?.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })?.toDate() || value?.endDate,
+      startDate:
+        dateStart
+          ?.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+          ?.toDate() || value?.startDate,
+      endDate:
+        dateEnd
+          ?.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+          ?.toDate() || value?.endDate,
       sort: roomFilter || null,
       numberOfAdult: numberOfAdult || null,
       numberOfChildren: numberOfChild || null,
@@ -222,7 +237,14 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateStart, dateEnd, roomFilter, numberOfAdult, numberOfChild, numberOfRoom]);
+  }, [
+    dateStart,
+    dateEnd,
+    roomFilter,
+    numberOfAdult,
+    numberOfChild,
+    numberOfRoom,
+  ]);
 
   useEffect(() => {
     setValue(
@@ -235,7 +257,7 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
 
   return (
     <Grid
-      sx={{ backgroundColor: "#f6f2f2", padding: "32px 0 8px 0" }}
+      sx={{ backgroundColor: "#f6f2f2", padding: "32px 0 32px 0" }}
       id={HOTEL_SECTION.section_check_room}
       component={"form"}
       onSubmit={handleSubmit(_onSubmit)}
@@ -253,11 +275,18 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
             {t("stay_detail_section_stay_check_room_empty_title")} {stay?.name}
           </h5>
           <Grid>
-            <Grid xs={12} container className={classes.inputDateContainer} spacing={2}>
+            <Grid
+              xs={12}
+              container
+              className={classes.inputDateContainer}
+              spacing={2}
+            >
               <Grid item xs={2}>
                 <InputDatePicker
                   className={classes.inputSearchDate}
-                  label={t("stay_detail_section_stay_check_room_empty_departure")}
+                  label={t(
+                    "stay_detail_section_stay_check_room_empty_departure"
+                  )}
                   placeholder="Departure"
                   name="departure"
                   dateFormat="DD/MM/YYYY"
@@ -296,18 +325,26 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   control={control}
                 />
               </Grid>
-              <Grid className={clsx(classes.boxItem, classes.boxGuest)} item xs={5}>
+              <Grid
+                className={clsx(classes.boxItem, classes.boxGuest)}
+                item
+                xs={5}
+              >
                 <InputTextfield
-                  title={t("landing_page_section_search_stay_input_guest_title")}
+                  title={t(
+                    "landing_page_section_search_stay_input_guest_title"
+                  )}
                   className={classes.inputSearchLocation}
                   placeholder="Guest and Room"
                   name="people"
                   autoComplete="off"
                   startAdornment={<FamilyRestroomIcon />}
                   onFocus={onFocus}
-                  value={`${numberOfAdult ? numberOfAdult : 1} ${t("landing_page_section_search_stay_input_adult_placeholder")}, ${
-                    numberOfChild ? numberOfChild : 0
-                  } ${t("landing_page_section_search_stay_input_child_placeholder")}, ${numberOfRoom ? numberOfRoom : 1} ${t(
+                  value={`${numberOfAdult ? numberOfAdult : 1} ${t(
+                    "landing_page_section_search_stay_input_adult_placeholder"
+                  )}, ${numberOfChild ? numberOfChild : 0} ${t(
+                    "landing_page_section_search_stay_input_child_placeholder"
+                  )}, ${numberOfRoom ? numberOfRoom : 1} ${t(
                     "landing_page_section_search_stay_input_room_placeholder"
                   )}`}
                 />
@@ -325,7 +362,11 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                       >
                         <Grid className={classes.boxTitleCounter}>
                           <PeopleAltIcon />
-                          <p>{t("landing_page_section_search_stay_input_adult_placeholder")}</p>
+                          <p>
+                            {t(
+                              "landing_page_section_search_stay_input_adult_placeholder"
+                            )}
+                          </p>
                         </Grid>
                         <Grid>
                           <InputCounter
@@ -348,7 +389,11 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                       >
                         <Grid className={classes.boxTitleCounter}>
                           <ChildFriendlyIcon />
-                          <p>{t("landing_page_section_search_stay_input_child_placeholder")}</p>
+                          <p>
+                            {t(
+                              "landing_page_section_search_stay_input_child_placeholder"
+                            )}
+                          </p>
                         </Grid>
                         <Grid>
                           <InputCounter
@@ -371,7 +416,11 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                       >
                         <Grid className={classes.boxTitleCounter}>
                           <MeetingRoomIcon />
-                          <p>{t("landing_page_section_search_stay_input_room_placeholder")}</p>
+                          <p>
+                            {t(
+                              "landing_page_section_search_stay_input_room_placeholder"
+                            )}
+                          </p>
                         </Grid>
                         <Grid>
                           <InputCounter
@@ -392,7 +441,10 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                         }}
                         xs={12}
                       >
-                        <Button btnType={BtnType.Secondary} onClick={() => setFocus(!focus)}>
+                        <Button
+                          btnType={BtnType.Secondary}
+                          onClick={() => setFocus(!focus)}
+                        >
                           {t("common_cancel")}
                         </Button>
                       </Grid>
@@ -414,8 +466,13 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
               </Grid>
             </Grid>
             <Grid className={classes.boxResetFilter}>
-              <Button btnType={BtnType.Primary} className={classes.btnResetOption} onClick={onClearFilter}>
-                <FontAwesomeIcon icon={faArrowsRotate} /> {t("list_tours_reset_filter")}
+              <Button
+                btnType={BtnType.Primary}
+                className={classes.btnResetOption}
+                onClick={onClearFilter}
+              >
+                <FontAwesomeIcon icon={faArrowsRotate} />{" "}
+                {t("list_tours_reset_filter")}
               </Button>
             </Grid>
           </Grid>
@@ -469,7 +526,11 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid xs={9} sx={{ paddingLeft: "10px" }} className={classes.rootRightPanel}>
+            <Grid
+              xs={9}
+              sx={{ paddingLeft: "10px" }}
+              className={classes.rootRightPanel}
+            >
               <Grid className={classes.rightPanel}>
                 <Grid className={classes.rightPanelHeader}>
                   <Grid>
@@ -478,69 +539,148 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   <Grid>
                     <FontAwesomeIcon icon={faUserGroup}></FontAwesomeIcon>
                     <span>
-                      {room?.numberOfAdult} {t("stay_detail_section_stay_check_room_empty_adult")}, {room?.numberOfChildren}{" "}
+                      {room?.numberOfAdult}{" "}
+                      {t("stay_detail_section_stay_check_room_empty_adult")},{" "}
+                      {room?.numberOfChildren}{" "}
                       {t("stay_detail_section_stay_check_room_empty_child")}
                     </span>
                   </Grid>
                 </Grid>
                 <Grid className={classes.boxServices} container>
                   <Grid item xs={4}>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemService}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemService}
+                    >
                       <RestaurantIcon />
-                      <span>Free Breakfast</span>
+                      <span>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_free_breakfast"
+                        )}
+                      </span>
                     </Grid>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemService}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemService}
+                    >
                       <WifiIcon />
-                      <span>Free Wifi</span>
+                      <span>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_free_wifi"
+                        )}
+                      </span>
                     </Grid>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemService}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemService}
+                    >
                       <SmokeFreeIcon />
-                      <span>Non-Smoking</span>
+                      <span>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_non_smoking"
+                        )}
+                      </span>
                     </Grid>
                   </Grid>
                   <Grid item xs={4}>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemInforRoom}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemInforRoom}
+                    >
                       <BedIcon />
                       <span>
                         {" "}
-                        {t("stay_detail_section_stay_check_room_empty_number_of_bed")}: {room?.numberOfBed}
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_number_of_bed"
+                        )}
+                        : {room?.numberOfBed}
                       </span>
                     </Grid>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemInforRoom}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemInforRoom}
+                    >
                       <CheckBoxIcon />
                       <span>
-                        {t("stay_detail_section_stay_check_room_empty_number_of_room_left")}: {room?.numberOfRoom}
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_number_of_room_left"
+                        )}
+                        : {room?.numberOfRoom}
                       </span>
                     </Grid>
                   </Grid>
                   <Grid item xs={4} className={classes.boxPrice}>
                     {room?.discount !== 0 && (
-                      <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemPriceRoom}>
+                      <Grid
+                        sx={{ padding: "0 0 10px 0" }}
+                        className={classes.itemPriceRoom}
+                      >
                         <span className={classes.discount}>
-                          {fCurrency2(Math.ceil(listMinPrice[index] * ((100 - room?.discount) / 100)))} VND
+                          {fCurrency2(
+                            Math.ceil(
+                              listMinPrice[index] *
+                                ((100 - room?.discount) / 100)
+                            )
+                          )}{" "}
+                          VND
                         </span>
                       </Grid>
                     )}
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemPriceRoom}>
-                      <span>{t("stay_detail_section_stay_from_review")} &nbsp;</span> <p> {fCurrency2(listMinPrice[index])} VND</p>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemPriceRoom}
+                    >
+                      <span>
+                        {t("stay_detail_section_stay_from_review")} &nbsp;
+                      </span>{" "}
+                      <p> {fCurrency2(listMinPrice[index])} VND</p>
                     </Grid>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemPriceRoom}>
-                      <span>{t("stay_detail_section_stay_check_room_empty_room_night")}</span>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemPriceRoom}
+                    >
+                      <span>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_room_night"
+                        )}
+                      </span>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid className={classes.boxDetailPrice}>
-                  <Grid onClick={() => setOpen(open === index ? -1 : index)} className={classes.boxControl}>
-                    <p>{t("stay_detail_section_stay_check_room_empty_price_detail")}</p>
-                    {open === index ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                  <Grid
+                    onClick={() => setOpen(open === index ? -1 : index)}
+                    className={classes.boxControl}
+                  >
+                    <p>
+                      {t(
+                        "stay_detail_section_stay_check_room_empty_price_detail"
+                      )}
+                    </p>
+                    {open === index ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    )}
                   </Grid>
                   <Collapse in={open === index} timeout="auto" unmountOnExit>
-                    <Grid sx={{ display: "flex", justifyContent: "space-between" }} container>
+                    <Grid
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                      container
+                    >
                       {room?.prices?.map((priceInfo, index) => (
-                        <Grid className={classes.itemPrice} xs={6} item key={index}>
+                        <Grid
+                          className={classes.itemPrice}
+                          xs={6}
+                          item
+                          key={index}
+                        >
                           <p>
-                            {moment(priceInfo?.date).format("DD/MM/YYYY")} {":"} <span>{fCurrency2(priceInfo?.price)} VND</span>{" "}
-                            {t("stay_detail_section_stay_check_room_empty_room_night")}
+                            {moment(priceInfo?.date).format("DD/MM/YYYY")} {":"}{" "}
+                            <span>{fCurrency2(priceInfo?.price)} VND</span>{" "}
+                            {t(
+                              "stay_detail_section_stay_check_room_empty_room_night"
+                            )}
                           </p>
                         </Grid>
                       ))}
@@ -550,11 +690,19 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                 <Grid className={classes.footerPrice}>
                   <Grid className={classes.boxTip}>
                     <InfoIcon />
-                    <p>{t("stay_detail_section_stay_check_room_empty_tip_select")}</p>
+                    <p>
+                      {t(
+                        "stay_detail_section_stay_check_room_empty_tip_select"
+                      )}
+                    </p>
                   </Grid>
                   <Grid className={classes.boxNumberOfRoom}>
                     <Grid sx={{ flex: "2", paddingRight: "10px" }}>
-                      <p>{t("stay_detail_section_stay_check_room_empty_number_of_room")}</p>
+                      <p>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_number_of_room"
+                        )}
+                      </p>
                     </Grid>
                     <Grid sx={{ flex: "1" }}>
                       <Controller
@@ -587,11 +735,16 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
           <Grid className={classes.boxTotalPrice}>
             <p>{t("stay_detail_section_stay_check_room_empty_total_price")}</p>
             <p className={classes.price}>
-              <span>{fCurrency2(Math.ceil(totalPrice))} VND</span> / {totalRoom} {t("stay_detail_section_stay_check_room_empty_room_night")}
+              <span>{fCurrency2(Math.ceil(totalPrice))} VND</span> / {totalRoom}{" "}
+              {t("stay_detail_section_stay_check_room_empty_room_night")}
             </p>
           </Grid>
           <Grid className={classes.btnControl}>
-            <Button btnType={BtnType.Secondary} type="submit" disabled={totalPrice === 0}>
+            <Button
+              btnType={BtnType.Secondary}
+              type="submit"
+              disabled={totalPrice === 0}
+            >
               {t("stay_detail_section_stay_check_room_empty_book_now")}
             </Button>
           </Grid>

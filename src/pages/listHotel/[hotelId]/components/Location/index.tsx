@@ -40,7 +40,7 @@ interface Props {
 const Comments = memo(({ stay }: Props) => {
   return (
     <Grid
-      sx={{ backgroundColor: "#f6f2f2", padding: "32px 0 8px 0" }}
+      sx={{ backgroundColor: "#f6f2f2", paddingBottom: "8px" }}
       id={HOTEL_SECTION.section_location}
     >
       <Container className={classes.root}>

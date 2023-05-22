@@ -10,7 +10,16 @@ import { Collapse, Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHotel } from "@fortawesome/free-solid-svg-icons";
-import { Restaurant, Wifi, ReceiptLong, AccessTime, Receipt, Person, Email, Phone } from "@mui/icons-material";
+import {
+  Restaurant,
+  Wifi,
+  ReceiptLong,
+  AccessTime,
+  Receipt,
+  Person,
+  Email,
+  Phone,
+} from "@mui/icons-material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Button, { BtnType } from "components/common/buttons/Button";
@@ -57,6 +66,14 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
+  const calculatePriceOfRoom = (roomPrice, amount, discount) => {
+    let price = 0;
+    roomPrice?.forEach((item) => {
+      price += item.price;
+    });
+    return (price * amount * (100 - discount)) / 100;
+  };
+
   const onSubmit = () => {
     const rooms = [];
     dataRoomBook?.rooms?.forEach((room) => {
@@ -95,12 +112,21 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
   return (
     <Grid component="form">
       <Container>
-        <Grid container spacing={2} className={classes.rootContent} id={PAYMENT_HOTEL_SECTION.REVIEW}>
+        <Grid
+          container
+          spacing={2}
+          className={classes.rootContent}
+          id={PAYMENT_HOTEL_SECTION.REVIEW}
+        >
           <Grid xs={8} item className={classes.leftPanel}>
             <Grid container item spacing={2}>
               <Grid item xs={12}>
-                <h4 className={classes.title}>{t("review_page_title_review")} </h4>
-                <p className={classes.subTitle}>{t("review_page_sub_title_review")}</p>
+                <h4 className={classes.title}>
+                  {t("review_page_title_review")}{" "}
+                </h4>
+                <p className={classes.subTitle}>
+                  {t("review_page_sub_title_review")}
+                </p>
 
                 <Grid
                   sx={{
@@ -127,19 +153,39 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                       </Grid>
                       <Grid container spacing={2} sx={{ paddingTop: "16px" }}>
                         <Grid item xs={4} className={classes.boxInforTime}>
-                          <p className={classes.textTitle}>{t("book_page_booking_check_in")}</p>
-                          <p className={classes.textDate}>{moment(dataRoomBook?.startDate).format("DD/MM/YYYY")}</p>
-                          <p className={classes.textTime}>From {fTime(dataRoomBook?.stay?.checkInTime)}</p>
-                        </Grid>
-                        <Grid item xs={4} className={classes.boxInforTime}>
-                          <p className={classes.textTitle}>{t("book_page_booking_check_out")}</p>
-                          <p className={classes.textDate}>{moment(dataRoomBook?.endDate).format("DD/MM/YYYY")}</p>
-                          <p className={classes.textTime}>Before {fTime(dataRoomBook?.stay?.checkOutTime)}</p>
-                        </Grid>
-                        <Grid item xs={4} className={classes.boxInforTime}>
-                          <p className={classes.textTitle}>{t("book_page_booking_duration")}</p>
+                          <p className={classes.textTitle}>
+                            {t("book_page_booking_check_in")}
+                          </p>
                           <p className={classes.textDate}>
-                            {fDuration(dataRoomBook?.startDate, dataRoomBook?.endDate)} {t("review_page_night")}
+                            {moment(dataRoomBook?.startDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          </p>
+                          <p className={classes.textTime}>
+                            From {fTime(dataRoomBook?.stay?.checkInTime)}
+                          </p>
+                        </Grid>
+                        <Grid item xs={4} className={classes.boxInforTime}>
+                          <p className={classes.textTitle}>
+                            {t("book_page_booking_check_out")}
+                          </p>
+                          <p className={classes.textDate}>
+                            {moment(dataRoomBook?.endDate).format("DD/MM/YYYY")}
+                          </p>
+                          <p className={classes.textTime}>
+                            Before {fTime(dataRoomBook?.stay?.checkOutTime)}
+                          </p>
+                        </Grid>
+                        <Grid item xs={4} className={classes.boxInforTime}>
+                          <p className={classes.textTitle}>
+                            {t("book_page_booking_duration")}
+                          </p>
+                          <p className={classes.textDate}>
+                            {fDuration(
+                              dataRoomBook?.startDate,
+                              dataRoomBook?.endDate
+                            )}{" "}
+                            {t("review_page_night")}
                           </p>
                         </Grid>
                       </Grid>
@@ -158,18 +204,27 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                             </Grid>
                             <Grid item xs={6}>
                               <span>
-                                {room?.numberOfAdult} {t("book_page_section_price_detail_adult")}, {room?.numberOfChildren}{" "}
+                                {room?.numberOfAdult}{" "}
+                                {t("book_page_section_price_detail_adult")},{" "}
+                                {room?.numberOfChildren}{" "}
                                 {t("book_page_section_price_detail_child")}{" "}
                               </span>
                             </Grid>
                           </Grid>
                           <Grid className={classes.boxInfoPerson} container>
                             <Grid item xs={6}>
-                              <p>{t("enterprise_management_section_add_or_edit_stay_tab_list_header_number_of_bed")}</p>
+                              <p>
+                                {t(
+                                  "enterprise_management_section_add_or_edit_stay_tab_list_header_number_of_bed"
+                                )}
+                              </p>
                             </Grid>{" "}
                             <Grid>
                               <span>
-                                {room?.numberOfBed} {t("enterprise_management_section_add_or_edit_stay_tab_list_body_bed")}
+                                {room?.numberOfBed}{" "}
+                                {t(
+                                  "enterprise_management_section_add_or_edit_stay_tab_list_body_bed"
+                                )}
                               </span>
                             </Grid>
                           </Grid>
@@ -209,7 +264,9 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                       borderBottom: "1px solid var(--gray-20)",
                     }}
                   >
-                    <h5 className={classes.title}>{t("review_page_hotel_policy")}</h5>
+                    <h5 className={classes.title}>
+                      {t("review_page_hotel_policy")}
+                    </h5>
                   </Grid>
                   <Grid
                     sx={{
@@ -225,15 +282,31 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                       <ReceiptLong />
                       <p>{t("review_page_section_cancellation_sub_title")}</p>
                     </Grid>
-                    <Grid>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</Grid>
+                    <Grid>
+                      {open ? (
+                        <KeyboardArrowUpIcon />
+                      ) : (
+                        <KeyboardArrowDownIcon />
+                      )}
+                    </Grid>
                   </Grid>
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <Grid className={classes.rootOverview}>
                       <Grid className={classes.boxTitle}>
-                        <p>{t("review_page_section_cancellation_tour_reschedule_refund_title")}</p>
+                        <p>
+                          {t(
+                            "review_page_section_cancellation_tour_reschedule_refund_title"
+                          )}
+                        </p>
                       </Grid>
                       <Grid className={classes.boxDuration}>
-                        <p className={classes.titleDetail}>- {t("review_page_section_cancellation_tour_reschedule_title")}: </p>
+                        <p className={classes.titleDetail}>
+                          -{" "}
+                          {t(
+                            "review_page_section_cancellation_tour_reschedule_title"
+                          )}
+                          :{" "}
+                        </p>
                         {policyType[0]?.length ? (
                           <ul>
                             {policyType[0]?.map((item, index) => (
@@ -241,19 +314,32 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                                 key={index}
                                 className={classes.itemPolicy}
                                 dangerouslySetInnerHTML={{
-                                  __html: t("review_page_section_cancellation_tour_reschedule_content", {
-                                    dayRange: item?.dayRange,
-                                    moneyRate: item?.moneyRate,
-                                  }),
+                                  __html: t(
+                                    "review_page_section_cancellation_tour_reschedule_content",
+                                    {
+                                      dayRange: item?.dayRange,
+                                      moneyRate: item?.moneyRate,
+                                    }
+                                  ),
                                 }}
                               ></li>
                             ))}
                           </ul>
                         ) : (
-                          <p>{t("review_page_section_cancellation_tour_no_refund")}</p>
+                          <p>
+                            {t(
+                              "review_page_section_cancellation_tour_no_refund"
+                            )}
+                          </p>
                         )}
 
-                        <p className={classes.titleDetail}>- {t("review_page_section_cancellation_tour_refund_title")}: </p>
+                        <p className={classes.titleDetail}>
+                          -{" "}
+                          {t(
+                            "review_page_section_cancellation_tour_refund_title"
+                          )}
+                          :{" "}
+                        </p>
                         {policyType[1]?.length ? (
                           <ul>
                             {policyType[1]?.map((item, index) => (
@@ -261,16 +347,23 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                                 className={classes.itemPolicy}
                                 key={index}
                                 dangerouslySetInnerHTML={{
-                                  __html: t("review_page_section_cancellation_tour_refund_content", {
-                                    dayRange: item?.dayRange,
-                                    moneyRate: item?.moneyRate,
-                                  }),
+                                  __html: t(
+                                    "review_page_section_cancellation_tour_refund_content",
+                                    {
+                                      dayRange: item?.dayRange,
+                                      moneyRate: item?.moneyRate,
+                                    }
+                                  ),
                                 }}
                               ></li>
                             ))}
                           </ul>
                         ) : (
-                          <p>{t("review_page_section_cancellation_tour_no_refund")}</p>
+                          <p>
+                            {t(
+                              "review_page_section_cancellation_tour_no_refund"
+                            )}
+                          </p>
                         )}
                       </Grid>
                     </Grid>
@@ -292,7 +385,9 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                       borderBottom: "1px solid var(--gray-20)",
                     }}
                   >
-                    <h5 className={classes.title}>{t("review_page_accom_policy")}</h5>
+                    <h5 className={classes.title}>
+                      {t("review_page_accom_policy")}
+                    </h5>
                   </Grid>
                   <Grid>
                     <Grid className={classes.boxSubTitlePolicy}>
@@ -309,21 +404,27 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                         >
                           <Grid container>
                             <Grid item xs={6}>
-                              <p className={classes.textCheck}>{t("book_page_booking_check_in")}:</p>
+                              <p className={classes.textCheck}>
+                                {t("book_page_booking_check_in")}:
+                              </p>
                             </Grid>
                             <Grid item xs={6}>
                               <p>
-                                {t("stay_detail_section_stay_from_review")} {fTime(dataRoomBook?.stay?.checkInTime)}
+                                {t("stay_detail_section_stay_from_review")}{" "}
+                                {fTime(dataRoomBook?.stay?.checkInTime)}
                               </p>
                             </Grid>
                           </Grid>
                           <Grid container>
                             <Grid item xs={6}>
-                              <p className={classes.textCheck}>{t("book_page_booking_check_out")}:</p>
+                              <p className={classes.textCheck}>
+                                {t("book_page_booking_check_out")}:
+                              </p>
                             </Grid>
                             <Grid item xs={6}>
                               <p>
-                                {t("book_page_booking_before")} {fTime(dataRoomBook?.stay?.checkOutTime)}
+                                {t("book_page_booking_before")}{" "}
+                                {fTime(dataRoomBook?.stay?.checkOutTime)}
                               </p>
                             </Grid>
                           </Grid>
@@ -352,14 +453,23 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                         </Collapse>
                       </Grid>
                     </Grid>
-                    <Grid className={classes.boxSeeMore} onClick={() => setReadMore(!readMore)}>
-                      {readMore ? <p>{t("book_page_booking_read_all")}</p> : <p>{t("book_page_booking_read_less")}</p>}
+                    <Grid
+                      className={classes.boxSeeMore}
+                      onClick={() => setReadMore(!readMore)}
+                    >
+                      {readMore ? (
+                        <p>{t("book_page_booking_read_all")}</p>
+                      ) : (
+                        <p>{t("book_page_booking_read_less")}</p>
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <h4 className={classes.title}>{t("review_page_section_price_detail_title")}</h4>
+                <h4 className={classes.title}>
+                  {t("review_page_section_price_detail_title")}
+                </h4>
                 <Grid
                   sx={{
                     backgroundColor: "var(--white-color)",
@@ -368,14 +478,26 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                     borderRadius: "10px",
                   }}
                 >
-                  <Grid className={classes.boxPrice} sx={{ borderBottom: "1px solid Var(--gray-10)" }} onClick={() => setOpen(!open)}>
+                  <Grid
+                    className={classes.boxPrice}
+                    sx={{ borderBottom: "1px solid Var(--gray-10)" }}
+                    onClick={() => setOpen(!open)}
+                  >
                     <Grid>
                       {" "}
-                      <p className={classes.titlePrice}>{t("review_page_section_price_detail_price_you_pay")}</p>
+                      <p className={classes.titlePrice}>
+                        {t("review_page_section_price_detail_price_you_pay")}
+                      </p>
                     </Grid>
                     <Grid className={classes.priceTotal}>
-                      <h4 className={classes.price}>{fCurrency2VND(dataRoomBook?.totalBill)} VND</h4>
-                      {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                      <h4 className={classes.price}>
+                        {fCurrency2VND(dataRoomBook?.totalBill)} VND
+                      </h4>
+                      {open ? (
+                        <KeyboardArrowUpIcon />
+                      ) : (
+                        <KeyboardArrowDownIcon />
+                      )}
                     </Grid>
                   </Grid>
                   <Collapse in={open} timeout="auto" unmountOnExit>
@@ -389,19 +511,29 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                               alignItems: "center",
                             }}
                           >
-                            <p>{t("book_page_booking_room_name")}: </p> <p>{room?.title}</p>
+                            <p>{t("book_page_booking_room_name")}: </p>{" "}
+                            <p>{room?.title}</p>
                           </Grid>{" "}
                           <Grid
                             sx={{
                               display: "flex",
                               justifyContent: "space-between",
-                              alignItems: "center",
                             }}
                           >
                             <p>{t("book_page_booking_price")}: </p>
-                            {room?.prices.map((price, index) => (
-                              <p key={index}>{fCurrency2VND(price?.price)} VND</p>
-                            ))}
+                            <Grid>
+                              {room?.prices.map((price, index) => (
+                                <Grid key={index} className="d-flex">
+                                  <p
+                                    className="mr-2"
+                                    style={{ minWidth: "84px" }}
+                                  >
+                                    {moment(price.date).format("DD/MM/YYYY")}:
+                                  </p>
+                                  <p>{fCurrency2VND(price?.price)} VND</p>
+                                </Grid>
+                              ))}
+                            </Grid>
                           </Grid>
                           {room?.discount !== 0 && (
                             <Grid
@@ -411,7 +543,8 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                                 alignItems: "center",
                               }}
                             >
-                              <p>{t("book_page_booking_discount")}: </p> <p>{room?.discount}%</p>
+                              <p>{t("book_page_booking_discount")}: </p>{" "}
+                              <p>{room?.discount}%</p>
                             </Grid>
                           )}
                           <Grid
@@ -421,7 +554,26 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                               alignItems: "center",
                             }}
                           >
-                            {/* <p>Amount: </p> <p>{room?.amount}</p> */}
+                            <p>Amount: </p> <p>{room?.amount}</p>
+                          </Grid>
+                          <Grid
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <p>Total: </p>{" "}
+                            <p>
+                              {fCurrency2VND(
+                                calculatePriceOfRoom(
+                                  room?.prices,
+                                  room?.amount,
+                                  room?.discount
+                                )
+                              )}{" "}
+                              VND
+                            </p>
                           </Grid>
                         </Grid>
                       ))}
@@ -436,14 +588,19 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                     className={classes.btnContinue}
                   >
                     <Button btnType={BtnType.Secondary} onClick={onSubmit}>
-                      Continue to Pay
+                      {t("book_page_booking_continue_to_pay")}
                     </Button>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid xs={4} item sx={{ marginTop: "70px" }} className={classes.rightPanel}>
+          <Grid
+            xs={4}
+            item
+            sx={{ marginTop: "70px" }}
+            className={classes.rightPanel}
+          >
             <Grid sx={{ borderRadius: "10px" }}>
               <Grid className={classes.boxContactDetail}>
                 <Grid
@@ -452,7 +609,9 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                     borderBottom: "1px solid var(--gray-20)",
                   }}
                 >
-                  <h5 className={classes.title}>{t("review_page_contact_detail")}</h5>
+                  <h5 className={classes.title}>
+                    {t("review_page_contact_detail")}
+                  </h5>
                 </Grid>
                 <Grid sx={{ padding: "16px" }}>
                   <Grid className={classes.boxInfoPerson}>
@@ -478,18 +637,31 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                     borderBottom: "1px solid var(--gray-20)",
                   }}
                 >
-                  <h5 className={classes.title}>{t("review_page_guest_detail")}</h5>
+                  <h5 className={classes.title}>
+                    {t("review_page_guest_detail")}
+                  </h5>
                 </Grid>
                 <Grid sx={{ padding: "16px" }}>
-                  <Grid className={classes.boxInfoGuest} sx={{ paddingBottom: "14px" }}>
-                    <p className={classes.guestTitle}>{t("review_page_guest_name")}</p>
+                  <Grid
+                    className={classes.boxInfoGuest}
+                    sx={{ paddingBottom: "14px" }}
+                  >
+                    <p className={classes.guestTitle}>
+                      {t("review_page_guest_name")}
+                    </p>
                     <p>
                       {dataRoomBook?.lastName} {dataRoomBook?.firstName}
                     </p>
                   </Grid>
                   <Grid className={classes.boxInfoGuest}>
-                    <p className={classes.guestTitle}>{t("review_page_special_request_title")}</p>
-                    {dataRoomBook?.specialRequest ? <p>{dataRoomBook?.specialRequest}</p> : <p>-</p>}
+                    <p className={classes.guestTitle}>
+                      {t("review_page_special_request_title")}
+                    </p>
+                    {dataRoomBook?.specialRequest ? (
+                      <p>{dataRoomBook?.specialRequest}</p>
+                    ) : (
+                      <p>-</p>
+                    )}
                   </Grid>
                   <Grid className={classes.boxAdvice}>
                     <p>{t("review_page_special_request_sub_title")}</p>

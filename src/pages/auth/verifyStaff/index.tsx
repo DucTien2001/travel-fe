@@ -18,11 +18,13 @@ import {
 } from "redux/reducers/Status/actionTypes";
 import { useRouter } from "next/router";
 import useAuth from "hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 const VerifyStaff: NextPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { user } = useAuth();
+  const { t } = useTranslation("common");
 
   // const [offerId, setOfferId] = useState(null);
 
@@ -31,7 +33,7 @@ const VerifyStaff: NextPage = () => {
       const offerId = router?.query?.offerId;
       StaffService.acceptOffer(Number(offerId))
         .then(() => {
-          dispatch(setSuccessMess("Accept successfully"));
+          dispatch(setSuccessMess(t("auth_verify_staff_success")));
         })
         .catch((e) => {
           dispatch(setErrorMess(e));
@@ -49,10 +51,10 @@ const VerifyStaff: NextPage = () => {
           <Modal isOpen={true} className={classes.root}>
             <ModalHeader className={classes.title}>
               <FontAwesomeIcon icon={faCircleCheck} />
-              ACCEPT OFFER STAFF
+              {t("auth_verify_staff_title")}
             </ModalHeader>
             <ModalBody>
-              You want to become staff for our
+              {t("auth_verify_staff_title_sub")}
               <Grid sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                   btnType={BtnType.Primary}
@@ -61,7 +63,7 @@ const VerifyStaff: NextPage = () => {
                     router.push("/enterprises/tours");
                   }}
                 >
-                  Back to management
+                  {t("auth_verify_staff_btn_back")}
                 </Button>
               </Grid>
             </ModalBody>
