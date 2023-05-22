@@ -347,6 +347,16 @@
   "popup_detail_event_and_terms_conditions_tip_6":"6. Travelix will not be liable to offer a replacement coupon that are discontinued, cancelled, or used improperly whether due to fraud or technical issues.",
   "popup_detail_event_and_terms_conditions_tip_7":"7. Travelix reserves the right to change the terms and conditions without prior notice.",
 
+  "popup_detail_room_title_information": "Room information",
+  "popup_detail_room_title_adult": "adult",
+  "popup_detail_room_title_child": "children",
+  "popup_detail_room_title_bed": "bed",
+  "popup_detail_room_title_room": "room",
+  "popup_detail_room_title_feature": "Room Feature(s) You May Like",
+  "popup_detail_room_title_starting": "starting from",
+  "popup_detail_room_title_night_room": "/ room / night(s)",
+  "popup_detail_room_title_see_option": "See Room Option",
+  
   "popup_confirm_delete":"DELETE",
 
   "popup_download_view_tour_title":"View Tour",
