@@ -291,3 +291,10 @@
 .btnUseCoupon {
     width: 100%;
 }
+
+.textViewDetail {
+    color: var(--primary-light-color-1) !important;
+    &:hover {
+        text-decoration: underline;
+    }
+}

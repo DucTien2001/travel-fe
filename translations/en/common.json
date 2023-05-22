@@ -155,6 +155,9 @@
   "stay_detail_section_stay_check_room_empty_total_price": "Total price",
   "stay_detail_section_stay_check_room_empty_book_now": "Book now",
   "stay_detail_section_stay_check_room_empty_see_detail": "See Room Detail",
+  "stay_detail_section_stay_check_room_empty_free_wifi": "Free Wifi",
+  "stay_detail_section_stay_check_room_empty_free_breakfast": "Free breakfast",
+  "stay_detail_section_stay_check_room_empty_non_smoking": "Non-Smoking",
 
   "popup_add_comment_tour_title": "What do you think about this tour?",
   "popup_add_comment_tour_title_star_rating": "Star rating",
@@ -248,6 +251,10 @@
   "book_page_booking_required_doc": "Required Documents",
   "book_page_booking_read_all": "Read All",
   "book_page_booking_read_less": "Read Less",
+  "book_page_booking_continue_to_pay": "Continue to Pay",
+  "book_page_booking_number_of_bed": "Number of bed",
+  "book_page_booking_number_of_bed_title": "bed",
+  "book_page_booking_guest_per_room": "Guest per room",
 
   "review_page_step_title_review": "Review",
   "review_page_title_review": "Please Review Your Booking",

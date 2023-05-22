@@ -117,7 +117,7 @@ const ProductPage = memo((Props) => {
                       to={`${HOTEL_SECTION.section_overview}`}
                       spy={true}
                       smooth={true}
-                      offset={-90}
+                      offset={-120}
                       duration={500}
                       activeClass="active"
                       onClick={closeMenu}
@@ -130,7 +130,7 @@ const ProductPage = memo((Props) => {
                       to={`${HOTEL_SECTION.section_location}`}
                       spy={true}
                       smooth={true}
-                      offset={-90}
+                      offset={-120}
                       duration={500}
                       activeClass="active"
                       onClick={closeMenu}
@@ -143,7 +143,7 @@ const ProductPage = memo((Props) => {
                       to={`${HOTEL_SECTION.section_check_room}`}
                       spy={true}
                       smooth={true}
-                      offset={-90}
+                      offset={-85}
                       duration={500}
                       activeClass="active"
                       onClick={closeMenu}
@@ -156,7 +156,7 @@ const ProductPage = memo((Props) => {
                       to={`${HOTEL_SECTION.section_reviews}`}
                       spy={true}
                       smooth={true}
-                      offset={-90}
+                      offset={-120}
                       duration={500}
                       activeClass="active"
                       onClick={closeMenu}
