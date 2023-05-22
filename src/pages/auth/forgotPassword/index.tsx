@@ -25,6 +25,7 @@ import {
 } from "redux/reducers/Status/actionTypes";
 import Router from "next/router";
 import InputTextfield from "components/common/inputs/InputTextfield";
+import { useTranslation } from "react-i18next";
 
 interface ForgotPasswordForm {
   email: string;
@@ -32,13 +33,14 @@ interface ForgotPasswordForm {
 
 const Login: NextPage = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation("common");
 
   const schema = useMemo(() => {
     return yup.object().shape({
       email: yup
         .string()
-        .email("Please enter a valid email address")
-        .required("Email is required"),
+        .email(t("auth_forgot_password_email_validate_error"))
+        .required(t("auth_forgot_password_email_validate")),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -56,7 +58,7 @@ const Login: NextPage = () => {
     dispatch(setLoading(true));
     UserService.sendEmailForgotPassword(data.email)
       .then(() => {
-        dispatch(setSuccessMess("Send verify code successfully"));
+        dispatch(setSuccessMess(t("common_send_success")));
         Router.push(`/auth/verifyForgotPassword?email=${data.email}`);
       })
       .catch((e) => dispatch(setErrorMess(e)))
@@ -78,25 +80,22 @@ const Login: NextPage = () => {
                           classes.headerContainer
                         )}
                       >
-                        <p>Forgot password</p>
-                        <span>
-                          No worries! Just enter your email and we will send you
-                          a reset password link.
-                        </span>
+                        <p>{t("auth_forgot_password")}</p>
+                        <span>{t("auth_forgot_password_sub")}</span>
                       </div>
                     </CardHeader>
                     <CardBody className="px-lg-5">
                       <Form role="form" onSubmit={handleSubmit(_onSubmit)}>
                         <InputTextfield
-                          title="Email address"
-                          placeholder="Enter your email"
+                          title={t("auth_forgot_password_email")}
+                          placeholder={t("auth_forgot_password_email")}
                           type="text"
                           inputRef={register("email")}
                           errorMessage={errors.email?.message}
                         />
                         <div className={classes.btnContainer}>
                           <Button btnType={BtnType.Linear} type="submit">
-                            Send recovery email
+                            {t("common_send")}
                           </Button>
                         </div>
                       </Form>
@@ -104,7 +103,7 @@ const Login: NextPage = () => {
                         <Col xs="12">
                           <Link href="/auth/login">
                             <a>
-                              <span>Back to login page</span>
+                              <span>{t("auth_forgot_password_btn_back")}</span>
                             </a>
                           </Link>
                         </Col>
