@@ -43,13 +43,10 @@ import InputTextfield from "components/common/inputs/InputTextfield";
 import PopupModalImages from "components/Popup/PopupModalImages";
 import { useTranslation } from "react-i18next";
 
-interface Props {
-  comments?: Comment[];
-  onGetTourComments?: () => void;
-}
+interface Props {}
 
 // eslint-disable-next-line react/display-name
-const Comments = memo(({ comments, onGetTourComments }: Props) => {
+const Comments = memo(({}: Props) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { user } = useAuth();
@@ -59,7 +56,6 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
   const { t, i18n } = useTranslation("common");
 
   const tourId = Number(router.query.tourId.slice(1));
-  const { allTourBills } = useSelector((state: ReducerType) => state.normal);
 
   const [itemAction, setItemAction] = useState<Comment>();
   const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
@@ -166,7 +162,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
   const onYesDelete = () => {
     dispatch(setLoading(true));
     if (replyDelete) {
-      CommentService.deleteCommentTour(replyDelete?.id)
+      CommentService.deleteComment(replyDelete?.id)
         .then(() => {
           dispatch(setSuccessMess(t("common_update_success")));
           onTogglePopupConfirmDelete();
@@ -179,7 +175,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
           dispatch(setLoading(false));
         });
     } else {
-      CommentService.deleteCommentTour(commentDelete?.id)
+      CommentService.deleteComment(commentDelete?.id)
         .then(() => {
           dispatch(setSuccessMess(t("common_update_success")));
           onTogglePopupConfirmDelete();
@@ -211,7 +207,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
 
   const onPostReply = () => {
     if (replyEdit) {
-      CommentService.updateReplyTourComment(replyEdit?.id, {
+      CommentService.updateReplyComment(replyEdit?.id, {
         content: contentReply,
       })
         .then(() => {
@@ -226,7 +222,7 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
           dispatch(setLoading(false));
         });
     } else {
-      CommentService.replyTourComment({
+      CommentService.replyComment({
         commentId: reply?.id,
         content: contentReply,
       })
@@ -266,14 +262,6 @@ const Comments = memo(({ comments, onGetTourComments }: Props) => {
     }
   }, [replyEdit]);
 
-  useEffect(() => {
-    allTourBills.forEach((item) => {
-      if (item.tourId === tourId && item.verifyCode === null) {
-        setIsAddComment(!isAddComment);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTourBills]);
   return (
     <Grid className={classes.root}>
       <Container className={classes.container}>

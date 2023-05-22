@@ -42,7 +42,7 @@ const VNPay: NextPage = () => {
     })
       .then(() => {
         setTimeout(() => {
-          router.push("/paymentHistory/tour");
+          router.push("/paymentHistory/hotel");
         }, 15000);
       })
       .catch((e) => {

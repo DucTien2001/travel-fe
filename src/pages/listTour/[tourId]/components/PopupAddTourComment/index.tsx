@@ -160,7 +160,7 @@ const PopupAddComment = memo((props: Props) => {
           formDataEdit.append(`imagesDeleted[]`, item);
         }
       });
-      CommentService?.updateCommentTour(commentEdit?.id, formDataEdit)
+      CommentService?.updateComment(commentEdit?.id, formDataEdit)
         .then(() => {
           dispatch(setSuccessMess(t("common_update_success")));
           toggle();
@@ -174,7 +174,7 @@ const PopupAddComment = memo((props: Props) => {
         });
     } else {
       onSubmit(data);
-      CommentService?.createCommentTour(dataForm)
+      CommentService?.createComment(dataForm)
         .then(() => {
           dispatch(setSuccessMess(t("common_send_success")));
           toggle();
@@ -211,8 +211,6 @@ const PopupAddComment = memo((props: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, commentEdit]);
-
-  console.log(tourBill, "-----");
 
   return (
     <>

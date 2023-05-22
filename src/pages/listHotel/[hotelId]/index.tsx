@@ -184,11 +184,7 @@ const ProductPage = memo((Props) => {
           <SectionHotel stay={stay} />
           <Location stay={stay} />
           <CheckRoomEmpty stay={stay} />
-          {/* <Comment
-              comments={listComment}
-              onGetHotelComments={getHotelComments}
-              hotel={hotel}
-            /> */}
+          <Comment />
         </>
         {/* )} */}
       </div>

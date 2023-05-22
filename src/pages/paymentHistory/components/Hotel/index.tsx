@@ -1,277 +1,719 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faCircleMinus, faDownload } from "@fortawesome/free-solid-svg-icons";
-import { Row, Col, Table, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Button } from "reactstrap";
+import { Row } from "reactstrap";
 import SearchNotFound from "components/SearchNotFound";
 import { useDispatch } from "react-redux";
-import useAuth from "hooks/useAuth";
-import { useRouter } from "next/router";
-import { RoomBillService } from "services/normal/roomBill";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import { TourBillService } from "services/normal/tourBill";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
 import { fCurrency2VND } from "utils/formatNumber";
+import { Box, Collapse, Grid, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  DataPagination,
+  EBillStatus,
+  EPaymentStatus,
+  EServicePolicyType,
+} from "models/general";
+import InputSearch from "components/common/inputs/InputSearch";
+import { DeleteOutlineOutlined, EditOutlined } from "@mui/icons-material";
+import { FindAll, TourBill } from "models/tourBill";
+import useDebounce from "hooks/useDebounce";
+import StatusPayment from "components/StatusPayment";
+import AddCardIcon from "@mui/icons-material/AddCard";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { TourService } from "services/normal/tour";
+import { Tour } from "models/tour";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import AddCommentIcon from "@mui/icons-material/AddComment";
+import PopupAddTourComment from "pages/listTour/[tourId]/components/PopupAddTourComment";
+import { useTranslation } from "react-i18next";
+import { BillHelper } from "helpers/bill";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Pagination from "@mui/material/Pagination";
+import { RoomBillService } from "services/normal/roomBill";
+import { RoomBill } from "models/roomBill";
+import { Stay } from "models/stay";
+import { fTime } from "utils/formatTime";
 import DownloadRoomBill from "./DownloadRoomBill";
-import { RoomService } from "services/normal/room";
-import { Tooltip } from "@mui/material";
-import PopupConfirmDelete from "components/Popup/PopupConfirmDelete";
-
+import PopupAddHotelComment from "pages/listHotel/[hotelId]/components/PopupAddHotelComment";
 // eslint-disable-next-line react/display-name
-const Hotel = memo(() => {
+const Stay = memo(() => {
   const dispatch = useDispatch();
-  const { user } = useAuth();
-  const [listHistory, setListHistory] = useState([]);
-  const [modalDownloadRoomBill, setModalDownloadRoomBill] = useState({
-    isOpenModal: false,
-    roomBill: null,
-  });
-  const [roomBillId, setRoomBillId] = useState();
-  const [openConfirmCancelBookRoom, setOpenConfirmCancelBookRoom] = useState(false);
+  const router = useRouter();
+  const { t, i18n } = useTranslation("common");
+
+  const [modalDownloadRoomBill, setModalDownloadRoomBill] = useState(false);
+  const [roomBill, setRoomBill] = useState<RoomBill>(null);
+  const [openConfirmCancelBookRoom, setOpenConfirmCancelBookRoom] =
+    useState(false);
+  const [data, setData] = useState<DataPagination<RoomBill>>();
+  const [keyword, setKeyword] = useState<string>("");
+  const [itemAction, setItemAction] = useState<RoomBill>();
+  const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
+  const [openPopupSelectDate, setOpenPopupSelectDate] = useState(false);
+  const [room, setRoom] = useState<Stay>(null);
+  const [openAddInformation, setOpenAddInformation] = useState(false);
+  const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
+  const [open, setOpen] = useState(0);
+
+  const onToggleAddComment = () => setOpenPopupAddComment(!openPopupAddComment);
 
   const onTogglePopupConfirmCancel = () => {
-    setOpenConfirmCancelBookRoom(!openConfirmCancelBookRoom)
-  }
-  const sortDate = (a, b) => {
-    if (moment(a?.createdAt).toDate() > moment(b?.createdAt).toDate()) {
-      return 1;
-    } else if (
-      moment(a?.createdAt).toDate() < moment(b?.createdAt).toDate()
-    ) {
-      return -1;
-    } else {
-      return 0;
-    }
-  }
-  const getAllRoomBill = () => {
-    RoomBillService.getAllRoomBills(user?.id)
-    .then((res) => {
-      setListHistory(res.data.sort(sortDate));
-    })
-    .catch((e) => {
-      dispatch(setErrorMess(e));
-    })
-    .finally(() => {
-      dispatch(setLoading(false));
+    setOpenConfirmCancelBookRoom(!openConfirmCancelBookRoom);
+  };
+
+  const onToggleAddInformation = () => {
+    setOpenAddInformation(!openAddInformation);
+    onCloseActionMenu();
+    setRoomBill(itemAction);
+  };
+
+  const onTogglePopupSelectDate = () => {
+    setOpenPopupSelectDate(!openPopupSelectDate);
+  };
+
+  const handleAction = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    item: RoomBill
+  ) => {
+    setItemAction(item);
+    setActionAnchor(event.currentTarget);
+  };
+
+  const onCloseActionMenu = () => {
+    setItemAction(null);
+    setActionAnchor(null);
+  };
+
+  const sortDataByDate = (first, second) =>
+    Number(Date.parse(second)) - Number(Date.parse(first));
+
+  const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
+    fetchData({
+      page: newPage,
     });
-  }
+  };
 
-  useEffect(() => {
-    if (user) {
-      dispatch(setLoading(true));
-      RoomBillService.getAllRoomBills(user?.id)
-        .then((res) => {
-          setListHistory(res.data.sort(sortDate));
-        })
-        .catch((e) => {
-          dispatch(setErrorMess(e));
-        })
-        .finally(() => {
-          dispatch(setLoading(false));
-        });
+  const fetchData = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+  }) => {
+    const params: FindAll = {
+      take: value?.take || data?.meta?.take || 10,
+      page: value?.page || data?.meta?.page || 1,
+      keyword: keyword,
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
     }
-  }, [user, dispatch]);
-
-  const onDownloadBill = (bill) => {
-    let requestGetRooms = []
-    let _roomBillDetail = []
-    bill?.roomBillDetail?.map(roomItem=>{
-      requestGetRooms.push(RoomService.getRoom(roomItem?.roomId))
-    })
-    Promise.all(requestGetRooms).then((res)=>{
-      res.map((item, index)=>{
-        _roomBillDetail.push({
-          ...bill?.roomBillDetail[index],
-          title: item?.data?.title,
-          description: item?.data?.description,
-          numberOfBed: item?.data?.numberOfBed,
-        })
+    dispatch(setLoading(true));
+    RoomBillService.findAll(params)
+      .then((res) => {
+        setData({
+          data: res.data.sort(sortDataByDate),
+          meta: res.meta,
+        });
       })
-      setModalDownloadRoomBill({
-        isOpenModal: true,
-        roomBill: {
-          ...bill,
-          roomBillDetail: _roomBillDetail
-        },
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  const _onSearch = useDebounce(
+    (keyword: string) => fetchData({ keyword, page: 1 }),
+    500
+  );
+
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    _onSearch(e.target.value);
+  };
+
+  const onPaymentAgain = () => {
+    if (!itemAction) return;
+    TourBillService.payAgain(itemAction?.id)
+      .then((res) => {
+        router.push(res?.data?.checkoutUrl);
+      })
+      .catch((err) => {
+        dispatch(setErrorMess(err));
       });
-    })
+  };
+
+  const onDownloadBill = () => {
+    setModalDownloadRoomBill(true);
+    setRoomBill(itemAction);
+    onCloseActionMenu();
   };
 
   const onCloseModalDownloadRoomBill = () => {
-    setModalDownloadRoomBill({
-      isOpenModal: false,
-      roomBill: null,
-    });
+    setModalDownloadRoomBill(false);
+    setRoomBill(null);
   };
 
-  const isExpire = (item) => {
-    var currentDate = new Date();
-    let isExpired = false
-      var date = new Date(item?.createdAt)
-      if(currentDate.setDate(currentDate.getDate()) > date.setDate(date.getDate() + 2)){
-        isExpired= true;
-      }
-      else {
-        isExpired= false;
-      }
-      return isExpired;
-  }
+  const fetchTour = () => {
+    // TourService.getTour(itemAction?.tourData?.id)
+    //   .then((res) => {
+    //     setTour(res.data);
+    //   })
+    //   .catch((e) => {
+    //     dispatch(setErrorMess(e));
+    //   });
+  };
 
-  const onCancelBookRoom = (e, id) => {
-    setRoomBillId(id)
-    onTogglePopupConfirmCancel()
-  }
-  const onYesCancel = () => {
-    dispatch(setLoading(true))
-    RoomBillService.cancelBookTour(roomBillId)
-    .then(() => {
-      dispatch(setSuccessMess("Cancel book room successfully"))
-      getAllRoomBill();
-      onTogglePopupConfirmCancel()
-    })
-    .catch((e) => {
-      dispatch(setErrorMess(e))
-    })
-    .finally(()=>{
-      dispatch(setLoading(false))
-    })
-  }
+  const onSelectDate = () => {
+    setRoomBill(itemAction);
+    fetchTour();
+    onTogglePopupSelectDate();
+    onCloseActionMenu();
+  };
+
+  const onUpdateInfo = () => {
+    setRoomBill(itemAction);
+    onToggleAddInformation();
+    onCloseActionMenu();
+  };
+
+  const onCancel = () => {
+    setRoomBill(itemAction);
+    fetchTour();
+    onTogglePopupConfirmCancel();
+    onCloseActionMenu();
+  };
+
+  const onRate = () => {
+    setRoomBill(itemAction);
+    onToggleAddComment();
+    onCloseActionMenu();
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className={classes.root}>
-        <Table bordered className={classes.table}>
-          <thead>
-            <tr>
-              <th scope="row">Hotel name</th>
-              <th>Invoice</th>
-              <th>Date</th>
-              <th>Total bill</th>
-              <th>Deposit</th>
-              <th>Status</th>
-              <th>Cancel order</th>
-              <th>Download invoice</th>
-            </tr>
-          </thead>
-          <tbody>
-            {listHistory &&
-              listHistory?.map((item, index) => (
-                <tr key={index}>
-                  <th scope="row">
-                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                    <a href={`/listHotel/:${item?.hotelId}`} target="_blank" className={classes.hotelName}>
-                      {item?.hotelInfo?.name}
-                    </a>
-                  </th>
-                  <td>TV{item?.id}</td>
-                  <td>{moment(item?.createdAt).format("DD/MM/YYYY")}</td>
-                  <td>{fCurrency2VND(item?.totalBill)} VND</td>
-                  <td>{fCurrency2VND(item?.deposit)} VND</td>
-                  <td>
-                    {item.verifyCode === null ? (
-                      <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck} />
-                    ) : (
-                      <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus} />
-                    )}
-                  </td>
-                  <th >
-                    <Tooltip title={isExpire(item) ? "This tour is expired" : ""}>
-                      <span>
-                        <Button
-                        className="btn-icon"
-                        color="danger"
-                        size="sm" 
-                        disabled={isExpire(item)}              
-                        onClick={(e) => onCancelBookRoom(e, item?.id)}
+        <Row className={clsx(classes.rowHeaderBox, classes.boxControl)}>
+          <div className={classes.boxInputSearch}>
+            <InputSearch
+              autoComplete="off"
+              placeholder={t("payment_history_page_search")}
+              value={keyword || ""}
+              onChange={onSearch}
+            />
+          </div>
+        </Row>
+        <Grid>
+          {data?.data?.length ? (
+            data.data?.map((item, index) => {
+              return (
+                <Grid className={classes.linkView} key={index}>
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      minHeight: "200px",
+                      minWidth: "640px",
+                      paddingBottom: "24px",
+                    }}
+                    className={classes.row}
+                  >
+                    <Grid
+                      container
+                      sx={{
+                        boxShadow: "var(--box-shadow-100)",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <Grid
+                        className={clsx(classes.boxImg, {
+                          [classes.boxImgNew]: !item?.oldBillId,
+                        })}
+                        item
+                        xs={3}
+                      >
+                        <img
+                          src={`${item?.stayData?.images[0]}`}
+                          alt="anh"
+                        ></img>
+                      </Grid>
+                      <Grid
+                        sx={{
+                          flex: "1",
+                          padding: "14px",
+                          justifyContent: "space-between",
+                          backgroundColor: "var(--white-color)",
+                          boxShadow: "var(--bui-shadow-100)",
+                        }}
+                        item
+                        xs={5}
+                      >
+                        <Grid
+                          className={clsx(classes.boxTitle, classes.linkDetail)}
                         >
-                        <i className="now-ui-icons ui-1_simple-remove"></i>        
-                        </Button>
-                      </span>
-                    </Tooltip>
-                  </th>
-                  <td className={classes.colIconDownload}>
-                    <div className={classes.iconDownload} onClick={() => onDownloadBill(item)}>
-                      <FontAwesomeIcon icon={faDownload} />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            {!listHistory?.length && (
-              <tr>
-                <th scope="row" colSpan={8}>
-                  <SearchNotFound mess="No hotel bill found" />
-                </th>
-              </tr>
-            )}
-          </tbody>
-        </Table>
-        {/* ===== Mobile ======== */}
-        <div className={classes.containerMobile}>
-          {listHistory &&
-            listHistory?.map((item, index) => (
-              <Row key={index} className={clsx(classes.row, classes.boxInvoiceMobile)}>
-                <Col className={classes.colInformation}>
-                  <div className={classes.boxInformation}>
-                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                    <a href={`/listHotel/:${item?.hotelId}`} target="_blank" className={classes.hotelName}>
-                      {item?.hotelInfo?.title}
-                    </a>
-                    <p>TV{item?.id}</p>
-                    <p>
-                      <span> {fCurrency2VND(item?.totalBill)} VND</span>
-                    </p>
-                  </div>
-                </Col>
-                <Col className={classes.boxDownload}>
-                  <div>
-                    {item.verifyCode === null ? (
-                      <FontAwesomeIcon icon={faCircleCheck} className={classes.iconCheck} />
-                    ) : (
-                      <FontAwesomeIcon icon={faCircleMinus} className={classes.iconMinus} />
-                    )}
-                  </div>
-                  <div className={classes.iconDownload}>
-                    <FontAwesomeIcon icon={faDownload} />
-                  </div>
-                </Col>
-                <Col className={classes.boxDownload}>
-                    <Tooltip title={isExpire(item) ? "This tour is expired" : ""}>
-                      <span>
-                        <Button
-                        className="btn-icon"
-                        color="danger"
-                        size="sm" 
-                        disabled={isExpire(item)}              
-                        onClick={(e) => onCancelBookRoom(e, item?.id)}
-                        >
-                        <i className="now-ui-icons ui-1_simple-remove"></i>        
-                        </Button>
-                      </span>
-                    </Tooltip>
-                </Col>
-              </Row>
-            ))}
-          {!listHistory?.length && (
-            <Row className={classes.row}>
-              <SearchNotFound mess="No hotel bill found" />
-            </Row>
+                          <Link href={`/listHotel/:${item?.stayData?.id}`}>
+                            <p>{item?.stayData?.name}</p>
+                          </Link>
+                        </Grid>
+                        <Grid className={classes.boxTitle}>
+                          <p className={classes.textStatus}>
+                            {t("payment_history_page_tour_status_payment")}{" "}
+                            <StatusPayment status={item?.paymentStatus} />
+                          </p>
+                        </Grid>
+                        <Grid className={classes.boxTitle}>
+                          <p className={classes.textStatus}>
+                            {t("payment_history_page_tour_status_bill")}{" "}
+                            {item?.paymentStatus === EPaymentStatus.PAID ? (
+                              <StatusPayment
+                                status={item?.status}
+                                type={true}
+                              />
+                            ) : (
+                              "-"
+                            )}
+                          </p>
+                        </Grid>
+                        {item?.oldBillId && item?.extraPay && (
+                          <Grid className={classes.boxTitle}>
+                            <p className={classes.textStatus}>
+                              {t("payment_history_page_tour_extra_pay")}{" "}
+                              {fCurrency2VND(item?.extraPay)} VND
+                            </p>
+                          </Grid>
+                        )}
+                        {item?.paymentStatus === EPaymentStatus.CANCEL &&
+                          item?.moneyRefund && (
+                            <Grid className={classes.boxTitle}>
+                              <p className={classes.textStatus}>
+                                {t("payment_history_page_tour_money_refund")}{" "}
+                                {fCurrency2VND(item?.moneyRefund)} VND
+                              </p>
+                            </Grid>
+                          )}
+                      </Grid>
+                      <Grid item xs={4} container>
+                        <Grid className={classes.containerPrice} container>
+                          <Grid item className={classes.boxMenu}>
+                            <IconButton
+                              className={clsx(classes.actionButton)}
+                              color="primary"
+                              onClick={(e) => {
+                                handleAction(e, item);
+                              }}
+                            >
+                              <MoreVertIcon />
+                            </IconButton>
+                          </Grid>
+                          <Grid container item xs={10}>
+                            {item?.oldBillId && item?.oldBillData && (
+                              <Grid item className={classes.boxSave}>
+                                <div className={classes.boxDate}>
+                                  <p>
+                                    {t("payment_history_page_tour_new_bill")}
+                                  </p>
+                                </div>
+                              </Grid>
+                            )}
+                            <Grid item className={classes.boxSave}>
+                              <div className={classes.boxDate}>
+                                <p>
+                                  {t("payment_history_page_tour_booking_date")}:{" "}
+                                  <span>
+                                    {moment(
+                                      item?.roomBillDetail[0]?.bookedDate
+                                    ).format("DD-MM-YYYY")}
+                                  </span>
+                                </p>
+                              </div>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <div className={classes.boxDate}>
+                                <p>
+                                  {t("payment_history_page_hotel_start_date")} :{" "}
+                                  <span>
+                                    {moment(item?.startDate).format(
+                                      "DD-MM-YYYY"
+                                    )}
+                                  </span>
+                                </p>
+                              </div>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <div className={classes.boxDate}>
+                                <p>
+                                  {t("payment_history_page_hotel_end_date")} :{" "}
+                                  <span>
+                                    {moment(item?.endDate).format("DD-MM-YYYY")}
+                                  </span>
+                                </p>
+                              </div>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <div className={classes.boxDate}>
+                                <p>
+                                  {t("payment_history_page_hotel_check_in")} :{" "}
+                                  <span>
+                                    {fTime(item?.stayData?.checkInTime)}
+                                  </span>
+                                </p>
+                              </div>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <div className={classes.boxDate}>
+                                <p>
+                                  {t("payment_history_page_hotel_check_out")} :{" "}
+                                  <span>
+                                    {fTime(item?.stayData?.checkOutTime)}
+                                  </span>
+                                </p>
+                              </div>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <Grid className={classes.boxPrice}>
+                                <p>
+                                  {t("payment_history_page_tour_discount")}:{" "}
+                                  <span>
+                                    {fCurrency2VND(item?.discount)} VND
+                                  </span>
+                                </p>
+                              </Grid>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <Grid className={classes.boxPrice}>
+                                <p>
+                                  {t(
+                                    "payment_history_page_hotel_number_of_room_book"
+                                  )}
+                                  :{" "}
+                                  <span>
+                                    {item?.roomBillDetail.reduce(function (
+                                      acc,
+                                      obj
+                                    ) {
+                                      return acc + obj.amount;
+                                    },
+                                    0)}{" "}
+                                  </span>
+                                </p>
+                              </Grid>
+                            </Grid>
+                            <Grid item className={classes.boxSave}>
+                              <Grid className={classes.boxPrice}>
+                                <p>
+                                  {t("payment_history_page_tour_total_bill")}:{" "}
+                                  <span>
+                                    {fCurrency2VND(item?.totalBill)} VND
+                                  </span>{" "}
+                                </p>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        {item?.oldBillId && item?.oldBillData && (
+                          <Grid container item className={classes.boxOldBill}>
+                            <Grid
+                              item
+                              className={classes.boxSave}
+                              onClick={() =>
+                                setOpen(open === index ? -1 : index)
+                              }
+                            >
+                              <div className={classes.boxDate}>
+                                <p>{t("payment_history_page_tour_old_bill")}</p>
+                                <div>
+                                  {open === index ? (
+                                    <KeyboardArrowUpIcon />
+                                  ) : (
+                                    <KeyboardArrowDownIcon />
+                                  )}
+                                </div>
+                              </div>
+                            </Grid>
+                            <Collapse
+                              in={open === index}
+                              timeout="auto"
+                              unmountOnExit
+                            >
+                              <Grid item className={classes.boxSave}>
+                                <div className={classes.boxDate}>
+                                  <p>
+                                    {t(
+                                      "payment_history_page_tour_booking_date"
+                                    )}
+                                    :{" "}
+                                    <span>
+                                      {fTime(
+                                        item?.oldBillData?.roomBillDetail[0]
+                                          ?.bookedDate
+                                      )}
+                                    </span>
+                                  </p>
+                                </div>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <div className={classes.boxDate}>
+                                  <p>
+                                    {t("payment_history_page_hotel_start_date")}{" "}
+                                    :{" "}
+                                    <span>
+                                      {moment(
+                                        item?.oldBillData?.startDate
+                                      ).format("DD-MM-YYYY")}
+                                    </span>
+                                  </p>
+                                </div>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <div className={classes.boxDate}>
+                                  <p>
+                                    {t("payment_history_page_hotel_end_date")} :{" "}
+                                    <span>
+                                      {moment(
+                                        item?.oldBillData?.endDate
+                                      ).format("DD-MM-YYYY")}
+                                    </span>
+                                  </p>
+                                </div>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <div className={classes.boxDate}>
+                                  <p>
+                                    {t("payment_history_page_hotel_check_in")} :{" "}
+                                    <span>
+                                      {fTime(
+                                        item?.oldBillData?.stayData?.checkInTime
+                                      )}
+                                    </span>
+                                  </p>
+                                </div>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <Grid className={classes.boxPrice}>
+                                  <p>
+                                    {t("payment_history_page_hotel_check_out")}:{" "}
+                                    <span>
+                                      {moment(
+                                        item?.oldBillData?.stayData
+                                          ?.checkOutTime
+                                      ).format("DD-MM-YYYY")}
+                                    </span>
+                                  </p>
+                                </Grid>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <Grid className={classes.boxPrice}>
+                                  <p>
+                                    {t(
+                                      "payment_history_page_hotel_number_of_room_book"
+                                    )}
+                                    :{" "}
+                                    <span>
+                                      {item?.oldBillData?.roomBillDetail.reduce(
+                                        function (acc, obj) {
+                                          return acc + obj.amount;
+                                        },
+                                        0
+                                      )}{" "}
+                                    </span>
+                                  </p>
+                                </Grid>
+                              </Grid>
+                              <Grid item className={classes.boxSave}>
+                                <Grid className={classes.boxPrice}>
+                                  <p>
+                                    {t("payment_history_page_tour_total_bill")}:{" "}
+                                    <span>
+                                      {fCurrency2VND(
+                                        item?.oldBillData?.totalBill
+                                      )}{" "}
+                                      VND
+                                    </span>{" "}
+                                  </p>
+                                </Grid>
+                              </Grid>
+                            </Collapse>
+                          </Grid>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              );
+            })
+          ) : (
+            <Grid>
+              <SearchNotFound searchQuery={keyword} />
+            </Grid>
           )}
-        </div>
+        </Grid>
+        <Grid sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Pagination
+            count={data?.meta?.pageCount || 0}
+            page={data?.meta?.page}
+            onChange={handleChangePage}
+          />
+        </Grid>
+        <Menu
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          anchorEl={actionAnchor}
+          keepMounted
+          open={Boolean(actionAnchor)}
+          onClose={onCloseActionMenu}
+        >
+          <MenuItem
+            sx={{ fontSize: "0.875rem" }}
+            className={classes.menuItem}
+            onClick={onDownloadBill}
+          >
+            <Box display="flex" alignItems={"center"}>
+              <VisibilityIcon
+                sx={{
+                  fontSize: "28px",
+                  color: "var(--primary-color)",
+                  marginRight: "8px",
+                }}
+              />
+              <span>{t("payment_history_page_tour_status_download_view")}</span>
+            </Box>
+          </MenuItem>
+          {/* {itemAction?.paymentStatus === EPaymentStatus.PAID &&
+            BillHelper.isCanReScheduleOrCancelBooking(
+              itemAction.status,
+              itemAction?.tourOnSaleData?.startDate,
+              EServicePolicyType.RESCHEDULE,
+              itemAction?.tourData?.tourPolicies
+            ) && (
+              <MenuItem
+                sx={{ fontSize: "0.875rem" }}
+                className={classes.menuItem}
+                onClick={onSelectDate}
+              >
+                <Box display="flex" alignItems={"center"}>
+                  <EditOutlined
+                    sx={{ marginRight: "0.25rem" }}
+                    fontSize="small"
+                  />
+                  <span>
+                    {t("payment_history_page_tour_action_reschedule")}
+                  </span>
+                </Box>
+              </MenuItem>
+            )} */}
 
-        <DownloadRoomBill
-          onClose={onCloseModalDownloadRoomBill}
-          isOpen={modalDownloadRoomBill.isOpenModal}
-          roomBill={modalDownloadRoomBill.roomBill}
-        />
-        <PopupConfirmDelete
-          title="Are you sure cancel this room ?"
-          isOpen={openConfirmCancelBookRoom}
+          {itemAction?.paymentStatus === EPaymentStatus.PAID && (
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onUpdateInfo}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <EditOutlined
+                  sx={{ marginRight: "0.25rem" }}
+                  fontSize="small"
+                />
+                <span>{t("payment_history_page_tour_action_update")}</span>
+              </Box>
+            </MenuItem>
+          )}
+          {itemAction?.paymentStatus !== EPaymentStatus.PAID && (
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onPaymentAgain}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <AddCardIcon
+                  sx={{ marginRight: "0.25rem" }}
+                  color="info"
+                  fontSize="small"
+                />
+                <span>{t("payment_history_page_tour_action_pay")}</span>
+              </Box>
+            </MenuItem>
+          )}
+          {/* {itemAction?.paymentStatus === EPaymentStatus.PAID &&
+            BillHelper.isCanReScheduleOrCancelBooking(
+              itemAction.status,
+              itemAction?.tourOnSaleData?.startDate,
+              EServicePolicyType.REFUND,
+              itemAction?.tourData?.tourPolicies
+            ) && (
+              <MenuItem
+                sx={{ fontSize: "0.875rem" }}
+                className={classes.menuItem}
+                onClick={onCancel}
+              >
+                <Box display="flex" alignItems={"center"}>
+                  <DeleteOutlineOutlined
+                    sx={{ marginRight: "0.25rem" }}
+                    color="error"
+                    fontSize="small"
+                  />
+                  <span>{t("payment_history_page_tour_action_cancel")}</span>
+                </Box>
+              </MenuItem>
+            )} */}
+          {itemAction?.status === EBillStatus.USED && (
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onRate}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <AddCommentIcon
+                  sx={{ marginRight: "0.25rem" }}
+                  fontSize="small"
+                  color="info"
+                />
+                <span>{t("payment_history_page_tour_action_rate")}</span>
+              </Box>
+            </MenuItem>
+          )}
+        </Menu>
+      </div>
+      <DownloadRoomBill
+        onClose={onCloseModalDownloadRoomBill}
+        isOpen={modalDownloadRoomBill}
+        roomBill={roomBill}
+      />
+      {/* <PopupSelectDate
+        onClose={onTogglePopupSelectDate}
+        isOpen={openPopupSelectDate}
+        tour={tour}
+        tourBill={tourBill}
+      />
+      {openConfirmCancelBookTour && (
+        <PopupConfirmCancel
+          isOpen={openConfirmCancelBookTour}
           onClose={onTogglePopupConfirmCancel}
           toggle={onTogglePopupConfirmCancel}
-          onYes={onYesCancel}
+          tourBill={tourBill}
+        />
+      )}
+      <PopupAddInformation
+        onClose={onToggleAddInformation}
+        isOpen={openAddInformation}
+        tourBill={tourBill}
+        fetchDataTourBill={fetchData}
+      /> */}
+      <PopupAddHotelComment
+        isOpen={openPopupAddComment}
+        // commentEdit={commentEdit}
+        onClose={onToggleAddComment}
+        toggle={onToggleAddComment}
+        // onGetTourComments={onGetTourComments}
+        roomBill={roomBill}
       />
-      </div>
     </>
   );
 });
 
-export default Hotel;
+export default Stay;

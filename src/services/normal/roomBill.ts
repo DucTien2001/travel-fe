@@ -1,8 +1,20 @@
 import { API } from "configs/constants";
-import { Create, IVerifyBookRoom, Update } from "models/roomBill";
+import { Create, FindAll, IVerifyBookRoom, Update } from "models/roomBill";
 import api from "services/configApi";
 
 export class RoomBillService {
+
+  static async findAll(data: FindAll): Promise<any> {
+    return await api.get(API.NORMAL.ROOMBILL.DEFAULT, {params:data})
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
+  
+
   static async create(data: Create): Promise<any> {
     return await api
       .post(API.NORMAL.ROOMBILL.CREATE, data)

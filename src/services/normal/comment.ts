@@ -13,7 +13,7 @@ export class CommentService {
         })
     }
 
-    static async createCommentTour(data: FormData): Promise<any> {
+    static async createComment(data: FormData): Promise<any> {
       return await api.post(API.NORMAL.COMMENT.DEFAULT, data)
         .then((res) => {
           return Promise.resolve(res.data)
@@ -23,7 +23,7 @@ export class CommentService {
         })
     }
 
-    static async updateCommentTour(commentId: number, data: FormData): Promise<any> {
+    static async updateComment(commentId: number, data: FormData): Promise<any> {
       return await api.put(API.NORMAL.COMMENT.UPDATE_COMMENT.replace(":id", `${commentId}`), data)
         .then((res) => {
           return Promise.resolve(res.data)
@@ -33,7 +33,7 @@ export class CommentService {
         })
     }
 
-    static async deleteCommentTour(commentId: number): Promise<any> {
+    static async deleteComment(commentId: number): Promise<any> {
       return await api.delete(API.NORMAL.COMMENT.DELETE_COMMENT.replace(":id", `${commentId}`))
         .then((res) => {
           return Promise.resolve(res.data)
@@ -43,7 +43,7 @@ export class CommentService {
         })
     }
 
-    static async replyTourComment(data: ReplyTourComment): Promise<any> {
+    static async replyComment(data: ReplyTourComment): Promise<any> {
       return await api.post(API.NORMAL.COMMENT.REPLY, data)
         .then((res) => {
           return Promise.resolve(res.data)
@@ -53,7 +53,7 @@ export class CommentService {
         })
     }
 
-    static async updateReplyTourComment(id: number, data: UpdateReply): Promise<any> {
+    static async updateReplyComment(id: number, data: UpdateReply): Promise<any> {
       return await api.put(API.NORMAL.COMMENT.UPDATE_REPLY.replace(":id", `${id}`), data)
         .then((res) => {
           return Promise.resolve(res.data)

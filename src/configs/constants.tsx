@@ -75,6 +75,7 @@ export const API = {
       UPDATE_REPLY: "/v1.0/comment/reply/:id",
     },
     ROOMBILL: {
+      DEFAULT: "/v1.0/room-bill",
       CREATE: "/v1.0/room-bill/",
       UPDATE: "/v1.0/room-bill/:id",
       GET_ALL_ROOMBILL: "/v1.0/room-bill/get-all-user-room-bills/:id",
@@ -204,7 +205,8 @@ export const API = {
       GET_ONE: "/v1.0/enterprise/tour-bill/:id",
       UPDATE_STATUS: "/v1.0/enterprise/tour-bill/:id",
       STATISTIC: "/v1.0/enterprise/tour-bill/statistic",
-      GET_ALL_BILL_STATISTICS: "/v1.0/enterprise/tour-bill/statistic/tour-on-sales",
+      GET_ALL_BILL_STATISTICS:
+        "/v1.0/enterprise/tour-bill/statistic/tour-on-sales",
       FILTER: "/v1.0/enterprise/tour-bill/filter",
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",
       GET_TOURS_REVENUE_BY_YEAR: "/v1.0/tour-bill/get-tours-revenue-by-year",
@@ -212,7 +214,8 @@ export const API = {
       GET_BILLS_ANY_DATE: "/v1.0/tour-bill/get-tour-bills-any-date",
     },
     ROOMBILL: {
-      GET_HOTELS_REVENUE_BY_MONTH: "/v1.0/room-bill/get-hotels-revenue-by-month",
+      GET_HOTELS_REVENUE_BY_MONTH:
+        "/v1.0/room-bill/get-hotels-revenue-by-month",
       GET_HOTELS_REVENUE_BY_YEAR: "/v1.0/room-bill/get-hotels-revenue-by-year",
       GET_ALL_BILLS_OF_ANY_ROOM: "/v1.0/room-bill/get-all-room-bills/:id",
       GET_BILLS_ANY_DATE: "/v1.0/room-bill/get-room-bills-any-date",
@@ -236,18 +239,21 @@ export const API = {
       TOUR: {
         DEFAULT: "/v1.0/admin/tour-bill/statistic",
         GET_TOUR: "/v1.0/admin/tour-bill/statistic/tour/:id",
-        GET_TOUR_ON_SALE_BILL: "/v1.0/admin/tour-bill/statistic/tour-on-sale/get-bills/:id",
+        GET_TOUR_ON_SALE_BILL:
+          "/v1.0/admin/tour-bill/statistic/tour-on-sale/get-bills/:id",
         GET_TOUR_ON_SALE: "/v1.0/admin/tour-bill/statistic/tour-on-sale/:id",
       },
     },
     COMMENT: {
       HOTEL_COMMENT: {
-        GET_COMMENT_NEED_DELETE: "/v1.0/hotel-comment/get-hotel-comments-need-delete",
+        GET_COMMENT_NEED_DELETE:
+          "/v1.0/hotel-comment/get-hotel-comments-need-delete",
         DECLINE_DELETE_COMMENT: "/v1.0/hotel-comment/decline-delete/:id",
         DELETE: "/v1.0/hotel-comment/delete/:id",
       },
       TOUR_COMMENT: {
-        GET_COMMENT_NEED_DELETE: "/v1.0/tour-comment/get-tour-comments-need-delete",
+        GET_COMMENT_NEED_DELETE:
+          "/v1.0/tour-comment/get-tour-comments-need-delete",
         DECLINE_DELETE_COMMENT: "/v1.0/tour-comment/decline-delete/:id",
         DELETE: "/v1.0/tour-comment/delete/:id",
       },
@@ -256,7 +262,8 @@ export const API = {
 };
 
 export const VALIDATION = {
-  password: /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[a-zA-Z0-9!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]*$/,
+  password:
+    /^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])[a-zA-Z0-9!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]*$/,
   phone: /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/,
 };
 

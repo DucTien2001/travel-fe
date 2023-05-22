@@ -1,7 +1,11 @@
 import { IHotel } from "./hotel";
 import { IRoom, Room } from "./room";
 import { Stay } from "./stay";
-
+export interface FindAll {
+  take: number;
+  page: number;
+  keyword?: string;
+}
 export interface Create {
   stayId: number;
   rooms: {
@@ -39,6 +43,38 @@ export interface RoomBillConfirm {
   price: number;
   discount: number;
   totalBill: number;
+}
+export interface RoomBillDetail {
+  id?: number;
+  amount?: number;
+  bookedDate?: number;
+  paymentStatus?: number;
+  price?: number;
+  roomData?: Room;
+}
+export interface RoomBill {
+  id?: number;
+  userId?: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+  specialRequest: string;
+  stayData: Stay;
+  rooms: Room[];
+  startDate: Date;
+  endDate: Date;
+  price: number;
+  discount: number;
+  totalBill: number;
+  extraPay?: number;
+  moneyRefund?: number;
+  oldBillId?: number;
+  oldBillData?: RoomBill;
+  paymentStatus?: number;
+  status?: number;
+  roomBillDetail?: RoomBillDetail[];
+  createdAt?: Date;
 }
 
 export interface IRoomBillConfirm {
