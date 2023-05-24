@@ -26,12 +26,50 @@ import { Col, Container } from "reactstrap";
 import Link from "next/link";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { useTranslation } from "react-i18next";
+import { FindAll, IEvent } from "models/event";
+import { DataPagination } from "models/general";
+import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import { EventService } from "services/normal/event";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
 // eslint-disable-next-line react/display-name
 const TourSearch = memo(() => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const { t, i18n } = useTranslation("common");
+  const [data, setData] = useState<DataPagination<IEvent>>();
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const fetchData = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+  }) => {
+    const params: FindAll = {
+      take: value?.take || data?.meta?.take || 10,
+      page: value?.page || data?.meta?.page || 1,
+      keyword: "",
+    };
+    if (value?.keyword !== undefined) {
+      params.keyword = value.keyword || undefined;
+    }
+    dispatch(setLoading(true));
+    EventService.getAllEvents(params)
+      .then((res) => {
+        setData({
+          data: res.data,
+          meta: res.meta,
+        });
+      })
+      .catch((e) => dispatch(setErrorMess(e)))
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -48,27 +86,37 @@ const TourSearch = memo(() => {
           </Link>
         </Grid>
         <Grid item xs={6}>
-          <Swiper
-            slidesPerView={isMobile ? 1 : 3}
-            spaceBetween={30}
-            slidesPerGroup={isMobile ? 1 : 3}
-            initialSlide={0}
-            loop={true}
-            // onSlideChange={(e) => console.log(e.realIndex)}
-            // loopFillGroupWithBlank={true}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            modules={[Pagination, Navigation]}
-            className={clsx("mySwiper", classes.swiper)}
-          >
-            <SwiperSlide>
-              <Grid>
-                <img src={images.deal1.src} alt="anh"></img>
-              </Grid>
-            </SwiperSlide>
-          </Swiper>
+          {data?.data?.length && (
+            <Swiper
+              slidesPerView={isMobile ? 1 : 3}
+              spaceBetween={30}
+              slidesPerGroup={isMobile ? 1 : 3}
+              initialSlide={0}
+              loop={true}
+              // onSlideChange={(e) => console.log(e.realIndex)}
+              // loopFillGroupWithBlank={true}
+              pagination={{
+                clickable: true,
+              }}
+              navigation={true}
+              modules={[Pagination, Navigation]}
+              className={clsx("mySwiper", classes.swiper)}
+            >
+              {data?.data?.map((item, index) => (
+                <SwiperSlide
+                  key={index}
+                  className={classes.slide}
+                  onClick={() => {
+                    router.push(`/listEvents/:${item?.id}`);
+                  }}
+                >
+                  <Grid>
+                    <img src={item?.banner} alt="anh"></img>
+                  </Grid>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </Grid>
       </Grid>
     </>

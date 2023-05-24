@@ -25,12 +25,11 @@ import {
   faEnvelopeOpenText,
   faEarthAmerica,
 } from "@fortawesome/free-solid-svg-icons";
-import InputTextFieldBorder from "components/common/inputs/InputTextFieldBorder";
-import InputTextArea from "components/common/inputs/InputTextArea";
 import clsx from "clsx";
 import { Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import InputTextfield from "components/common/inputs/InputTextfield";
+
 export interface EmailForm {
   firstName: string;
   lastName: string;
@@ -95,8 +94,10 @@ const Contact = memo(() => {
             </div>
           </Col>
           <Col className="ml-auto mr-auto" md="5">
-            <Card className="card-contact card-raised">
-              <Form
+            <Card
+              className={clsx(classes.cardFood, "card-contact card-raised")}
+            >
+              {/* <Form
                 id="contact-form1"
                 method="post"
                 role="form"
@@ -188,7 +189,12 @@ const Contact = memo(() => {
                     </Col>
                   </Row>
                 </CardBody>
-              </Form>
+              </Form> */}
+              <img
+                src={images.food.src}
+                alt="anh food"
+                className={classes.foodContact}
+              />
             </Card>
             <Row>
               <ul className={classes.infoBodyListContact}>

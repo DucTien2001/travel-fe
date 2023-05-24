@@ -89,15 +89,7 @@ const ListEvents: NextPage = () => {
             <p>🎉🎉🎉{t("list_events_sub_title")} ✨✨✨:</p>
           </Grid>
           <Grid className={classes.rowResultBody} container spacing={2}>
-            <Grid xs={2} className={classes.btnResetWrapper} item>
-              <Button
-                btnType={BtnType.Primary}
-                className={classes.btnResetOption}
-              >
-                {t("list_events_see_all_pro")}
-              </Button>
-            </Grid>
-            <Grid xs={10} item className={classes.wrapperListItem}>
+            <Grid xs={12} item className={classes.wrapperListItem}>
               <Grid
                 container
                 columnSpacing={2}

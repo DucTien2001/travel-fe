@@ -31,6 +31,7 @@
 }
 
 .swiper {
+    cursor: pointer;
     img {
         width: 100%;
     }
@@ -64,4 +65,8 @@
         justify-content: center;
         box-shadow: var(--bui-shadow-100);
     }
+}
+
+.slide {
+    height:90px;
 }

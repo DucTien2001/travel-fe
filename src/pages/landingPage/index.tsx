@@ -34,12 +34,10 @@ const LandingPage: NextPage = () => {
                     className={clsx("title", classes.titleHome)}
                     // eslint-disable-next-line react/no-unknown-property
                   >
-                    {/* {t("landing_page_section_search_title_hero")} */}
-                    DISCOVER STORY-WORTHY TRAVEL MOMENTS
+                    {t("landing_page_section_search_title_hero")}
                   </Grid>
                   <Grid className={classes.subTitle}>
-                    {/* {t("landing_page_section_search_sub_title_hero")} */}
-                    It time for new adventures, escapes thrills & experiences
+                    {t("landing_page_section_search_sub_title_hero")}
                   </Grid>
                   <Search />
                 </Col>

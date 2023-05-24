@@ -22,7 +22,7 @@ import { EUserType } from "models/user";
 import { useTranslation } from "react-i18next";
 const Footer = memo(() => {
   const { user } = useAuth();
-  // const { t, i18n } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
 
   return (
     <>
@@ -40,8 +40,8 @@ const Footer = memo(() => {
           <Col>
             <Row>
               <Col className={classes.titleFollow}>
-                {/* <p>{t("footer_follow_title")}</p> */}
-                <p>Follow us</p>
+                <p>{t("footer_follow_title")}</p>
+                {/* <p>Follow us</p> */}
               </Col>
             </Row>
             <Row>
@@ -94,8 +94,8 @@ const Footer = memo(() => {
           <Col>
             <Row>
               <Col className={classes.titleContact}>
-                {/* <p>{t("footer_contact_title")}</p> */}
-                <p>Contact us</p>
+                <p>{t("footer_contact_title")}</p>
+                {/* <p>Contact us</p> */}
               </Col>
             </Row>
             <ul className={classes.infoBodyListContact}>
@@ -139,11 +139,11 @@ const Footer = memo(() => {
           </Col>
           <Col>
             <div className={classes.subFooter}>
-              {/* <p>{t("footer_sub_title")}</p> */}
-              <p>
+              <p>{t("footer_sub_title")}</p>
+              {/* <p>
                 Acsses our's website to have more new destination information in
                 Viet Nam
-              </p>
+              </p> */}
             </div>
           </Col>
         </Row>

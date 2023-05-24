@@ -170,27 +170,54 @@ const OfferComponent = memo(() => {
                 className={classes.col6}
                 sx={{ paddingRight: "8px" }}
               >
-                <Card className={clsx(classes.cardPhuYen)}>
+                <Card
+                  className={clsx(classes.cardPhuYen)}
+                  onClick={() => {
+                    router.push({
+                      pathname: "/listHotel",
+                      search: `?keyword=Phu Yen
+                                    `,
+                    });
+                  }}
+                >
                   <p>{t("landing_page_section_offer_title_PhuYen")}</p>{" "}
                   <span>
-                    100 {t("landing_page_section_offer_title_favorite_stay")}
+                    {/* 100 {t("landing_page_section_offer_title_favorite_stay")} */}
                   </span>
                 </Card>
               </Grid>
               <Grid xs={6} item container className={classes.col6} spacing={1}>
                 <Grid xs={6} item>
-                  <Card className={clsx(classes.cardDaLat)}>
+                  <Card
+                    className={clsx(classes.cardDaLat)}
+                    onClick={() => {
+                      router.push({
+                        pathname: "/listHotel",
+                        search: `?keyword=Da Lat
+                                                      `,
+                      });
+                    }}
+                  >
                     <p>{t("landing_page_section_offer_title_Da_Lat")}</p>
                     <span>
-                      100 {t("landing_page_section_offer_title_favorite_stay")}
+                      {/* 100 {t("landing_page_section_offer_title_favorite_stay")} */}
                     </span>
                   </Card>
                 </Grid>
                 <Grid xs={6} item>
-                  <Card className={clsx(classes.cardQuyNhon)}>
+                  <Card
+                    className={clsx(classes.cardQuyNhon)}
+                    onClick={() => {
+                      router.push({
+                        pathname: "/listHotel",
+                        search: `?keyword=Quy Nhon
+                                                      `,
+                      });
+                    }}
+                  >
                     <p>{t("landing_page_section_offer_title_QuyNhon")}</p>
                     <span>
-                      100 {t("landing_page_section_offer_title_favorite_stay")}
+                      {/* 100 {t("landing_page_section_offer_title_favorite_stay")} */}
                     </span>
                   </Card>
                 </Grid>
@@ -201,10 +228,19 @@ const OfferComponent = memo(() => {
               xs={4}
               sx={{ paddingBottom: "16px", paddingLeft: "0 !important" }}
             >
-              <Card className={clsx(classes.cardVungTau)}>
+              <Card
+                className={clsx(classes.cardVungTau)}
+                onClick={() => {
+                  router.push({
+                    pathname: "/listHotel",
+                    search: `?keyword=Vung Tau
+                                                  `,
+                  });
+                }}
+              >
                 <p>{t("landing_page_section_offer_title_VungTau")}</p>
                 <span>
-                  100 {t("landing_page_section_offer_title_favorite_stay")}
+                  {/* 100 {t("landing_page_section_offer_title_favorite_stay")} */}
                 </span>
               </Card>
             </Grid>
