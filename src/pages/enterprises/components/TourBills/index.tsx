@@ -25,6 +25,8 @@ import {
 import TableHeader from "components/Table/TableHeader";
 import {
   DataPagination,
+  EBillStatus,
+  EPaymentStatus,
   OptionItem,
   TableHeaderLabel,
   billStatusType,
@@ -92,7 +94,14 @@ const Tour = memo(({}: Props) => {
       sortable: false,
     },
     {
-      name: "status",
+      name: "statusPayment",
+      label: t(
+        "enterprise_management_section_tour_bill_header_table_status_payment"
+      ),
+      sortable: false,
+    },
+    {
+      name: "statusBill",
       label: t("enterprise_management_section_tour_bill_header_table_status"),
       sortable: false,
     },
@@ -368,8 +377,17 @@ const Tour = memo(({}: Props) => {
                         {moment(item?.createdAt).format("DD-MM-YYYY")}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <StatusPayment status={item?.status} type={true} />
+                        <StatusPayment status={item?.paymentStatus} />
                       </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.paymentStatus === EPaymentStatus.PAID ||
+                        item?.status === EBillStatus.CANCELED ? (
+                          <StatusPayment status={item?.status} type={true} />
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+
                       <TableCell className="text-center" component="th">
                         <IconButton
                           className={clsx(classes.actionButton)}
@@ -441,24 +459,28 @@ const Tour = memo(({}: Props) => {
               </span>
             </Box>
           </MenuItem>
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            onClick={onChangeStatus}
-            className={classes.menuItem}
-          >
-            <Box display="flex" alignItems={"center"}>
-              <PublishedWithChangesIcon
-                sx={{ marginRight: "0.25rem" }}
-                fontSize="small"
-                color="success"
-              />
-              <span>
-                {t(
-                  "enterprise_management_section_tour_bill_action_change_status"
-                )}
-              </span>
-            </Box>
-          </MenuItem>
+          {itemAction?.paymentStatus === EPaymentStatus.PAID &&
+            itemAction?.status !== EBillStatus.USED &&
+            itemAction?.status !== EBillStatus.CANCELED && (
+              <MenuItem
+                sx={{ fontSize: "0.875rem" }}
+                onClick={onChangeStatus}
+                className={classes.menuItem}
+              >
+                <Box display="flex" alignItems={"center"}>
+                  <PublishedWithChangesIcon
+                    sx={{ marginRight: "0.25rem" }}
+                    fontSize="small"
+                    color="success"
+                  />
+                  <span>
+                    {t(
+                      "enterprise_management_section_tour_bill_action_change_status"
+                    )}
+                  </span>
+                </Box>
+              </MenuItem>
+            )}
         </Menu>
       </div>
       <PopupChangeStatus

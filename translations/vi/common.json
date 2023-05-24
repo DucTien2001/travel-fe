@@ -540,7 +540,7 @@
   "enterprise_management_navbar_staff": "Nhân Viên",
   "enterprise_management_navbar_voucher": "Mã Giảm Giá",
   "enterprise_management_navbar_order": "Đơn Hàng",
-  "enterprise_management_navbar_tour_bill": "Đơn Hàng Du Lịch",
+  "enterprise_management_navbar_tour_bill": "Du Lịch",
   "enterprise_management_navbar_statistic": "Thống Kê",
   "enterprise_management_navbar_term_and_condition": "Điều Khoản và Điều Kiện",
 
@@ -706,7 +706,8 @@
   "enterprise_management_section_tour_bill_header_table_amount": "Số lượng",
   "enterprise_management_section_tour_bill_header_table_start_time": "Ngày đi",
   "enterprise_management_section_tour_bill_header_table_booking_date": "Ngày đặt",
-  "enterprise_management_section_tour_bill_header_table_status": "Trạng thái",
+  "enterprise_management_section_tour_bill_header_table_status": "Trạng thái hóa đơn",
+  "enterprise_management_section_tour_bill_header_table_status_payment": "Trạng thái thanh toán",
   "enterprise_management_section_tour_bill_header_table_action": "Hành động",
   "enterprise_management_section_tour_bill_body_table_amount": "người",
   "enterprise_management_section_tour_bill_action_view": "Xem chi tiết",
@@ -886,7 +887,7 @@
   "admin_management_navbar_event": "Sự kiện",
   "admin_management_navbar_commission": "Chiết khấu",
   "admin_management_navbar_statistic": "Thống kê",
-  "admin_management_navbar_tour_bills": "Đơn hàng du lịch",
+  "admin_management_navbar_tour_bills": "Du lịch",
 
   "admin_management_tab_user_header_table_name": "Tên người dùng",
   "admin_management_tab_user_header_table_role": "Quyền",

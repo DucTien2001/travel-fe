@@ -120,17 +120,6 @@ const PopupChangeStatus = memo(
                   <Grid sx={{ paddingRight: "14px" }}>
                     <InputCheckbox
                       content={t(
-                        "enterprise_management_section_tour_bill_action_change_status_cancelled"
-                      )}
-                      checked={field.value === EBillStatus.CANCELED}
-                      onChange={() => {
-                        setValue("status", EBillStatus.CANCELED);
-                      }}
-                    />
-                  </Grid>
-                  <Grid sx={{ paddingRight: "14px" }}>
-                    <InputCheckbox
-                      content={t(
                         "enterprise_management_section_tour_bill_action_change_status_not_contact"
                       )}
                       checked={field.value === EBillStatus.NOT_CONTACTED_YET}

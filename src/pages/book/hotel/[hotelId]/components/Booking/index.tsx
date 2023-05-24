@@ -714,7 +714,7 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                       }}
                       className={classes.btnContinue}
                     >
-                      <Button btnType={BtnType.Secondary} type="submit">
+                      <Button btnType={BtnType.Primary} type="submit">
                         {t("book_page_section_price_detail_continue_review")}
                       </Button>
                     </Grid>

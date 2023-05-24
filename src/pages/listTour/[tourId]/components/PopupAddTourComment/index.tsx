@@ -173,7 +173,6 @@ const PopupAddComment = memo((props: Props) => {
           dispatch(setLoading(false));
         });
     } else {
-      onSubmit(data);
       CommentService?.createComment(dataForm)
         .then(() => {
           dispatch(setSuccessMess(t("common_send_success")));

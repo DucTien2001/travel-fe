@@ -101,7 +101,6 @@ const UserProfile = memo((props: Props) => {
       <Container className={`px-lg-5 ${classes.containerForm}`}>
         <h3>{t("profile_detail_change_pass_title")}</h3>
         <p>{t("profile_detail_change_pass_sub_title")}</p>
-        <Divider />
         {isEmptyPassword && (
           <p>{t("profile_detail_change_pass_sub_title_empty")}</p>
         )}

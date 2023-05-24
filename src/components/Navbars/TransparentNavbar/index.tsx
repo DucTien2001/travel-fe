@@ -209,7 +209,10 @@ const WhiteNavbar = memo(() => {
                         </p>
                         <ArrowDropDownIcon />
                       </DropdownToggle>
-                      <DropdownMenu aria-labelledby="navbarDropdownMenuLink">
+                      <DropdownMenu
+                        aria-labelledby="navbarDropdownMenuLink"
+                        className={classes.dropdownMenuUser}
+                      >
                         <DropdownItem className="noti-title" header tag="div">
                           <p
                             className={classes.headerTitle}

@@ -587,7 +587,7 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                     }}
                     className={classes.btnContinue}
                   >
-                    <Button btnType={BtnType.Secondary} onClick={onSubmit}>
+                    <Button btnType={BtnType.Primary} onClick={onSubmit}>
                       {t("book_page_booking_continue_to_pay")}
                     </Button>
                   </Grid>

@@ -83,7 +83,7 @@ const Review = memo(({ handleChangeStep }: Props) => {
     if (!confirmBookTourReview) {
       router.push(`/listTour/:${tour?.id}`);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, confirmBookTourReview]);
 
   return (
@@ -379,14 +379,14 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                     className={classes.boxPriceDetail}
                   >
                     <p>
                       {t("review_page_section_price_detail_price_discount")}
                     </p>
-                    <p style={{fontWeight: 600}}>
+                    <p style={{ fontWeight: 600 }}>
                       {" "}
                       {fCurrency2VND(confirmBookTourReview?.discount)} VND
                     </p>
@@ -399,7 +399,7 @@ const Review = memo(({ handleChangeStep }: Props) => {
                     }}
                     className={classes.btnContinue}
                   >
-                    <Button btnType={BtnType.Secondary} onClick={onSubmit}>
+                    <Button btnType={BtnType.Primary} onClick={onSubmit}>
                       {t("review_page_continue_payment")}
                     </Button>
                   </Grid>

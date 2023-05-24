@@ -93,9 +93,10 @@
     position: absolute;
     top: 80px;
     background-color: var(--white-color);
-    padding: 16px;
+    padding: 16px 16px 0 16px   ;
     min-width: 280px;
     border-radius: 4px;
+    box-shadow: 5px 10px var(--box-shadow-100);
 }
 
 .boxTitleCounter {
