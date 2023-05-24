@@ -37,7 +37,7 @@ const VNPay: NextPage = () => {
   };
 
   useEffect(() => {
-    RoomBillService.update(Number(router?.query.vnp_TxnRef), {
+    RoomBillService.update(Number(router?.query.vnp_TxnRef?.toString().split("-")[1]), {
       paymentStatus: getStatusPayment(router?.query?.vnp_TransactionStatus),
     })
       .then(() => {
