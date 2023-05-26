@@ -461,7 +461,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
             <Col xs={4} className={classes.rightContent}>
               <Grid className={classes.boxSelect}>
                 <p>{t("tour_detail_section_when")}</p>
-                <Grid sx={{ paddingTop: "14px" }}>
+                <Grid sx={{ padding: "14px 0" }}>
                   <InputDatePicker
                     control={control}
                     name="startDate"
@@ -479,17 +479,6 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   <FontAwesomeIcon icon={faClock}></FontAwesomeIcon>
                   <p>7:30</p>
                 </Grid> */}
-              </Grid>
-              <Grid className={classes.boxSelect} sx={{ paddingTop: "14px" }}>
-                <p>{t("tour_detail_section_language_option")}</p>
-                <InputSelect
-                  className={classes.inputSelect}
-                  control={control}
-                  name="language"
-                  selectProps={{
-                    options: languageOptions,
-                  }}
-                />
               </Grid>
               <Grid className={classes.boxSelect}>
                 <p>{t("tour_detail_section_many_ticket")}</p>
