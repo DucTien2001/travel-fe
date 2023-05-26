@@ -37,7 +37,7 @@ import { useRouter } from "next/router";
 import useDebounce from "hooks/useDebounce";
 import InputCheckbox from "components/common/inputs/InputCheckbox";
 import "react-loading-skeleton/dist/skeleton.css";
-import { FindAll, TourBill } from "models/enterprise/tourBill";
+import { TourBill } from "models/enterprise/tourBill";
 import { TourBillService } from "services/enterprise/tourBill";
 import { fCurrency2VND } from "utils/formatNumber";
 import moment from "moment";
@@ -49,11 +49,16 @@ import { useTranslation } from "react-i18next";
 import InputSelect from "components/common/inputs/InputSelect";
 import { SelectOption } from "common/general";
 import InputSearch from "components/common/inputs/InputSearch";
+import { RoomBillService } from "services/enterprise/roomBill";
+import { Moment } from "moment";
+import { FindAll, RoomBill } from "models/enterprise/roomBill";
+import InputDatePicker from "components/common/inputs/InputDatePicker";
 import Button, { BtnType } from "components/common/buttons/Button";
+import { fTime } from "utils/formatTime";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
-const Tour = memo(({}: Props) => {
+const RoomBills = memo(({}: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { t, i18n } = useTranslation("common");
@@ -62,12 +67,17 @@ const Tour = memo(({}: Props) => {
     { name: "id", label: "#", sortable: false },
     {
       name: "name",
-      label: t("enterprise_management_section_tour_bill_header_table_name"),
+      label: t("enterprise_management_section_room_bill_title_stay_name"),
+      sortable: false,
+    },
+    {
+      name: "roomName",
+      label: t("enterprise_management_section_room_bill_title_room_name"),
       sortable: false,
     },
     {
       name: "duration",
-      label: t("enterprise_management_section_tour_bill_header_table_duration"),
+      label: t("enterprise_management_section_room_bill_header_table_duration"),
       sortable: false,
     },
     {
@@ -76,15 +86,15 @@ const Tour = memo(({}: Props) => {
       sortable: false,
     },
     {
-      name: "amount",
-      label: t("enterprise_management_section_tour_bill_header_table_amount"),
-      sortable: false,
-    },
-    {
       name: "start time",
       label: t(
         "enterprise_management_section_tour_bill_header_table_start_time"
       ),
+      sortable: false,
+    },
+    {
+      name: "end time",
+      label: t("enterprise_management_section_tour_bill_header_table_end_time"),
       sortable: false,
     },
     {
@@ -113,28 +123,36 @@ const Tour = memo(({}: Props) => {
     },
   ];
 
-  const [itemAction, setItemAction] = useState<TourBill>();
+  const [itemAction, setItemAction] = useState<RoomBill>();
   const [keyword, setKeyword] = useState<string>("");
-  const [data, setData] = useState<DataPagination<TourBill>>();
+  const [data, setData] = useState<DataPagination<RoomBill>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [openPopupChangeStatus, setOpenPopupChangeStatus] = useState(false);
-  const [isTookPlace, setIsTookPlace] = useState<boolean>(false);
-  const [tourBillId, setTourBillId] = useState(null);
-  const [tourOption, setTourOption] = useState<OptionItem[]>([]);
-  const [tourOnSaleOption, setTourOnSaleOption] = useState<OptionItem[]>([]);
-  const [tourFilter, setTourFilter] = useState<number>(-1);
-  const [tourOnSalesFilter, setTourOnSalesFilter] = useState<number[]>([-1]);
+  const [roomBillId, setRoomBillId] = useState(null);
+  const [stayOption, setStayOption] = useState<OptionItem[]>([]);
+  const [roomOption, setRoomOption] = useState<OptionItem[]>([]);
+  const [stayFilter, setStayFilter] = useState<number>(-1);
+  const [roomFilter, setRoomFilter] = useState<number>(null);
   const [statusFilter, setStatusFilter] = useState<number>(-1);
+  const [dateFilter, setDateFilter] = useState<Moment>(null);
+  const [filterData, setFilterData] = useState(null);
 
   useEffect(() => {
     getFilterData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isTookPlace]);
+  }, []);
 
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tourFilter, tourOnSalesFilter, isTookPlace, statusFilter]);
+  }, [
+    stayOption,
+    roomOption,
+    stayFilter,
+    roomFilter,
+    dateFilter,
+    statusFilter,
+  ]);
 
   const onClosePopupChangeStatus = () => {
     setOpenPopupChangeStatus(!openPopupChangeStatus);
@@ -142,7 +160,7 @@ const Tour = memo(({}: Props) => {
 
   const handleAction = (
     event: React.MouseEvent<HTMLButtonElement>,
-    item: TourBill
+    item: RoomBill
   ) => {
     setItemAction(item);
     setActionAnchor(event.currentTarget);
@@ -167,25 +185,17 @@ const Tour = memo(({}: Props) => {
   };
 
   const getFilterData = () => {
-    TourBillService.getFilters({ isPast: isTookPlace })
+    RoomBillService.getFilters()
       .then((res) => {
         if (res?.success) {
-          setTourOption([
-            ...[{ id: 0, name: t("common_select_all"), value: -1 }],
-            ...res.data.tour.map((item, index) => ({
-              id: index + 1,
-              name: item.title,
-              value: item.id,
-            })),
-          ]);
-          setTourOnSaleOption([
-            ...[{ id: 0, name: t("common_select_all"), value: [-1] }],
-            ...res.data.tourOnSale.map((item, index) => ({
-              id: index + 1,
-              name: moment(item.startDate).format("DD/MM/YYYY"),
-              value: item.tourOnSaleIds,
-            })),
-          ]);
+          const _stayOption = res.data?.stays?.map((item, index) => ({
+            id: index + 1,
+            name: item?.name,
+            value: item?.id,
+          }));
+          setStayOption(_stayOption);
+          setStayFilter(_stayOption[0].value);
+          setFilterData(res?.data?.stays);
         }
       })
       .catch((e) => {
@@ -193,6 +203,20 @@ const Tour = memo(({}: Props) => {
       })
       .finally(() => dispatch(setLoading(false)));
   };
+
+  useEffect(() => {
+    filterData?.forEach((item, index) => {
+      if (item?.id === stayFilter) {
+        setRoomOption(
+          item?.listRooms?.map((room, index) => ({
+            id: index + 1,
+            name: room.title,
+            value: room?.id,
+          }))
+        );
+      }
+    });
+  }, [stayFilter]);
 
   const fetchData = (value?: {
     take?: number;
@@ -203,8 +227,9 @@ const Tour = memo(({}: Props) => {
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
       keyword: keyword,
-      tourId: tourFilter || -1,
-      tourOnSaleIds: tourOnSalesFilter || [-1],
+      roomId: roomFilter || null,
+      stayId: stayFilter || -1,
+      date: dateFilter?.toDate(),
       status: statusFilter || -1,
     };
     if (value?.keyword !== undefined) {
@@ -212,7 +237,7 @@ const Tour = memo(({}: Props) => {
     }
     dispatch(setLoading(true));
 
-    TourBillService.findAll(params)
+    RoomBillService.findAll(params)
       .then((res) => {
         setData({
           data: res.data,
@@ -246,36 +271,34 @@ const Tour = memo(({}: Props) => {
     onCloseActionMenu();
   };
 
-  const onRedirectEdit = (item: TourBill) => {
+  const onRedirectEdit = (item: RoomBill) => {
     router.push({
-      pathname: `/enterprises/tourBills/${item.id}`,
+      pathname: `/enterprises/roomBills/${item.id}`,
     });
   };
 
   const onChangeStatus = () => {
-    setTourBillId(itemAction?.id);
+    setRoomBillId(itemAction?.id);
     onClosePopupChangeStatus();
     onCloseActionMenu();
   };
 
   const onClear = () => {
     setKeyword("");
-    setTourOnSalesFilter([-1]);
+    setDateFilter(null);
+    setRoomFilter(null);
     setStatusFilter(-1);
-    setStatusFilter(-1);
-    setTourFilter(-1);
-    setIsTookPlace(false);
   };
 
   return (
     <>
       <div className={classes.root}>
         <Row className={clsx(classes.rowHeaderBox, classes.title)}>
-          <h3>{t("enterprise_management_section_tour_bill_title_tab")}</h3>
+          <h3>{t("enterprise_management_section_room_bill_title_tab")}</h3>
         </Row>
         <Grid
           item
-          xs={3}
+          xs={12}
           sx={{
             marginBottom: "16px",
             display: "flex",
@@ -297,15 +320,33 @@ const Tour = memo(({}: Props) => {
             <InputSelect
               fullWidth
               title={t(
-                "enterprise_management_section_tour_bill_title_filter_tour"
+                "enterprise_management_section_room_bill_title_tab_filter_stay"
               )}
+              defaultValue={stayOption[0]}
+              value={stayOption[0]}
               selectProps={{
-                options: tourOption,
+                options: stayOption,
                 placeholder: t(
-                  "enterprise_management_section_tour_bill_title_filter_tour_placeholder"
+                  "enterprise_management_section_room_bill_title_tab_filter_stay_place"
                 ),
               }}
-              onChange={(e) => setTourFilter(e?.value)}
+              onChange={(e) => setStayFilter(e?.value)}
+            />
+          </Grid>
+
+          <Grid item xs={3}>
+            <InputSelect
+              fullWidth
+              title={t(
+                "enterprise_management_section_room_bill_title_tab_filter_room"
+              )}
+              selectProps={{
+                options: roomOption,
+                placeholder: t(
+                  "enterprise_management_section_room_bill_title_tab_filter_room_place"
+                ),
+              }}
+              onChange={(e) => setRoomFilter(e?.value)}
             />
           </Grid>
           <Grid item xs={3}>
@@ -324,34 +365,21 @@ const Tour = memo(({}: Props) => {
               onChange={(e) => setStatusFilter(e?.value)}
             />
           </Grid>
-
-          <Grid item xs={3}>
-            <InputSelect
-              fullWidth
-              title={t(
-                "enterprise_management_section_tour_bill_title_filter_date"
-              )}
-              selectProps={{
-                options: tourOnSaleOption,
-                placeholder: t(
-                  "enterprise_management_section_tour_bill_title_filter_date_placeholder"
-                ),
-              }}
-              onChange={(e) => setTourOnSalesFilter(e?.value)}
-            />
-          </Grid>
-          <Grid item sx={{ display: "flex", alignItems: "center" }} xs={3}>
-            <FormControlLabel
-              className={classes.checkBoxTourTaken}
-              control={
-                <InputCheckbox
-                  checked={isTookPlace}
-                  onChange={() => setIsTookPlace(!isTookPlace)}
-                />
-              }
+          <Grid xs={3} item>
+            <InputDatePicker
               label={t(
-                "enterprise_management_section_tour_bill_title_filter_taken_place"
+                "enterprise_management_section_room_bill_title_tab_filter_date"
               )}
+              className={classes.inputSearchDate}
+              placeholder={t(
+                "landing_page_section_search_tour_input_start_time"
+              )}
+              dateFormat="DD/MM/YYYY"
+              timeFormat={false}
+              closeOnSelect
+              value={dateFilter ? dateFilter : ""}
+              initialValue={dateFilter ? dateFilter : ""}
+              _onChange={(e) => setDateFilter(moment(e?._d))}
             />
           </Grid>
         </Grid>
@@ -367,32 +395,35 @@ const Tour = memo(({}: Props) => {
                         {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <a
-                          href={`/listTour/:${item?.id}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={classes.tourName}
-                        >
-                          {item?.tourData?.title}
-                        </a>
+                        {item?.stayData?.name}
+                      </TableCell>
+                      <TableCell
+                        className={clsx(classes.tableCell, classes.bookInfo)}
+                        component="th"
+                      >
+                        {item?.bookedRoomsInfo?.map((item, index) => (
+                          <div key={index}>
+                            <span>
+                              {item?.title} - {item?.amount}{" "}
+                              {t(
+                                "enterprise_management_section_room_bill_title_room"
+                              )}{" "}
+                            </span>
+                          </div>
+                        ))}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.tourData?.numberOfDays} {t("common_days")}{" "}
-                        {item?.tourData?.numberOfNights} {t("common_nights")}
+                        {fTime(item?.stayData?.checkInTime)}{" "}
+                        {fTime(item?.stayData?.checkOutTime)}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.totalBill)} VND
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.amountAdult + item?.amountChild}{" "}
-                        {t(
-                          "enterprise_management_section_tour_bill_body_table_amount"
-                        )}
+                        {moment(item?.startDate).format("DD-MM-YYYY")}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {moment(item?.tourOnSaleData?.startDate).format(
-                          "DD-MM-YYYY"
-                        )}
+                        {moment(item?.endDate).format("DD-MM-YYYY")}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {moment(item?.createdAt).format("DD-MM-YYYY")}
@@ -425,7 +456,7 @@ const Tour = memo(({}: Props) => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={10}>
+                  <TableCell align="center" colSpan={11}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>
@@ -507,11 +538,11 @@ const Tour = memo(({}: Props) => {
       <PopupChangeStatus
         isOpen={openPopupChangeStatus}
         onClose={onClosePopupChangeStatus}
-        tourBillId={tourBillId}
+        billId={roomBillId}
         fetchData={fetchData}
       />
     </>
   );
 });
 
-export default Tour;
+export default RoomBills;

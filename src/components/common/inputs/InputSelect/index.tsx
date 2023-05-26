@@ -135,6 +135,8 @@ interface InputSelectProps {
   fullWidth?: boolean;
   optional?: boolean;
   onChange?: (e: any) => void;
+  defaultValue?: any;
+  value?: any;
 }
 
 const InputSelect = memo((props: InputSelectProps) => {
@@ -150,6 +152,8 @@ const InputSelect = memo((props: InputSelectProps) => {
     fullWidth,
     optional,
     onChange,
+    defaultValue,
+    value,
   } = props;
   const { t } = useTranslation("common");
 
@@ -187,6 +191,8 @@ const InputSelect = memo((props: InputSelectProps) => {
                   components={{ DropdownIndicator, Option, SingleValue }}
                   onChange={(e) => onChange && onChange(e)}
                   {...selectProps}
+                  defaultValue={defaultValue}
+                  value={value}
                 />
               ) : (
                 <Select
@@ -196,6 +202,8 @@ const InputSelect = memo((props: InputSelectProps) => {
                   getOptionLabel={(option) => getOptionLabel(option)}
                   components={{ DropdownIndicator, Option, SingleValue }}
                   {...selectProps}
+                  defaultValue={defaultValue}
+                  value={value}
                 />
               )
             }
@@ -209,6 +217,8 @@ const InputSelect = memo((props: InputSelectProps) => {
           components={{ DropdownIndicator, Option, SingleValue }}
           onChange={(e) => onChange && onChange(e)}
           {...selectProps}
+          defaultValue={defaultValue}
+          value={value}
         />
       ) : (
         <Select
@@ -217,6 +227,8 @@ const InputSelect = memo((props: InputSelectProps) => {
           getOptionLabel={(option) => getOptionLabel(option)}
           components={{ DropdownIndicator, Option, SingleValue }}
           {...selectProps}
+          defaultValue={defaultValue}
+          value={value}
         />
       )}
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}

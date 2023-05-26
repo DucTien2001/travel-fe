@@ -11,6 +11,9 @@ import { useTranslation } from "react-i18next";
 import TourIcon from "@mui/icons-material/Tour";
 import useAuth from "hooks/useAuth";
 import { EUserType } from "models/user";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import StatisticStayBills from "../components/StatisticStayBills";
+
 const Users = dynamic(() => import("pages/admin/components/Users"));
 const Events = dynamic(() => import("pages/admin/components/Events"));
 const Commissions = dynamic(() => import("pages/admin/components/Commissions"));
@@ -77,6 +80,14 @@ const Admin = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
+      case "statisticStayBills":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <StatisticStayBills />
+            </TabContent>
+          </Col>
+        );
     }
   };
 
@@ -125,17 +136,29 @@ const Admin = memo(({ ...props }: PropTypes) => {
               <span>{t("admin_management_navbar_commission")}</span>
             </NavLink>
           </NavItem>
-          <span>{t("admin_management_navbar_statistic")}</span>
           {user.role === EUserType.SUPER_ADMIN && (
-            <NavItem
-              onClick={() => gotoMenu("statisticTourBills")}
-              className={classes.navItem}
-            >
-              <NavLink className={renderClass("statisticTourBills")}>
-                <TourIcon />
-                <span>{t("admin_management_navbar_tour_bills")}</span>
-              </NavLink>
-            </NavItem>
+            <>
+              <span>{t("admin_management_navbar_statistic")}</span>
+
+              <NavItem
+                onClick={() => gotoMenu("statisticTourBills")}
+                className={classes.navItem}
+              >
+                <NavLink className={renderClass("statisticTourBills")}>
+                  <TourIcon />
+                  <span>{t("admin_management_navbar_tour_bills")}</span>
+                </NavLink>
+              </NavItem>
+              <NavItem
+                onClick={() => gotoMenu("statisticStayBills")}
+                className={classes.navItem}
+              >
+                <NavLink className={renderClass("statisticStayBills")}>
+                  <MeetingRoomIcon />
+                  <span>{t("enterprise_management_navbar_room_bill")}</span>
+                </NavLink>
+              </NavItem>
+            </>
           )}
         </Nav>
       </Col>

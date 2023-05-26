@@ -213,6 +213,14 @@ export const API = {
       GET_ALL_BILLS_OF_ANY_TOUR: "/v1.0/tour-bill/get-all-tour-bills/:id",
       GET_BILLS_ANY_DATE: "/v1.0/tour-bill/get-tour-bills-any-date",
     },
+    ROOM_BILL: {
+      DEFAULT: "/v1.0/enterprise/room-bill",
+      FILTER: "/v1.0/enterprise/room-bill/filter",
+      STATISTIC: "/v1.0/enterprise/room-bill/statistic",
+      STATISTIC_ROOM: "/v1.0/enterprise/room-bill/statistic/room/:id",
+      STATISTIC_ONE: "/v1.0/enterprise/room-bill/statistic/:id",
+      GET_ONE: "/v1.0/enterprise/room-bill/:id",
+    },
     ROOMBILL: {
       GET_HOTELS_REVENUE_BY_MONTH:
         "/v1.0/room-bill/get-hotels-revenue-by-month",
@@ -242,6 +250,14 @@ export const API = {
         GET_TOUR_ON_SALE_BILL:
           "/v1.0/admin/tour-bill/statistic/tour-on-sale/get-bills/:id",
         GET_TOUR_ON_SALE: "/v1.0/admin/tour-bill/statistic/tour-on-sale/:id",
+      },
+      STAY: {
+        DEFAULT: "/v1.0/admin/room-bill",
+        FILTER: "/v1.0/admin/room-bill/filter/:id",
+        STATISTIC: "/v1.0/admin/room-bill/statistic",
+        STATISTIC_ROOM: "/v1.0/admin/room-bill/statistic/room/:id",
+        STATISTIC_STAY: "/v1.0/admin/room-bill/statistic/stay/:id",
+        STATISTIC_USER: "/v1.0/admin/room-bill/statistic/user/:id",
       },
     },
     COMMENT: {

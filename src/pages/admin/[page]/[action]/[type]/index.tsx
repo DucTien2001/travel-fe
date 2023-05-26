@@ -7,15 +7,13 @@ import useAuth from "hooks/useAuth";
 import EventIcon from "@mui/icons-material/Event";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import Users from "pages/admin/components/Users";
-import AddOrEditEvent from "pages/admin/components/Events/components/AddOrEditEvent";
-import AddOrEditCommission from "pages/admin/components/Commissions/components/AddOrEditCommission";
 import { useTranslation } from "react-i18next";
 import TourIcon from "@mui/icons-material/Tour";
 import { EUserType } from "models/user";
-import StatisticTourBills from "pages/admin/components/StatisticTourBills";
-import TourRevenue from "pages/admin/components/StatisticTourBills/components/TourRevenue";
 import TourOnSaleRevenue from "pages/admin/components/StatisticTourBills/components/TourOnSaleRevenue";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import StatisticOneStay from "pages/admin/components/StatisticStayBills/components/StatisticOneStay";
+import StatisticStayBills from "pages/admin/components/StatisticStayBills";
 
 interface PropTypes {}
 
@@ -47,6 +45,25 @@ const Admin = memo(({ ...props }: PropTypes) => {
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
               <TourOnSaleRevenue />
+            </TabContent>
+          </Col>
+        );
+      case "statisticStayBills":
+        if (action) {
+          if (type) {
+            return (
+              <Col xs={10} className={classes.content}>
+                <TabContent className={classes.tabContent}>
+                  <StatisticOneStay stayId={Number(type)} />
+                </TabContent>
+              </Col>
+            );
+          }
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <StatisticStayBills />
             </TabContent>
           </Col>
         );
@@ -98,17 +115,29 @@ const Admin = memo(({ ...props }: PropTypes) => {
               <span>{t("admin_management_navbar_commission")}</span>
             </NavLink>
           </NavItem>
-          <span>{t("admin_management_navbar_statistic")}</span>
           {user.role === EUserType.SUPER_ADMIN && (
-            <NavItem
-              onClick={() => gotoMenu("statisticTourBills")}
-              className={classes.navItem}
-            >
-              <NavLink className={renderClass("statisticTourBills")}>
-                <TourIcon />
-                <span>{t("admin_management_navbar_tour_bills")}</span>
-              </NavLink>
-            </NavItem>
+            <>
+              <span>{t("admin_management_navbar_statistic")}</span>
+
+              <NavItem
+                onClick={() => gotoMenu("statisticTourBills")}
+                className={classes.navItem}
+              >
+                <NavLink className={renderClass("statisticTourBills")}>
+                  <TourIcon />
+                  <span>{t("admin_management_navbar_tour_bills")}</span>
+                </NavLink>
+              </NavItem>
+              <NavItem
+                onClick={() => gotoMenu("statisticStayBills")}
+                className={classes.navItem}
+              >
+                <NavLink className={renderClass("statisticStayBills")}>
+                  <MeetingRoomIcon />
+                  <span>{t("enterprise_management_navbar_room_bill")}</span>
+                </NavLink>
+              </NavItem>
+            </>
           )}
         </Nav>
       </Col>

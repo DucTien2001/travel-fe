@@ -23,7 +23,10 @@ import TourStatistic from "../components/TourStatistic";
 import { Grid } from "@mui/material";
 import PopupTermsAndConditions from "../components/PopupTermsAndConditions";
 import { useTranslation } from "react-i18next";
-
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import RoomBills from "../components/RoomBills";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import StayStatistic from "../components/StayStatistic";
 interface PropTypes {}
 
 const Enterprise = memo(({ ...props }: PropTypes) => {
@@ -114,11 +117,27 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
+      case "roomBills":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <RoomBills />
+            </TabContent>
+          </Col>
+        );
       case "tourStatistic":
         return (
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
               <TourStatistic />
+            </TabContent>
+          </Col>
+        );
+      case "stayStatistic":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <StayStatistic />
             </TabContent>
           </Col>
         );
@@ -196,23 +215,45 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           >
             <NavLink className={renderClass("tourBills")}>
               <TourIcon />
-              <span ref={vouchersRef}>
-                {t("enterprise_management_navbar_tour_bill")}
-              </span>
+              <span>{t("enterprise_management_navbar_tour_bill")}</span>
             </NavLink>
           </NavItem>
-          <span>{t("enterprise_management_navbar_statistic")}</span>
           <NavItem
-            onClick={() => gotoMenu("tourStatistic")}
+            onClick={() => gotoMenu("roomBills")}
             className={classes.navItem}
           >
-            <NavLink className={renderClass("tourStatistic")}>
-              <BarChartIcon />
-              <span ref={vouchersRef}>
-                {t("enterprise_management_navbar_tour")}
-              </span>
+            <NavLink className={renderClass("roomBills")}>
+              <MeetingRoomIcon />
+              <span>{t("enterprise_management_navbar_room_bill")}</span>
             </NavLink>
           </NavItem>
+          {user?.role === EUserType.ENTERPRISE && (
+            <>
+              <span>{t("enterprise_management_navbar_statistic")}</span>
+              <NavItem
+                onClick={() => gotoMenu("tourStatistic")}
+                className={classes.navItem}
+              >
+                <NavLink className={renderClass("tourStatistic")}>
+                  <BarChartIcon />
+                  <span ref={vouchersRef}>
+                    {t("enterprise_management_navbar_tour")}
+                  </span>
+                </NavLink>
+              </NavItem>
+              <NavItem
+                onClick={() => gotoMenu("stayStatistic")}
+                className={classes.navItem}
+              >
+                <NavLink className={renderClass("stayStatistic")}>
+                  <SignalCellularAltIcon />
+                  <span ref={vouchersRef}>
+                    {t("enterprise_management_navbar_hotel")}
+                  </span>
+                </NavLink>
+              </NavItem>
+            </>
+          )}
           <Grid
             className={classes.boxTerms}
             onClick={onTogglePopupTermsAndConditions}

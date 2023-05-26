@@ -1,11 +1,8 @@
 import React, { memo, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
 import { Col, Nav, NavItem, NavLink, TabContent } from "reactstrap";
 import classes from "./styles.module.scss";
 import { images } from "configs/images";
-
-import OfferStaffs from "pages/enterprises/components/Staffs/components/OfferStaffs";
 import { EUserType } from "models/user";
 import useAuth from "hooks/useAuth";
 import ApartmentIcon from "@mui/icons-material/Apartment";
@@ -13,20 +10,15 @@ import AttractionsIcon from "@mui/icons-material/Attractions";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import TourIcon from "@mui/icons-material/Tour";
-import Tours from "pages/enterprises/components/Tours";
-import Vouchers from "pages/enterprises/components/Vouchers";
-import AddOrEditTour from "pages/enterprises/components/Tours/AddOrEditTour";
-import AddOrEditVoucher from "pages/enterprises/components/Vouchers/components/AddOrEditVoucher";
-import DetailTourBill from "pages/enterprises/components/TourBills/components/DetailTourBill";
-import Staffs from "pages/enterprises/components/Staffs";
-import TourBills from "pages/enterprises/components/TourBills";
-import TourStatistic from "pages/enterprises/components/TourStatistic";
-import TourOnSaleStatistic from "pages/enterprises/components/TourStatistic/components/TourOnSaleStatistic";
 import PopupTermsAndConditions from "pages/enterprises/components/PopupTermsAndConditions";
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import DetailTourOnSaleStatistic from "pages/enterprises/components/TourStatistic/components/DetailTourOnSaleStatistic";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import DetailRoomStatistic from "pages/enterprises/components/StayStatistic/components/DetailRoomStatistic";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import StayStatistic from "pages/enterprises/components/StayStatistic";
 
 interface PropTypes {}
 
@@ -66,6 +58,25 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
               <DetailTourOnSaleStatistic />
+            </TabContent>
+          </Col>
+        );
+      case "stayStatistic":
+        if (action) {
+          if (type) {
+            return (
+              <Col xs={10} className={classes.content}>
+                <TabContent className={classes.tabContent}>
+                  <DetailRoomStatistic roomId={Number(type)} />
+                </TabContent>
+              </Col>
+            );
+          }
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <StayStatistic />
             </TabContent>
           </Col>
         );
@@ -148,6 +159,15 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
               </span>
             </NavLink>
           </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("roomBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("roomBills")}>
+              <MeetingRoomIcon />
+              <span>{t("enterprise_management_navbar_room_bill")}</span>
+            </NavLink>
+          </NavItem>
           <span>{t("enterprise_management_navbar_statistic")}</span>
           <NavItem
             onClick={() => gotoMenu("tourStatistic")}
@@ -157,6 +177,17 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
               <BarChartIcon />
               <span ref={vouchersRef}>
                 {t("enterprise_management_navbar_tour")}
+              </span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("stayStatistic")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("stayStatistic")}>
+              <SignalCellularAltIcon />
+              <span ref={vouchersRef}>
+                {t("enterprise_management_navbar_hotel")}
               </span>
             </NavLink>
           </NavItem>

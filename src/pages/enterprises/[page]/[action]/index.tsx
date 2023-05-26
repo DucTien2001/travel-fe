@@ -28,6 +28,12 @@ import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import AddOrEditStay from "pages/enterprises/components/Stays/AddOrEditStay";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import DetailRoomBill from "pages/enterprises/components/RoomBills/components/DetailRoomBill";
+import RoomBills from "pages/enterprises/components/RoomBills";
+import StayStatistic from "pages/enterprises/components/StayStatistic";
+import DetailStayStatistic from "pages/enterprises/components/StayStatistic/components/DetailStayStatistic";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 
 interface PropTypes {}
 
@@ -184,6 +190,23 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
+      case "roomBills":
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <DetailRoomBill roomBillId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <RoomBills />
+            </TabContent>
+          </Col>
+        );
       case "tourStatistic":
         if (action) {
           return (
@@ -198,6 +221,23 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
               <TourStatistic />
+            </TabContent>
+          </Col>
+        );
+      case "stayStatistic":
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <DetailStayStatistic stayId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <StayStatistic />
             </TabContent>
           </Col>
         );
@@ -280,6 +320,15 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
               </span>
             </NavLink>
           </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("roomBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("roomBills")}>
+              <MeetingRoomIcon />
+              <span>{t("enterprise_management_navbar_room_bill")}</span>
+            </NavLink>
+          </NavItem>
           <span>{t("enterprise_management_navbar_statistic")}</span>
           <NavItem
             onClick={() => gotoMenu("tourStatistic")}
@@ -289,6 +338,17 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
               <BarChartIcon />
               <span ref={vouchersRef}>
                 {t("enterprise_management_navbar_tour")}
+              </span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("stayStatistic")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("stayStatistic")}>
+              <SignalCellularAltIcon />
+              <span ref={vouchersRef}>
+                {t("enterprise_management_navbar_hotel")}
               </span>
             </NavLink>
           </NavItem>
