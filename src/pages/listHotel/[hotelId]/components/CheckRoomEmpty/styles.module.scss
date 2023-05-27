@@ -69,8 +69,13 @@
     min-width: 280px;
     border-radius: 4px;
     box-shadow: var(--box-shadow-100);
+    z-index: 1;
 }
-
+.boxItemSearch {
+    @media only screen and (max-width: 768px) {
+        max-width: 100%;
+    }
+}
 .boxTitleCounter {
     display: flex;
     align-items: center;

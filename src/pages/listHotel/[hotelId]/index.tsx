@@ -101,92 +101,96 @@ const ProductPage = memo((Props) => {
           title={t("stay_detail_section_title_hero")}
           src={images.bgUser.src}
         />
-        {/* {hotel?.isTemporarilyStopWorking || hotel?.isDeleted ? (
+        {stay?.isDeleted ? (
           <Container className={classes.boxStopWorking}>
             <h3>Sorry, our service is temporarily in active use </h3>
             <FontAwesomeIcon icon={faFaceFrown} />
           </Container>
-        ) : ( */}
-        <>
-          <div className={classes.navbar} id="navbar">
-            <Container className={classes.containerNav}>
-              <Tabs variant="scrollable" value={0} className={classes.rootTabs}>
-                <div className={classes.listNav}>
-                  <div className={classes.navItem}>
+        ) : (
+          <>
+            <div className={classes.navbar} id="navbar">
+              <Container className={classes.containerNav}>
+                <Tabs
+                  variant="scrollable"
+                  value={0}
+                  className={classes.rootTabs}
+                >
+                  <div className={classes.listNav}>
+                    <div className={classes.navItem}>
+                      <NavLink
+                        to={`${HOTEL_SECTION.section_overview}`}
+                        spy={true}
+                        smooth={true}
+                        offset={-120}
+                        duration={500}
+                        activeClass="active"
+                        onClick={closeMenu}
+                      >
+                        {t("stay_detail_section_title_nav_bar_overview")}
+                      </NavLink>
+                    </div>
+                    <div className={classes.navItem}>
+                      <NavLink
+                        to={`${HOTEL_SECTION.section_location}`}
+                        spy={true}
+                        smooth={true}
+                        offset={-120}
+                        duration={500}
+                        activeClass="active"
+                        onClick={closeMenu}
+                      >
+                        {t("stay_detail_section_title_nav_bar_location")}
+                      </NavLink>
+                    </div>
+                    <div className={classes.navItem}>
+                      <NavLink
+                        to={`${HOTEL_SECTION.section_check_room}`}
+                        spy={true}
+                        smooth={true}
+                        offset={-85}
+                        duration={500}
+                        activeClass="active"
+                        onClick={closeMenu}
+                      >
+                        {t("stay_detail_section_title_nav_bar_room")}
+                      </NavLink>
+                    </div>
+                    <div className={classes.navItem}>
+                      <NavLink
+                        to={`${HOTEL_SECTION.section_reviews}`}
+                        spy={true}
+                        smooth={true}
+                        offset={-120}
+                        duration={500}
+                        activeClass="active"
+                        onClick={closeMenu}
+                      >
+                        {t("stay_detail_section_title_nav_bar_review")}
+                      </NavLink>
+                    </div>
+                  </div>
+                  <div className={classes.backToTop}>
                     <NavLink
                       to={`${HOTEL_SECTION.section_overview}`}
                       spy={true}
                       smooth={true}
-                      offset={-120}
+                      offset={-90}
                       duration={500}
-                      activeClass="active"
                       onClick={closeMenu}
                     >
-                      {t("stay_detail_section_title_nav_bar_overview")}
+                      {t("stay_detail_section_title_nav_bar_back")}
+                      <FontAwesomeIcon icon={faArrowUp}></FontAwesomeIcon>
                     </NavLink>
                   </div>
-                  <div className={classes.navItem}>
-                    <NavLink
-                      to={`${HOTEL_SECTION.section_location}`}
-                      spy={true}
-                      smooth={true}
-                      offset={-120}
-                      duration={500}
-                      activeClass="active"
-                      onClick={closeMenu}
-                    >
-                      {t("stay_detail_section_title_nav_bar_location")}
-                    </NavLink>
-                  </div>
-                  <div className={classes.navItem}>
-                    <NavLink
-                      to={`${HOTEL_SECTION.section_check_room}`}
-                      spy={true}
-                      smooth={true}
-                      offset={-85}
-                      duration={500}
-                      activeClass="active"
-                      onClick={closeMenu}
-                    >
-                      {t("stay_detail_section_title_nav_bar_room")}
-                    </NavLink>
-                  </div>
-                  <div className={classes.navItem}>
-                    <NavLink
-                      to={`${HOTEL_SECTION.section_reviews}`}
-                      spy={true}
-                      smooth={true}
-                      offset={-120}
-                      duration={500}
-                      activeClass="active"
-                      onClick={closeMenu}
-                    >
-                      {t("stay_detail_section_title_nav_bar_review")}
-                    </NavLink>
-                  </div>
-                </div>
-                <div className={classes.backToTop}>
-                  <NavLink
-                    to={`${HOTEL_SECTION.section_overview}`}
-                    spy={true}
-                    smooth={true}
-                    offset={-90}
-                    duration={500}
-                    onClick={closeMenu}
-                  >
-                    {t("stay_detail_section_title_nav_bar_back")}
-                    <FontAwesomeIcon icon={faArrowUp}></FontAwesomeIcon>
-                  </NavLink>
-                </div>
-              </Tabs>
-            </Container>
-          </div>
-          <SectionHotel stay={stay} />
-          <Location stay={stay} />
-          <CheckRoomEmpty stay={stay} />
-          <Comment />
-        </>
-        {/* )} */}
+                </Tabs>
+              </Container>
+            </div>
+            <SectionHotel stay={stay} />
+            <Location stay={stay} />
+            <CheckRoomEmpty stay={stay} />
+            <Comment />
+          </>
+        )}
       </div>
     </>
   );

@@ -281,7 +281,7 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
               className={classes.inputDateContainer}
               spacing={2}
             >
-              <Grid item xs={2}>
+              <Grid item xs={2} className={classes.boxItemSearch}>
                 <InputDatePicker
                   className={classes.inputSearchDate}
                   label={t(
@@ -305,7 +305,7 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   control={control}
                 />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={2} className={classes.boxItemSearch}>
                 <InputDatePicker
                   className={classes.inputSearchDate}
                   label={t("stay_detail_section_stay_check_room_empty_return")}
@@ -452,7 +452,7 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   </div>
                 )}
               </Grid>
-              <Grid xs={3} item>
+              <Grid xs={3} item className={classes.boxItemSearch}>
                 <InputSelect
                   title={t("stay_detail_section_stay_check_room_empty_sort")}
                   className={classes.inputSelect}
@@ -495,7 +495,7 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
               <Grid className={classes.boxLeftItem}>
                 <Grid sx={{ position: "relative", cursor: "pointer" }}>
                   <img src={room?.images[0]} alt="anh"></img>
-                  <Grid className={classes.numberImg}>1/4</Grid>
+                  {/* <Grid className={classes.numberImg}>1/4</Grid> */}
                   <Grid container className={classes.moreImg} spacing={0.5}>
                     <Grid item xs={4}>
                       <img src={room?.images[1]} alt="anh"></img>

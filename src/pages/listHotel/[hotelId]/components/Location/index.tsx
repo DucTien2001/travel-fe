@@ -32,19 +32,42 @@ import "swiper/css/navigation";
 import clsx from "clsx";
 import { Grid, useMediaQuery, useTheme } from "@mui/material";
 import { Stay } from "models/stay";
+import Geocode from "react-geocode";
+import GoogleMapReact from "google-map-react";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
+import { useTranslation } from "react-i18next";
 interface Props {
   stay: Stay;
 }
 
 // eslint-disable-next-line react/display-name
 const Comments = memo(({ stay }: Props) => {
+  // Geocode.setApiKey("AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI");
+  const [coords, setCoords] = useState(null);
+  const { t, i18n } = useTranslation("common");
+
+  useEffect(() => {
+    Geocode.fromAddress(
+      `${stay?.moreLocation}, ${stay?.commune.name}, ${stay?.district.name}, ${stay?.city.name}`
+    ).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+        setCoords({ lat, lng });
+      },
+      (error) => {
+        // console.error(error);
+      }
+    );
+  }, [stay]);
+
   return (
     <Grid
       sx={{ backgroundColor: "#f6f2f2", paddingBottom: "8px" }}
       id={HOTEL_SECTION.section_location}
     >
       <Container className={classes.root}>
-        <h5> Location Detail</h5>
+        <h5> {t("tour_detail_section_location")}</h5>
         <Grid
           sx={{
             padding: "18px",
@@ -54,55 +77,34 @@ const Comments = memo(({ stay }: Props) => {
           }}
         >
           <p className={classes.locationDetail}>
-            143 Trần Hưng Đạo, KP 7, TT Dương Đông, H.Phú Quốc, tỉnh Kiên Giang,
-            Vietnam
+            {stay?.moreLocation}, {stay?.commune.name},{stay?.district.name},{" "}
+            {stay?.city.name}
           </p>
-          <div className={classes.map}></div>
-          <Grid
-            className={classes.boxNearPlaces}
-            columns={12}
-            container
-            columnSpacing={3}
-          >
-            <Grid className={classes.leftNearPlace} xs={6} item>
-              <Grid sx={{ marginLeft: "0" }}>
-                <Grid sx={{ marginBottom: "14px" }}>
-                  <p>Nearby Places</p>
-                </Grid>
-                <Grid className={classes.itemNearPlace} xs={12}>
-                  <Grid sx={{ display: "flex", alignItems: "center" }}>
-                    <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
-                    <Grid>
-                      <p>Da Nang Night Market</p>
-                      <span>Shop & Gifts</span>
-                    </Grid>
-                  </Grid>
-                  <Grid>
-                    <span>12 km</span>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid className={classes.rightNearPlace} xs={6} item>
-              <Grid sx={{ marginLeft: "0" }}>
-                <Grid sx={{ marginBottom: "14px" }}>
-                  <p>Popular in Area</p>
-                </Grid>
-                <Grid className={classes.itemNearPlace}>
-                  <Grid sx={{ display: "flex", alignItems: "center" }}>
-                    <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>
-                    <Grid>
-                      <p>Da Nang Night Market</p>
-                      <span>Shop & Gifts</span>
-                    </Grid>
-                  </Grid>
-                  <Grid>
-                    <span>12 km</span>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+          {/* <div style={{ height: "30vh", width: "100%" }}>
+                    <GoogleMapReact
+                      bootstrapURLKeys={{
+                        key: "AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI",
+                      }}
+                      defaultCenter={coords}
+                      defaultZoom={11}
+                      center={coords}
+                    >
+                      <AnyReactComponent
+                        lat={coords?.lat}
+                        lng={coords?.lng}
+                        text={
+                          <LocationOnIcon
+                            sx={{ color: "var(--danger-color)" }}
+                          />
+                        }
+                      />
+                    </GoogleMapReact>
+                  </div> */}
+          <div className={classes.contactBox}>
+            <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
+            <p> {t("tour_detail_section_contact")}: </p>
+            <a href={`tel: ${stay?.contact}`}>{stay?.contact}</a>
+          </div>
         </Grid>
       </Container>
     </Grid>

@@ -103,7 +103,7 @@ const ListServices = memo(
     };
     return (
       <Grid className={classes.linkView}>
-        <Link href={`/${linkView}/:${id}`}>
+        <Link href={`/${linkView}/:${id}`} className={classes.link}>
           <a>
             <Grid
               key={id}
@@ -126,6 +126,7 @@ const ListServices = memo(
                   boxShadow: "var(--box-shadow-100)",
                   borderRadius: "10px",
                 }}
+                className={classes.boxGridList}
               >
                 <Grid className={classes.boxImg} item xs={3}>
                   <img src={src} alt="anh"></img>
@@ -140,6 +141,7 @@ const ListServices = memo(
                   }}
                   item
                   xs={6}
+                  className={classes.boxContent}
                 >
                   <Grid className={classes.boxLocation}>
                     <FontAwesomeIcon icon={faSignsPost}></FontAwesomeIcon>

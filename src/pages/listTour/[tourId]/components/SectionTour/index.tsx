@@ -50,7 +50,6 @@ import { useTranslation } from "react-i18next";
 const AnyReactComponent = ({ text, lat, lng }) => <div>{text}</div>;
 export interface FormBookData {
   startDate: Date;
-  language: OptionItem;
   numberOfAdult?: number;
   numberOfChild?: number;
 }
@@ -83,7 +82,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation("common");
 
-  // Geocode.setApiKey("AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k");
+  // Geocode.setApiKey("AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI");
 
   const daySchedule = useMemo(() => {
     return _.chain(tourSchedule)
@@ -118,15 +117,6 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      language: yup
-        .object()
-        .typeError("Language is required.")
-        .shape({
-          id: yup.number().required("Language is required"),
-          name: yup.string().required(),
-          value: yup.string().required(),
-        })
-        .required(),
       numberOfAdult: yup
         .number()
         .transform((value) => (isNaN(value) ? undefined : value))
@@ -154,7 +144,6 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
     defaultValues: {
       numberOfAdult: 1,
       numberOfChild: 0,
-      language: languageOptions[0],
     },
   });
 
@@ -207,7 +196,6 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
         amountChildren: data?.numberOfChild,
         startDate: data?.startDate,
         totalPrice: totalPrice,
-        language: data?.language.name,
         priceAdult: priceAndAge.adultPrice,
         priceChildren: priceAndAge.priceChildren,
         discount: priceAndAge?.discount,
@@ -248,19 +236,19 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
     );
   }, [priceAndAge, _numberOfAdult, _numberOfChild]);
 
-  // useEffect(() => {
-  //   Geocode.fromAddress(
-  //     `${tour?.moreLocation}, ${tour?.commune.name}, ${tour?.district.name}, ${tour?.city.name}`
-  //   ).then(
-  //     (response) => {
-  //       const { lat, lng } = response.results[0].geometry.location;
-  //       setCoords({ lat, lng });
-  //     },
-  //     (error) => {
-  //       // console.error(error);
-  //     }
-  //   );
-  // }, [tour]);
+  useEffect(() => {
+    Geocode.fromAddress(
+      `${tour?.moreLocation}, ${tour?.commune.name}, ${tour?.district.name}, ${tour?.city.name}`
+    ).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+        setCoords({ lat, lng });
+      },
+      (error) => {
+        // console.error(error);
+      }
+    );
+  }, [tour]);
 
   return (
     <>
@@ -422,7 +410,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   {/* <div style={{ height: "30vh", width: "100%" }}>
                     <GoogleMapReact
                       bootstrapURLKeys={{
-                        key: "AIzaSyCRzSrswCY_UoHgkZnUW7JsPeq4VizUB2k",
+                        key: "AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI",
                       }}
                       defaultCenter={coords}
                       defaultZoom={11}

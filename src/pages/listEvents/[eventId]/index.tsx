@@ -78,7 +78,7 @@ const EventPage = memo(() => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              paddingTop: "24px",
+              padding: "24px",
             }}
           >
             <Grid className={classes.boxTicket}>

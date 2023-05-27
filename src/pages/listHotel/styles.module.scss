@@ -46,6 +46,7 @@
       }
     @media only screen and (max-width: 768px) {
         top: 50px;
+        margin-bottom: 0px;
     }
 }
 .boxControlSearch {
@@ -82,8 +83,15 @@
 }
 .searchControlWrapper {
     display: flex;
+    @media only screen and (max-width: 500px) {
+        flex-direction: column;
+      }
     .inputSearchDate {
         margin-left: 14px;
+        @media only screen and (max-width: 500px) {
+            margin-left: 0;
+            margin-top: 14px !important;
+          }
     }
 }
 .boxResult {
@@ -140,6 +148,7 @@
         @media only screen and (max-width: 768px) {
             max-width: 100%;
             padding: 14px 0;
+            display: none;
           }
     }
     @media only screen and (max-width: 768px) {
@@ -183,11 +192,13 @@
         display: block;
         margin-left: 0;
         margin-right: 0;
+        margin-top: 0;
+        padding-top: 0;
+        
       }
     .btnResetWrapper {
         @media only screen and (max-width: 768px) {
             max-width: 100%;
-            margin: 24px 0;
             padding-left: 15px;
             padding-right: 15px;
             button {

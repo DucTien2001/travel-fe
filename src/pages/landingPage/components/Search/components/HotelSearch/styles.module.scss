@@ -41,8 +41,14 @@
     align-items: flex-start;
     
     @media only screen and (max-width: 768px) {
-        max-width: 100%;
+        max-width: 100% !important;
+        width: 100% !important;
         margin-bottom: 14px;
+    }
+}
+.boxSearchDate {
+    @media only screen and (max-width: 768px) {
+        display: block;
     }
 }
 .boxItem {

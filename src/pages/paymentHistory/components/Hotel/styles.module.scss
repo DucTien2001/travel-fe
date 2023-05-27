@@ -84,7 +84,11 @@
         margin: 0;
     }
 }
-
+.boxTitleDetail {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-light-color);
+}
 .linkView{
     width: 100%;
     a:hover {text-decoration: none !important;}
@@ -94,25 +98,25 @@
     cursor: pointer;
 }
 .boxImg {
-    max-width: 300px;
+    max-width: 185px;
     background-color: var(--white-color);
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
     img {
         width: 100%;
-        height: 150px;
+        height: 100% !important;
+
         object-fit: cover;
         object-position: center center;
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
+        border-radius: 10px;
     }
 }
 .boxImgNew {
 
-    max-width: 300px;
+    max-width: 185px;
     background-color: var(--white-color);
-    border-bottom-left-radius: 10px;
-    border-top-left-radius: 10px;
+    border-radius: 10px;
+
     img {
         width: 100%;
         height: 100% !important;
@@ -271,21 +275,20 @@
     border-left: 1px solid var(--gray-20);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    .boxSave {
-        display: flex;
-        align-items: flex-start;
-        padding-bottom: 14px;
-        max-width: 100% !important;
-        color: var(--success-color); 
-        p {
-           
-            font-weight: 600;
-            margin: 0;
-            margin-left: 8px;
-        }
+
+}
+.boxSave {
+    display: flex;
+    align-items: flex-start;
+    padding-bottom: 14px;
+    max-width: 100% !important;
+    color: var(--success-color); 
+    p {
+       
+        font-weight: 600;
+        margin: 0;
     }
 }
-
 .textStatus {
     font-size: 16px !important;
     font-weight: 600;

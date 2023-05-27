@@ -93,7 +93,7 @@ const HotelSearch = memo(() => {
           />
         </Grid>
         <Grid container className={classes.boxDate}>
-          <Grid container xs={12}>
+          <Grid container xs={12} className={classes.boxSearchDate}>
             <Grid xs={3} item className={classes.boxItem}>
               <p className={classes.titleInput}>
                 {t("landing_page_section_search_stay_input_start_time")}

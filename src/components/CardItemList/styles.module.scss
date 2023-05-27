@@ -1,8 +1,27 @@
+.row {
+    max-width: 100% !important;
+    min-width: 0;
+    @media only screen and (max-width: 600px) {
+        width: 100% !important;
+    }
+}
+
 .linkView{
     width: 100%;
     a:hover {text-decoration: none !important;}
+    a {
+        @media only screen and (max-width: 600px) {
+            width: 100%;
+        }
+    }
 }
-
+.boxGridList {
+    
+    @media only screen and (max-width: 600px) {
+        display: block;
+        width: 100%;
+    }
+}
 .boxImg {
     max-width: 300px;
     img {
@@ -13,8 +32,19 @@
         border-top-left-radius: 10px;
         border-bottom-left-radius: 10px;
     }
-}
+    @media only screen and (max-width: 600px) {
+        max-width: 100%;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 0;
 
+    }
+}
+.boxContent {
+    @media only screen and (max-width: 600px) {
+        max-width: 100%;
+
+    } 
+}
 .boxLocation {
     display: flex;
     svg {
@@ -151,4 +181,9 @@
             margin-left: 8px;
         }
     }
+    @media only screen and (max-width: 600px) {
+        max-width: 100%;
+        border-left: none;
+        border-bottom-left-radius: 10px;
+    } 
 }

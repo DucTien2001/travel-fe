@@ -66,7 +66,6 @@ export interface IConfirmBookTour {
   amountAdult: number;
   amountChildren: number;
   startDate: Date;
-  language: string;
   totalPrice: number;
   priceAdult: number;
   priceChildren: number;
