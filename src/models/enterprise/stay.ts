@@ -58,4 +58,6 @@ export interface FindAll {
     languages?: Stay[];
     language?: string;
     isDeleted?: boolean;
+    rate?:number;
+    numberOfReviewer?: number;
   }

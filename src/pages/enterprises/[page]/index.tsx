@@ -27,6 +27,10 @@ import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import RoomBills from "../components/RoomBills";
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import StayStatistic from "../components/StayStatistic";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import ForumIcon from "@mui/icons-material/Forum";
+import TourRate from "../components/TourRate";
+import StayRate from "../components/StayRate";
 interface PropTypes {}
 
 const Enterprise = memo(({ ...props }: PropTypes) => {
@@ -122,6 +126,22 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
               <RoomBills />
+            </TabContent>
+          </Col>
+        );
+      case "tourRates":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <TourRate />
+            </TabContent>
+          </Col>
+        );
+      case "stayRates":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <StayRate />
             </TabContent>
           </Col>
         );
@@ -225,6 +245,25 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             <NavLink className={renderClass("roomBills")}>
               <MeetingRoomIcon />
               <span>{t("enterprise_management_navbar_room_bill")}</span>
+            </NavLink>
+          </NavItem>
+          <span>{t("enterprise_management_navbar_rate")}</span>
+          <NavItem
+            onClick={() => gotoMenu("tourRates")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourRates")}>
+              <RateReviewIcon />
+              <span>{t("enterprise_management_navbar_rate_tour")}</span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("stayRates")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("stayRates")}>
+              <ForumIcon />
+              <span>{t("enterprise_management_navbar_rate_stay")}</span>
             </NavLink>
           </NavItem>
           {user?.role === EUserType.ENTERPRISE && (

@@ -41,6 +41,9 @@ import InputTextfield from "components/common/inputs/InputTextfield";
 import PopupModalImages from "components/Popup/PopupModalImages";
 import { useTranslation } from "react-i18next";
 import PopupAddHotelComment from "../PopupAddHotelComment";
+import { HOTEL_SECTION } from "models/hotel";
+import { RoomBillService } from "services/normal/roomBill";
+import { RoomBill } from "models/roomBill";
 
 interface Props {}
 
@@ -62,7 +65,7 @@ const Comments = memo(({}: Props) => {
   const [isAddComment, setIsAddComment] = useState(false);
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [data, setData] = useState<DataPagination<Comment>>();
-  const [lastedBill, setLastedBill] = useState<TourBill>(null);
+  const [lastedBill, setLastedBill] = useState<RoomBill>(null);
   const [comment, setComment] = useState<Comment>(null);
   const [commentDelete, setCommentDelete] = useState<Comment>(null);
   const [reply, setReply] = useState(null);
@@ -160,8 +163,8 @@ const Comments = memo(({}: Props) => {
 
   const onYesDelete = () => {
     dispatch(setLoading(true));
-    if (replyDelete) {
-      CommentService.deleteComment(replyDelete?.id)
+    if (commentDelete) {
+      CommentService.deleteComment(commentDelete?.id)
         .then(() => {
           dispatch(setSuccessMess(t("common_update_success")));
           onTogglePopupConfirmDelete();
@@ -205,6 +208,8 @@ const Comments = memo(({}: Props) => {
   };
 
   const onPostReply = () => {
+    dispatch(setLoading(true));
+
     if (replyEdit) {
       CommentService.updateReplyComment(replyEdit?.id, {
         content: contentReply,
@@ -242,18 +247,22 @@ const Comments = memo(({}: Props) => {
   const onOpenPopupModalImages = () =>
     setOpenPopupModalImages(!openPopupModalImages);
 
-  // useEffect(() => {
-  //   fetchData();
-  //   if (user) {
-  //     TourBillService.getLastedTourBill(stayId)
-  //       .then((res) => {
-  //         setLastedBill(res?.data);
-  //       })
-  //       .catch((e) => {
-  //         dispatch(setErrorMess(e));
-  //       });
-  //   }
-  // }, []);
+  useEffect(() => {
+    fetchData();
+    if (user) {
+      RoomBillService.getLastedRoomBill(stayId)
+        .then((res) => {
+          setLastedBill(res?.data);
+        })
+        .catch((e) => {
+          dispatch(setErrorMess(e));
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [stayId]);
 
   useEffect(() => {
     if (replyEdit) {
@@ -262,7 +271,7 @@ const Comments = memo(({}: Props) => {
   }, [replyEdit]);
 
   return (
-    <Grid className={classes.root}>
+    <Grid className={classes.root} id={HOTEL_SECTION.section_reviews}>
       <Container className={classes.container}>
         {/* eslint-disable-next-line react/no-unescaped-entities */}
         <Grid className={classes.titleHeader}>
@@ -573,7 +582,7 @@ const Comments = memo(({}: Props) => {
         <PopupAddHotelComment
           isOpen={openPopupAddComment}
           toggle={onToggleAddComment}
-          // roomBill={lastedBill}
+          roomBill={lastedBill}
           fetchComment={fetchData}
           commentEdit={comment}
         />

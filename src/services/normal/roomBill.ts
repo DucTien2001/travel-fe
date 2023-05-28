@@ -13,6 +13,16 @@ export class RoomBillService {
         return Promise.reject(e?.response?.data);
       })
   }
+
+  static async getLastedRoomBill(id: number): Promise<any> {
+    return await api.get(API.NORMAL.ROOMBILL.GET_LASTED_ROOM_BILL.replace(":id", `${id}`))
+      .then((res) => {
+          return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+          return Promise.reject(e?.response?.data);
+      })
+  }
   
 
   static async create(data: Create): Promise<any> {

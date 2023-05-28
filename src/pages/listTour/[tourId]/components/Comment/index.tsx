@@ -161,8 +161,8 @@ const Comments = memo(({}: Props) => {
 
   const onYesDelete = () => {
     dispatch(setLoading(true));
-    if (replyDelete) {
-      CommentService.deleteComment(replyDelete?.id)
+    if (commentDelete) {
+      CommentService.deleteComment(commentDelete?.id)
         .then(() => {
           dispatch(setSuccessMess(t("common_update_success")));
           onTogglePopupConfirmDelete();
@@ -206,6 +206,8 @@ const Comments = memo(({}: Props) => {
   };
 
   const onPostReply = () => {
+    dispatch(setLoading(true));
+
     if (replyEdit) {
       CommentService.updateReplyComment(replyEdit?.id, {
         content: contentReply,

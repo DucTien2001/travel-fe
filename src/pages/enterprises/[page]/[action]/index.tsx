@@ -34,7 +34,12 @@ import RoomBills from "pages/enterprises/components/RoomBills";
 import StayStatistic from "pages/enterprises/components/StayStatistic";
 import DetailStayStatistic from "pages/enterprises/components/StayStatistic/components/DetailStayStatistic";
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
-
+import TourRate from "pages/enterprises/components/TourRate";
+import DetailRateTour from "pages/enterprises/components/TourRate/components/DetailRateTour";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import ForumIcon from "@mui/icons-material/Forum";
+import StayRate from "pages/enterprises/components/StayRate";
+import DetailRateStay from "pages/enterprises/components/StayRate/components/DetailRateStay";
 interface PropTypes {}
 
 const Enterprise = memo(({ ...props }: PropTypes) => {
@@ -207,6 +212,40 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             </TabContent>
           </Col>
         );
+      case "tourRates":
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <DetailRateTour tourId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <TourRate />
+            </TabContent>
+          </Col>
+        );
+      case "stayRates":
+        if (action) {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <DetailRateStay stayId={Number(action)} />
+              </TabContent>
+            </Col>
+          );
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <StayRate />
+            </TabContent>
+          </Col>
+        );
       case "tourStatistic":
         if (action) {
           return (
@@ -327,6 +366,25 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             <NavLink className={renderClass("roomBills")}>
               <MeetingRoomIcon />
               <span>{t("enterprise_management_navbar_room_bill")}</span>
+            </NavLink>
+          </NavItem>
+          <span>{t("enterprise_management_navbar_rate")}</span>
+          <NavItem
+            onClick={() => gotoMenu("tourRates")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourRates")}>
+              <RateReviewIcon />
+              <span>{t("enterprise_management_navbar_rate_tour")}</span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("stayRates")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("stayRates")}>
+              <ForumIcon />
+              <span>{t("enterprise_management_navbar_rate_stay")}</span>
             </NavLink>
           </NavItem>
           <span>{t("enterprise_management_navbar_statistic")}</span>

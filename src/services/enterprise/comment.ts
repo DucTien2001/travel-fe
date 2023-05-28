@@ -1,17 +1,44 @@
 import { API } from "configs/constants";
 import {
-  ICreateHotelComment,
   IGetAllHotelComments,
   IGetAllTourComments,
   IReplyHotelComment,
-  // IReplyTourComment,
   IRequestDeleteHotelComment,
   IRequestDeleteTourComment,
-  IUpdateHotelComment,
+
 } from "models/comment";
+import { FindAll } from "models/enterprise/comment";
+
 import api from "services/configApi";
 
 export class CommentService {
+  static async findAll(data: FindAll): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.COMMENT.TOUR_COMMENT.DEFAULT, {params: data})
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async deleteReply(id: number): Promise<any> {
+    return await api
+      .delete(API.ENTERPRISE.COMMENT.TOUR_COMMENT.DELETE_REPLY.replace(":id", `${id}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+
+
+
+
+  ///////////////////////////////////////////////////////
   static async getAllTourComments(data: IGetAllTourComments): Promise<any> {
     return await api
       .post(API.ENTERPRISE.COMMENT.TOUR_COMMENT.GET_All_COMMENTS, data)

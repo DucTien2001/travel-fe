@@ -129,6 +129,8 @@ const PopupAddComment = memo((props: Props) => {
   };
 
   const _onSubmit = (data: CommentForm) => {
+    dispatch(setLoading(true));
+
     const dataForm = new FormData();
     dataForm.append("content", data?.content);
     dataForm.append("rate", `${data?.numberOfStars}`);

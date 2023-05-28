@@ -27,6 +27,7 @@ export interface ETour {
   language: string;
   isCanDelete?: boolean;
   isDeleted?: boolean;
+  numberOfReviewer?: number;
 }
 
 export interface ScheduleItem {

@@ -78,6 +78,8 @@ export const API = {
       DEFAULT: "/v1.0/room-bill",
       CREATE: "/v1.0/room-bill/",
       UPDATE: "/v1.0/room-bill/:id",
+      GET_LASTED_ROOM_BILL: "/v1.0/room-bill/latest/:id",
+
       GET_ALL_ROOMBILL: "/v1.0/room-bill/get-all-user-room-bills/:id",
       VERIFY_BOOKROOM: "/v1.0/room-bill/verify-book-room",
       CANCEL_BOOK_ROOM: "/v1.0/room-bill/cancel-room-bill/:id",
@@ -111,6 +113,9 @@ export const API = {
   ENTERPRISE: {
     COMMENT: {
       TOUR_COMMENT: {
+        DEFAULT: "/v1.0/enterprise/comment",
+        DELETE_REPLY: "/v1.0/enterprise/comment/:id",
+
         GET_All_COMMENTS: "/v1.0/tour-comment/get-all-tour-comments",
         REPLY: "/v1.0/tour-comment/reply/:id",
         REQUEST_DELETE: "/v1.0/tour-comment/request-delete/:id",

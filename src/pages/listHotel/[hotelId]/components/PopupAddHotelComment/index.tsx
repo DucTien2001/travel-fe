@@ -130,11 +130,13 @@ const PopupAddComment = memo((props: Props) => {
   };
 
   const _onSubmit = (data: CommentForm) => {
+    dispatch(setLoading(true));
+
     const dataForm = new FormData();
     dataForm.append("content", data?.content);
     dataForm.append("rate", `${data?.numberOfStars}`);
     dataForm.append("serviceId", `${roomBill?.stayData?.id}`);
-    dataForm.append("serviceType", `${EServiceType?.TOUR}`);
+    dataForm.append("serviceType", `${EServiceType?.HOTEL}`);
     dataForm.append("billId", `${roomBill?.id}`);
     imagesUpload.forEach((item, index) => {
       dataForm.append(`imageFiles${index}`, item);
@@ -174,7 +176,6 @@ const PopupAddComment = memo((props: Props) => {
           dispatch(setLoading(false));
         });
     } else {
-      onSubmit(data);
       CommentService?.createComment(dataForm)
         .then(() => {
           dispatch(setSuccessMess(t("common_send_success")));
@@ -189,6 +190,8 @@ const PopupAddComment = memo((props: Props) => {
         });
     }
   };
+
+  console.log(commentEdit);
 
   useEffect(() => {
     if (commentEdit) {

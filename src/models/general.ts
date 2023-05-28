@@ -105,6 +105,15 @@ export const billStatusType = [
   { id: 6, name: "Not used", value: EBillStatus.NOT_USE, translation: "bill_status_not_use"},
 ]
 
+export const rateOption = [
+  { id: 0, name: "All", value: -1, translation: "common_select_all" },
+  { id: 1, name: "1 STAR", value: EBillStatus.RESCHEDULED, translation: "rate_option_1" },
+  { id: 2, name: "2 STAR", value: EBillStatus.CANCELED, translation: "rate_option_2"},
+  { id: 2, name: "3 STAR", value: EBillStatus.CANCELED, translation: "rate_option_3"},
+  { id: 3, name: "4 STAR", value: EBillStatus.NOT_CONTACTED_YET, translation: "rate_option_4"},
+  { id: 4, name: "5 STAR", value: EBillStatus.CONTACTED, translation: "rate_option_5"},
+]
+
 export enum EDiscountType {
   MONEY = 1,
   PERCENT = 2
