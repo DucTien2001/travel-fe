@@ -63,11 +63,19 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
     return yup.object().shape({
       departure: yup
         .date()
-        .max(yup.ref("return"), "Departure date can't be after return date")
+        .max(
+          yup.ref("return"),
+          t(
+            "stay_detail_section_stay_check_room_empty_start_time_validate_error"
+          )
+        )
         .required("Start datetime is required"),
       return: yup
         .date()
-        .min(yup.ref("departure"), "Return date can't be before departure date")
+        .min(
+          yup.ref("departure"),
+          t("stay_detail_section_stay_check_room_empty_end_time_validate_error")
+        )
         .required("End datetime is required"),
       amountList: yup.array().of(
         yup.object().shape({
@@ -110,6 +118,7 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
       amountList: [{ amount: 0 }],
     },
   });
+
   const yesterday = moment().subtract(1, "day");
   const disablePastDt = (current) => {
     return current.isAfter(yesterday);
@@ -192,7 +201,7 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
     const _watchAmount = watch(`amountList.${i}.amount`);
     let result = data?.data[i]?.prices.reduce(function (total, element) {
       if (data?.data[i].discount) {
-        return (total + element.price) * ((100 - data?.data[i].discount) / 100);
+        return total + element.price * ((100 - data?.data[i].discount) / 100);
       } else {
         return total + element.price;
       }
@@ -312,6 +321,7 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   placeholder="Return"
                   name="return"
                   dateFormat="DD/MM/YYYY"
+                  isValidDate={disablePastDt}
                   timeFormat={false}
                   closeOnSelect
                   value={dateEnd ? dateEnd : ""}

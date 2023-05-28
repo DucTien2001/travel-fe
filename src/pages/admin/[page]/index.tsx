@@ -13,6 +13,8 @@ import useAuth from "hooks/useAuth";
 import { EUserType } from "models/user";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import StatisticStayBills from "../components/StatisticStayBills";
+import TourBills from "../components/TourBills";
+import StayBills from "../components/StayBills";
 
 const Users = dynamic(() => import("pages/admin/components/Users"));
 const Events = dynamic(() => import("pages/admin/components/Events"));
@@ -69,6 +71,22 @@ const Admin = memo(({ ...props }: PropTypes) => {
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
               <Commissions />
+            </TabContent>
+          </Col>
+        );
+      case "tourBills":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <TourBills />
+            </TabContent>
+          </Col>
+        );
+      case "roomBills":
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <StayBills />
             </TabContent>
           </Col>
         );
@@ -134,6 +152,25 @@ const Admin = memo(({ ...props }: PropTypes) => {
             <NavLink className={renderClass("commissions")}>
               <MonetizationOnIcon />
               <span>{t("admin_management_navbar_commission")}</span>
+            </NavLink>
+          </NavItem>
+          <span>{t("enterprise_management_navbar_order")}</span>
+          <NavItem
+            onClick={() => gotoMenu("tourBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourBills")}>
+              <TourIcon />
+              <span>{t("enterprise_management_navbar_tour_bill")}</span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("roomBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("roomBills")}>
+              <MeetingRoomIcon />
+              <span>{t("enterprise_management_navbar_room_bill")}</span>
             </NavLink>
           </NavItem>
           {user.role === EUserType.SUPER_ADMIN && (

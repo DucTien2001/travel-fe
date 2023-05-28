@@ -5,7 +5,10 @@ export enum ESortRoomBillOption {
     LOWEST_REVENUE = 0,
     HIGHEST_REVENUE,
   }
-
+  export enum ERefundStatusOption {
+    NOT_REFUND_YET = 0,
+    REFUNDED= 1,
+  }
   export const sortRevenueOption = [
     { id: 0, name: "LOWEST REVENUE", value: -1, translation: "common_select_all" },
     { id: 1, name: "LOWEST REVENUE", value: ESortRoomBillOption.LOWEST_REVENUE, translation: "admin_management_section_tour_bill_sort_option_title_lowest_revenue" },
@@ -86,3 +89,18 @@ export enum ESortRoomBillOption {
     totalNumberOfRoom: number;
     bookedDate: Date;
   }
+
+  export interface FindAllOrderNeedRefund {
+    take: number;
+    page: number;
+    month: number;
+    year: number;
+    refundStatus: number;         // refundStatus === -1  --> All
+  }                               // refundStatus === 0   --> Not refunded yet
+                                  // refundStatus === 1   --> Refunded
+
+  export const refundStatusOption = [
+    { id: 0, name: "ALL", value: -1, translation: "common_select_all" },
+    { id: 1, name: "NOT REFUND YET", value: ERefundStatusOption.NOT_REFUND_YET, translation: "admin_management_section_tour_bill_sort_option_title_refund_yet" },
+    { id: 2, name: "REFUND", value: ERefundStatusOption.REFUNDED, translation: "admin_management_section_tour_bill_sort_option_title_refund"},
+  ]                         

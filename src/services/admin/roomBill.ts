@@ -1,8 +1,31 @@
 import { API } from "configs/constants";
-import { StatisticAllUsers, StatisticOneRoom, StatisticOneStay, StatisticOneUser } from "models/admin/roomBill";
+import { FindAllOrderNeedRefund, StatisticAllUsers, StatisticOneRoom, StatisticOneStay, StatisticOneUser } from "models/admin/roomBill";
 import api from "services/configApi";
 
 export class RoomBillService {
+
+  static async orderRefundFindAll(data: FindAllOrderNeedRefund): Promise<any> {
+    return await api
+      .get(API.ADMIN.STATISTIC.STAY.ORDER_REFUND, {params: data})
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async updateRefund(id: number): Promise<any> {
+    return await api
+      .put(API.ADMIN.STATISTIC.STAY.ORDER_REFUND_ONE.replace(":id", `${id}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  
   static async statisticAllUsers(data: StatisticAllUsers): Promise<any> {
     return await api
       .get(API.ADMIN.STATISTIC.STAY.STATISTIC, {params: data})

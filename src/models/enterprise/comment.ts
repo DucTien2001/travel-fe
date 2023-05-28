@@ -1,4 +1,5 @@
-import { TourPrice } from "models/tour";
+import { Stay } from "models/stay";
+import { Tour, TourPrice } from "models/tour";
 import { TourBill } from "models/tourBill";
 import { User } from "models/user";
 
@@ -30,4 +31,6 @@ export interface FindAll {
     tourBillData?: TourBill;
     tourOnSaleData?: TourPrice;
     createdAt?: Date;
+    tourInfo?: Tour;
+    stayInfo?: Stay;
   }

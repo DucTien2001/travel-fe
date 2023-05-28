@@ -190,6 +190,25 @@ const Admin = memo(({ ...props }: PropTypes) => {
               <span>{t("admin_management_navbar_commission")}</span>
             </NavLink>
           </NavItem>
+          <span>{t("enterprise_management_navbar_order")}</span>
+          <NavItem
+            onClick={() => gotoMenu("tourBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourBills")}>
+              <TourIcon />
+              <span>{t("enterprise_management_navbar_tour_bill")}</span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("roomBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("roomBills")}>
+              <MeetingRoomIcon />
+              <span>{t("enterprise_management_navbar_room_bill")}</span>
+            </NavLink>
+          </NavItem>
           {user.role === EUserType.SUPER_ADMIN && (
             <>
               <span>{t("admin_management_navbar_statistic")}</span>

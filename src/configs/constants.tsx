@@ -255,6 +255,8 @@ export const API = {
         GET_TOUR_ON_SALE_BILL:
           "/v1.0/admin/tour-bill/statistic/tour-on-sale/get-bills/:id",
         GET_TOUR_ON_SALE: "/v1.0/admin/tour-bill/statistic/tour-on-sale/:id",
+        ORDER_REFUND: "/v1.0/admin/tour-bill/order-refund",
+        ORDER_REFUND_ONE: "/v1.0/admin/tour-bill/order-refund/:id",
       },
       STAY: {
         DEFAULT: "/v1.0/admin/room-bill",
@@ -263,6 +265,8 @@ export const API = {
         STATISTIC_ROOM: "/v1.0/admin/room-bill/statistic/room/:id",
         STATISTIC_STAY: "/v1.0/admin/room-bill/statistic/stay/:id",
         STATISTIC_USER: "/v1.0/admin/room-bill/statistic/user/:id",
+        ORDER_REFUND: "/v1.0/admin/room-bill/order-refund",
+        ORDER_REFUND_ONE: "/v1.0/admin/room-bill/order-refund/:id",
       },
     },
     COMMENT: {

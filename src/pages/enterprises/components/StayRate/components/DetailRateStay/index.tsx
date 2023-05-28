@@ -52,6 +52,7 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import PopupReplyComment from "components/Popup/PopupReplyComment";
 import useAuth from "hooks/useAuth";
 import Button, { BtnType } from "components/common/buttons/Button";
+import { EUserType } from "models/user";
 interface Props {
   stayId?: number;
 }
@@ -83,6 +84,11 @@ const Stay = memo(({ stayId }: Props) => {
     {
       name: "rate",
       label: t("enterprise_management_section_tour_header_rate"),
+      sortable: false,
+    },
+    {
+      name: "discuss",
+      label: t("enterprise_management_section_tour_header_discuss"),
       sortable: false,
     },
     {
@@ -342,48 +348,110 @@ const Stay = memo(({ stayId }: Props) => {
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {item?.replies?.length
-                          ? item?.replies?.map((reply, index) => (
-                              <Grid
-                                key={index}
-                                className={classes.containerReply}
-                              >
-                                <Grid className={classes.boxReply}>
-                                  {reply?.reviewer?.username}
-                                  <br />
-                                  <span>{reply?.content}</span>
-                                </Grid>
-                                <Grid>
-                                  {user && user?.id === item?.reviewer?.id && (
-                                    <IconButton
-                                      className={clsx(classes.actionButton)}
-                                      color="primary"
-                                      onClick={(event) => {
-                                        onUpdateReply(event, reply);
-                                      }}
-                                    >
-                                      <EditOutlined
-                                        sx={{ marginRight: "0.25rem" }}
-                                        color="info"
-                                        fontSize="small"
-                                      />
-                                    </IconButton>
-                                  )}
-                                  <IconButton
-                                    className={clsx(classes.actionButton)}
-                                    color="primary"
-                                    onClick={(event) => {
-                                      onShowConfirm(event, reply);
-                                    }}
+                          ? item?.replies?.map(
+                              (reply, index) =>
+                                (reply?.reviewer?.enterpriseId !==
+                                  item?.tourInfo?.owner &&
+                                  reply?.reviewer?.role === EUserType.STAFF) ||
+                                (reply?.reviewer?.id !==
+                                  item?.tourInfo?.owner &&
+                                  reply?.reviewer?.role ===
+                                    EUserType.ENTERPRISE) ||
+                                reply?.reviewer?.role === EUserType.USER ||
+                                reply?.reviewer?.role === EUserType.ADMIN ||
+                                (reply?.reviewer?.role ===
+                                  EUserType.SUPER_ADMIN && (
+                                  <Grid
+                                    key={index}
+                                    className={classes.containerReply}
                                   >
-                                    <DeleteOutlineOutlined
-                                      sx={{ marginRight: "0.25rem" }}
-                                      color="error"
-                                      fontSize="small"
-                                    />
-                                  </IconButton>
-                                </Grid>
-                              </Grid>
-                            ))
+                                    <Grid className={classes.boxReply}>
+                                      {reply?.reviewer?.username}
+                                      <br />
+                                      <span>{reply?.content}</span>
+                                    </Grid>
+                                    <Grid>
+                                      <IconButton
+                                        className={clsx(classes.actionButton)}
+                                        color="primary"
+                                        onClick={(event) => {
+                                          onShowConfirm(event, reply);
+                                        }}
+                                      >
+                                        <DeleteOutlineOutlined
+                                          sx={{ marginRight: "0.25rem" }}
+                                          color="error"
+                                          fontSize="small"
+                                        />
+                                      </IconButton>
+                                    </Grid>
+                                  </Grid>
+                                ))
+                            )
+                          : "-"}
+                      </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.replies?.length
+                          ? item?.replies?.map(
+                              (reply, index) =>
+                                (reply?.reviewer?.enterpriseId ===
+                                  item?.stayInfo?.owner &&
+                                  reply?.reviewer?.role === EUserType.STAFF) ||
+                                (reply?.reviewer?.id ===
+                                  item?.stayInfo?.owner &&
+                                  reply?.reviewer?.role ===
+                                    EUserType.ENTERPRISE && (
+                                    <Grid
+                                      key={index}
+                                      className={classes.containerReply}
+                                    >
+                                      <Grid className={classes.boxReply}>
+                                        {reply?.reviewer?.username}
+                                        <br />
+                                        <span>{reply?.content}</span>
+                                      </Grid>
+                                      <Grid>
+                                        <Grid sx={{ display: "flex" }}>
+                                          {user &&
+                                            user?.id === item?.reviewer?.id && (
+                                              <IconButton
+                                                className={clsx(
+                                                  classes.actionButton
+                                                )}
+                                                color="primary"
+                                                onClick={(event) => {
+                                                  onUpdateReply(event, reply);
+                                                }}
+                                              >
+                                                <EditOutlined
+                                                  sx={{
+                                                    marginRight: "0.25rem",
+                                                  }}
+                                                  color="info"
+                                                  fontSize="small"
+                                                />
+                                              </IconButton>
+                                            )}
+                                          <IconButton
+                                            className={clsx(
+                                              classes.actionButton
+                                            )}
+                                            color="primary"
+                                            onClick={(event) => {
+                                              onShowConfirm(event, reply);
+                                            }}
+                                          >
+                                            <DeleteOutlineOutlined
+                                              sx={{ marginRight: "0.25rem" }}
+                                              color="error"
+                                              fontSize="small"
+                                            />
+                                          </IconButton>
+                                        </Grid>
+                                      </Grid>
+                                    </Grid>
+                                  ))
+                            )
                           : "-"}
                       </TableCell>
                       {item?.images?.length ? (

@@ -514,8 +514,8 @@ const Comments = memo(({}: Props) => {
           open={Boolean(actionAnchor)}
           onClose={onCloseActionMenu}
         >
-          {user && user?.id === itemAction?.userId && (
-            <>
+          <>
+            {user && user?.id === itemAction?.userId && (
               <MenuItem
                 sx={{ fontSize: "0.875rem" }}
                 className={classes.menuItem}
@@ -529,39 +529,41 @@ const Comments = memo(({}: Props) => {
                   <span>{t("common_edit")}</span>
                 </Box>
               </MenuItem>
-              {user ? (
-                <MenuItem
-                  sx={{ fontSize: "0.875rem" }}
-                  className={classes.menuItem}
-                  onClick={onOpenReply}
-                >
-                  <Box display="flex" alignItems={"center"}>
-                    <AddCommentIcon
-                      sx={{ marginRight: "0.25rem" }}
-                      fontSize="small"
-                      color="info"
-                    />
-                    <span>{t("common_reply")}</span>
-                  </Box>
-                </MenuItem>
-              ) : (
-                <MenuItem
-                  sx={{ fontSize: "0.875rem" }}
-                  className={classes.menuItem}
-                  onClick={() => {
-                    router?.push("/auth/login");
-                  }}
-                >
-                  <Box display="flex" alignItems={"center"}>
-                    <AddCommentIcon
-                      sx={{ marginRight: "0.25rem" }}
-                      fontSize="small"
-                      color="info"
-                    />
-                    <span>{t("common_reply")}</span>
-                  </Box>
-                </MenuItem>
-              )}
+            )}
+            {user ? (
+              <MenuItem
+                sx={{ fontSize: "0.875rem" }}
+                className={classes.menuItem}
+                onClick={onOpenReply}
+              >
+                <Box display="flex" alignItems={"center"}>
+                  <AddCommentIcon
+                    sx={{ marginRight: "0.25rem" }}
+                    fontSize="small"
+                    color="info"
+                  />
+                  <span>{t("common_reply")}</span>
+                </Box>
+              </MenuItem>
+            ) : (
+              <MenuItem
+                sx={{ fontSize: "0.875rem" }}
+                className={classes.menuItem}
+                onClick={() => {
+                  router?.push("/auth/login");
+                }}
+              >
+                <Box display="flex" alignItems={"center"}>
+                  <AddCommentIcon
+                    sx={{ marginRight: "0.25rem" }}
+                    fontSize="small"
+                    color="info"
+                  />
+                  <span>{t("common_reply")}</span>
+                </Box>
+              </MenuItem>
+            )}
+            {user && user?.id === itemAction?.userId && (
               <MenuItem
                 sx={{ fontSize: "0.875rem" }}
                 className={classes.menuItem}
@@ -576,8 +578,8 @@ const Comments = memo(({}: Props) => {
                   <span>{t("common_delete")}</span>
                 </Box>
               </MenuItem>
-            </>
-          )}
+            )}
+          </>
         </Menu>
         <PopupAddHotelComment
           isOpen={openPopupAddComment}

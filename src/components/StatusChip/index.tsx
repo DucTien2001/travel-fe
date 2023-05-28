@@ -2,19 +2,32 @@ import { Chip, ChipProps } from "@mui/material";
 // import { EStatus } from 'models/general';
 import { memo } from "react";
 import classes from "./styles.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface StatusChipProps extends ChipProps {
-  status: boolean;
+  status?: boolean;
+  statusRefund?: boolean;
 }
 
 const StatusChip = memo((props: StatusChipProps) => {
-  const { status, ...rest } = props;
+  const { status, statusRefund, ...rest } = props;
+  const { t } = useTranslation("common");
+
   const getLabel = () => {
     switch (status) {
       case true:
-        return "Active";
+        return t("common_active");
       case false:
-        return "Inactive";
+        return t("common_in_active");
+    }
+  };
+
+  const getLabelRefund = () => {
+    switch (statusRefund) {
+      case true:
+        return t("common_refund");
+      case false:
+        return t("common_not_refund");
     }
   };
 
@@ -34,10 +47,26 @@ const StatusChip = memo((props: StatusChipProps) => {
     }
   };
 
+  const getColorRefund = ():
+    | "default"
+    | "primary"
+    | "secondary"
+    | "error"
+    | "info"
+    | "success"
+    | "warning" => {
+    switch (statusRefund) {
+      case true:
+        return "success";
+      case false:
+        return "error";
+    }
+  };
+
   return (
     <Chip
-      label={getLabel()}
-      color={getColor()}
+      label={statusRefund ? getLabelRefund() : getLabel()}
+      color={statusRefund ? getColorRefund() : getColor()}
       variant="outlined"
       {...rest}
       className={classes.root}

@@ -13,6 +13,7 @@ export interface User {
     introduction: string;
     isDelete: boolean;
     isVerified: boolean;
+    enterpriseId?: number;
 }
 
 export interface LoginForm {
