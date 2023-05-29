@@ -354,17 +354,17 @@ const Tour = memo(({ tourId }: Props) => {
                         {item?.replies?.length
                           ? item?.replies?.map(
                               (reply, index) =>
-                                (reply?.reviewer?.enterpriseId !==
+                                ((reply?.reviewer?.enterpriseId !==
                                   item?.tourInfo?.owner &&
                                   reply?.reviewer?.role === EUserType.STAFF) ||
-                                (reply?.reviewer?.id !==
-                                  item?.tourInfo?.owner &&
+                                  (reply?.reviewer?.id !==
+                                    item?.tourInfo?.owner &&
+                                    reply?.reviewer?.role ===
+                                      EUserType.ENTERPRISE) ||
+                                  reply?.reviewer?.role === EUserType.USER ||
+                                  reply?.reviewer?.role === EUserType.ADMIN ||
                                   reply?.reviewer?.role ===
-                                    EUserType.ENTERPRISE) ||
-                                reply?.reviewer?.role === EUserType.USER ||
-                                reply?.reviewer?.role === EUserType.ADMIN ||
-                                (reply?.reviewer?.role ===
-                                  EUserType.SUPER_ADMIN && (
+                                    EUserType.SUPER_ADMIN) && (
                                   <Grid
                                     key={index}
                                     className={classes.containerReply}
@@ -390,7 +390,7 @@ const Tour = memo(({ tourId }: Props) => {
                                       </IconButton>
                                     </Grid>
                                   </Grid>
-                                ))
+                                )
                             )
                           : "-"}
                       </TableCell>
@@ -398,63 +398,61 @@ const Tour = memo(({ tourId }: Props) => {
                         {item?.replies?.length
                           ? item?.replies?.map(
                               (reply, index) =>
-                                (reply?.reviewer?.enterpriseId ===
+                                ((reply?.reviewer?.enterpriseId ===
                                   item?.tourInfo?.owner &&
                                   reply?.reviewer?.role === EUserType.STAFF) ||
-                                (reply?.reviewer?.id ===
-                                  item?.tourInfo?.owner &&
-                                  reply?.reviewer?.role ===
-                                    EUserType.ENTERPRISE && (
-                                    <Grid
-                                      key={index}
-                                      className={classes.containerReply}
-                                    >
-                                      <Grid className={classes.boxReply}>
-                                        {reply?.reviewer?.username}
-                                        <br />
-                                        <span>{reply?.content}</span>
-                                      </Grid>
-                                      <Grid>
-                                        <Grid sx={{ display: "flex" }}>
-                                          {user &&
-                                            user?.id === item?.reviewer?.id && (
-                                              <IconButton
-                                                className={clsx(
-                                                  classes.actionButton
-                                                )}
-                                                color="primary"
-                                                onClick={(event) => {
-                                                  onUpdateReply(event, reply);
+                                  (reply?.reviewer?.id ===
+                                    item?.tourInfo?.owner &&
+                                    reply?.reviewer?.role ===
+                                      EUserType.ENTERPRISE)) && (
+                                  <Grid
+                                    key={index}
+                                    className={classes.containerReply}
+                                  >
+                                    <Grid className={classes.boxReply}>
+                                      {reply?.reviewer?.username}
+                                      <br />
+                                      <span>{reply?.content}</span>
+                                    </Grid>
+                                    <Grid>
+                                      <Grid sx={{ display: "flex" }}>
+                                        {user &&
+                                          user?.id === item?.reviewer?.id && (
+                                            <IconButton
+                                              className={clsx(
+                                                classes.actionButton
+                                              )}
+                                              color="primary"
+                                              onClick={(event) => {
+                                                onUpdateReply(event, reply);
+                                              }}
+                                            >
+                                              <EditOutlined
+                                                sx={{
+                                                  marginRight: "0.25rem",
                                                 }}
-                                              >
-                                                <EditOutlined
-                                                  sx={{
-                                                    marginRight: "0.25rem",
-                                                  }}
-                                                  color="info"
-                                                  fontSize="small"
-                                                />
-                                              </IconButton>
-                                            )}
-                                          <IconButton
-                                            className={clsx(
-                                              classes.actionButton
-                                            )}
-                                            color="primary"
-                                            onClick={(event) => {
-                                              onShowConfirm(event, reply);
-                                            }}
-                                          >
-                                            <DeleteOutlineOutlined
-                                              sx={{ marginRight: "0.25rem" }}
-                                              color="error"
-                                              fontSize="small"
-                                            />
-                                          </IconButton>
-                                        </Grid>
+                                                color="info"
+                                                fontSize="small"
+                                              />
+                                            </IconButton>
+                                          )}
+                                        <IconButton
+                                          className={clsx(classes.actionButton)}
+                                          color="primary"
+                                          onClick={(event) => {
+                                            onShowConfirm(event, reply);
+                                          }}
+                                        >
+                                          <DeleteOutlineOutlined
+                                            sx={{ marginRight: "0.25rem" }}
+                                            color="error"
+                                            fontSize="small"
+                                          />
+                                        </IconButton>
                                       </Grid>
                                     </Grid>
-                                  ))
+                                  </Grid>
+                                )
                             )
                           : "-"}
                       </TableCell>

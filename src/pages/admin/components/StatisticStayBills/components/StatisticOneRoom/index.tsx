@@ -43,9 +43,7 @@ const StayStatistic = memo(({ roomId }: Props) => {
 
     {
       name: "booked date",
-      label: t(
-        "enterprise_management_section_tour_statistic_header_table_number_booking"
-      ),
+      label: t("admin_management_section_tour_bill_header_table_booking_date"),
       sortable: false,
     },
     {

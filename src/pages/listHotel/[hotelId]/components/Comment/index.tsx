@@ -62,7 +62,6 @@ const Comments = memo(({}: Props) => {
   const [itemAction, setItemAction] = useState<Comment>();
   const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
   const [openPopupConfirmDelete, setOpenPopupConfirmDelete] = useState(false);
-  const [isAddComment, setIsAddComment] = useState(false);
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [data, setData] = useState<DataPagination<Comment>>();
   const [lastedBill, setLastedBill] = useState<RoomBill>(null);
@@ -73,6 +72,7 @@ const Comments = memo(({}: Props) => {
   const [replyDelete, setReplyDelete] = useState(null);
   const [replyEdit, setReplyEdit] = useState(null);
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
+  const [visible, setVisible] = useState(1);
 
   const getRateComment = (rate: number) => {
     switch (rate) {
@@ -247,6 +247,10 @@ const Comments = memo(({}: Props) => {
   const onOpenPopupModalImages = () =>
     setOpenPopupModalImages(!openPopupModalImages);
 
+  const showMoreReply = () => {
+    setVisible((prev) => prev + 1);
+  };
+
   useEffect(() => {
     fetchData();
     if (user) {
@@ -409,6 +413,7 @@ const Comments = memo(({}: Props) => {
                           </Grid>
                         ) : (
                           <Grid>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               alt=""
                               src="https://res.cloudinary.com/dpvvffyul/image/upload/v1675930803/my-uploads/user_qcfigg.png"
@@ -479,6 +484,13 @@ const Comments = memo(({}: Props) => {
                     )}
                   </>
                 ))}
+                {item?.replies?.length > 1 && (
+                  <Grid className={classes.btnReadMore}>
+                    <Button btnType={BtnType?.Primary} onClick={showMoreReply}>
+                      {t("book_page_booking_read_all")}
+                    </Button>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           ))
