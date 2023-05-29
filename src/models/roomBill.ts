@@ -25,8 +25,33 @@ export interface Create {
   lastName: string;
 }
 
+export interface ReSchedule {
+  stayId: number;
+  rooms: {
+    roomId: number;
+    amount: number;
+    price: number;
+    discount: number;   //percent
+    bookedDate: Date;
+  }[];
+  startDate: Date;
+  endDate: Date;
+  price: number;
+  discount: number;     //money
+  totalBill: number;
+  moneyRefund: number;
+  extraPay: number;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+}
+
 export interface Update {
   paymentStatus: number;
+}
+export interface Cancel {
+  moneyRefund: number;
 }
 
 export interface RoomBillConfirm {
@@ -60,6 +85,7 @@ export interface RoomBill {
   firstName: string;
   lastName: string;
   specialRequest: string;
+  stayId: number;
   stayData: Stay;
   rooms: Room[];
   startDate: Date;

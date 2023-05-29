@@ -20,6 +20,7 @@ import { Stay } from "models/stay";
 import { StayType } from "models/enterprise/stay";
 import { useTranslation } from "react-i18next";
 import { fCurrency2VND } from "utils/formatNumber";
+import { useRouter } from "next/router";
 interface Props {
   stay: Stay;
 }
@@ -28,6 +29,7 @@ interface Props {
 const SectionTour = memo(({ stay }: Props) => {
   const { user } = useAuth();
   const { t, i18n } = useTranslation("common");
+  const router = useRouter();
 
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
 
@@ -55,7 +57,7 @@ const SectionTour = memo(({ stay }: Props) => {
   return (
     <>
       <div
-        className={clsx("section", classes.root)}
+        className={clsx({["section"]: router.query?.hotelId}, classes.root)}
         id={HOTEL_SECTION.section_overview}
       >
         <Container className={classes.container}>

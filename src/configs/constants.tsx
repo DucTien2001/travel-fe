@@ -79,10 +79,11 @@ export const API = {
       CREATE: "/v1.0/room-bill/",
       UPDATE: "/v1.0/room-bill/:id",
       GET_LASTED_ROOM_BILL: "/v1.0/room-bill/latest/:id",
+      RESCHEDULE: "/v1.0/room-bill/re-schedule/:id",
+      CANCEL_BOOK_ROOM: "/v1.0/room-bill/cancel/:id",
 
       GET_ALL_ROOMBILL: "/v1.0/room-bill/get-all-user-room-bills/:id",
       VERIFY_BOOKROOM: "/v1.0/room-bill/verify-book-room",
-      CANCEL_BOOK_ROOM: "/v1.0/room-bill/cancel-room-bill/:id",
     },
     TOUR_BILL: {
       DEFAULT: "/v1.0/tour-bill/",

@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { Create, FindAll, IVerifyBookRoom, Update } from "models/roomBill";
+import { Cancel, Create, FindAll, IVerifyBookRoom, ReSchedule, Update } from "models/roomBill";
 import api from "services/configApi";
 
 export class RoomBillService {
@@ -13,6 +13,16 @@ export class RoomBillService {
         return Promise.reject(e?.response?.data);
       })
   }
+  
+  static async findOne(id: number): Promise<any> {
+    return await api.get(`${API.NORMAL.ROOMBILL.DEFAULT}/${id}`)
+      .then((res) => {
+          return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+          return Promise.reject(e?.response?.data);
+      })
+  }
 
   static async getLastedRoomBill(id: number): Promise<any> {
     return await api.get(API.NORMAL.ROOMBILL.GET_LASTED_ROOM_BILL.replace(":id", `${id}`))
@@ -24,7 +34,6 @@ export class RoomBillService {
       })
   }
   
-
   static async create(data: Create): Promise<any> {
     return await api
       .post(API.NORMAL.ROOMBILL.CREATE, data)
@@ -34,6 +43,16 @@ export class RoomBillService {
       .catch((e) => {
         return Promise.reject(e?.response?.data);
       });
+  }
+  
+  static async reSchedule(billId: number, data: ReSchedule): Promise<any> {
+    return await api.put(API.NORMAL.ROOMBILL.RESCHEDULE.replace(":id", `${billId}`), data)
+      .then((res) => {
+          return Promise.resolve(res.data)
+      })
+      .catch((e) => {
+          return Promise.reject(e?.response?.data);
+      })
   }
 
   static async update(billId: number, data: Update): Promise<any> {
@@ -66,9 +85,9 @@ export class RoomBillService {
         return Promise.reject(e?.response?.data);
       });
   }
-  static async cancelBookTour(roomId: number): Promise<any> {
+  static async cancelBookRoom(billId: number, data: Cancel): Promise<any> {
     return await api
-      .put(API.NORMAL.ROOMBILL.CANCEL_BOOK_ROOM.replace(":id", `${roomId}`))
+      .put(API.NORMAL.ROOMBILL.CANCEL_BOOK_ROOM.replace(":id", `${billId}`), data)
       .then((res) => {
         return Promise.resolve(res.data.data);
       })

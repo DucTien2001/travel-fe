@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { memo, useEffect, useState } from "react";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
@@ -8,7 +9,7 @@ import { TourBillService } from "services/normal/tourBill";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
 import { fCurrency2VND } from "utils/formatNumber";
-import { Box, Collapse, Grid, IconButton, Menu, MenuItem } from "@mui/material";
+import { Box, Grid, IconButton, Menu, MenuItem } from "@mui/material";
 import {
   DataPagination,
   EBillStatus,
@@ -17,22 +18,17 @@ import {
 } from "models/general";
 import InputSearch from "components/common/inputs/InputSearch";
 import { DeleteOutlineOutlined, EditOutlined } from "@mui/icons-material";
-import { FindAll, TourBill } from "models/tourBill";
+import { FindAll } from "models/tourBill";
 import useDebounce from "hooks/useDebounce";
 import StatusPayment from "components/StatusPayment";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { TourService } from "services/normal/tour";
-import { Tour } from "models/tour";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddCommentIcon from "@mui/icons-material/AddComment";
-import PopupAddTourComment from "pages/listTour/[tourId]/components/PopupAddTourComment";
 import { useTranslation } from "react-i18next";
 import { BillHelper } from "helpers/bill";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Pagination from "@mui/material/Pagination";
 import { RoomBillService } from "services/normal/roomBill";
 import { RoomBill } from "models/roomBill";
@@ -40,40 +36,31 @@ import { Stay } from "models/stay";
 import { fTime } from "utils/formatTime";
 import DownloadRoomBill from "./DownloadRoomBill";
 import PopupAddHotelComment from "pages/listHotel/[hotelId]/components/PopupAddHotelComment";
+import PopupConfirmCancel from "./PopupConfirmCancel";
+import PopupConfirmChange from "./PopupConfirmChange";
 // eslint-disable-next-line react/display-name
-const Stay = memo(() => {
+const StayHistory = memo(() => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { t, i18n } = useTranslation("common");
 
   const [modalDownloadRoomBill, setModalDownloadRoomBill] = useState(false);
   const [roomBill, setRoomBill] = useState<RoomBill>(null);
-  const [openConfirmCancelBookRoom, setOpenConfirmCancelBookRoom] =
-    useState(false);
   const [data, setData] = useState<DataPagination<RoomBill>>();
   const [keyword, setKeyword] = useState<string>("");
   const [itemAction, setItemAction] = useState<RoomBill>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
-  const [openPopupSelectDate, setOpenPopupSelectDate] = useState(false);
-  const [room, setRoom] = useState<Stay>(null);
-  const [openAddInformation, setOpenAddInformation] = useState(false);
+  const [openConfirmCancelBook, setOpenConfirmCancelBook] = useState(false);
+  const [openConfirmChange, setOpenConfirmChange] = useState(false);
   const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
-  const [open, setOpen] = useState(0);
 
   const onToggleAddComment = () => setOpenPopupAddComment(!openPopupAddComment);
 
   const onTogglePopupConfirmCancel = () => {
-    setOpenConfirmCancelBookRoom(!openConfirmCancelBookRoom);
+    setOpenConfirmCancelBook(!openConfirmCancelBook);
   };
-
-  const onToggleAddInformation = () => {
-    setOpenAddInformation(!openAddInformation);
-    onCloseActionMenu();
-    setRoomBill(itemAction);
-  };
-
-  const onTogglePopupSelectDate = () => {
-    setOpenPopupSelectDate(!openPopupSelectDate);
+  const onTogglePopupConfirmChange = () => {
+    setOpenConfirmChange(!openConfirmCancelBook);
   };
 
   const handleAction = (
@@ -155,33 +142,15 @@ const Stay = memo(() => {
     setRoomBill(null);
   };
 
-  const fetchTour = () => {
-    // TourService.getTour(itemAction?.tourData?.id)
-    //   .then((res) => {
-    //     setTour(res.data);
-    //   })
-    //   .catch((e) => {
-    //     dispatch(setErrorMess(e));
-    //   });
-  };
-
-  const onSelectDate = () => {
-    setRoomBill(itemAction);
-    fetchTour();
-    onTogglePopupSelectDate();
-    onCloseActionMenu();
-  };
-
-  const onUpdateInfo = () => {
-    setRoomBill(itemAction);
-    onToggleAddInformation();
-    onCloseActionMenu();
-  };
-
   const onCancel = () => {
     setRoomBill(itemAction);
-    fetchTour();
     onTogglePopupConfirmCancel();
+    onCloseActionMenu();
+  };
+
+  const onChange = () => {
+    setRoomBill(itemAction);
+    onTogglePopupConfirmChange();
     onCloseActionMenu();
   };
 
@@ -598,17 +567,17 @@ const Stay = memo(() => {
               <span>{t("payment_history_page_tour_status_download_view")}</span>
             </Box>
           </MenuItem>
-          {/* {itemAction?.paymentStatus === EPaymentStatus.PAID &&
+          {itemAction?.paymentStatus === EPaymentStatus.PAID &&
             BillHelper.isCanReScheduleOrCancelBooking(
               itemAction.status,
-              itemAction?.tourOnSaleData?.startDate,
+              itemAction?.startDate,
               EServicePolicyType.RESCHEDULE,
-              itemAction?.tourData?.tourPolicies
+              itemAction?.stayData?.stayPolicies
             ) && (
               <MenuItem
                 sx={{ fontSize: "0.875rem" }}
                 className={classes.menuItem}
-                onClick={onSelectDate}
+                onClick={onChange}
               >
                 <Box display="flex" alignItems={"center"}>
                   <EditOutlined
@@ -620,23 +589,7 @@ const Stay = memo(() => {
                   </span>
                 </Box>
               </MenuItem>
-            )} */}
-
-          {itemAction?.paymentStatus === EPaymentStatus.PAID && (
-            <MenuItem
-              sx={{ fontSize: "0.875rem" }}
-              className={classes.menuItem}
-              onClick={onUpdateInfo}
-            >
-              <Box display="flex" alignItems={"center"}>
-                <EditOutlined
-                  sx={{ marginRight: "0.25rem" }}
-                  fontSize="small"
-                />
-                <span>{t("payment_history_page_tour_action_update")}</span>
-              </Box>
-            </MenuItem>
-          )}
+            )}
           {itemAction?.paymentStatus !== EPaymentStatus.PAID && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
@@ -653,12 +606,12 @@ const Stay = memo(() => {
               </Box>
             </MenuItem>
           )}
-          {/* {itemAction?.paymentStatus === EPaymentStatus.PAID &&
+          {itemAction?.paymentStatus === EPaymentStatus.PAID &&
             BillHelper.isCanReScheduleOrCancelBooking(
               itemAction.status,
-              itemAction?.tourOnSaleData?.startDate,
+              itemAction?.startDate,
               EServicePolicyType.REFUND,
-              itemAction?.tourData?.tourPolicies
+              itemAction?.stayData?.stayPolicies
             ) && (
               <MenuItem
                 sx={{ fontSize: "0.875rem" }}
@@ -674,7 +627,7 @@ const Stay = memo(() => {
                   <span>{t("payment_history_page_tour_action_cancel")}</span>
                 </Box>
               </MenuItem>
-            )} */}
+            )}
           {itemAction?.status === EBillStatus.USED && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
@@ -698,26 +651,21 @@ const Stay = memo(() => {
         isOpen={modalDownloadRoomBill}
         roomBill={roomBill}
       />
-      {/* <PopupSelectDate
-        onClose={onTogglePopupSelectDate}
-        isOpen={openPopupSelectDate}
-        tour={tour}
-        tourBill={tourBill}
-      />
-      {openConfirmCancelBookTour && (
-        <PopupConfirmCancel
-          isOpen={openConfirmCancelBookTour}
-          onClose={onTogglePopupConfirmCancel}
-          toggle={onTogglePopupConfirmCancel}
-          tourBill={tourBill}
+      {openConfirmChange && (
+        <PopupConfirmChange
+          isOpen={openConfirmChange}
+          onClose={onTogglePopupConfirmChange}
+          roomBill={roomBill}
         />
       )}
-      <PopupAddInformation
-        onClose={onToggleAddInformation}
-        isOpen={openAddInformation}
-        tourBill={tourBill}
-        fetchDataTourBill={fetchData}
-      /> */}
+      {openConfirmCancelBook && (
+        <PopupConfirmCancel
+          isOpen={openConfirmCancelBook}
+          onClose={onTogglePopupConfirmCancel}
+          roomBill={roomBill}
+          callBack={fetchData}
+        />
+      )}
       <PopupAddHotelComment
         isOpen={openPopupAddComment}
         // commentEdit={commentEdit}
@@ -730,4 +678,4 @@ const Stay = memo(() => {
   );
 });
 
-export default Stay;
+export default StayHistory;
