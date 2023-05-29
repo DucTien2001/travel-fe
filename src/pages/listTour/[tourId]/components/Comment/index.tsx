@@ -60,7 +60,6 @@ const Comments = memo(({}: Props) => {
   const [itemAction, setItemAction] = useState<Comment>();
   const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
   const [openPopupConfirmDelete, setOpenPopupConfirmDelete] = useState(false);
-  const [isAddComment, setIsAddComment] = useState(false);
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [data, setData] = useState<DataPagination<Comment>>();
   const [lastedBill, setLastedBill] = useState<TourBill>(null);
@@ -71,6 +70,7 @@ const Comments = memo(({}: Props) => {
   const [replyDelete, setReplyDelete] = useState(null);
   const [replyEdit, setReplyEdit] = useState(null);
   const [openPopupModalImages, setOpenPopupModalImages] = useState(false);
+  const [visible, setVisible] = useState(1);
 
   const getRateComment = (rate: number) => {
     switch (rate) {
@@ -245,6 +245,10 @@ const Comments = memo(({}: Props) => {
   const onOpenPopupModalImages = () =>
     setOpenPopupModalImages(!openPopupModalImages);
 
+  const showMoreReply = () => {
+    setVisible((prev) => prev + 1);
+  };
+
   useEffect(() => {
     fetchData();
     if (user) {
@@ -387,9 +391,9 @@ const Comments = memo(({}: Props) => {
                     </Grid>
                   </Grid>
                 )}
-                {item?.replies?.map((reply, index) => (
-                  <>
-                    <Grid className={classes.boxCommentReply} key={index}>
+                {item?.replies?.slice(0, visible)?.map((reply, index) => (
+                  <Grid key={index}>
+                    <Grid className={classes.boxCommentReply}>
                       <Grid
                         className={classes.boxAvatar}
                         sx={{
@@ -471,8 +475,15 @@ const Comments = memo(({}: Props) => {
                         <p className={classes.contentReply}>{reply?.content}</p>
                       </Grid>
                     )}
-                  </>
+                  </Grid>
                 ))}
+                {item?.replies?.length > 1 && (
+                  <Grid className={classes.btnReadMore}>
+                    <Button btnType={BtnType?.Primary} onClick={showMoreReply}>
+                      {t("book_page_booking_read_all")}
+                    </Button>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           ))
@@ -491,9 +502,8 @@ const Comments = memo(({}: Props) => {
           {/* <Button btnType={BtnType.Primary}>See More</Button>
            */}
           <Pagination
-            count={data?.meta?.itemCount || 0}
-            page={data?.meta?.page ? data?.meta?.page - 1 : 0}
-            shape="rounded"
+            count={data?.meta?.pageCount || 0}
+            page={data?.meta?.page}
             onChange={handleChangePage}
           />
         </Grid>

@@ -18,7 +18,8 @@ import TourRevenue from "pages/admin/components/StatisticTourBills/components/To
 import StatisticStayBills from "pages/admin/components/StatisticStayBills";
 import StatisticOneUser from "pages/admin/components/StatisticStayBills/components/StatisticOneUser";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
-
+import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
+import SwipeDownIcon from "@mui/icons-material/SwipeDown";
 interface PropTypes {}
 
 const Admin = memo(({ ...props }: PropTypes) => {
@@ -190,13 +191,13 @@ const Admin = memo(({ ...props }: PropTypes) => {
               <span>{t("admin_management_navbar_commission")}</span>
             </NavLink>
           </NavItem>
-          <span>{t("enterprise_management_navbar_order")}</span>
+          <span>{t("enterprise_management_navbar_order_refund")}</span>
           <NavItem
             onClick={() => gotoMenu("tourBills")}
             className={classes.navItem}
           >
             <NavLink className={renderClass("tourBills")}>
-              <TourIcon />
+              <SwipeLeftIcon />
               <span>{t("enterprise_management_navbar_tour_bill")}</span>
             </NavLink>
           </NavItem>
@@ -205,7 +206,7 @@ const Admin = memo(({ ...props }: PropTypes) => {
             className={classes.navItem}
           >
             <NavLink className={renderClass("roomBills")}>
-              <MeetingRoomIcon />
+              <SwipeDownIcon />
               <span>{t("enterprise_management_navbar_room_bill")}</span>
             </NavLink>
           </NavItem>

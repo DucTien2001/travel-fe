@@ -15,7 +15,8 @@ import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import StatisticStayBills from "../components/StatisticStayBills";
 import TourBills from "../components/TourBills";
 import StayBills from "../components/StayBills";
-
+import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
+import SwipeDownIcon from "@mui/icons-material/SwipeDown";
 const Users = dynamic(() => import("pages/admin/components/Users"));
 const Events = dynamic(() => import("pages/admin/components/Events"));
 const Commissions = dynamic(() => import("pages/admin/components/Commissions"));
@@ -154,13 +155,13 @@ const Admin = memo(({ ...props }: PropTypes) => {
               <span>{t("admin_management_navbar_commission")}</span>
             </NavLink>
           </NavItem>
-          <span>{t("enterprise_management_navbar_order")}</span>
+          <span>{t("enterprise_management_navbar_order_refund")}</span>
           <NavItem
             onClick={() => gotoMenu("tourBills")}
             className={classes.navItem}
           >
             <NavLink className={renderClass("tourBills")}>
-              <TourIcon />
+              <SwipeLeftIcon />
               <span>{t("enterprise_management_navbar_tour_bill")}</span>
             </NavLink>
           </NavItem>
@@ -169,7 +170,7 @@ const Admin = memo(({ ...props }: PropTypes) => {
             className={classes.navItem}
           >
             <NavLink className={renderClass("roomBills")}>
-              <MeetingRoomIcon />
+              <SwipeDownIcon />
               <span>{t("enterprise_management_navbar_room_bill")}</span>
             </NavLink>
           </NavItem>

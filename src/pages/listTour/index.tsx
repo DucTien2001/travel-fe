@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 // reactstrap components
 import { Container, Row, Col } from "reactstrap";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGrip,
@@ -13,32 +12,17 @@ import { images } from "configs/images";
 import clsx from "clsx";
 import classes from "./styles.module.scss";
 import Social from "components/Social";
-import Aos from "aos";
 import "aos/dist/aos.css";
-import InputRecentSearch from "components/common/inputs/InputRecentSearch";
 import Button, { BtnType } from "components/common/buttons/Button";
 import SectionHeader from "components/Header/SectionHeader";
 import CardItemGrid from "components/CardItemGrid";
 import CardItemList from "components/CardItemList";
-import BoxSmallLeft from "components/BoxSmallLeft";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
-import { ReducerType } from "redux/reducers";
+import { useDispatch } from "react-redux";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import { TourService } from "services/normal/tour";
 import SearchNotFound from "components/SearchNotFound";
-import FilterPanel from "../../components/FilterPanel";
-import ReactPaginate from "react-paginate";
-import CustomSelect from "components/common/CustomSelect";
 import InputSelect from "components/common/inputs/InputSelect";
-import {
-  DataPagination,
-  ESortOption,
-  sortOption,
-  sortType,
-} from "models/general";
+import { DataPagination, ESortOption, sortOption } from "models/general";
 import { Grid, Pagination } from "@mui/material";
 import { NormalGetTours, Tour } from "models/tour";
 import useDebounce from "hooks/useDebounce";
@@ -73,51 +57,6 @@ const ListTours: NextPage = () => {
   const disablePastDt = (current) => {
     return current.isAfter(yesterday);
   };
-
-  // const handleSelectRating = (event, value) =>
-  //   !value ? null : setSelectedRating(value);
-
-  // const handleChangeChecked = (id) => {
-  //   const tagStateList = tags;
-  //   const changeCheckedTags = tagStateList.map((item) =>
-  //     item.id === id ? { ...item, checked: !item.checked } : item
-  //   );
-  //   setTags(changeCheckedTags);
-  // };
-
-  // const handleChangePrice = (event, value) => {
-  //   setSelectedPrice(value);
-  // };
-
-  // const applyFilters = () => {
-  //   let updatedList = allTours;
-  //   // Rating Filter
-  //   if (selectedRating) {
-  //     updatedList = updatedList.filter(
-  //       (item) => Math.floor(item?.rate) === parseInt(selectedRating)
-  //     );
-  //   }
-  //   //Tag filter
-  //   const tagsChecked = tags
-  //     .filter((item) => item.checked)
-  //     .map((item) => item.label.toLowerCase());
-  //   if (tagsChecked.length) {
-  //     updatedList = updatedList.filter((item) =>
-  //       tagsChecked.every((filterTag) =>
-  //         item.tags.map((tag) => tag.toLowerCase()).includes(filterTag)
-  //       )
-  //     );
-  //   }
-
-  //   // Price Filter
-  //   const minPrice = selectedPrice[0];
-  //   const maxPrice = selectedPrice[1];
-
-  //   updatedList = updatedList.filter(
-  //     (item) => item.price >= minPrice && item.price <= maxPrice
-  //   );
-  //   setListTours(updatedList);
-  // };
 
   const fetchData = (value?: {
     take?: number;
@@ -159,7 +98,7 @@ const ListTours: NextPage = () => {
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
     fetchData({
-      page: newPage,
+      page: newPage + 1,
     });
   };
 

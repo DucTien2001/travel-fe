@@ -94,7 +94,7 @@ const Stay = memo(() => {
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
     fetchData({
-      page: newPage,
+      page: newPage + 1,
     });
   };
 

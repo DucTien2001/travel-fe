@@ -14,7 +14,8 @@ import TourOnSaleRevenue from "pages/admin/components/StatisticTourBills/compone
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import StatisticOneStay from "pages/admin/components/StatisticStayBills/components/StatisticOneStay";
 import StatisticStayBills from "pages/admin/components/StatisticStayBills";
-
+import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
+import SwipeDownIcon from "@mui/icons-material/SwipeDown";
 interface PropTypes {}
 
 const Admin = memo(({ ...props }: PropTypes) => {
@@ -113,6 +114,25 @@ const Admin = memo(({ ...props }: PropTypes) => {
             <NavLink className={renderClass("commissions")}>
               <MonetizationOnIcon />
               <span>{t("admin_management_navbar_commission")}</span>
+            </NavLink>
+          </NavItem>
+          <span>{t("enterprise_management_navbar_order_refund")}</span>
+          <NavItem
+            onClick={() => gotoMenu("tourBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourBills")}>
+              <SwipeLeftIcon />
+              <span>{t("enterprise_management_navbar_tour_bill")}</span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("roomBills")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("roomBills")}>
+              <SwipeDownIcon />
+              <span>{t("enterprise_management_navbar_room_bill")}</span>
             </NavLink>
           </NavItem>
           {user.role === EUserType.SUPER_ADMIN && (
