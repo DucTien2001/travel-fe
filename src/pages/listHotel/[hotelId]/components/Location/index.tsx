@@ -37,13 +37,15 @@ import GoogleMapReact from "google-map-react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
 import { useTranslation } from "react-i18next";
+const AnyReactComponent = ({ text, lat, lng }) => <div>{text}</div>;
+
 interface Props {
   stay: Stay;
 }
 
 // eslint-disable-next-line react/display-name
 const Comments = memo(({ stay }: Props) => {
-  // Geocode.setApiKey("AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI");
+  Geocode.setApiKey("AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI");
   const [coords, setCoords] = useState(null);
   const { t, i18n } = useTranslation("common");
 
@@ -80,26 +82,22 @@ const Comments = memo(({ stay }: Props) => {
             {stay?.moreLocation}, {stay?.commune.name},{stay?.district.name},{" "}
             {stay?.city.name}
           </p>
-          {/* <div style={{ height: "30vh", width: "100%" }}>
-                    <GoogleMapReact
-                      bootstrapURLKeys={{
-                        key: "AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI",
-                      }}
-                      defaultCenter={coords}
-                      defaultZoom={11}
-                      center={coords}
-                    >
-                      <AnyReactComponent
-                        lat={coords?.lat}
-                        lng={coords?.lng}
-                        text={
-                          <LocationOnIcon
-                            sx={{ color: "var(--danger-color)" }}
-                          />
-                        }
-                      />
-                    </GoogleMapReact>
-                  </div> */}
+          <div style={{ height: "30vh", width: "100%" }}>
+            <GoogleMapReact
+              bootstrapURLKeys={{
+                key: "AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI",
+              }}
+              defaultCenter={coords}
+              defaultZoom={11}
+              center={coords}
+            >
+              <AnyReactComponent
+                lat={coords?.lat}
+                lng={coords?.lng}
+                text={<LocationOnIcon sx={{ color: "var(--danger-color)" }} />}
+              />
+            </GoogleMapReact>
+          </div>
           <div className={classes.contactBox}>
             <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
             <p> {t("tour_detail_section_contact")}: </p>
