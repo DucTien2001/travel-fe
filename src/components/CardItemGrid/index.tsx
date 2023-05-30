@@ -151,15 +151,16 @@ const ListServices = memo(
                     </Grid>
 
                     <Grid className={classes.boxPrice}>
+                      <span>
+                        {fCurrency2(minPrice)} ~ {fCurrency2(maxPrice)} VND
+                      </span>
+
                       {discount !== 0 && (
-                        <span>
+                        <p>
                           {fCurrency2((minPrice * (100 - discount)) / 100)} ~{" "}
                           {fCurrency2((maxPrice * (100 - discount)) / 100)} VND
-                        </span>
+                        </p>
                       )}
-                      <p>
-                        {fCurrency2(minPrice)} ~ {fCurrency2(maxPrice)} VND
-                      </p>
                     </Grid>
                     <Grid className={classes.boxViewMore}>
                       <p>{t("common_view_more")}</p>

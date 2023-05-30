@@ -40,6 +40,7 @@ import PopupConfirmCancel from "./PopupConfirmCancel";
 import PopupConfirmChange from "./PopupConfirmChange";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import PopupDefault from "components/Popup/PopupDefault";
 // eslint-disable-next-line react/display-name
 const StayHistory = memo(() => {
   const dispatch = useDispatch();
@@ -56,8 +57,22 @@ const StayHistory = memo(() => {
   const [openConfirmChange, setOpenConfirmChange] = useState(false);
   const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
   const [open, setOpen] = useState(-1);
+  const [openPopupWarningCancel, setOpenPopupWarningCancel] = useState(false);
+  const [openPopupWarningRate, setOpenPopupWarningRate] = useState(false);
+  const [openPopupWarningReschedule, setOpenPopupWarningReschedule] =
+    useState(false);
 
   const onToggleAddComment = () => setOpenPopupAddComment(!openPopupAddComment);
+
+  const onTogglePopupWarningCancel = () =>
+    setOpenPopupWarningCancel(!openPopupWarningCancel);
+
+  const onTogglePopupWarningRate = () =>
+    setOpenPopupWarningRate(!openPopupWarningRate);
+
+  const onTogglePopupWarningReschedule = () => {
+    setOpenPopupWarningReschedule(!openPopupWarningReschedule);
+  };
 
   const onTogglePopupConfirmCancel = () => {
     setOpenConfirmCancelBook(!openConfirmCancelBook);
@@ -84,7 +99,7 @@ const StayHistory = memo(() => {
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
     fetchData({
-      page: newPage + 1,
+      page: newPage,
     });
   };
 
@@ -146,21 +161,52 @@ const StayHistory = memo(() => {
   };
 
   const onCancel = () => {
-    setRoomBill(itemAction);
-    onTogglePopupConfirmCancel();
-    onCloseActionMenu();
+    if (
+      itemAction?.paymentStatus === EPaymentStatus.PAID &&
+      BillHelper.isCanReScheduleOrCancelBooking(
+        itemAction.status,
+        itemAction?.startDate,
+        EServicePolicyType.REFUND,
+        itemAction?.stayData?.stayPolicies
+      )
+    ) {
+      setRoomBill(itemAction);
+      onTogglePopupConfirmCancel();
+      onCloseActionMenu();
+    } else {
+      onTogglePopupWarningCancel();
+      onCloseActionMenu();
+    }
   };
 
   const onChange = () => {
-    setRoomBill(itemAction);
-    onTogglePopupConfirmChange();
-    onCloseActionMenu();
+    if (
+      itemAction?.paymentStatus === EPaymentStatus.PAID &&
+      BillHelper.isCanReScheduleOrCancelBooking(
+        itemAction.status,
+        itemAction?.startDate,
+        EServicePolicyType.RESCHEDULE,
+        itemAction?.stayData?.stayPolicies
+      )
+    ) {
+      setRoomBill(itemAction);
+      onTogglePopupConfirmChange();
+      onCloseActionMenu();
+    } else {
+      onTogglePopupWarningReschedule();
+      onCloseActionMenu();
+    }
   };
 
   const onRate = () => {
-    setRoomBill(itemAction);
-    onToggleAddComment();
-    onCloseActionMenu();
+    if (itemAction?.status === EBillStatus.USED) {
+      setRoomBill(itemAction);
+      onToggleAddComment();
+      onCloseActionMenu();
+    } else {
+      onTogglePopupWarningRate();
+      onCloseActionMenu();
+    }
   };
 
   useEffect(() => {
@@ -457,7 +503,14 @@ const StayHistory = memo(() => {
                                   </p>
                                 </Grid>
                               </Grid>
-                              <Grid item xs={12} className={classes.boxSave}>
+                              <Grid
+                                item
+                                xs={12}
+                                className={clsx(
+                                  classes.boxSave,
+                                  classes.boxOldRoom
+                                )}
+                              >
                                 <Grid
                                   className={classes.boxDate}
                                   sx={{ cursor: "pointer" }}
@@ -478,6 +531,7 @@ const StayHistory = memo(() => {
                                   in={open === index}
                                   timeout="auto"
                                   unmountOnExit
+                                  className={classes.boxCollapse}
                                 >
                                   {item?.oldBillData?.roomBillDetail?.map(
                                     (room, i) => (
@@ -492,7 +546,8 @@ const StayHistory = memo(() => {
                                             {t(
                                               "payment_history_page_hotel_room_name"
                                             )}
-                                            : <span>{room?.amount}</span>
+                                            :{" "}
+                                            <span>{room?.roomData?.title}</span>
                                           </p>
                                         </Grid>
                                       </Grid>
@@ -614,29 +669,21 @@ const StayHistory = memo(() => {
               <span>{t("payment_history_page_tour_status_download_view")}</span>
             </Box>
           </MenuItem>
-          {itemAction?.paymentStatus === EPaymentStatus.PAID &&
-            BillHelper.isCanReScheduleOrCancelBooking(
-              itemAction.status,
-              itemAction?.startDate,
-              EServicePolicyType.RESCHEDULE,
-              itemAction?.stayData?.stayPolicies
-            ) && (
-              <MenuItem
-                sx={{ fontSize: "0.875rem" }}
-                className={classes.menuItem}
-                onClick={onChange}
-              >
-                <Box display="flex" alignItems={"center"}>
-                  <EditOutlined
-                    sx={{ marginRight: "0.25rem" }}
-                    fontSize="small"
-                  />
-                  <span>
-                    {t("payment_history_page_tour_action_reschedule")}
-                  </span>
-                </Box>
-              </MenuItem>
-            )}
+          {itemAction?.paymentStatus === EPaymentStatus.PAID && (
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onChange}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <EditOutlined
+                  sx={{ marginRight: "0.25rem" }}
+                  fontSize="small"
+                />
+                <span>{t("payment_history_page_tour_action_reschedule")}</span>
+              </Box>
+            </MenuItem>
+          )}
           {itemAction?.paymentStatus !== EPaymentStatus.PAID && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
@@ -653,28 +700,22 @@ const StayHistory = memo(() => {
               </Box>
             </MenuItem>
           )}
-          {itemAction?.paymentStatus === EPaymentStatus.PAID &&
-            BillHelper.isCanReScheduleOrCancelBooking(
-              itemAction.status,
-              itemAction?.startDate,
-              EServicePolicyType.REFUND,
-              itemAction?.stayData?.stayPolicies
-            ) && (
-              <MenuItem
-                sx={{ fontSize: "0.875rem" }}
-                className={classes.menuItem}
-                onClick={onCancel}
-              >
-                <Box display="flex" alignItems={"center"}>
-                  <DeleteOutlineOutlined
-                    sx={{ marginRight: "0.25rem" }}
-                    color="error"
-                    fontSize="small"
-                  />
-                  <span>{t("payment_history_page_tour_action_cancel")}</span>
-                </Box>
-              </MenuItem>
-            )}
+          {itemAction?.paymentStatus === EPaymentStatus.PAID && (
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onCancel}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <DeleteOutlineOutlined
+                  sx={{ marginRight: "0.25rem" }}
+                  color="error"
+                  fontSize="small"
+                />
+                <span>{t("payment_history_page_tour_action_cancel")}</span>
+              </Box>
+            </MenuItem>
+          )}
           {itemAction?.status === EBillStatus.USED && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
@@ -720,6 +761,30 @@ const StayHistory = memo(() => {
         toggle={onToggleAddComment}
         // onGetTourComments={onGetTourComments}
         roomBill={roomBill}
+      />
+      <PopupDefault
+        isOpen={openPopupWarningCancel}
+        toggle={onTogglePopupWarningCancel}
+        title={t("popup_change_date_payment_history_notification")}
+        description={t(
+          "popup_change_date_payment_history_notification_not_cancel"
+        )}
+      />
+      <PopupDefault
+        isOpen={openPopupWarningRate}
+        toggle={onTogglePopupWarningRate}
+        title={t("popup_change_date_payment_history_notification")}
+        description={t(
+          "popup_change_date_payment_history_notification_not_rate"
+        )}
+      />
+      <PopupDefault
+        isOpen={openPopupWarningReschedule}
+        toggle={onTogglePopupWarningReschedule}
+        title={t("popup_change_date_payment_history_notification")}
+        description={t(
+          "popup_change_date_payment_history_notification_not_reschedule"
+        )}
       />
     </>
   );

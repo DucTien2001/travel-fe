@@ -95,19 +95,34 @@ const TermsAndCondition = memo((props: Props) => {
               {dataTourCommission?.length ? (
                 dataTourCommission?.map((item, index) => (
                   <Grid className={classes.boxDuration} key={index}>
-                    <p
-                      className={classes.titleDetail}
-                      dangerouslySetInnerHTML={{
-                        __html: t(
-                          "popup_enterprise_term_and_condition_content",
-                          {
-                            minPrice: fCurrency2VND(item?.minPrice),
-                            maxPrice: fCurrency2VND(item?.maxPrice),
-                            rate: item?.rate,
-                          }
-                        ),
-                      }}
-                    ></p>
+                    {item?.maxPrice ? (
+                      <p
+                        className={classes.titleDetail}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_enterprise_term_and_condition_content",
+                            {
+                              minPrice: fCurrency2VND(item?.minPrice),
+                              maxPrice: fCurrency2VND(item?.maxPrice),
+                              rate: item?.rate,
+                            }
+                          ),
+                        }}
+                      ></p>
+                    ) : (
+                      <p
+                        className={classes.titleDetail}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_enterprise_term_and_condition_content_no_max_price",
+                            {
+                              minPrice: fCurrency2VND(item?.minPrice),
+                              rate: item?.rate,
+                            }
+                          ),
+                        }}
+                      ></p>
+                    )}
                   </Grid>
                 ))
               ) : (
@@ -126,19 +141,34 @@ const TermsAndCondition = memo((props: Props) => {
               {dataHotelCommission?.length ? (
                 dataHotelCommission?.map((item, index) => (
                   <Grid className={classes.boxDuration} key={index}>
-                    <p
-                      className={classes.titleDetail}
-                      dangerouslySetInnerHTML={{
-                        __html: t(
-                          "popup_enterprise_term_and_condition_content",
-                          {
-                            minPrice: fCurrency2VND(item?.minPrice),
-                            maxPrice: fCurrency2VND(item?.maxPrice),
-                            rate: item?.rate,
-                          }
-                        ),
-                      }}
-                    ></p>
+                    {item?.maxPrice ? (
+                      <p
+                        className={classes.titleDetail}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_enterprise_term_and_condition_content",
+                            {
+                              minPrice: fCurrency2VND(item?.minPrice),
+                              maxPrice: fCurrency2VND(item?.maxPrice),
+                              rate: item?.rate,
+                            }
+                          ),
+                        }}
+                      ></p>
+                    ) : (
+                      <p
+                        className={classes.titleDetail}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_enterprise_term_and_condition_content_no_max_price",
+                            {
+                              minPrice: fCurrency2VND(item?.minPrice),
+                              rate: item?.rate,
+                            }
+                          ),
+                        }}
+                      ></p>
+                    )}
                   </Grid>
                 ))
               ) : (

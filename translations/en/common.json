@@ -166,6 +166,7 @@
   "tour_detail_section_many_ticket": "How many tickets?",
   "tour_detail_section_adult": "Adult",
   "tour_detail_section_age": "age",
+  "tour_detail_section_age_free": "(Children under the age of {{number}} are free)",
   "tour_detail_section_child": "Child",
   "tour_detail_section_number_ticket_left": "Number of tickets left: {{number}} tickets",
   "tour_detail_section_discount": "Discount",
@@ -479,6 +480,9 @@
   "popup_change_date_payment_history_not_2":"You will not receive a discount on the number of tickets booked",
   "popup_change_date_payment_history_not_3":"You may incur additional costs for rescheduling according to our policy",
   "popup_change_date_payment_history_no_date":"There is no suitable date, maybe the time you can reschedule has expired, please check the invoice again!",
+  "popup_change_date_payment_history_notification_not_cancel":"You cannot cancel this service because you have fallen outside our policy cancellation period, please read the terms and conditions of the service again in the service details section",
+  "popup_change_date_payment_history_notification_not_rate":"You cannot rate this service because you have not used it. Please check again",
+  "popup_change_date_payment_history_notification_not_reschedule":"You cannot reschedule this service because you are outside of our policy change time, please re-read the terms and conditions of the service in the service details section",
 
   "popup_confirm_cancel_payment_history_title":"Confirm Cancel Tour",
   "popup_confirm_cancel_payment_history_total_bill":"Total bill",
@@ -691,6 +695,7 @@
   "enterprise_management_section_tour_tab_range_price_title_took_place": "Took place",
   "enterprise_management_section_tour_tab_range_price_title_upcoming": "Upcoming",
 
+  "enterprise_management_section_tour_tab_schedule_day_title_setup": "Tour's Schedule",
   "enterprise_management_section_tour_tab_schedule_day_title": "Day",
   "enterprise_management_section_tour_tab_schedule_add": "Click add to day",
   "enterprise_management_section_tour_tab_schedule_next_range": "Next Range Rice and Date",
@@ -935,7 +940,8 @@
 
   "popup_enterprise_term_and_condition": "Terms and Conditions",
   "popup_enterprise_term_and_condition_tour": "Tour",
-  "popup_enterprise_term_and_condition_content": "- If the tour bill has the smallest value from <span>{{minPrice}}</span> VND and the largest from <span>{{maxPrice}}</span> VND, the discount amount is: <span>{{rate}}</span> %",
+  "popup_enterprise_term_and_condition_content": "- If the bill has the smallest value from <span>{{minPrice}}</span> VND and the largest from <span>{{maxPrice}}</span> VND, the discount amount is: <span>{{rate}}</span> %",
+  "popup_enterprise_term_and_condition_content_no_max_price": "- If the bill has the smallest value from <span>{{minPrice}}</span> VND, the discount amount is: <span>{{rate}}</span> %",
   "popup_enterprise_term_and_condition_stay": "Stay",
   "popup_enterprise_term_and_condition_no_terms": "No terms and conditions",
 

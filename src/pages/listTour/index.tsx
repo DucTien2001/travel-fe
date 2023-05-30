@@ -98,7 +98,7 @@ const ListTours: NextPage = () => {
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
     fetchData({
-      page: newPage + 1,
+      page: newPage,
     });
   };
 

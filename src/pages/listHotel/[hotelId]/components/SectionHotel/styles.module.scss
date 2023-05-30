@@ -171,7 +171,7 @@
 }
 .boxPrice {
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
     align-items: flex-end !important;
     p {
         font-size: 14px;

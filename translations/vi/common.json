@@ -166,6 +166,7 @@
   "tour_detail_section_many_ticket": "Bạn muốn đặt bao nhiêu vé?",
   "tour_detail_section_adult": "Người lớn",
   "tour_detail_section_age": "tuổi",
+  "tour_detail_section_age_free": "(Những trẻ em có độ tuổi nhỏ hơn {{number}} thì được miễn phí)",
   "tour_detail_section_child": "Trẻ em",
   "tour_detail_section_number_ticket_left": "Số vé còn lại: <span>{{number}}</span> vé",
   "tour_detail_section_discount": "Giảm  giá",
@@ -478,6 +479,9 @@
   "popup_change_date_payment_history_not_2":"Bạn sẽ không được giảm số lượng vé đã đặt",
   "popup_change_date_payment_history_not_3":"Bạn có thể phải chịu thêm chi phí đổi lịch theo chính sách của chúng tôi",
   "popup_change_date_payment_history_no_date":"Không có ngày phù hợp, có thể thời gian bạn có thể đổi lịch đã hết, vui lòng kiểm tra lại hóa đơn!",
+  "popup_change_date_payment_history_notification_not_cancel":"Bạn không thể hủy dịch vụ này do bạn đã nằm ngoài thời gian hủy theo chính sách của chúng tôi, vui lòng đọc lại điều khoản điều kiện của dịch vụ tại mục chi tiết dịch vụ",
+  "popup_change_date_payment_history_notification_not_rate":"Bạn không thể đánh giá dịch vụ này do bạn chưa sử dụng dịch vụ này. Vui lòng kiểm tra lại",
+  "popup_change_date_payment_history_notification_not_reschedule":"Bạn không thể đổi lịch cho dịch vụ này do bạn đã nằm ngoài thời gian đổi theo chính sách của chúng tôi, vui lòng đọc lại điều khoản điều kiện của dịch vụ tại mục chi tiết dịch vụ",
 
   "popup_confirm_cancel_payment_history_title":"Xác Nhận Hủy Điểm Du Lịch",
   "popup_confirm_cancel_payment_history_total_bill":"Tổng hóa đơn",
@@ -689,6 +693,7 @@
   "enterprise_management_section_tour_tab_range_price_title_took_place": "Đã diễn ra",
   "enterprise_management_section_tour_tab_range_price_title_upcoming": "Sắp diễn ra",
 
+  "enterprise_management_section_tour_tab_schedule_day_title_setup": "Lịch trình của điểm tham quan",
   "enterprise_management_section_tour_tab_schedule_day_title": "Ngày",
   "enterprise_management_section_tour_tab_schedule_add": "Nhấn đểt thêm ngày",
   "enterprise_management_section_tour_tab_schedule_next_range": "Tiếp tục thiết lập Giá và Ngày",
@@ -933,7 +938,8 @@
 
   "popup_enterprise_term_and_condition": "Điều Khoản và Điều Kiện",
   "popup_enterprise_term_and_condition_tour": "Du lịch",
-  "popup_enterprise_term_and_condition_content": "- Nếu hóa đơn tour có giá trị nhỏ nhất từ ​​<span>{{minPrice}}</span> VND và lớn nhất từ ​​<span>{{maxPrice}}</span> VND thì số tiền hoa hồng cho hệ thống là: <span>{{rate}}</span> %",
+  "popup_enterprise_term_and_condition_content": "- Nếu hóa đơn có giá trị nhỏ nhất từ ​​<span>{{minPrice}}</span> VND và lớn nhất từ ​​<span>{{maxPrice}}</span> VND thì số tiền hoa hồng cho hệ thống là: <span>{{rate}}</span> %",
+  "popup_enterprise_term_and_condition_content_no_max_price": "- Nếu hóa đơn có giá trị nhỏ nhất từ ​​<span>{{minPrice}}</span> VND thì số tiền hoa hồng cho hệ thống là: <span>{{rate}}</span> %",
   "popup_enterprise_term_and_condition_stay": "Nơi ở",
   "popup_enterprise_term_and_condition_no_terms": "Không có điều khoản và điều kiện",
 
