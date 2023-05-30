@@ -218,6 +218,9 @@ const RoomBills = memo(({}: Props) => {
     });
   }, [stayFilter]);
 
+  const sortDataByDate = (first, second) =>
+    Number(Date.parse(second)) - Number(Date.parse(first));
+
   const fetchData = (value?: {
     take?: number;
     page?: number;
@@ -240,7 +243,7 @@ const RoomBills = memo(({}: Props) => {
     RoomBillService.findAll(params)
       .then((res) => {
         setData({
-          data: res.data,
+          data: res.data.sort(sortDataByDate),
           meta: res.meta,
         });
       })

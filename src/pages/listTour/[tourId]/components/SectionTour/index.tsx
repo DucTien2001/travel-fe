@@ -291,6 +291,12 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   </div>
                 )}
               </div>
+              <div className={classes.subPlaceStart}>
+                <div className={classes.locationStart}>
+                  <p>{t("tour_detail_section_tour_place_start")}&nbsp;</p>
+                  <span>{tour?.cityStart.name}</span>
+                </div>
+              </div>
               <Row
                 className={classes.containerImg}
                 onClick={onOpenPopupModalImages}

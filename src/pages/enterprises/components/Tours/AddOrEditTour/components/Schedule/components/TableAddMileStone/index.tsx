@@ -256,7 +256,7 @@ const PopupAddMileStone = memo((props: Props) => {
           onGetAllSchedule();
         })
         .catch((e) => {
-          dispatch(setErrorMess(e));
+          // dispatch(setErrorMess(e));
         })
         .finally(() => {
           dispatch(setLoading(false));

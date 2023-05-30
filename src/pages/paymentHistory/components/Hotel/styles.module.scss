@@ -270,7 +270,8 @@
 .containerPrice {
     padding: 14px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
+
     background-color: var(--white-color);
     border-left: 1px solid var(--gray-20);
     border-top-right-radius: 10px;
@@ -303,10 +304,8 @@
 }
 
 .boxOldBill {
-    border-top: 1px solid var(--gray-20);
-    padding: 14px;
+    padding: 0 14px 14px;
     display: flex;
-    flex-direction: column;
     background-color: var(--white-color);
     border-left: 1px solid var(--gray-20);
     border-bottom-right-radius: 10px;

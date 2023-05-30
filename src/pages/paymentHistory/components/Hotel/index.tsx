@@ -9,7 +9,7 @@ import { TourBillService } from "services/normal/tourBill";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
 import moment from "moment";
 import { fCurrency2VND } from "utils/formatNumber";
-import { Box, Grid, IconButton, Menu, MenuItem } from "@mui/material";
+import { Box, Collapse, Grid, IconButton, Menu, MenuItem } from "@mui/material";
 import {
   DataPagination,
   EBillStatus,
@@ -38,6 +38,8 @@ import DownloadRoomBill from "./DownloadRoomBill";
 import PopupAddHotelComment from "pages/listHotel/[hotelId]/components/PopupAddHotelComment";
 import PopupConfirmCancel from "./PopupConfirmCancel";
 import PopupConfirmChange from "./PopupConfirmChange";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 // eslint-disable-next-line react/display-name
 const StayHistory = memo(() => {
   const dispatch = useDispatch();
@@ -53,6 +55,7 @@ const StayHistory = memo(() => {
   const [openConfirmCancelBook, setOpenConfirmCancelBook] = useState(false);
   const [openConfirmChange, setOpenConfirmChange] = useState(false);
   const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
+  const [open, setOpen] = useState(-1);
 
   const onToggleAddComment = () => setOpenPopupAddComment(!openPopupAddComment);
 
@@ -60,7 +63,7 @@ const StayHistory = memo(() => {
     setOpenConfirmCancelBook(!openConfirmCancelBook);
   };
   const onTogglePopupConfirmChange = () => {
-    setOpenConfirmChange(!openConfirmCancelBook);
+    setOpenConfirmChange(!openConfirmChange);
   };
 
   const handleAction = (
@@ -224,7 +227,7 @@ const StayHistory = memo(() => {
                         <Grid container xs={12}>
                           <Grid container item xs={6}>
                             {item?.oldBillId && item?.oldBillData && (
-                              <Grid item className={classes.boxSave}>
+                              <Grid item className={classes.boxSave} xs={12}>
                                 <div className={classes.boxDate}>
                                   <p>
                                     {t("payment_history_page_tour_new_bill")}
@@ -232,19 +235,19 @@ const StayHistory = memo(() => {
                                 </div>
                               </Grid>
                             )}
-                            <Grid item className={classes.boxSave}>
+                            <Grid item className={classes.boxSave} xs={12}>
                               <div className={classes.boxDate}>
                                 <p>
                                   {t("payment_history_page_tour_booking_date")}:{" "}
                                   <span>
-                                    {moment(
-                                      item?.roomBillDetail[0]?.bookedDate
-                                    ).format("DD-MM-YYYY")}
+                                    {moment(item?.createdAt).format(
+                                      "DD-MM-YYYY"
+                                    )}
                                   </span>
                                 </p>
                               </div>
                             </Grid>
-                            <Grid item className={classes.boxSave}>
+                            <Grid item className={classes.boxSave} xs={12}>
                               <div className={classes.boxDate}>
                                 <p>
                                   {t("payment_history_page_hotel_start_date")} :{" "}
@@ -256,7 +259,7 @@ const StayHistory = memo(() => {
                                 </p>
                               </div>
                             </Grid>
-                            <Grid item className={classes.boxSave}>
+                            <Grid item className={classes.boxSave} xs={12}>
                               <div className={classes.boxDate}>
                                 <p>
                                   {t("payment_history_page_hotel_end_date")} :{" "}
@@ -266,7 +269,7 @@ const StayHistory = memo(() => {
                                 </p>
                               </div>
                             </Grid>
-                            <Grid item className={classes.boxSave}>
+                            <Grid item className={classes.boxSave} xs={12}>
                               <div className={classes.boxDate}>
                                 <p>
                                   {t("payment_history_page_hotel_check_in")} :{" "}
@@ -276,7 +279,7 @@ const StayHistory = memo(() => {
                                 </p>
                               </div>
                             </Grid>
-                            <Grid item className={classes.boxSave}>
+                            <Grid item className={classes.boxSave} xs={12}>
                               <div className={classes.boxDate}>
                                 <p>
                                   {t("payment_history_page_hotel_check_out")} :{" "}
@@ -298,7 +301,7 @@ const StayHistory = memo(() => {
                                 </Grid>
                               </Grid>
                             )}
-                            <Grid item className={classes.boxSave}>
+                            <Grid item className={classes.boxSave} xs={12}>
                               <Grid className={classes.boxPrice}>
                                 <p>
                                   {t(
@@ -317,7 +320,7 @@ const StayHistory = memo(() => {
                                 </p>
                               </Grid>
                             </Grid>
-                            <Grid item className={classes.boxSave}>
+                            <Grid item className={classes.boxSave} xs={12}>
                               <Grid className={classes.boxPrice}>
                                 <p>
                                   {t("payment_history_page_tour_total_bill")}:{" "}
@@ -364,7 +367,7 @@ const StayHistory = memo(() => {
                               xs={6}
                               className={classes.boxOldBill}
                             >
-                              <Grid item className={classes.boxSave}>
+                              <Grid item className={classes.boxSave} xs={12}>
                                 <div className={classes.boxDate}>
                                   <p>
                                     {t("payment_history_page_tour_old_bill")}
@@ -379,10 +382,9 @@ const StayHistory = memo(() => {
                                     )}
                                     :{" "}
                                     <span>
-                                      {fTime(
-                                        item?.oldBillData?.roomBillDetail[0]
-                                          ?.bookedDate
-                                      )}
+                                      {moment(
+                                        item?.oldBillData?.createdAt
+                                      ).format("DD-MM-YYYY")}
                                     </span>
                                   </p>
                                 </div>
@@ -425,14 +427,14 @@ const StayHistory = memo(() => {
                                 </div>
                               </Grid>
                               <Grid item xs={12} className={classes.boxSave}>
-                                <Grid className={classes.boxPrice}>
+                                <Grid className={classes.boxDate}>
                                   <p>
                                     {t("payment_history_page_hotel_check_out")}:{" "}
                                     <span>
-                                      {moment(
+                                      {fTime(
                                         item?.oldBillData?.stayData
                                           ?.checkOutTime
-                                      ).format("DD-MM-YYYY")}
+                                      )}
                                     </span>
                                   </p>
                                 </Grid>
@@ -445,7 +447,7 @@ const StayHistory = memo(() => {
                                     )}
                                     :{" "}
                                     <span>
-                                      {item?.oldBillData?.roomBillDetail.reduce(
+                                      {item?.oldBillData?.roomBillDetail?.reduce(
                                         function (acc, obj) {
                                           return acc + obj.amount;
                                         },
@@ -454,6 +456,49 @@ const StayHistory = memo(() => {
                                     </span>
                                   </p>
                                 </Grid>
+                              </Grid>
+                              <Grid item xs={12} className={classes.boxSave}>
+                                <Grid
+                                  className={classes.boxDate}
+                                  sx={{ cursor: "pointer" }}
+                                  onClick={() =>
+                                    setOpen(open === index ? -1 : index)
+                                  }
+                                >
+                                  <p>
+                                    {t("payment_history_page_room_bill_info")}
+                                  </p>
+                                  {open === index ? (
+                                    <KeyboardArrowUpIcon />
+                                  ) : (
+                                    <KeyboardArrowDownIcon />
+                                  )}
+                                </Grid>
+                                <Collapse
+                                  in={open === index}
+                                  timeout="auto"
+                                  unmountOnExit
+                                >
+                                  {item?.oldBillData?.roomBillDetail?.map(
+                                    (room, i) => (
+                                      <Grid
+                                        item
+                                        xs={12}
+                                        className={classes.boxSave}
+                                        key={i}
+                                      >
+                                        <Grid className={classes.boxDate}>
+                                          <p>
+                                            {t(
+                                              "payment_history_page_hotel_room_name"
+                                            )}
+                                            : <span>{room?.amount}</span>
+                                          </p>
+                                        </Grid>
+                                      </Grid>
+                                    )
+                                  )}
+                                </Collapse>
                               </Grid>
                               <Grid item xs={12} className={classes.boxSave}>
                                 <Grid className={classes.boxPrice}>
@@ -495,20 +540,22 @@ const StayHistory = memo(() => {
                                   <StatusPayment status={item?.paymentStatus} />
                                 </p>
                               </Grid>
-                              <Grid className={classes.boxTitle} item xs={12}>
-                                <p className={classes.textStatus}>
-                                  {t("payment_history_page_tour_status_bill")}{" "}
-                                  {item?.paymentStatus ===
-                                  EPaymentStatus.PAID ? (
-                                    <StatusPayment
-                                      status={item?.status}
-                                      type={true}
-                                    />
-                                  ) : (
-                                    "-"
-                                  )}
-                                </p>
-                              </Grid>
+                              {item?.paymentStatus === EPaymentStatus.PAID && (
+                                <Grid className={classes.boxTitle} item xs={12}>
+                                  <p className={classes.textStatus}>
+                                    {t("payment_history_page_tour_status_bill")}{" "}
+                                    {item?.paymentStatus ===
+                                    EPaymentStatus.PAID ? (
+                                      <StatusPayment
+                                        status={item?.status}
+                                        type={true}
+                                      />
+                                    ) : (
+                                      "-"
+                                    )}
+                                  </p>
+                                </Grid>
+                              )}
                               <Grid
                                 className={clsx(classes.boxImg, {
                                   [classes.boxImgNew]: !item?.oldBillId,

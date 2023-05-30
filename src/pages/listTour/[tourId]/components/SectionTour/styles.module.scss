@@ -348,3 +348,17 @@
         }
 }
 }
+
+.locationStart {
+    display: flex;
+    font-size: 16px;
+
+    p {margin: 0;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+    span {
+        color: var(--primary-color);
+        font-weight: 700;
+    }
+}
