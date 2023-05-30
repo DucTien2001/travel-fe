@@ -82,7 +82,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation("common");
 
-  // Geocode.setApiKey("AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI");
+  Geocode.setApiKey("AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI");
 
   const daySchedule = useMemo(() => {
     return _.chain(tourSchedule)
@@ -291,6 +291,12 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   </div>
                 )}
               </div>
+              <div className={classes.subPlaceStart}>
+                <div className={classes.locationStart}>
+                  <p>{t("tour_detail_section_tour_place_start")}&nbsp;</p>
+                  <span>{tour?.cityStart.name}</span>
+                </div>
+              </div>
               <Row
                 className={classes.containerImg}
                 onClick={onOpenPopupModalImages}
@@ -407,7 +413,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                     {tour?.moreLocation}, {tour?.commune.name},
                     {tour?.district.name}, {tour?.city.name}
                   </p>
-                  {/* <div style={{ height: "30vh", width: "100%" }}>
+                  <div style={{ height: "30vh", width: "100%" }}>
                     <GoogleMapReact
                       bootstrapURLKeys={{
                         key: "AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI",
@@ -426,7 +432,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                         }
                       />
                     </GoogleMapReact>
-                  </div> */}
+                  </div>
                   <div className={classes.contactBox}>
                     <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
                     <p> {t("tour_detail_section_contact")}: </p>

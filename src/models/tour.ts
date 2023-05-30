@@ -9,6 +9,10 @@ export interface Tour {
   district?: OptionItem;
   commune?: OptionItem;
   moreLocation?: string;
+  cityStart?: OptionItem;
+  districtStart?: OptionItem;
+  communeStart?: OptionItem;
+  moreLocationStart?: string;
   highlight?: string;
   termsAndCondition?: string;
   suitablePerson?: string;

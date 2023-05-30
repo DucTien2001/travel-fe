@@ -456,20 +456,22 @@ const Tour = memo(() => {
                                   <StatusPayment status={item?.paymentStatus} />
                                 </p>
                               </Grid>
-                              <Grid className={classes.boxTitle} item xs={12}>
-                                <p className={classes.textStatus}>
-                                  {t("payment_history_page_tour_status_bill")}{" "}
-                                  {item?.paymentStatus ===
-                                  EPaymentStatus.PAID ? (
-                                    <StatusPayment
-                                      status={item?.status}
-                                      type={true}
-                                    />
-                                  ) : (
-                                    "-"
-                                  )}
-                                </p>
-                              </Grid>
+                              {item?.paymentStatus === EPaymentStatus.PAID && (
+                                <Grid className={classes.boxTitle} item xs={12}>
+                                  <p className={classes.textStatus}>
+                                    {t("payment_history_page_tour_status_bill")}{" "}
+                                    {item?.paymentStatus ===
+                                    EPaymentStatus.PAID ? (
+                                      <StatusPayment
+                                        status={item?.status}
+                                        type={true}
+                                      />
+                                    ) : (
+                                      "-"
+                                    )}
+                                  </p>
+                                </Grid>
+                              )}
                               <Grid
                                 className={clsx(classes.boxImg, {
                                   [classes.boxImgNew]: !item?.oldBillId,

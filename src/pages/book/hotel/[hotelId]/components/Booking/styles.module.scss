@@ -201,7 +201,7 @@
 .containerVoucher {
     margin-top: 14px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
     background-color: rgb(236, 248, 255);
     padding: 8px 16px;
 }
@@ -285,7 +285,7 @@
 }
 .inputCoupon {
     display: flex;
-    margin-top: 0px;
+    margin-top: 0px !important;
 }
 
 .btnUseCoupon {

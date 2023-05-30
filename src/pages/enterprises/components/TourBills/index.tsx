@@ -140,6 +140,9 @@ const Tour = memo(({}: Props) => {
     setOpenPopupChangeStatus(!openPopupChangeStatus);
   };
 
+  const sortDataByDate = (first, second) =>
+    Number(Date.parse(second)) - Number(Date.parse(first));
+
   const handleAction = (
     event: React.MouseEvent<HTMLButtonElement>,
     item: TourBill
@@ -215,7 +218,7 @@ const Tour = memo(({}: Props) => {
     TourBillService.findAll(params)
       .then((res) => {
         setData({
-          data: res.data,
+          data: res.data.sort(sortDataByDate),
           meta: res.meta,
         });
       })

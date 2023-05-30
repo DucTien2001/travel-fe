@@ -52,6 +52,10 @@ export interface TourForm {
   district: OptionItem;
   commune: OptionItem;
   moreLocation?: string;
+  provinceStart: OptionItem;
+  districtStart: OptionItem;
+  communeStart: OptionItem;
+  moreLocationStart?: string;
   contact: string;
   description: string;
   highlight: string;
@@ -81,6 +85,9 @@ const InformationComponent = memo((props: Props) => {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [communes, setCommunes] = useState([]);
+  const [provincesStart, setProvincesStart] = useState([]);
+  const [districtsStart, setDistrictsStart] = useState([]);
+  const [communesStart, setCommunesStart] = useState([]);
   const [oldImages, setOldImages] = useState<any>([]);
   const [imagesDeleted, setImagesDeleted] = useState([]);
   const [imagesUpload, setImagesUpload] = useState([]);
@@ -143,6 +150,61 @@ const InformationComponent = memo((props: Props) => {
         })
         .required(),
       moreLocation: yup
+        .string()
+        .required(
+          t(
+            "enterprise_management_section_tour_tab_information_detail_address_validation"
+          )
+        ),
+      provinceStart: yup
+        .object()
+        .typeError(
+          t(
+            "enterprise_management_section_tour_tab_information_city_validation"
+          )
+        )
+        .shape({
+          id: yup.number().required(),
+          name: yup.string().required(),
+        })
+        .required(),
+      districtStart: yup
+        .object()
+        .typeError(
+          t(
+            "enterprise_management_section_tour_tab_information_district_validation"
+          )
+        )
+        .shape({
+          id: yup
+            .number()
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_information_district_validation"
+              )
+            ),
+          name: yup.string().required(),
+        })
+        .required(),
+      communeStart: yup
+        .object()
+        .typeError(
+          t(
+            "enterprise_management_section_tour_tab_information_commune_validation"
+          )
+        )
+        .shape({
+          id: yup
+            .number()
+            .required(
+              t(
+                "enterprise_management_section_tour_tab_information_commune_validation"
+              )
+            ),
+          name: yup.string().required(),
+        })
+        .required(),
+      moreLocationStart: yup
         .string()
         .required(
           t(
@@ -312,6 +374,40 @@ const InformationComponent = memo((props: Props) => {
     });
     return _communes;
   };
+  // place start
+  const fetchProvinceStart = () => {
+    const _provinces = provincesStart?.map((item) => {
+      return {
+        id: item.province_id,
+        name: item.province_name,
+      };
+    });
+    return _provinces;
+  };
+
+  const watchCityStart = watch("provinceStart");
+
+  const fetchDistrictStart = () => {
+    const _districts = districtsStart?.map((item) => {
+      return {
+        id: item.district_id,
+        name: item.district_name,
+      };
+    });
+    return _districts;
+  };
+
+  const watchDistrictStart = watch("districtStart");
+
+  const fetchCommuneStart = () => {
+    const _communes = communes?.map((item) => {
+      return {
+        id: item.ward_id,
+        name: item.ward_name,
+      };
+    });
+    return _communes;
+  };
 
   const _onSubmit = (data: TourForm) => {
     const formData = new FormData();
@@ -323,6 +419,13 @@ const InformationComponent = memo((props: Props) => {
     formData.append("commune[id]", `${data?.commune?.id}`);
     formData.append("commune[name]", data?.commune?.name);
     formData.append("moreLocation", data.moreLocation);
+    formData.append("cityStart[id]", `${data?.provinceStart?.id}`);
+    formData.append("cityStart[name]", data?.provinceStart?.name);
+    formData.append("districtStart[id]", `${data?.districtStart?.id}`);
+    formData.append("districtStart[name]", data?.districtStart?.name);
+    formData.append("communeStart[id]", `${data?.communeStart?.id}`);
+    formData.append("communeStart[name]", data?.communeStart?.name);
+    formData.append("moreLocationStart", data.moreLocationStart);
     formData.append("contact", data.contact);
     formData.append("description", data.description);
     formData.append("suitablePerson", `${data.suitablePerson}`);
@@ -344,6 +447,13 @@ const InformationComponent = memo((props: Props) => {
       formDataEdit.append("commune[id]", `${data?.commune?.id}`);
       formDataEdit.append("commune[name]", data?.commune?.name);
       formDataEdit.append("moreLocation", data.moreLocation);
+      formDataEdit.append("cityStart[id]", `${data?.provinceStart?.id}`);
+      formDataEdit.append("cityStart[name]", data?.provinceStart?.name);
+      formDataEdit.append("districtStart[id]", `${data?.districtStart?.id}`);
+      formDataEdit.append("districtStart[name]", data?.districtStart?.name);
+      formDataEdit.append("communeStart[id]", `${data?.communeStart?.id}`);
+      formDataEdit.append("communeStart[name]", data?.communeStart?.name);
+      formDataEdit.append("moreLocationStart", data.moreLocationStart);
       formDataEdit.append("contact", data.contact);
       formDataEdit.append("description", data.description);
       formDataEdit.append("suitablePerson", `${data.suitablePerson}`);
@@ -414,6 +524,10 @@ const InformationComponent = memo((props: Props) => {
         district: tour?.district,
         commune: tour?.commune,
         moreLocation: tour?.moreLocation,
+        provinceStart: tour?.cityStart,
+        districtStart: tour?.districtStart,
+        communeStart: tour?.communeStart,
+        moreLocationStart: tour?.moreLocationStart,
         contact: tour?.contact,
         description: tour?.description,
         highlight: tour?.highlight,
@@ -467,6 +581,39 @@ const InformationComponent = memo((props: Props) => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchDistrict?.id]);
+
+  useEffect(() => {
+    ProvinceService.getProvince()
+      .then((res) => {
+        setProvincesStart(res?.data.results);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess("Get province fail"));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    ProvinceService.getDistrict(Number(watchCityStart?.id))
+      .then((res) => {
+        setDistrictsStart(res?.data.results);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess("Get district fail"));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchCityStart?.id]);
+
+  useEffect(() => {
+    ProvinceService.getCommune(Number(watchDistrictStart?.id))
+      .then((res) => {
+        setCommunesStart(res?.data.results);
+      })
+      .catch((e) => {
+        dispatch(setErrorMess("Get commune fail"));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchDistrictStart?.id]);
 
   return (
     <div
@@ -581,7 +728,72 @@ const InformationComponent = memo((props: Props) => {
                 errorMessage={errors.moreLocation?.message}
               />
             </Grid>
-
+            {/* start place */}
+            <Grid item xs={6}>
+              <InputSelect
+                fullWidth
+                title={t(
+                  "enterprise_management_section_tour_tab_information_city_start"
+                )}
+                name="provinceStart"
+                control={control}
+                selectProps={{
+                  options: fetchProvinceStart(),
+                  placeholder: t(
+                    "enterprise_management_section_tour_tab_information_city_placeholder"
+                  ),
+                }}
+                errorMessage={(errors.provinceStart as any)?.message}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <InputSelect
+                fullWidth
+                title={t(
+                  "enterprise_management_section_tour_tab_information_district_start"
+                )}
+                name="districtStart"
+                control={control}
+                selectProps={{
+                  options: fetchDistrictStart(),
+                  placeholder: t(
+                    "enterprise_management_section_tour_tab_information_district_placeholder"
+                  ),
+                }}
+                errorMessage={(errors.districtStart as any)?.message}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <InputSelect
+                fullWidth
+                title={t(
+                  "enterprise_management_section_tour_tab_information_commune_start"
+                )}
+                name="communeStart"
+                control={control}
+                selectProps={{
+                  options: fetchCommuneStart(),
+                  placeholder: t(
+                    "enterprise_management_section_tour_tab_information_commune_placeholder"
+                  ),
+                }}
+                errorMessage={(errors.communeStart as any)?.message}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <InputTextfield
+                title={t(
+                  "enterprise_management_section_tour_tab_information_more_location_start"
+                )}
+                placeholder={t(
+                  "enterprise_management_section_tour_tab_information_more_location"
+                )}
+                autoComplete="off"
+                name="moreLocationStart"
+                inputRef={register("moreLocationStart")}
+                errorMessage={errors.moreLocationStart?.message}
+              />
+            </Grid>
             <Grid item xs={6}>
               <InputTextfield
                 title={t(

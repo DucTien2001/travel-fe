@@ -191,8 +191,6 @@ const InputSelect = memo((props: InputSelectProps) => {
                   components={{ DropdownIndicator, Option, SingleValue }}
                   onChange={(e) => onChange && onChange(e)}
                   {...selectProps}
-                  defaultValue={defaultValue}
-                  value={value}
                 />
               ) : (
                 <Select
@@ -202,8 +200,6 @@ const InputSelect = memo((props: InputSelectProps) => {
                   getOptionLabel={(option) => getOptionLabel(option)}
                   components={{ DropdownIndicator, Option, SingleValue }}
                   {...selectProps}
-                  defaultValue={defaultValue}
-                  value={value}
                 />
               )
             }
@@ -217,8 +213,6 @@ const InputSelect = memo((props: InputSelectProps) => {
           components={{ DropdownIndicator, Option, SingleValue }}
           onChange={(e) => onChange && onChange(e)}
           {...selectProps}
-          defaultValue={defaultValue}
-          value={value}
         />
       ) : (
         <Select
@@ -227,8 +221,6 @@ const InputSelect = memo((props: InputSelectProps) => {
           getOptionLabel={(option) => getOptionLabel(option)}
           components={{ DropdownIndicator, Option, SingleValue }}
           {...selectProps}
-          defaultValue={defaultValue}
-          value={value}
         />
       )}
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}

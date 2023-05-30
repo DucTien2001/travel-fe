@@ -178,6 +178,17 @@ const DownloadTourBill = memo(
           </Row>
           <Row className="mb-1">
             <Col xs={4} className={classes.titleInfo}>
+              {t("tour_detail_section_tour_place_start")}:
+            </Col>
+            <Col xs={8} className={classes.info}>
+              {tourBill?.tourData?.moreLocationStart},{" "}
+              {tourBill?.tourData?.communeStart?.name},{" "}
+              {tourBill?.tourData?.districtStart?.name},{" "}
+              {tourBill?.tourData?.cityStart?.name}
+            </Col>
+          </Row>
+          <Row className="mb-1">
+            <Col xs={4} className={classes.titleInfo}>
               {t("popup_download_view_tour_title_tour_start")}:
             </Col>
             <Col xs={8} className={classes.info}>

@@ -95,9 +95,7 @@ const DownloadTourBill = memo(
               {t("popup_download_view_tour_title_person_purchase")}
             </Col>
             <Col xs={8} className={classes.info}>
-              {moment(roomBill?.roomBillDetail[0]?.bookedDate).format(
-                "DD/MM/YYYY"
-              )}
+              {moment(roomBill?.createdAt).format("DD/MM/YYYY")}
             </Col>
           </Row>
           {/* {tourBill?.amountChild !== 0 && (
