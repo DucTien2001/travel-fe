@@ -123,11 +123,7 @@ const AddOrEditCommission = memo((props: Props) => {
                 "admin_management_section_commission_add_or_edit_max_price_validate_min"
               )
             )
-            .required(
-              t(
-                "admin_management_section_commission_add_or_edit_max_price_validate"
-              )
-            ),
+            .nullable(),
           rate: yup
             .number()
             .integer()
@@ -174,7 +170,7 @@ const AddOrEditCommission = memo((props: Props) => {
     if (commission) {
       CommissionService.update(commission?.id, {
         minPrice: data?.minPrice,
-        maxPrice: data?.maxPrice,
+        maxPrice: data?.maxPrice || null,
         rate: data?.rate,
       })
         .then(() => {
@@ -190,7 +186,7 @@ const AddOrEditCommission = memo((props: Props) => {
     } else {
       CommissionService.create({
         minPrice: data?.minPrice,
-        maxPrice: data?.maxPrice,
+        maxPrice: data?.maxPrice || null,
         rate: data?.rate,
         serviceType: data?.serviceType.value,
       })
