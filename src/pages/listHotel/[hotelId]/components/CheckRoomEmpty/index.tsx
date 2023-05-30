@@ -6,7 +6,12 @@ import InputCounter from "components/common/inputs/InputCounter";
 import classes from "./styles.module.scss";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPhone, faUser, faUserGroup } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faPhone,
+  faUser,
+  faUserGroup,
+} from "@fortawesome/free-solid-svg-icons";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,7 +20,12 @@ import { RoomService } from "services/normal/room";
 import { useDispatch } from "react-redux";
 import { HOTEL_SECTION } from "models/hotel";
 import { useRouter } from "next/router";
-import { fCurrency2, fCurrency2VND, fPercent, fShortenNumber } from "utils/formatNumber";
+import {
+  fCurrency2,
+  fCurrency2VND,
+  fPercent,
+  fShortenNumber,
+} from "utils/formatNumber";
 import useAuth from "hooks/useAuth";
 import { Grid, Collapse } from "@mui/material";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
@@ -35,10 +45,21 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import moment, { Moment } from "moment";
 import InputTextfield from "components/common/inputs/InputTextfield";
 import { useTranslation } from "react-i18next";
-import { DataPagination, EDiscountType, EServicePolicyType, EServiceType, ESortOption, sortOption } from "models/general";
+import {
+  DataPagination,
+  EDiscountType,
+  EServicePolicyType,
+  EServiceType,
+  ESortOption,
+  sortOption,
+} from "models/general";
 import InputSelect from "components/common/inputs/InputSelect";
 import { NormalGetRoom, Room } from "models/room";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { setRoomBillConfirmReducer } from "redux/reducers/Normal/actionTypes";
 import PopupDetailRoom from "../PopupDetailRoom";
@@ -78,11 +99,19 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
     let validate: any = {
       departure: yup
         .date()
-        .max(yup.ref("return"), t("stay_detail_section_stay_check_room_empty_start_time_validate_error"))
+        .max(
+          yup.ref("return"),
+          t(
+            "stay_detail_section_stay_check_room_empty_start_time_validate_error"
+          )
+        )
         .required("Start datetime is required"),
       return: yup
         .date()
-        .min(yup.ref("departure"), t("stay_detail_section_stay_check_room_empty_end_time_validate_error"))
+        .min(
+          yup.ref("departure"),
+          t("stay_detail_section_stay_check_room_empty_end_time_validate_error")
+        )
         .required("End datetime is required"),
       amountList: yup.array().of(
         yup.object().shape({
@@ -93,12 +122,20 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
     if (router.query?.action) {
       validate = {
         ...validate,
-        firstName: yup.string().required(t("book_page_section_contact_detail_first_name_validation")),
-        lastName: yup.string().required(t("book_page_section_contact_detail_last_name_validation")),
+        firstName: yup
+          .string()
+          .required(
+            t("book_page_section_contact_detail_first_name_validation")
+          ),
+        lastName: yup
+          .string()
+          .required(t("book_page_section_contact_detail_last_name_validation")),
         email: yup
           .string()
           .email(t("book_page_section_contact_detail_email_validation"))
-          .required(t("book_page_section_contact_detail_email_validation_error")),
+          .required(
+            t("book_page_section_contact_detail_email_validation_error")
+          ),
         phoneNumber: yup
           .string()
           .required(t("book_page_section_contact_detail_phone_validation"))
@@ -117,11 +154,15 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
   const [focus, setFocus] = useState(false);
   const [open, setOpen] = useState(0);
   const [dateStart, setDateStart] = useState<Moment>(moment(new Date()));
-  const [dateEnd, setDateEnd] = useState<Moment>(moment(new Date(Date.now() + 3600 * 1000 * 24)));
+  const [dateEnd, setDateEnd] = useState<Moment>(
+    moment(new Date(Date.now() + 3600 * 1000 * 24))
+  );
   const [numberOfAdult, setNumberOfAdult] = useState(null);
   const [numberOfChild, setNumberOfChild] = useState(null);
   const [numberOfRoom, setNumberOfRoom] = useState(null);
-  const [roomFilter, setRoomFilter] = useState<number>(ESortOption.LOWEST_PRICE);
+  const [roomFilter, setRoomFilter] = useState<number>(
+    ESortOption.LOWEST_PRICE
+  );
   const [data, setData] = useState<DataPagination<Room>>();
   const [itemRoom, setItemRoom] = useState<Room>(null);
 
@@ -138,7 +179,13 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
   const [priceMustPay, setPriceMustPay] = useState(null);
 
   const refundRate = useMemo(() => {
-    return BillHelper.getRefundRate(roomBill?.startDate, EServicePolicyType.RESCHEDULE, roomBill?.stayData?.stayPolicies) || 0;
+    return (
+      BillHelper.getRefundRate(
+        roomBill?.startDate,
+        EServicePolicyType.RESCHEDULE,
+        roomBill?.stayData?.stayPolicies
+      ) || 0
+    );
   }, [roomBill]);
   const priceRefund = useMemo(() => {
     return (roomBill?.totalBill * refundRate) / 100 || 0;
@@ -181,13 +228,25 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
     setItemRoom(null);
   };
 
-  const fetchData = (value?: { take?: number; page?: number; keyword?: string; startDate?: Date; endDate?: Date }) => {
+  const fetchData = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+    startDate?: Date;
+    endDate?: Date;
+  }) => {
     const params: NormalGetRoom = {
       stayId: stay?.id || Number(router.query.hotelId.slice(1)),
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
-      startDate: dateStart?.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })?.toDate() || value?.startDate,
-      endDate: dateEnd?.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })?.toDate() || value?.endDate,
+      startDate:
+        dateStart
+          ?.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+          ?.toDate() || value?.startDate,
+      endDate:
+        dateEnd
+          ?.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+          ?.toDate() || value?.endDate,
       sort: roomFilter || null,
       numberOfAdult: numberOfAdult || null,
       numberOfChildren: numberOfChild || null,
@@ -278,7 +337,14 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateStart, dateEnd, roomFilter, numberOfAdult, numberOfChild, numberOfRoom]);
+  }, [
+    dateStart,
+    dateEnd,
+    roomFilter,
+    numberOfAdult,
+    numberOfChild,
+    numberOfRoom,
+  ]);
 
   useEffect(() => {
     setValue(
@@ -331,7 +397,10 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
       if (voucherChoose) {
         if (voucherChoose?.discountType === EDiscountType.PERCENT) {
           discount = (totalPrice * voucherChoose.discountValue) / 100;
-          if (!!voucherChoose.maxDiscount && discount > voucherChoose.maxDiscount) {
+          if (
+            !!voucherChoose.maxDiscount &&
+            discount > voucherChoose.maxDiscount
+          ) {
             discount = voucherChoose.maxDiscount;
           }
         } else {
@@ -359,7 +428,11 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
           dispatch(setSuccessMess(t("update_bill_price_apply_coupon_success")));
         } else {
           dispatch(
-            setErrorMess({ message: t("update_bill_price_apply_coupon_min_price", { minPrice: fCurrency2VND(valueEvent?.minOrder) }) })
+            setErrorMess({
+              message: t("update_bill_price_apply_coupon_min_price", {
+                minPrice: fCurrency2VND(valueEvent?.minOrder),
+              }),
+            })
           );
         }
       }
@@ -383,7 +456,12 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
   }, [stay, router.query]);
 
   // re-schedule
-  const fetchVoucher = (value?: { take?: number; page?: number; keyword?: string; owner?: number }) => {
+  const fetchVoucher = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+    owner?: number;
+  }) => {
     const params: FindAll = {
       take: value?.take || voucher?.meta?.take || 10,
       page: value?.page || voucher?.meta?.page || 1,
@@ -433,7 +511,9 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
         setValueEvent(res?.data);
       })
       .catch((e) => {
-        dispatch(setErrorMess({ message: t("update_bill_price_apply_coupon_fail") }));
+        dispatch(
+          setErrorMess({ message: t("update_bill_price_apply_coupon_fail") })
+        );
       })
       .finally(() => {
         dispatch(setLoading(false));
@@ -503,11 +583,18 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
             {t("stay_detail_section_stay_check_room_empty_title")} {stay?.name}
           </h5>
           <Grid>
-            <Grid xs={12} container className={classes.inputDateContainer} spacing={2}>
+            <Grid
+              xs={12}
+              container
+              className={classes.inputDateContainer}
+              spacing={2}
+            >
               <Grid item xs={2} className={classes.boxItemSearch}>
                 <InputDatePicker
                   className={classes.inputSearchDate}
-                  label={t("stay_detail_section_stay_check_room_empty_departure")}
+                  label={t(
+                    "stay_detail_section_stay_check_room_empty_departure"
+                  )}
                   placeholder="Departure"
                   name="departure"
                   dateFormat="DD/MM/YYYY"
@@ -547,18 +634,26 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   control={control}
                 />
               </Grid>
-              <Grid className={clsx(classes.boxItem, classes.boxGuest)} item xs={5}>
+              <Grid
+                className={clsx(classes.boxItem, classes.boxGuest)}
+                item
+                xs={5}
+              >
                 <InputTextfield
-                  title={t("landing_page_section_search_stay_input_guest_title")}
+                  title={t(
+                    "landing_page_section_search_stay_input_guest_title"
+                  )}
                   className={classes.inputSearchLocation}
                   placeholder="Guest and Room"
                   name="people"
                   autoComplete="off"
                   startAdornment={<FamilyRestroomIcon />}
                   onFocus={onFocus}
-                  value={`${numberOfAdult ? numberOfAdult : 1} ${t("landing_page_section_search_stay_input_adult_placeholder")}, ${
-                    numberOfChild ? numberOfChild : 0
-                  } ${t("landing_page_section_search_stay_input_child_placeholder")}, ${numberOfRoom ? numberOfRoom : 1} ${t(
+                  value={`${numberOfAdult ? numberOfAdult : 1} ${t(
+                    "landing_page_section_search_stay_input_adult_placeholder"
+                  )}, ${numberOfChild ? numberOfChild : 0} ${t(
+                    "landing_page_section_search_stay_input_child_placeholder"
+                  )}, ${numberOfRoom ? numberOfRoom : 1} ${t(
                     "landing_page_section_search_stay_input_room_placeholder"
                   )}`}
                 />
@@ -576,7 +671,11 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                       >
                         <Grid className={classes.boxTitleCounter}>
                           <PeopleAltIcon />
-                          <p>{t("landing_page_section_search_stay_input_adult_placeholder")}</p>
+                          <p>
+                            {t(
+                              "landing_page_section_search_stay_input_adult_placeholder"
+                            )}
+                          </p>
                         </Grid>
                         <Grid>
                           <InputCounter
@@ -599,7 +698,11 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                       >
                         <Grid className={classes.boxTitleCounter}>
                           <ChildFriendlyIcon />
-                          <p>{t("landing_page_section_search_stay_input_child_placeholder")}</p>
+                          <p>
+                            {t(
+                              "landing_page_section_search_stay_input_child_placeholder"
+                            )}
+                          </p>
                         </Grid>
                         <Grid>
                           <InputCounter
@@ -622,7 +725,11 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                       >
                         <Grid className={classes.boxTitleCounter}>
                           <MeetingRoomIcon />
-                          <p>{t("landing_page_section_search_stay_input_room_placeholder")}</p>
+                          <p>
+                            {t(
+                              "landing_page_section_search_stay_input_room_placeholder"
+                            )}
+                          </p>
                         </Grid>
                         <Grid>
                           <InputCounter
@@ -643,7 +750,10 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                         }}
                         xs={12}
                       >
-                        <Button btnType={BtnType.Secondary} onClick={() => setFocus(!focus)}>
+                        <Button
+                          btnType={BtnType.Secondary}
+                          onClick={() => setFocus(!focus)}
+                        >
                           {t("common_cancel")}
                         </Button>
                       </Grid>
@@ -665,8 +775,13 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
               </Grid>
             </Grid>
             <Grid className={classes.boxResetFilter}>
-              <Button btnType={BtnType.Primary} className={classes.btnResetOption} onClick={onClearFilter}>
-                <FontAwesomeIcon icon={faArrowsRotate} /> {t("list_tours_reset_filter")}
+              <Button
+                btnType={BtnType.Primary}
+                className={classes.btnResetOption}
+                onClick={onClearFilter}
+              >
+                <FontAwesomeIcon icon={faArrowsRotate} />{" "}
+                {t("list_tours_reset_filter")}
               </Button>
             </Grid>
           </Grid>
@@ -674,8 +789,18 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
       </Container>
       <Container className={classes.rootRooms}>
         {data?.data?.map((room, index) => (
-          <Grid sx={{ padding: "16px" }} container key={index} className={classes.containerCheckRoom}>
-            <Grid className={classes.leftPanel} item xs={3} onClick={(e) => onTogglePopupDetailRoom(e, room)}>
+          <Grid
+            sx={{ padding: "16px" }}
+            container
+            key={index}
+            className={classes.containerCheckRoom}
+          >
+            <Grid
+              className={classes.leftPanel}
+              item
+              xs={3}
+              onClick={(e) => onTogglePopupDetailRoom(e, room)}
+            >
               <Grid className={classes.boxLeftItem}>
                 <Grid sx={{ position: "relative", cursor: "pointer" }}>
                   <img src={room?.images[0]} alt="anh"></img>
@@ -693,20 +818,31 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   </Grid>
                 </Grid>
                 <Grid sx={{ padding: "14px" }}>
-                  <Grid sx={{ paddingBottom: "10px" }}>
+                  <Grid
+                    sx={{ paddingBottom: "10px" }}
+                    className={classes.boxUtility}
+                  >
                     {room?.utility?.map((item) => (
                       <Badge className={classes.tag} key={index}>
                         {item}
                       </Badge>
                     ))}
                   </Grid>
-                  <Button btnType={BtnType.Outlined} className={classes.btnSeeRoom} onClick={(e) => onTogglePopupDetailRoom(e, room)}>
+                  <Button
+                    btnType={BtnType.Outlined}
+                    className={classes.btnSeeRoom}
+                    onClick={(e) => onTogglePopupDetailRoom(e, room)}
+                  >
                     {t("stay_detail_section_stay_check_room_empty_see_detail")}
                   </Button>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid xs={9} sx={{ paddingLeft: "10px" }} className={classes.rootRightPanel}>
+            <Grid
+              xs={9}
+              sx={{ paddingLeft: "10px" }}
+              className={classes.rootRightPanel}
+            >
               <Grid className={classes.rightPanel}>
                 <Grid className={classes.rightPanelHeader}>
                   <Grid>
@@ -715,69 +851,149 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   <Grid>
                     <FontAwesomeIcon icon={faUserGroup}></FontAwesomeIcon>
                     <span>
-                      {room?.numberOfAdult} {t("stay_detail_section_stay_check_room_empty_adult")}, {room?.numberOfChildren}{" "}
+                      {room?.numberOfAdult}{" "}
+                      {t("stay_detail_section_stay_check_room_empty_adult")},{" "}
+                      {room?.numberOfChildren}{" "}
                       {t("stay_detail_section_stay_check_room_empty_child")}
                     </span>
                   </Grid>
                 </Grid>
                 <Grid className={classes.boxServices} container>
                   <Grid item xs={4}>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemService}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemService}
+                    >
                       <RestaurantIcon />
-                      <span>{t("stay_detail_section_stay_check_room_empty_free_breakfast")}</span>
+                      <span>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_free_breakfast"
+                        )}
+                      </span>
                     </Grid>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemService}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemService}
+                    >
                       <WifiIcon />
-                      <span>{t("stay_detail_section_stay_check_room_empty_free_wifi")}</span>
+                      <span>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_free_wifi"
+                        )}
+                      </span>
                     </Grid>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemService}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemService}
+                    >
                       <SmokeFreeIcon />
-                      <span>{t("stay_detail_section_stay_check_room_empty_non_smoking")}</span>
+                      <span>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_non_smoking"
+                        )}
+                      </span>
                     </Grid>
                   </Grid>
                   <Grid item xs={4}>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemInforRoom}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemInforRoom}
+                    >
                       <BedIcon />
                       <span>
                         {" "}
-                        {t("stay_detail_section_stay_check_room_empty_number_of_bed")}: {room?.numberOfBed}
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_number_of_bed"
+                        )}
+                        : {room?.numberOfBed}
                       </span>
                     </Grid>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemInforRoom}>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemInforRoom}
+                    >
                       <CheckBoxIcon />
                       <span>
-                        {t("stay_detail_section_stay_check_room_empty_number_of_room_left")}: {room?.numberOfRoom}
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_number_of_room_left"
+                        )}
+                        : {room?.numberOfRoom}
                       </span>
                     </Grid>
                   </Grid>
                   <Grid item xs={4} className={classes.boxPrice}>
                     {room?.discount !== 0 && (
-                      <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemPriceRoom}>
+                      <Grid
+                        sx={{ padding: "0 0 10px 0" }}
+                        className={classes.itemPriceRoom}
+                      >
                         <span className={classes.discount}>
-                          {fCurrency2(Math.ceil(listMinPrice[index] * ((100 - room?.discount) / 100)))} VND
+                          {fCurrency2(listMinPrice[index])} VND
                         </span>
                       </Grid>
                     )}
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemPriceRoom}>
-                      <span>{t("stay_detail_section_stay_from_review")} &nbsp;</span> <p> {fCurrency2(listMinPrice[index])} VND</p>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemPriceRoom}
+                    >
+                      <span>
+                        {t("stay_detail_section_stay_from_review")} &nbsp;
+                      </span>{" "}
+                      <p>
+                        {fCurrency2(
+                          Math.ceil(
+                            listMinPrice[index] * ((100 - room?.discount) / 100)
+                          )
+                        )}{" "}
+                        VND
+                      </p>
                     </Grid>
-                    <Grid sx={{ padding: "0 0 10px 0" }} className={classes.itemPriceRoom}>
-                      <span>{t("stay_detail_section_stay_check_room_empty_room_night")}</span>
+                    <Grid
+                      sx={{ padding: "0 0 10px 0" }}
+                      className={classes.itemPriceRoom}
+                    >
+                      <span>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_room_night"
+                        )}
+                      </span>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid className={classes.boxDetailPrice}>
-                  <Grid onClick={() => setOpen(open === index ? -1 : index)} className={classes.boxControl}>
-                    <p>{t("stay_detail_section_stay_check_room_empty_price_detail")}</p>
-                    {open === index ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                  <Grid
+                    onClick={() => setOpen(open === index ? -1 : index)}
+                    className={classes.boxControl}
+                  >
+                    <p>
+                      {t(
+                        "stay_detail_section_stay_check_room_empty_price_detail"
+                      )}
+                    </p>
+                    {open === index ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    )}
                   </Grid>
                   <Collapse in={open === index} timeout="auto" unmountOnExit>
-                    <Grid sx={{ display: "flex", justifyContent: "space-between" }} container>
+                    <Grid
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                      container
+                    >
                       {room?.prices?.map((priceInfo, index) => (
-                        <Grid className={classes.itemPrice} xs={6} item key={index}>
+                        <Grid
+                          className={classes.itemPrice}
+                          xs={6}
+                          item
+                          key={index}
+                        >
                           <p>
-                            {moment(priceInfo?.date).format("DD/MM/YYYY")} {":"} <span>{fCurrency2(priceInfo?.price)} VND</span>{" "}
-                            {t("stay_detail_section_stay_check_room_empty_room_night")}
+                            {moment(priceInfo?.date).format("DD/MM/YYYY")} {":"}{" "}
+                            <span>{fCurrency2(priceInfo?.price)} VND</span>{" "}
+                            {t(
+                              "stay_detail_section_stay_check_room_empty_room_night"
+                            )}
                           </p>
                         </Grid>
                       ))}
@@ -787,11 +1003,19 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                 <Grid className={classes.footerPrice}>
                   <Grid className={classes.boxTip}>
                     <InfoIcon />
-                    <p>{t("stay_detail_section_stay_check_room_empty_tip_select")}</p>
+                    <p>
+                      {t(
+                        "stay_detail_section_stay_check_room_empty_tip_select"
+                      )}
+                    </p>
                   </Grid>
                   <Grid className={classes.boxNumberOfRoom}>
                     <Grid sx={{ flex: "2", paddingRight: "10px" }}>
-                      <p>{t("stay_detail_section_stay_check_room_empty_number_of_room")}</p>
+                      <p>
+                        {t(
+                          "stay_detail_section_stay_check_room_empty_number_of_room"
+                        )}
+                      </p>
                     </Grid>
                     <Grid sx={{ flex: "1" }}>
                       <Controller
@@ -812,13 +1036,22 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <PopupDetailRoom isOpen={!!itemRoom} toggle={onClosePopupDetailRoom} room={itemRoom} minPrice={listMinPrice[index]} />
+            {itemRoom?.id === room?.id && (
+              <PopupDetailRoom
+                isOpen={!!itemRoom}
+                toggle={onClosePopupDetailRoom}
+                room={itemRoom}
+                minPrice={listMinPrice[index]}
+              />
+            )}
           </Grid>
         ))}
         {router.query?.hotelId && (
           <Grid className={classes.footerRoom}>
             <Grid className={classes.boxTotalPrice}>
-              <p>{t("stay_detail_section_stay_check_room_empty_total_price")}</p>
+              <p>
+                {t("stay_detail_section_stay_check_room_empty_total_price")}
+              </p>
               <p className={classes.price}>
                 <span>{fCurrency2(Math.ceil(totalPrice))} VND</span>
                 {/* <span>{fCurrency2(Math.ceil(totalPrice))} VND</span> / {totalRoom}{" "}
@@ -826,7 +1059,11 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
               </p>
             </Grid>
             <Grid className={classes.btnControl}>
-              <Button btnType={BtnType.Secondary} type="submit" disabled={totalPrice === 0}>
+              <Button
+                btnType={BtnType.Secondary}
+                type="submit"
+                disabled={totalPrice === 0}
+              >
                 {t("stay_detail_section_stay_check_room_empty_book_now")}
               </Button>
             </Grid>
@@ -841,18 +1078,26 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                 <Grid item xs={12}>
                   <InputTextfield
                     title={t("book_page_section_contact_detail_first_name")}
-                    placeholder={t("book_page_section_contact_detail_first_name")}
+                    placeholder={t(
+                      "book_page_section_contact_detail_first_name"
+                    )}
                     inputRef={register("firstName")}
-                    startAdornment={<FontAwesomeIcon icon={faUser}></FontAwesomeIcon>}
+                    startAdornment={
+                      <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+                    }
                     errorMessage={errors?.firstName?.message}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputTextfield
                     title={t("book_page_section_contact_detail_last_name")}
-                    placeholder={t("book_page_section_contact_detail_last_name")}
+                    placeholder={t(
+                      "book_page_section_contact_detail_last_name"
+                    )}
                     inputRef={register("lastName")}
-                    startAdornment={<FontAwesomeIcon icon={faUser}></FontAwesomeIcon>}
+                    startAdornment={
+                      <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+                    }
                     errorMessage={errors?.lastName?.message}
                   />
                 </Grid>
@@ -861,7 +1106,9 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                     title={t("book_page_section_contact_detail_email")}
                     placeholder={t("book_page_section_contact_detail_email")}
                     inputRef={register("email")}
-                    startAdornment={<FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>}
+                    startAdornment={
+                      <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
+                    }
                     errorMessage={errors?.email?.message}
                   />
                 </Grid>
@@ -870,7 +1117,9 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                     title={t("book_page_section_contact_detail_phone")}
                     placeholder={t("book_page_section_contact_detail_phone")}
                     inputRef={register("phoneNumber")}
-                    startAdornment={<FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>}
+                    startAdornment={
+                      <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
+                    }
                     errorMessage={errors?.phoneNumber?.message}
                   />
                 </Grid>
@@ -901,48 +1150,69 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                   <Grid sx={{ display: "flex", paddingTop: "14px" }}>
                     {voucherChoose ? (
                       <Grid>
-                        {voucherChoose?.discountType === EDiscountType.PERCENT ? (
+                        {voucherChoose?.discountType ===
+                        EDiscountType.PERCENT ? (
                           <Grid
                             className={clsx(classes.boxVoucher, {
-                              [classes.boxVoucherInValid]: handleValidVoucher(voucherChoose?.startTime),
+                              [classes.boxVoucherInValid]: handleValidVoucher(
+                                voucherChoose?.startTime
+                              ),
                             })}
                           >
                             <span>
-                              {t("voucher_title_deal")} {fPercent(voucherChoose?.discountValue)}
+                              {t("voucher_title_deal")}{" "}
+                              {fPercent(voucherChoose?.discountValue)}
                             </span>
                             {voucherChoose?.maxDiscount !== 0 && (
                               <span>
-                                {t("voucher_title_max")} {fCurrency2VND(voucherChoose?.maxDiscount)} VND
+                                {t("voucher_title_max")}{" "}
+                                {fCurrency2VND(voucherChoose?.maxDiscount)} VND
                               </span>
                             )}
                           </Grid>
                         ) : (
                           <Grid
                             className={clsx(classes.boxVoucher, {
-                              [classes.boxVoucherInValid]: handleValidVoucher(voucherChoose?.startTime),
+                              [classes.boxVoucherInValid]: handleValidVoucher(
+                                voucherChoose?.startTime
+                              ),
                             })}
                           >
-                            {t("voucher_title_deal")} {fShortenNumber(voucherChoose?.discountValue)} VND
+                            {t("voucher_title_deal")}{" "}
+                            {fShortenNumber(voucherChoose?.discountValue)} VND
                           </Grid>
                         )}
                       </Grid>
                     ) : (
                       <Grid>
-                        <p style={{ fontWeight: "600" }}>{t("update_bill_price_detail_no_use_voucher")}</p>
+                        <p style={{ fontWeight: "600" }}>
+                          {t("update_bill_price_detail_no_use_voucher")}
+                        </p>
                       </Grid>
                     )}
                   </Grid>
-                  <Grid className={classes.btnChooseVoucher} onClick={onOpenPopupVoucher}>
+                  <Grid
+                    className={classes.btnChooseVoucher}
+                    onClick={onOpenPopupVoucher}
+                  >
                     <p>{t("update_bill_price_detail_choose_voucher")}</p>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid container spacing={2} sx={{ marginTop: "8px" }}>
                 <Grid item xs={8}>
-                  <InputTextfield placeholder="Example: CHEAPTRAVEL" type="text" onChange={(e) => setInputValueCode(e.target.value)} />
+                  <InputTextfield
+                    placeholder="Example: CHEAPTRAVEL"
+                    type="text"
+                    onChange={(e) => setInputValueCode(e.target.value)}
+                  />
                 </Grid>
                 <Grid item xs={4}>
-                  <Button btnType={BtnType.Primary} className={classes.btnUseCoupon} onClick={onUseCoupon}>
+                  <Button
+                    btnType={BtnType.Primary}
+                    className={classes.btnUseCoupon}
+                    onClick={onUseCoupon}
+                  >
                     {t("book_page_section_price_detail_use_coupon_btn")}
                   </Button>
                 </Grid>
@@ -953,8 +1223,12 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                     <p>{t("update_bill_price_detail_total_coupon_price")}:</p>
                     <p>{fCurrency2VND(voucherDiscount + couponDiscount)} VND</p>
                   </Grid>
-                  <Grid className={clsx(classes.resSheduleDetail, classes.boxPrice)}>
-                    <p>{t("update_bill_price_detail_price_after_apply_coupon")}:</p>
+                  <Grid
+                    className={clsx(classes.resSheduleDetail, classes.boxPrice)}
+                  >
+                    <p>
+                      {t("update_bill_price_detail_price_after_apply_coupon")}:
+                    </p>
                     <p>{fCurrency2VND(totalBillAfterDiscount)} VND</p>
                   </Grid>
                 </Grid>
@@ -966,19 +1240,29 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
                     {priceMustPay >= 0 ? (
                       <Grid className={classes.resSheduleDetail}>
                         <p>{t("update_bill_price_detail_price_you_extra")}:</p>
-                        <p className={classes.price}>{fCurrency2VND(priceMustPay)} VND</p>
+                        <p className={classes.price}>
+                          {fCurrency2VND(priceMustPay)} VND
+                        </p>
                       </Grid>
                     ) : (
                       <Grid className={classes.resSheduleDetail}>
-                        <p>{t("update_bill_price_detail_price_you_reimbursed")}:</p>
-                        <p className={classes.price}>{fCurrency2VND(-priceMustPay)} VND</p>
+                        <p>
+                          {t("update_bill_price_detail_price_you_reimbursed")}:
+                        </p>
+                        <p className={classes.price}>
+                          {fCurrency2VND(-priceMustPay)} VND
+                        </p>
                       </Grid>
                     )}
                   </Grid>
                 </>
               )}
               <Grid className={classes.btnControl}>
-                <Button btnType={BtnType.Secondary} disabled={totalPrice === 0} onClick={handleSubmit(onReSchedule)}>
+                <Button
+                  btnType={BtnType.Secondary}
+                  disabled={totalPrice === 0}
+                  onClick={handleSubmit(onReSchedule)}
+                >
                   Xác nhận đổi lịch
                 </Button>
               </Grid>

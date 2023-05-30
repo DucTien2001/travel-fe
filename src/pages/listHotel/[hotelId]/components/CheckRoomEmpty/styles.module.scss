@@ -448,3 +448,12 @@
         }
     }
 }
+
+.boxUtility {
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-overflow: ellipsis !important;
+    white-space: nowrap;
+    word-wrap: break-word;
+}
