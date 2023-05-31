@@ -498,15 +498,17 @@ const Comments = memo(({}: Props) => {
           </Grid>
         )}
 
-        <Grid className={classes.boxViewMore}>
-          {/* <Button btnType={BtnType.Primary}>See More</Button>
-           */}
-          <Pagination
-            count={data?.meta?.pageCount || 0}
-            page={data?.meta?.page}
-            onChange={handleChangePage}
-          />
-        </Grid>
+        {data?.data?.length !== 0 && (
+          <Grid className={classes.boxViewMore}>
+            {/* <Button btnType={BtnType.Primary}>See More</Button>
+             */}
+            <Pagination
+              count={data?.meta?.pageCount || 0}
+              page={data?.meta?.page}
+              onChange={handleChangePage}
+            />
+          </Grid>
+        )}
 
         <Menu
           transformOrigin={{

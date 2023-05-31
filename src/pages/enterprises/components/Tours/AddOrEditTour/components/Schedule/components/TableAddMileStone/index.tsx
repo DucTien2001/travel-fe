@@ -252,7 +252,7 @@ const PopupAddMileStone = memo((props: Props) => {
         })),
       })
         .then(() => {
-          dispatch(setSuccessMess(t("common_success")));
+          dispatch(setSuccessMess(t("common_create_success")));
           onGetAllSchedule();
         })
         .catch((e) => {
