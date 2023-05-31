@@ -157,9 +157,9 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
   const [dateEnd, setDateEnd] = useState<Moment>(
     moment(new Date(Date.now() + 3600 * 1000 * 24))
   );
-  const [numberOfAdult, setNumberOfAdult] = useState(null);
-  const [numberOfChild, setNumberOfChild] = useState(null);
-  const [numberOfRoom, setNumberOfRoom] = useState(null);
+  const [numberOfAdult, setNumberOfAdult] = useState(2);
+  const [numberOfChild, setNumberOfChild] = useState(0);
+  const [numberOfRoom, setNumberOfRoom] = useState(1);
   const [roomFilter, setRoomFilter] = useState<number>(
     ESortOption.LOWEST_PRICE
   );
