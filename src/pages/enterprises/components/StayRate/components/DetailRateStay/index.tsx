@@ -497,7 +497,7 @@ const Stay = memo(({ stayId }: Props) => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={8}>
+                  <TableCell align="center" colSpan={9}>
                     <SearchNotFound searchQuery={keyword} />
                   </TableCell>
                 </TableRow>

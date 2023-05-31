@@ -23,7 +23,7 @@ import { DataPagination, EServiceType } from "models/general";
 import { useDispatch } from "react-redux";
 import { CommissionService } from "services/enterprise/commission";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
-import { fCurrency2VND } from "utils/formatNumber";
+import { fCurrency2VND, fPercent } from "utils/formatNumber";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import { useTranslation } from "react-i18next";
 
@@ -104,7 +104,7 @@ const TermsAndCondition = memo((props: Props) => {
                             {
                               minPrice: fCurrency2VND(item?.minPrice),
                               maxPrice: fCurrency2VND(item?.maxPrice),
-                              rate: item?.rate,
+                              rate: fPercent(item?.rate * 100),
                             }
                           ),
                         }}
@@ -117,7 +117,7 @@ const TermsAndCondition = memo((props: Props) => {
                             "popup_enterprise_term_and_condition_content_no_max_price",
                             {
                               minPrice: fCurrency2VND(item?.minPrice),
-                              rate: item?.rate,
+                              rate: fPercent(item?.rate * 100),
                             }
                           ),
                         }}
@@ -150,7 +150,7 @@ const TermsAndCondition = memo((props: Props) => {
                             {
                               minPrice: fCurrency2VND(item?.minPrice),
                               maxPrice: fCurrency2VND(item?.maxPrice),
-                              rate: item?.rate,
+                              rate: fPercent(item?.rate * 100),
                             }
                           ),
                         }}
@@ -163,7 +163,7 @@ const TermsAndCondition = memo((props: Props) => {
                             "popup_enterprise_term_and_condition_content_no_max_price",
                             {
                               minPrice: fCurrency2VND(item?.minPrice),
-                              rate: item?.rate,
+                              rate: fPercent(item?.rate * 100),
                             }
                           ),
                         }}

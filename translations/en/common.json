@@ -940,8 +940,8 @@
 
   "popup_enterprise_term_and_condition": "Terms and Conditions",
   "popup_enterprise_term_and_condition_tour": "Tour",
-  "popup_enterprise_term_and_condition_content": "- If the bill has the smallest value from <span>{{minPrice}}</span> VND and the largest from <span>{{maxPrice}}</span> VND, the discount amount is: <span>{{rate}}</span> %",
-  "popup_enterprise_term_and_condition_content_no_max_price": "- If the bill has the smallest value from <span>{{minPrice}}</span> VND, the discount amount is: <span>{{rate}}</span> %",
+  "popup_enterprise_term_and_condition_content": "- If the bill has the smallest value from <span>{{minPrice}}</span> VND and the largest from <span>{{maxPrice}}</span> VND, the discount amount is: <span>{{rate}}</span> ",
+  "popup_enterprise_term_and_condition_content_no_max_price": "- If the bill has the smallest value from <span>{{minPrice}}</span> VND, the discount amount is: <span>{{rate}}</span> ",
   "popup_enterprise_term_and_condition_stay": "Stay",
   "popup_enterprise_term_and_condition_no_terms": "No terms and conditions",
 
