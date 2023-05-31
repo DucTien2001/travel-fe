@@ -125,7 +125,7 @@ const ListHotels: NextPage = () => {
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
     fetchData({
-      page: newPage + 1,
+      page: newPage,
     });
   };
   
@@ -311,6 +311,7 @@ const ListHotels: NextPage = () => {
                       maxPrice={stay?.maxPrice}
                       rate={Math.floor(stay?.rate)}
                       isHotel={true}
+                      convenient={stay?.convenient}
                     />
                   ))}
                 </div>

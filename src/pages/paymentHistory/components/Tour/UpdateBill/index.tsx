@@ -5,13 +5,22 @@ import { Container } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { TourService } from "services/normal/tour";
-import { setErrorMess, setLoading, setSuccessMess } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import { Collapse, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { Controller, useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faEnvelope, faPhone, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faEnvelope,
+  faPhone,
+  faCircleCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputTextField from "components/common/inputs/InputTextfield";
 import { VALIDATION } from "configs/constants";
@@ -20,9 +29,20 @@ import PopupDetailTour from "pages/listTour/[tourId]/components/SectionTour/comp
 import { BookTourReview, Tour } from "models/tour";
 import { ReducerType } from "redux/reducers";
 import moment from "moment";
-import { fCurrency2, fCurrency2VND, fPercent, fShortenNumber } from "utils/formatNumber";
+import {
+  fCurrency2,
+  fCurrency2VND,
+  fPercent,
+  fShortenNumber,
+} from "utils/formatNumber";
 import _ from "lodash";
-import { DataPagination, EDiscountType, EServicePolicyType, EServiceType, OptionItem } from "models/general";
+import {
+  DataPagination,
+  EDiscountType,
+  EServicePolicyType,
+  EServiceType,
+  OptionItem,
+} from "models/general";
 import { FindAll, Voucher } from "models/voucher";
 import { VoucherService } from "services/normal/voucher";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -88,7 +108,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down(600));
-  const { getSelectChangeDate } = useSelector((state: ReducerType) => state.normal);
+  const { getSelectChangeDate } = useSelector(
+    (state: ReducerType) => state.normal
+  );
 
   const { t, i18n } = useTranslation("common");
 
@@ -124,7 +146,13 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
     });
   }, [tour]);
   const refundRate = useMemo(() => {
-    return BillHelper.getRefundRate(tourBill?.tourOnSaleData?.startDate, EServicePolicyType.REFUND, tourBill?.tourData?.tourPolicies) || 0;
+    return (
+      BillHelper.getRefundRate(
+        tourBill?.tourOnSaleData?.startDate,
+        EServicePolicyType.REFUND,
+        tourBill?.tourData?.tourPolicies
+      ) || 0
+    );
   }, [tourBill]);
   const priceRefund = useMemo(() => {
     return (tourBill?.totalBill * refundRate) / 100 || 0;
@@ -132,8 +160,12 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
 
   const schema = useMemo(() => {
     return yup.object().shape({
-      firstName: yup.string().required(t("update_bill_contact_detail_first_name_validation")),
-      lastName: yup.string().required(t("update_bill_contact_detail_last_name_validation")),
+      firstName: yup
+        .string()
+        .required(t("update_bill_contact_detail_first_name_validation")),
+      lastName: yup
+        .string()
+        .required(t("update_bill_contact_detail_last_name_validation")),
       email: yup
         .string()
         .email(t("update_bill_contact_detail_email_validation"))
@@ -243,7 +275,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
     if (!isEmpty(tour) && !isEmpty(tour.tourOnSales)) {
       fetchVoucher();
       for (let item of tour.tourOnSales) {
-        if (moment(item.startDate).format("DD/MM/YYYY") !== moment(tourBill.tourOnSaleData.startDate).format("DD/MM/YYYY")) {
+        if (
+          moment(item.startDate).format("DD/MM/YYYY") !==
+          moment(tourBill.tourOnSaleData.startDate).format("DD/MM/YYYY")
+        ) {
           setValue("startDate", new Date(item.startDate));
           handleChangeStartDate(moment(item.startDate));
           break;
@@ -255,13 +290,19 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
 
   useEffect(() => {
     console.log(priceAndAge?.priceChildren, _numberOfChild);
-    if (_numberOfAdult + _numberOfChild >= priceAndAge.quantity - priceAndAge.quantityOrdered) {
+    if (
+      _numberOfAdult + _numberOfChild >=
+      priceAndAge.quantity - priceAndAge.quantityOrdered
+    ) {
       setIsValidQuantity(true);
     } else {
       setIsValidQuantity(false);
     }
     setTotalBillReschedule(
-      ((_numberOfChild * priceAndAge?.priceChildren + _numberOfAdult * priceAndAge?.adultPrice) * (100 - priceAndAge?.discount)) / 100
+      ((_numberOfChild * priceAndAge?.priceChildren +
+        _numberOfAdult * priceAndAge?.adultPrice) *
+        (100 - priceAndAge?.discount)) /
+        100
     );
   }, [priceAndAge, _numberOfAdult, _numberOfChild]);
 
@@ -270,7 +311,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
     if (voucherChoose) {
       if (voucherChoose?.discountType === EDiscountType.PERCENT) {
         discount = (totalBillReschedule * voucherChoose.discountValue) / 100;
-        if (!!voucherChoose.maxDiscount && discount > voucherChoose.maxDiscount) {
+        if (
+          !!voucherChoose.maxDiscount &&
+          discount > voucherChoose.maxDiscount
+        ) {
           discount = voucherChoose.maxDiscount;
         }
       } else {
@@ -283,7 +327,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
   useEffect(() => {
     let discount = 0;
     if (valueEvent) {
-      if (!valueEvent?.minOrder || totalBillReschedule >= valueEvent?.minOrder) {
+      if (
+        !valueEvent?.minOrder ||
+        totalBillReschedule >= valueEvent?.minOrder
+      ) {
         if (valueEvent?.discountType === EDiscountType.PERCENT) {
           discount = (totalBillReschedule * valueEvent.discountValue) / 100;
           if (!!valueEvent.maxDiscount && discount > valueEvent.maxDiscount) {
@@ -295,7 +342,11 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
         dispatch(setSuccessMess(t("update_bill_price_apply_coupon_success")));
       } else {
         dispatch(
-          setErrorMess({ message: t("update_bill_price_apply_coupon_min_price", { minPrice: fCurrency2VND(valueEvent?.minOrder) }) })
+          setErrorMess({
+            message: t("update_bill_price_apply_coupon_min_price", {
+              minPrice: fCurrency2VND(valueEvent?.minOrder),
+            }),
+          })
         );
       }
     }
@@ -304,14 +355,17 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
   }, [totalBillReschedule, valueEvent]);
 
   useEffect(() => {
-    setTotalBillAfterDiscount(totalBillReschedule - voucherDiscount - couponDiscount);
+    setTotalBillAfterDiscount(
+      totalBillReschedule - voucherDiscount - couponDiscount
+    );
   }, [totalBillReschedule, voucherDiscount, couponDiscount]);
 
   useEffect(() => {
     setPriceMustPay(totalBillAfterDiscount - priceRefund);
   }, [totalBillAfterDiscount, priceRefund]);
 
-  const onOpenPopupDetailTour = () => setOpenPopupDetailTour(!openPopupDetailTour);
+  const onOpenPopupDetailTour = () =>
+    setOpenPopupDetailTour(!openPopupDetailTour);
 
   const onOpenPopupVoucher = () => setOpenPopupVoucher(!openPopupVoucher);
 
@@ -344,7 +398,12 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
       });
   };
 
-  const fetchVoucher = (value?: { take?: number; page?: number; keyword?: string; owner?: number }) => {
+  const fetchVoucher = (value?: {
+    take?: number;
+    page?: number;
+    keyword?: string;
+    owner?: number;
+  }) => {
     const params: FindAll = {
       take: value?.take || voucher?.meta?.take || 10,
       page: value?.page || voucher?.meta?.page || 1,
@@ -392,7 +451,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
         setValueEvent(res?.data);
       })
       .catch((e) => {
-        dispatch(setErrorMess({ message: t("update_bill_price_apply_coupon_fail") }));
+        dispatch(
+          setErrorMess({ message: t("update_bill_price_apply_coupon_fail") })
+        );
       })
       .finally(() => {
         dispatch(setLoading(false));
@@ -403,13 +464,18 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
 
   const disableCustomDt = (current) => {
     return (
-      dayValid?.includes(current.format("DD/MM/YYYY")) && current.isAfter(yesterday) && !current.isSame(tourBill?.tourOnSaleData?.startDate)
+      dayValid?.includes(current.format("DD/MM/YYYY")) &&
+      current.isAfter(yesterday) &&
+      !current.isSame(tourBill?.tourOnSaleData?.startDate)
     );
   };
 
   const handleChangeStartDate = (e) => {
     tour?.tourOnSales.forEach((item) => {
-      if (moment(item.startDate).format("DD/MM/YYYY") === moment(e._d).format("DD/MM/YYYY")) {
+      if (
+        moment(item.startDate).format("DD/MM/YYYY") ===
+        moment(e._d).format("DD/MM/YYYY")
+      ) {
         setPriceAndAge({
           tourOnSaleId: item?.id,
           childrenAgeMin: item.childrenAgeMin,
@@ -431,7 +497,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
           <Grid container spacing={2} className={classes.rootContent}>
             <Grid xs={7} item className={classes.leftPanel}>
               <Grid item xs={12}>
-                <h4 className={classes.title}>{t("update_bill_contact_detail_title")}</h4>
+                <h4 className={classes.title}>
+                  {t("update_bill_contact_detail_title")}
+                </h4>
                 <Grid
                   sx={{
                     backgroundColor: "var(--white-color)",
@@ -440,13 +508,19 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                     borderRadius: "10px",
                   }}
                 >
-                  <Grid container columnSpacing={isMobile ? 0 : 1} rowSpacing={3}>
+                  <Grid
+                    container
+                    columnSpacing={isMobile ? 0 : 1}
+                    rowSpacing={3}
+                  >
                     <Grid item xs={12} sm={6}>
                       <InputTextField
                         title={t("update_bill_contact_detail_first_name")}
                         placeholder={t("update_bill_contact_detail_first_name")}
                         inputRef={register("firstName")}
-                        startAdornment={<FontAwesomeIcon icon={faUser}></FontAwesomeIcon>}
+                        startAdornment={
+                          <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+                        }
                         errorMessage={errors?.firstName?.message}
                       />
                     </Grid>
@@ -455,7 +529,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         title={t("update_bill_contact_detail_last_name")}
                         placeholder={t("update_bill_contact_detail_last_name")}
                         inputRef={register("lastName")}
-                        startAdornment={<FontAwesomeIcon icon={faUser}></FontAwesomeIcon>}
+                        startAdornment={
+                          <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+                        }
                         errorMessage={errors?.lastName?.message}
                       />
                     </Grid>
@@ -465,7 +541,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       title={t("update_bill_contact_detail_email")}
                       placeholder={t("update_bill_contact_detail_email")}
                       inputRef={register("email")}
-                      startAdornment={<FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>}
+                      startAdornment={
+                        <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
+                      }
                       errorMessage={errors?.email?.message}
                     />
                   </Grid>
@@ -474,7 +552,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       title={t("update_bill_contact_detail_phone")}
                       placeholder={t("update_bill_contact_detail_phone")}
                       inputRef={register("phoneNumber")}
-                      startAdornment={<FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>}
+                      startAdornment={
+                        <FontAwesomeIcon icon={faPhone}></FontAwesomeIcon>
+                      }
                       errorMessage={errors?.phoneNumber?.message}
                     />
                   </Grid>
@@ -482,7 +562,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
               </Grid>
               <Grid container item spacing={2}>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>{t("update_bill_special_request_title")}</h4>
+                  <h4 className={classes.title}>
+                    {t("update_bill_special_request_title")}
+                  </h4>
                   <Grid
                     sx={{
                       backgroundColor: "var(--white-color)",
@@ -497,7 +579,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       optional
                       multiline
                       rows={3}
-                      infor={`${specialRequest?.length || 0}/${CHARACTER_LIMIT}`}
+                      infor={`${
+                        specialRequest?.length || 0
+                      }/${CHARACTER_LIMIT}`}
                       inputRef={register("specialRequest")}
                       inputProps={{
                         maxLength: CHARACTER_LIMIT,
@@ -506,7 +590,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <h4 className={classes.title}>{t("update_bill_price_detail_title")}</h4>
+                  <h4 className={classes.title}>
+                    {t("update_bill_price_detail_title")}
+                  </h4>
                   <Grid
                     sx={{
                       backgroundColor: "var(--white-color)",
@@ -524,7 +610,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       }}
                     >
                       <Grid className={classes.boxReschedule}>
-                        <p className={classes.titlePrice}>{t("update_bill_price_detail_price_you_pay")}:</p>
+                        <p className={classes.titlePrice}>
+                          {t("update_bill_price_detail_price_you_pay")}:
+                        </p>
                         <p>
                           {fCurrency2VND(tourBill?.totalBill)}
                           VND
@@ -532,7 +620,8 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       </Grid>
                       <Grid className={classes.boxReschedule}>
                         <p>
-                          {t("update_bill_price_detail_price_reimbursed")} ({refundRate}%):
+                          {t("update_bill_price_detail_price_reimbursed")} (
+                          {refundRate}%):
                         </p>
                         <p>{fCurrency2VND(priceRefund)} VND</p>
                       </Grid>
@@ -543,21 +632,35 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         borderBottom: "1px solid Var(--gray-10)",
                         padding: "14px 0",
                       }}
-                      onClick={() => setOpenCollapseReschedule(!openCollapseReschedule)}
+                      onClick={() =>
+                        setOpenCollapseReschedule(!openCollapseReschedule)
+                      }
                     >
                       <Grid>
                         {" "}
-                        <p className={classes.titlePrice}>{t("update_bill_price_detail_price_you_pay_reschedule")}</p>
+                        <p className={classes.titlePrice}>
+                          {t(
+                            "update_bill_price_detail_price_you_pay_reschedule"
+                          )}
+                        </p>
                       </Grid>
                       <Grid sx={{ display: "flex", alignItems: "center" }}>
                         <h4 className={classes.price}>
                           {fCurrency2VND(totalBillReschedule)}
                           VND
                         </h4>
-                        {openCollapseReschedule ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        {openCollapseReschedule ? (
+                          <KeyboardArrowUpIcon />
+                        ) : (
+                          <KeyboardArrowDownIcon />
+                        )}
                       </Grid>
                     </Grid>
-                    <Collapse in={openCollapseReschedule} timeout="auto" unmountOnExit>
+                    <Collapse
+                      in={openCollapseReschedule}
+                      timeout="auto"
+                      unmountOnExit
+                    >
                       <Grid
                         className={classes.boxPriceDetail}
                         sx={{
@@ -588,9 +691,16 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                           }}
                         >
                           <p>
-                            {t("update_bill_price_detail_adult")} ({_numberOfAdult}x)
+                            {t("update_bill_price_detail_adult")} (
+                            {_numberOfAdult}x)
                           </p>
-                          <p> {fCurrency2VND(priceAndAge?.adultPrice * _numberOfAdult)} VND</p>
+                          <p>
+                            {" "}
+                            {fCurrency2VND(
+                              priceAndAge?.adultPrice * _numberOfAdult
+                            )}{" "}
+                            VND
+                          </p>
                         </Grid>
                         {_numberOfChild !== 0 && (
                           <Grid
@@ -601,9 +711,16 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                             }}
                           >
                             <p>
-                              {t("update_bill_price_detail_child")} ({_numberOfChild}x)
+                              {t("update_bill_price_detail_child")} (
+                              {_numberOfChild}x)
                             </p>
-                            <p> {fCurrency2VND(priceAndAge?.priceChildren * _numberOfChild)} VND</p>
+                            <p>
+                              {" "}
+                              {fCurrency2VND(
+                                priceAndAge?.priceChildren * _numberOfChild
+                              )}{" "}
+                              VND
+                            </p>
                           </Grid>
                         )}
                       </Grid>
@@ -617,38 +734,57 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         <Grid sx={{ display: "flex", paddingTop: "14px" }}>
                           {voucherChoose ? (
                             <Grid>
-                              {voucherChoose?.discountType === EDiscountType.PERCENT ? (
+                              {voucherChoose?.discountType ===
+                              EDiscountType.PERCENT ? (
                                 <Grid
                                   className={clsx(classes.boxVoucher, {
-                                    [classes.boxVoucherInValid]: handleValidVoucher(voucherChoose?.startTime),
+                                    [classes.boxVoucherInValid]:
+                                      handleValidVoucher(
+                                        voucherChoose?.startTime
+                                      ),
                                   })}
                                 >
                                   <span>
-                                    {t("voucher_title_deal")} {fPercent(voucherChoose?.discountValue)}
+                                    {t("voucher_title_deal")}{" "}
+                                    {fPercent(voucherChoose?.discountValue)}
                                   </span>
                                   {voucherChoose?.maxDiscount !== 0 && (
                                     <span>
-                                      {t("voucher_title_max")} {fCurrency2VND(voucherChoose?.maxDiscount)} VND
+                                      {t("voucher_title_max")}{" "}
+                                      {fCurrency2VND(
+                                        voucherChoose?.maxDiscount
+                                      )}{" "}
+                                      VND
                                     </span>
                                   )}
                                 </Grid>
                               ) : (
                                 <Grid
                                   className={clsx(classes.boxVoucher, {
-                                    [classes.boxVoucherInValid]: handleValidVoucher(voucherChoose?.startTime),
+                                    [classes.boxVoucherInValid]:
+                                      handleValidVoucher(
+                                        voucherChoose?.startTime
+                                      ),
                                   })}
                                 >
-                                  {t("voucher_title_deal")} {fShortenNumber(voucherChoose?.discountValue)} VND
+                                  {t("voucher_title_deal")}{" "}
+                                  {fShortenNumber(voucherChoose?.discountValue)}{" "}
+                                  VND
                                 </Grid>
                               )}
                             </Grid>
                           ) : (
                             <Grid>
-                              <p style={{ fontWeight: "600" }}>{t("update_bill_price_detail_no_use_voucher")}</p>
+                              <p style={{ fontWeight: "600" }}>
+                                {t("update_bill_price_detail_no_use_voucher")}
+                              </p>
                             </Grid>
                           )}
                         </Grid>
-                        <Grid className={classes.btnChooseVoucher} onClick={onOpenPopupVoucher}>
+                        <Grid
+                          className={classes.btnChooseVoucher}
+                          onClick={onOpenPopupVoucher}
+                        >
                           <p>{t("update_bill_price_detail_choose_voucher")}</p>
                         </Grid>
                       </Grid>
@@ -662,7 +798,11 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         />
                       </Grid>
                       <Grid item xs={4}>
-                        <Button btnType={BtnType.Primary} className={classes.btnUseCoupon} onClick={onUseCoupon}>
+                        <Button
+                          btnType={BtnType.Primary}
+                          className={classes.btnUseCoupon}
+                          onClick={onUseCoupon}
+                        >
                           {t("book_page_section_price_detail_use_coupon_btn")}
                         </Button>
                       </Grid>
@@ -674,24 +814,46 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         }}
                       >
                         <Grid className={classes.boxReschedule}>
-                          <p>{t("update_bill_price_detail_total_coupon_price")}:</p>
-                          <p>{fCurrency2VND(voucherDiscount + couponDiscount)} VND</p>
+                          <p>
+                            {t("update_bill_price_detail_total_coupon_price")}:
+                          </p>
+                          <p>
+                            {fCurrency2VND(voucherDiscount + couponDiscount)}{" "}
+                            VND
+                          </p>
                         </Grid>
-                        <Grid className={clsx(classes.boxReschedule, classes.boxPrice)}>
-                          <p>{t("update_bill_price_detail_price_after_apply_coupon")}:</p>
-                          <h4 className={classes.price}>{fCurrency2VND(totalBillAfterDiscount)} VND</h4>
+                        <Grid
+                          className={clsx(
+                            classes.boxReschedule,
+                            classes.boxPrice
+                          )}
+                        >
+                          <p>
+                            {t(
+                              "update_bill_price_detail_price_after_apply_coupon"
+                            )}
+                            :
+                          </p>
+                          <h4 className={classes.price}>
+                            {fCurrency2VND(totalBillAfterDiscount)} VND
+                          </h4>
                         </Grid>
                       </Grid>
                     )}
                     <Grid>
                       {priceMustPay >= 0 ? (
                         <Grid className={classes.boxReschedule}>
-                          <p>{t("update_bill_price_detail_price_you_extra")}:</p>
+                          <p>
+                            {t("update_bill_price_detail_price_you_extra")}:
+                          </p>
                           <p>{fCurrency2VND(priceMustPay)} VND</p>
                         </Grid>
                       ) : (
                         <Grid className={classes.boxReschedule}>
-                          <p>{t("update_bill_price_detail_price_you_reimbursed")}:</p>
+                          <p>
+                            {t("update_bill_price_detail_price_you_reimbursed")}
+                            :
+                          </p>
                           <p>{fCurrency2VND(-priceMustPay)} VND</p>
                         </Grid>
                       )}
@@ -712,7 +874,12 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid xs={5} item sx={{ marginTop: "40px" }} className={classes.rightPanel}>
+            <Grid
+              xs={5}
+              item
+              sx={{ marginTop: "40px" }}
+              className={classes.rightPanel}
+            >
               <Grid className={classes.rootPanelRight}>
                 <Grid className={classes.boxTitle}>
                   <FontAwesomeIcon icon={faCircleCheck}></FontAwesomeIcon>
@@ -724,7 +891,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   </Grid>
                   <Grid className={classes.product}>
                     <img src={tourBill?.tourData?.images[0]} alt="anh"></img>
-                    <p onClick={onOpenPopupDetailTour}>{t("update_bill_booking_summary_view_detail")}</p>
+                    <p onClick={onOpenPopupDetailTour}>
+                      {t("update_bill_booking_summary_view_detail")}
+                    </p>
                   </Grid>
                 </Grid>
                 <Grid className={classes.boxSelect}>
@@ -744,23 +913,14 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                     />
                   </Grid>
                 </Grid>
-                <Grid className={classes.boxSelect} sx={{ paddingTop: "14px" }}>
-                  <p>{t("update_bill_section_language_option")}</p>
-                  <InputSelect
-                    className={classes.inputSelect}
-                    control={control}
-                    name="language"
-                    selectProps={{
-                      options: languageOptions,
-                    }}
-                  />
-                </Grid>
                 <Grid className={classes.boxSelect}>
                   <p>{t("update_bill_section_many_ticket")}</p>
                   <Grid className={classes.boxNumberTickets}>
                     <Grid>
                       <p>
-                        {t("update_bill_section_adult")} ({t("update_bill_section_age")} &gt; {priceAndAge?.childrenAgeMax})
+                        {t("update_bill_section_adult")} (
+                        {t("update_bill_section_age")} &gt;{" "}
+                        {priceAndAge?.childrenAgeMax})
                       </p>
                       <span>{fCurrency2(priceAndAge?.adultPrice)} VND</span>
                     </Grid>
@@ -771,7 +931,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         render={({ field }) => (
                           <InputCounter
                             className={classes.inputCounter}
-                            max={priceAndAge?.quantity - priceAndAge.quantityOrdered}
+                            max={
+                              priceAndAge?.quantity -
+                              priceAndAge.quantityOrdered
+                            }
                             min={tourBill?.amountAdult}
                             onChange={field.onChange}
                             value={field.value}
@@ -783,7 +946,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   <Grid className={classes.boxNumberTickets}>
                     <Grid>
                       <p>
-                        {t("update_bill_section_child")} ({t("update_bill_section_age")} {priceAndAge?.childrenAgeMin}-
+                        {t("update_bill_section_child")} (
+                        {t("update_bill_section_age")}{" "}
+                        {priceAndAge?.childrenAgeMin}-
                         {priceAndAge?.childrenAgeMax})
                       </p>
                       <span>{fCurrency2(priceAndAge?.priceChildren)} VND</span>
@@ -795,7 +960,10 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                         render={({ field }) => (
                           <InputCounter
                             className={classes.inputCounter}
-                            max={priceAndAge?.quantity - priceAndAge.quantityOrdered}
+                            max={
+                              priceAndAge?.quantity -
+                              priceAndAge.quantityOrdered
+                            }
                             min={tourBill?.amountChild}
                             onChange={field.onChange}
                             value={field.value}
@@ -811,7 +979,8 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                       className={classes.discount}
                       dangerouslySetInnerHTML={{
                         __html: t("update_bill_section_number_ticket_left", {
-                          number: priceAndAge?.quantity - priceAndAge.quantityOrdered,
+                          number:
+                            priceAndAge?.quantity - priceAndAge.quantityOrdered,
                         }),
                       }}
                     ></p>
@@ -825,7 +994,8 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                   >
                     <p>{t("update_bill_section_duration")}: &nbsp;</p>
                     <p>
-                      {tour?.numberOfDays} {t("update_bill_section_days")} - {tour?.numberOfNights} {t("update_bill_section_nights")}
+                      {tour?.numberOfDays} {t("update_bill_section_days")} -{" "}
+                      {tour?.numberOfNights} {t("update_bill_section_nights")}
                     </p>
                   </Grid>
                   <Grid
@@ -849,7 +1019,11 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
           </Grid>
         </Container>
       </Grid>
-      <PopupDetailTour isOpen={openPopupDetailTour} toggle={onOpenPopupDetailTour} tour={tour} />
+      <PopupDetailTour
+        isOpen={openPopupDetailTour}
+        toggle={onOpenPopupDetailTour}
+        tour={tour}
+      />
       {openPopupVoucher && (
         <PopupVoucherNew
           isOpen={openPopupVoucher}

@@ -167,7 +167,7 @@ const HotelSearch = memo(() => {
                       sx={{
                         display: "flex",
                         justifyContent: "space-between",
-                        marginBottom: "14px",
+                        marginBottom: "7px",
                       }}
                       xs={12}
                     >
@@ -179,22 +179,21 @@ const HotelSearch = memo(() => {
                           )}
                         </p>
                       </Grid>
-                      <Grid>
-                        <InputCounter
-                          className={classes.inputCounter}
-                          max={9999}
-                          min={1}
-                          onChange={(e) => setNumberOfAdult(e)}
-                          value={numberOfAdult}
-                        />
-                      </Grid>
+
+                      <InputCounter
+                        className={classes.inputCounter}
+                        max={9999}
+                        min={1}
+                        onChange={(e) => setNumberOfAdult(e)}
+                        value={numberOfAdult}
+                      />
                     </Grid>
                     <Grid
                       item
                       sx={{
                         display: "flex",
                         justifyContent: "space-between",
-                        marginBottom: "14px",
+                        marginBottom: "7px",
                       }}
                       xs={12}
                     >
@@ -206,22 +205,21 @@ const HotelSearch = memo(() => {
                           )}
                         </p>
                       </Grid>
-                      <Grid>
-                        <InputCounter
-                          className={classes.inputCounter}
-                          max={9999}
-                          min={1}
-                          onChange={(e) => setNumberOfChild(e)}
-                          value={numberOfChild}
-                        />
-                      </Grid>
+
+                      <InputCounter
+                        className={classes.counter}
+                        max={9999}
+                        min={1}
+                        onChange={(e) => setNumberOfChild(e)}
+                        value={numberOfChild}
+                      />
                     </Grid>
                     <Grid
                       item
                       sx={{
                         display: "flex",
                         justifyContent: "space-between",
-                        marginBottom: "14px",
+                        marginBottom: "7px",
                       }}
                       xs={12}
                     >
@@ -248,7 +246,6 @@ const HotelSearch = memo(() => {
                       sx={{
                         display: "flex",
                         justifyContent: "flex-end",
-                        marginBottom: "14px",
                       }}
                       xs={12}
                     >

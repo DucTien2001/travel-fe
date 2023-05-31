@@ -25,7 +25,7 @@
     position: fixed;
     top: 0px; 
     width: 100%; 
-    z-index: 1;
+    z-index: 12 !important;
     transition: top 0.3s; 
     box-shadow: var(--box-shadow-100);
   }

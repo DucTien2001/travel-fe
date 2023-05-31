@@ -23,7 +23,7 @@ import { DataPagination, EServiceType } from "models/general";
 import { useDispatch } from "react-redux";
 import { CommissionService } from "services/enterprise/commission";
 import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
-import { fCurrency2VND } from "utils/formatNumber";
+import { fCurrency2VND, fPercent } from "utils/formatNumber";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import { useTranslation } from "react-i18next";
 
@@ -95,19 +95,34 @@ const TermsAndCondition = memo((props: Props) => {
               {dataTourCommission?.length ? (
                 dataTourCommission?.map((item, index) => (
                   <Grid className={classes.boxDuration} key={index}>
-                    <p
-                      className={classes.titleDetail}
-                      dangerouslySetInnerHTML={{
-                        __html: t(
-                          "popup_enterprise_term_and_condition_content",
-                          {
-                            minPrice: fCurrency2VND(item?.minPrice),
-                            maxPrice: fCurrency2VND(item?.maxPrice),
-                            rate: item?.rate,
-                          }
-                        ),
-                      }}
-                    ></p>
+                    {item?.maxPrice ? (
+                      <p
+                        className={classes.titleDetail}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_enterprise_term_and_condition_content",
+                            {
+                              minPrice: fCurrency2VND(item?.minPrice),
+                              maxPrice: fCurrency2VND(item?.maxPrice),
+                              rate: fPercent(item?.rate * 100),
+                            }
+                          ),
+                        }}
+                      ></p>
+                    ) : (
+                      <p
+                        className={classes.titleDetail}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_enterprise_term_and_condition_content_no_max_price",
+                            {
+                              minPrice: fCurrency2VND(item?.minPrice),
+                              rate: fPercent(item?.rate * 100),
+                            }
+                          ),
+                        }}
+                      ></p>
+                    )}
                   </Grid>
                 ))
               ) : (
@@ -126,19 +141,34 @@ const TermsAndCondition = memo((props: Props) => {
               {dataHotelCommission?.length ? (
                 dataHotelCommission?.map((item, index) => (
                   <Grid className={classes.boxDuration} key={index}>
-                    <p
-                      className={classes.titleDetail}
-                      dangerouslySetInnerHTML={{
-                        __html: t(
-                          "popup_enterprise_term_and_condition_content",
-                          {
-                            minPrice: fCurrency2VND(item?.minPrice),
-                            maxPrice: fCurrency2VND(item?.maxPrice),
-                            rate: item?.rate,
-                          }
-                        ),
-                      }}
-                    ></p>
+                    {item?.maxPrice ? (
+                      <p
+                        className={classes.titleDetail}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_enterprise_term_and_condition_content",
+                            {
+                              minPrice: fCurrency2VND(item?.minPrice),
+                              maxPrice: fCurrency2VND(item?.maxPrice),
+                              rate: fPercent(item?.rate * 100),
+                            }
+                          ),
+                        }}
+                      ></p>
+                    ) : (
+                      <p
+                        className={classes.titleDetail}
+                        dangerouslySetInnerHTML={{
+                          __html: t(
+                            "popup_enterprise_term_and_condition_content_no_max_price",
+                            {
+                              minPrice: fCurrency2VND(item?.minPrice),
+                              rate: fPercent(item?.rate * 100),
+                            }
+                          ),
+                        }}
+                      ></p>
+                    )}
                   </Grid>
                 ))
               ) : (

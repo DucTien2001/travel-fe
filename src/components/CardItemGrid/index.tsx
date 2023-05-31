@@ -38,6 +38,9 @@ interface Props {
   tourOnSale?: any;
   minPrice?: number;
   maxPrice?: number;
+  numberOfDays?: number;
+  numberOfNights?: number;
+  cityStart?: string;
 }
 
 // eslint-disable-next-line react/display-name
@@ -65,6 +68,9 @@ const ListServices = memo(
     tourOnSale,
     minPrice,
     maxPrice,
+    cityStart,
+    numberOfDays,
+    numberOfNights,
   }: Props) => {
     const { t, i18n } = useTranslation("common");
 
@@ -127,6 +133,24 @@ const ListServices = memo(
                   <Grid className={classes.boxTitle}>
                     <p>{title}</p>
                   </Grid>
+                  <Grid className={classes.boxCityStart}>
+                    <p>
+                      {t("tour_detail_section_tour_place_start")}:{" "}
+                      <span>{cityStart}</span>
+                    </p>
+                  </Grid>
+                  <Grid className={classes.boxCityStart}>
+                    <p>
+                      {t(
+                        "admin_management_section_tour_bill_header_table_duration"
+                      )}
+                      :{" "}
+                      <span>
+                        {numberOfDays} {t("update_bill_section_days")}-{" "}
+                        {numberOfNights} {t("update_bill_section_nights")}
+                      </span>
+                    </p>
+                  </Grid>
                   <Grid
                     sx={{
                       display: "flex !important",
@@ -151,15 +175,16 @@ const ListServices = memo(
                     </Grid>
 
                     <Grid className={classes.boxPrice}>
+                      <span>
+                        {fCurrency2(minPrice)} ~ {fCurrency2(maxPrice)} VND
+                      </span>
+
                       {discount !== 0 && (
-                        <span>
+                        <p>
                           {fCurrency2((minPrice * (100 - discount)) / 100)} ~{" "}
                           {fCurrency2((maxPrice * (100 - discount)) / 100)} VND
-                        </span>
+                        </p>
                       )}
-                      <p>
-                        {fCurrency2(minPrice)} ~ {fCurrency2(maxPrice)} VND
-                      </p>
                     </Grid>
                     <Grid className={classes.boxViewMore}>
                       <p>{t("common_view_more")}</p>

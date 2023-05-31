@@ -531,6 +531,17 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                     />
                   </Grid>
                 </Grid>
+                <Grid className={classes.boxNumberTickets}>
+                  <Grid>
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: t("tour_detail_section_age_free", {
+                          number: priceAndAge?.childrenAgeMin,
+                        }),
+                      }}
+                    ></p>
+                  </Grid>
+                </Grid>
               </Grid>
               <div className={classes.priceWrapper}>
                 <Grid>

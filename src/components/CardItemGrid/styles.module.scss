@@ -12,6 +12,8 @@
     }
     .boxImg {
         img {
+            height: 155px;
+            width: 100%;
             border-top-right-radius: 10px;
             border-top-left-radius: 10px;
         }
@@ -50,10 +52,33 @@
             font-size: 14px;
             color: var(--text-color);
             margin: 0;
+            text-overflow: ellipsis !important;
+            max-width: 100%;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            text-overflow: ellipsis !important;
+            white-space: nowrap;
+            word-wrap: break-word;
+        }
+    }
+    .boxCityStart {
+        padding-top: 10px;
+        display: flex;
+        justify-content: flex-start;
+        p {
+            font-weight: 500;
+            font-size: 12px;
+            color: #5E5B5B;
+            margin: 0;
+        }
+        span {
+            font-weight: 600;
+            color: var(--text-color);
         }
     }
     .boxReview {
-        padding-top: 28px;
+        padding-top: 20px;
+        min-height: 40px;
         display: flex;
         justify-content: flex-end;
         align-items: center;

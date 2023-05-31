@@ -42,7 +42,7 @@ const InputCounter = memo((props: InputsProps) => {
   };
 
   return (
-    <Grid>
+    <Grid className={className}>
       {label && (
         <label className={classes.label}>
           {labelIcon} {label}

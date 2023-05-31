@@ -38,6 +38,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Pagination from "@mui/material/Pagination";
+import PopupDefault from "components/Popup/PopupDefault";
+import UpdateIcon from "@mui/icons-material/Update";
 // eslint-disable-next-line react/display-name
 const Tour = memo(() => {
   const dispatch = useDispatch();
@@ -56,9 +58,22 @@ const Tour = memo(() => {
   const [tour, setTour] = useState<Tour>(null);
   const [openAddInformation, setOpenAddInformation] = useState(false);
   const [openPopupAddComment, setOpenPopupAddComment] = useState(false);
-  const [open, setOpen] = useState(0);
+  const [openPopupWarningCancel, setOpenPopupWarningCancel] = useState(false);
+  const [openPopupWarningRate, setOpenPopupWarningRate] = useState(false);
+  const [openPopupWarningReschedule, setOpenPopupWarningReschedule] =
+    useState(false);
 
   const onToggleAddComment = () => setOpenPopupAddComment(!openPopupAddComment);
+
+  const onTogglePopupWarningCancel = () =>
+    setOpenPopupWarningCancel(!openPopupWarningCancel);
+
+  const onTogglePopupWarningRate = () =>
+    setOpenPopupWarningRate(!openPopupWarningRate);
+
+  const onTogglePopupWarningReschedule = () => {
+    setOpenPopupWarningReschedule(!openPopupWarningReschedule);
+  };
 
   const onTogglePopupConfirmCancel = () => {
     setOpenConfirmCancelBookTour(!openConfirmCancelBookTour);
@@ -92,7 +107,7 @@ const Tour = memo(() => {
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
     fetchData({
-      page: newPage + 1,
+      page: newPage,
     });
   };
 
@@ -164,10 +179,23 @@ const Tour = memo(() => {
   };
 
   const onSelectDate = () => {
-    setTourBill(itemAction);
-    fetchTour();
-    onTogglePopupSelectDate();
-    onCloseActionMenu();
+    if (
+      itemAction?.paymentStatus === EPaymentStatus.PAID &&
+      BillHelper.isCanReScheduleOrCancelBooking(
+        itemAction.status,
+        itemAction?.tourOnSaleData?.startDate,
+        EServicePolicyType.RESCHEDULE,
+        itemAction?.tourData?.tourPolicies
+      )
+    ) {
+      setTourBill(itemAction);
+      fetchTour();
+      onTogglePopupSelectDate();
+      onCloseActionMenu();
+    } else {
+      onTogglePopupWarningReschedule();
+      onCloseActionMenu();
+    }
   };
 
   const onUpdateInfo = () => {
@@ -177,16 +205,34 @@ const Tour = memo(() => {
   };
 
   const onCancel = () => {
-    setTourBill(itemAction);
-    fetchTour();
-    onTogglePopupConfirmCancel();
-    onCloseActionMenu();
+    if (
+      itemAction?.paymentStatus === EPaymentStatus.PAID &&
+      BillHelper.isCanReScheduleOrCancelBooking(
+        itemAction.status,
+        itemAction?.tourOnSaleData?.startDate,
+        EServicePolicyType.REFUND,
+        itemAction?.tourData?.tourPolicies
+      )
+    ) {
+      setTourBill(itemAction);
+      fetchTour();
+      onTogglePopupConfirmCancel();
+      onCloseActionMenu();
+    } else {
+      onTogglePopupWarningCancel();
+      onCloseActionMenu();
+    }
   };
 
   const onRate = () => {
-    setTourBill(itemAction);
-    onToggleAddComment();
-    onCloseActionMenu();
+    if (itemAction?.status === EBillStatus.USED) {
+      setTourBill(itemAction);
+      onToggleAddComment();
+      onCloseActionMenu();
+    } else {
+      onTogglePopupWarningRate();
+      onCloseActionMenu();
+    }
   };
 
   useEffect(() => {
@@ -530,29 +576,21 @@ const Tour = memo(() => {
               <span>{t("payment_history_page_tour_status_download_view")}</span>
             </Box>
           </MenuItem>
-          {itemAction?.paymentStatus === EPaymentStatus.PAID &&
-            BillHelper.isCanReScheduleOrCancelBooking(
-              itemAction.status,
-              itemAction?.tourOnSaleData?.startDate,
-              EServicePolicyType.RESCHEDULE,
-              itemAction?.tourData?.tourPolicies
-            ) && (
-              <MenuItem
-                sx={{ fontSize: "0.875rem" }}
-                className={classes.menuItem}
-                onClick={onSelectDate}
-              >
-                <Box display="flex" alignItems={"center"}>
-                  <EditOutlined
-                    sx={{ marginRight: "0.25rem" }}
-                    fontSize="small"
-                  />
-                  <span>
-                    {t("payment_history_page_tour_action_reschedule")}
-                  </span>
-                </Box>
-              </MenuItem>
-            )}
+          {itemAction?.paymentStatus === EPaymentStatus.PAID && (
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onSelectDate}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <EditOutlined
+                  sx={{ marginRight: "0.25rem" }}
+                  fontSize="small"
+                />
+                <span>{t("payment_history_page_tour_action_reschedule")}</span>
+              </Box>
+            </MenuItem>
+          )}
 
           {itemAction?.paymentStatus === EPaymentStatus.PAID && (
             <MenuItem
@@ -561,10 +599,7 @@ const Tour = memo(() => {
               onClick={onUpdateInfo}
             >
               <Box display="flex" alignItems={"center"}>
-                <EditOutlined
-                  sx={{ marginRight: "0.25rem" }}
-                  fontSize="small"
-                />
+                <UpdateIcon sx={{ marginRight: "0.25rem" }} fontSize="small" />
                 <span>{t("payment_history_page_tour_action_update")}</span>
               </Box>
             </MenuItem>
@@ -585,28 +620,24 @@ const Tour = memo(() => {
               </Box>
             </MenuItem>
           )}
-          {itemAction?.paymentStatus === EPaymentStatus.PAID &&
-            BillHelper.isCanReScheduleOrCancelBooking(
-              itemAction.status,
-              itemAction?.tourOnSaleData?.startDate,
-              EServicePolicyType.REFUND,
-              itemAction?.tourData?.tourPolicies
-            ) && (
-              <MenuItem
-                sx={{ fontSize: "0.875rem" }}
-                className={classes.menuItem}
-                onClick={onCancel}
-              >
-                <Box display="flex" alignItems={"center"}>
-                  <DeleteOutlineOutlined
-                    sx={{ marginRight: "0.25rem" }}
-                    color="error"
-                    fontSize="small"
-                  />
-                  <span>{t("payment_history_page_tour_action_cancel")}</span>
-                </Box>
-              </MenuItem>
-            )}
+
+          {itemAction?.paymentStatus === EPaymentStatus.PAID && (
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              className={classes.menuItem}
+              onClick={onCancel}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <DeleteOutlineOutlined
+                  sx={{ marginRight: "0.25rem" }}
+                  color="error"
+                  fontSize="small"
+                />
+                <span>{t("payment_history_page_tour_action_cancel")}</span>
+              </Box>
+            </MenuItem>
+          )}
+
           {itemAction?.status === EBillStatus.USED && (
             <MenuItem
               sx={{ fontSize: "0.875rem" }}
@@ -657,6 +688,30 @@ const Tour = memo(() => {
         toggle={onToggleAddComment}
         // onGetTourComments={onGetTourComments}
         tourBill={tourBill}
+      />
+      <PopupDefault
+        isOpen={openPopupWarningCancel}
+        toggle={onTogglePopupWarningCancel}
+        title={t("popup_change_date_payment_history_notification")}
+        description={t(
+          "popup_change_date_payment_history_notification_not_cancel"
+        )}
+      />
+      <PopupDefault
+        isOpen={openPopupWarningRate}
+        toggle={onTogglePopupWarningRate}
+        title={t("popup_change_date_payment_history_notification")}
+        description={t(
+          "popup_change_date_payment_history_notification_not_rate"
+        )}
+      />
+      <PopupDefault
+        isOpen={openPopupWarningReschedule}
+        toggle={onTogglePopupWarningReschedule}
+        title={t("popup_change_date_payment_history_notification")}
+        description={t(
+          "popup_change_date_payment_history_notification_not_reschedule"
+        )}
       />
     </>
   );

@@ -323,3 +323,16 @@
         }
     }
 }
+.boxOldRoom {
+display: flex;
+flex-direction: column !important;
+p {
+    word-wrap: initial !important;
+    white-space: normal !important;
+}
+}
+
+.boxCollapse {
+    margin-top: 14px;
+    width: 100%;
+}

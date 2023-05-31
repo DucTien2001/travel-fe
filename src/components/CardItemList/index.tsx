@@ -5,7 +5,7 @@ import classes from "./styles.module.scss";
 import Stars from "components/Stars";
 import clsx from "clsx";
 import { fCurrency2, fCurrency2VND } from "utils/formatNumber";
-import { Grid } from "@mui/material";
+import { Badge, Grid } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAnglesRight,
@@ -43,6 +43,10 @@ interface Props {
   minPrice?: number;
   maxPrice?: number;
   type?: number;
+  numberOfDays?: number;
+  numberOfNights?: number;
+  cityStart?: string;
+  convenient?: string[];
 }
 
 // eslint-disable-next-line react/display-name
@@ -72,6 +76,10 @@ const ListServices = memo(
     minPrice,
     maxPrice,
     type,
+    cityStart,
+    numberOfDays,
+    numberOfNights,
+    convenient,
   }: Props) => {
     const { t, i18n } = useTranslation("common");
 
@@ -111,7 +119,7 @@ const ListServices = memo(
                 display: "flex",
                 minHeight: "200px",
                 minWidth: "640px",
-                paddingBottom: "24px",
+                marginBottom: "24px",
                 cursor: "pointer",
               }}
               className={clsx(
@@ -134,7 +142,7 @@ const ListServices = memo(
                 <Grid
                   sx={{
                     flex: "1",
-                    padding: "24px 14px 7px 14px",
+                    padding: "14px 14px 7px 14px",
                     justifyContent: "space-between",
                     backgroundColor: "var(--white-color)",
                     boxShadow: "var(--bui-shadow-100)",
@@ -154,47 +162,131 @@ const ListServices = memo(
                   <Grid className={classes.boxTitle}>
                     <p>{title}</p>
                   </Grid>
+                  {cityStart && (
+                    <Grid className={classes.boxCityStart}>
+                      <p>
+                        {t("tour_detail_section_tour_place_start")}:{" "}
+                        <span>{cityStart}</span>
+                      </p>
+                    </Grid>
+                  )}
+                  {numberOfDays && numberOfNights && (
+                    <Grid className={classes.boxCityStart}>
+                      <p>
+                        {t(
+                          "admin_management_section_tour_bill_header_table_duration"
+                        )}
+                        :{" "}
+                        <span>
+                          {numberOfDays} {t("update_bill_section_days")}-{" "}
+                          {numberOfNights} {t("update_bill_section_nights")}
+                        </span>
+                      </p>
+                    </Grid>
+                  )}
                   {rate !== 0 ? (
                     <Grid className={classes.boxRate}>
                       {isHotel ? (
-                        <Grid className={classes.badge}>
-                          {getTypeState(type)}
-                        </Grid>
+                        <>
+                          <Grid className={classes.badge}>
+                            {getTypeState(type)}
+                          </Grid>
+                          <Grid className={classes.boxReview}>
+                            {rate !== 0 && (
+                              <Grid className={classes.boxReview}>
+                                <FontAwesomeIcon
+                                  icon={faLocationDot}
+                                ></FontAwesomeIcon>
+                                <span>
+                                  {rate} {getRateComment(rate)}{" "}
+                                  <span className={classes.numberOfReviews}>
+                                    | {numberOfReviewers} {t("common_reviews")}
+                                  </span>
+                                </span>
+                              </Grid>
+                            )}
+                          </Grid>
+                        </>
                       ) : (
-                        <Grid className={classes.badge}>
-                          {t("common_tour")}
-                        </Grid>
+                        <>
+                          <Grid className={classes.badge}>
+                            {t("common_tour")}
+                          </Grid>
+                          <Grid className={classes.boxReview}>
+                            {rate !== 0 && (
+                              <Grid className={classes.boxReview}>
+                                <FontAwesomeIcon
+                                  icon={faLocationDot}
+                                ></FontAwesomeIcon>
+                                <span>
+                                  {rate} {getRateComment(rate)}{" "}
+                                  <span className={classes.numberOfReviews}>
+                                    | {numberOfReviewers} {t("common_reviews")}
+                                  </span>
+                                </span>
+                              </Grid>
+                            )}
+                          </Grid>
+                        </>
                       )}
                     </Grid>
                   ) : (
                     <Grid className={classes.boxRate}>
                       {isHotel ? (
-                        <Grid className={classes.badge}>
-                          {getTypeState(type)}
-                        </Grid>
+                        <>
+                          <Grid className={classes.badge}>
+                            {getTypeState(type)}
+                          </Grid>
+                          <Grid className={classes.boxReview}>
+                            {rate !== 0 && (
+                              <Grid className={classes.boxReview}>
+                                <FontAwesomeIcon
+                                  icon={faLocationDot}
+                                ></FontAwesomeIcon>
+                                <span>
+                                  {rate} {getRateComment(rate)}{" "}
+                                  <span className={classes.numberOfReviews}>
+                                    | {numberOfReviewers} {t("common_reviews")}
+                                  </span>
+                                </span>
+                              </Grid>
+                            )}
+                          </Grid>
+                        </>
                       ) : (
-                        <Grid className={classes.badge}>
-                          {t("common_tour")}
-                        </Grid>
+                        <>
+                          <Grid className={classes.badge}>
+                            {t("common_tour")}
+                          </Grid>
+                          <Grid className={classes.boxReview}>
+                            {rate !== 0 && (
+                              <Grid className={classes.boxReview}>
+                                <FontAwesomeIcon
+                                  icon={faLocationDot}
+                                ></FontAwesomeIcon>
+                                <span>
+                                  {rate} {getRateComment(rate)}{" "}
+                                  <span className={classes.numberOfReviews}>
+                                    | {numberOfReviewers} {t("common_reviews")}
+                                  </span>
+                                </span>
+                              </Grid>
+                            )}
+                          </Grid>
+                        </>
                       )}
                     </Grid>
                   )}
-
                   <Grid
-                    className={classes.boxReview}
-                    sx={{ paddingTop: "8px" }}
+                    sx={{ padding: "10px 0" }}
+                    className={classes.boxUtility}
                   >
-                    {rate !== 0 && (
-                      <Grid className={classes.boxReview}>
-                        <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
-                        <span>
-                          {rate} {getRateComment(rate)}{" "}
-                          <span className={classes.numberOfReviews}>
-                            | {numberOfReviewers} {t("common_reviews")}
-                          </span>
-                        </span>
-                      </Grid>
-                    )}
+                    {convenient &&
+                      convenient?.map((item, index) => (
+                        <Badge className={classes.tag} key={index}>
+                          {item}
+                        </Badge>
+                      ))}
                   </Grid>
                 </Grid>
                 <Grid item xs={3} className={classes.containerPrice} container>
@@ -205,7 +297,7 @@ const ListServices = memo(
                         <p>
                           {t("card_list_item_save_discount", {
                             discount: discount,
-                          })}
+                          })}{" "}
                         </p>
                       </>
                     ) : (

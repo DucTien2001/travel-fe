@@ -70,9 +70,6 @@
 
 .boxItem:last-child {
     padding-left: 16px;    
-    button {
-        height:100%;
-    }
     @media only screen and (max-width: 768px) {
         padding: 0;
         padding-top: 14px;
@@ -99,7 +96,7 @@
     position: absolute;
     top: 80px;
     background-color: var(--white-color);
-    padding: 16px 16px 0 16px   ;
+    padding: 16px 16px 16px 16px !important;
     min-width: 280px;
     border-radius: 4px;
     box-shadow: 5px 10px var(--box-shadow-100);

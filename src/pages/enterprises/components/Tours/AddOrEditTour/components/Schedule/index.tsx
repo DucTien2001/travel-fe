@@ -200,7 +200,11 @@ const ScheduleComponent = memo((props: Props) => {
     >
       {value === index && (
         <Grid className={classes.root}>
-          <h3 className={classes.title}>Tour&apos;s Schedule</h3>
+          <h3 className={classes.title}>
+            {t(
+              "enterprise_management_section_tour_tab_schedule_day_title_setup"
+            )}
+          </h3>
           {!!fieldsSchedule?.length &&
             fieldsSchedule?.map((field, index) => (
               <Grid key={index}>
