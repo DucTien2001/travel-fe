@@ -277,6 +277,9 @@ const ListTours: NextPage = () => {
                         city={tour?.city?.name}
                         minPrice={tour?.minPrice}
                         maxPrice={tour?.maxPrice}
+                        cityStart={tour?.cityStart?.name}
+                        numberOfDays={tour?.numberOfDays}
+                        numberOfNights={tour?.numberOfNights}
                         price={
                           tour?.tourOnSales.length &&
                           tour?.tourOnSales[0]?.adultPrice
@@ -325,6 +328,9 @@ const ListTours: NextPage = () => {
                         maxPrice={tour?.maxPrice}
                         rate={Math.floor(tour?.rate)}
                         numberOfReviewers={tour?.numberOfReviewer}
+                        cityStart={tour?.cityStart?.name}
+                        numberOfDays={tour?.numberOfDays}
+                        numberOfNights={tour?.numberOfNights}
                       />
                     ))}
                   </div>

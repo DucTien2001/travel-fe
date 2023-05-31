@@ -265,6 +265,7 @@ const ListHotels: NextPage = () => {
                       maxPrice={stay?.maxPrice}
                       rate={Math.floor(stay?.rate)}
                       isHotel={true}
+                      convenient={stay?.convenient}
                     />
                   ))}
                 </div>
