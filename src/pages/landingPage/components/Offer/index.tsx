@@ -49,7 +49,7 @@ const OfferComponent = memo(() => {
                 onClick={() => {
                   router.push({
                     pathname: "/listTour",
-                    search: `?keyword=Phu Quoc
+                    search: `?keyword=Phu Quôc
                     `,
                   });
                 }}
@@ -65,7 +65,7 @@ const OfferComponent = memo(() => {
                     onClick={() => {
                       router.push({
                         pathname: "/listTour",
-                        search: `?keyword=Da Nang
+                        search: `?keyword=Đa Năng
                                       `,
                       });
                     }}
@@ -95,7 +95,7 @@ const OfferComponent = memo(() => {
                     onClick={() => {
                       router.push({
                         pathname: "/listTour",
-                        search: `?keyword=Ha Long Bay
+                        search: `?keyword=Ha Long
                         `,
                       });
                     }}
@@ -109,7 +109,7 @@ const OfferComponent = memo(() => {
                     onClick={() => {
                       router.push({
                         pathname: "/listTour",
-                        search: `?keyword=Da Lat
+                        search: `?keyword=Đa Lat
                         `,
                       });
                     }}
@@ -139,7 +139,7 @@ const OfferComponent = memo(() => {
                     onClick={() => {
                       router.push({
                         pathname: "/listTour",
-                        search: `?keyword=Hue
+                        search: `?keyword=Huê
                                           `,
                       });
                     }}
@@ -175,7 +175,7 @@ const OfferComponent = memo(() => {
                   onClick={() => {
                     router.push({
                       pathname: "/listHotel",
-                      search: `?keyword=Phu Yen
+                      search: `?keyword=Phu Yên
                                     `,
                     });
                   }}
@@ -193,7 +193,7 @@ const OfferComponent = memo(() => {
                     onClick={() => {
                       router.push({
                         pathname: "/listHotel",
-                        search: `?keyword=Da Lat
+                        search: `?keyword=Đa Lat
                                                       `,
                       });
                     }}
@@ -210,7 +210,7 @@ const OfferComponent = memo(() => {
                     onClick={() => {
                       router.push({
                         pathname: "/listHotel",
-                        search: `?keyword=Quy Nhon
+                        search: `?keyword=Quy Nhơn
                                                       `,
                       });
                     }}
