@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 // reactstrap components
 import { Container, Row, Col } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,6 +41,7 @@ const ListTours: NextPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const [isFirstConnect, setIsFirstConnect] = useState(true);
   const [changeViewLayout, setChangeViewLayout] = useState(false);
   const [data, setData] = useState<DataPagination<Tour>>();
   const [keyword, setKeyword] = useState<string>("");
@@ -77,13 +78,20 @@ const ListTours: NextPage = () => {
     dispatch(setLoading(true));
     TourService.getAllTours(params)
       .then((res) => {
-        setData({
-          data: res.data,
-          meta: res.meta,
-        });
+        if (isFirstConnect) {
+          setIsFirstConnect(false)
+        } else {
+          setData({
+            data: res.data,
+            meta: res.meta,
+          });
+          dispatch(setLoading(false))
+        }
       })
-      .catch((e) => dispatch(setErrorMess(e)))
-      .finally(() => dispatch(setLoading(false)));
+      .catch((e) => {
+        dispatch(setErrorMess(e))
+        dispatch(setLoading(false))
+      })
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,6 +112,7 @@ const ListTours: NextPage = () => {
 
   const onSearchDate = (e) => {
     setDateStart(moment(e?._d));
+    fetchData({ dateSearch: new Date(e?._d) });
   };
 
   const onClearFilter = () => {
@@ -138,20 +147,40 @@ const ListTours: NextPage = () => {
   //     setListTours(listSortHighRate);
   //   }
   // }, [watchSortType]);
-  useEffect(() => {
+
+  const queryUrl = () => {
+    let params = {}
     if (router.query?.keyword) {
       setKeyword(String(router.query?.keyword));
+      params = {
+        keyword: String(router.query?.keyword),
+      }
     }
     if (router.query?.dateSearch) {
       setDateStart(moment(router.query?.dateSearch));
+      params = {
+        ...params,
+        dateSearch: String(router.query?.dateSearch),
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query]);
+    fetchData(params)
+  }
 
   useEffect(() => {
+    if(!isFirstConnect) {
+      if (router.query?.keyword || router.query?.dateSearch) {
+        queryUrl()
+      } else {
+        fetchData()
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFirstConnect])
+
+  useLayoutEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateStart, tourFilter]);
+  }, [tourFilter]);
 
   return (
     <>

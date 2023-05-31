@@ -25,19 +25,21 @@ import InputSearch from "components/common/inputs/InputSearch";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import moment from "moment";
 import { useRouter } from "next/router";
+import useDebounce from "hooks/useDebounce";
 
 const ListHotels: NextPage = () => {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation("common");
   const router = useRouter();
 
+  const [isFirstConnect, setIsFirstConnect] = useState(true);
   const [data, setData] = useState<DataPagination<Stay>>();
   const [keyword, setKeyword] = useState<string>("");
   const [dateStart, setDateStart] = useState<Moment>(null);
   const [dateEnd, setDateEnd] = useState<Moment>(null);
-  const [numberOfAdult, setNumberOfAdult] = useState(1);
-  const [numberOfChild, setNumberOfChild] = useState(0);
-  const [numberOfRoom, setNumberOfRoom] = useState(1);
+  const [numberOfAdult, setNumberOfAdult] = useState(null);
+  const [numberOfChild, setNumberOfChild] = useState(null);
+  const [numberOfRoom, setNumberOfRoom] = useState(null);
 
   const [stayFilter, setStayFilter] = useState<number>(
     ESortOption.LOWEST_PRICE
@@ -46,6 +48,9 @@ const ListHotels: NextPage = () => {
   const fetchData = (value?: {
     take?: number;
     page?: number;
+    numberOfAdult?: number;
+    numberOfChild?: number;
+    numberOfRoom?: number;
     keyword?: string;
     startDate?: Date;
     endDate?: Date;
@@ -57,9 +62,9 @@ const ListHotels: NextPage = () => {
       startDate: dateStart?.toDate() || value?.startDate,
       endDate: dateEnd?.toDate() || value?.endDate,
       sort: stayFilter,
-      numberOfAdult: numberOfAdult || 1,
-      numberOfChildren: numberOfChild || 0,
-      numberOfRoom: numberOfRoom || 1,
+      numberOfAdult: numberOfAdult || value?.numberOfAdult || null,
+      numberOfChildren: numberOfChild || value?.numberOfChild || null,
+      numberOfRoom: numberOfRoom || value?.numberOfRoom || null,
     };
     if (value?.keyword !== undefined) {
       params.keyword = value.keyword || undefined;
@@ -67,18 +72,31 @@ const ListHotels: NextPage = () => {
     dispatch(setLoading(true));
     StayService.findAll(params)
       .then((res) => {
-        setData({
-          data: res.data,
-          meta: res.meta,
-        });
+        if (isFirstConnect) {
+          setIsFirstConnect(false)
+        } else {
+          setData({
+            data: res.data,
+            meta: res.meta,
+          });
+          dispatch(setLoading(false))
+        }
       })
-      .catch((e) => dispatch(setErrorMess(e)))
-      .finally(() => dispatch(setLoading(false)));
+      .catch((e) => {
+        dispatch(setErrorMess(e))
+        dispatch(setLoading(false))
+      })
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
+    _onSearch(e.target.value);
   };
+  
+  const _onSearch = useDebounce(
+    (keyword: string) => fetchData({ keyword, page: 1 }),
+    500
+  );
 
   const yesterday = moment().subtract(1, "day");
   const disablePastDt = (current) => {
@@ -87,10 +105,12 @@ const ListHotels: NextPage = () => {
 
   const onSearchStartDate = (e) => {
     setDateStart(moment(e?._d));
+    fetchData({ startDate: new Date(e?._d) });
   };
 
   const onSearchEndDate = (e) => {
     setDateEnd(moment(e?._d));
+    fetchData({ endDate: new Date(e?._d) });
   };
 
   const onClearFilter = () => {
@@ -98,9 +118,9 @@ const ListHotels: NextPage = () => {
     setDateStart(null);
     setDateEnd(null);
     setStayFilter(null);
-    setNumberOfAdult(1);
-    setNumberOfChild(0);
-    setNumberOfRoom(1);
+    setNumberOfAdult(null);
+    setNumberOfChild(null);
+    setNumberOfRoom(null);
   };
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, newPage: number) => {
@@ -108,42 +128,68 @@ const ListHotels: NextPage = () => {
       page: newPage + 1,
     });
   };
-
-  useEffect(() => {
+  
+  const queryUrl = () => {
+    let params = {}
     if (router.query?.keyword) {
       setKeyword(String(router.query?.keyword));
+      params = {
+        keyword: String(router.query?.keyword),
+      }
     }
     if (router.query?.dateStart) {
       setDateStart(moment(router.query?.dateStart));
+      params = {
+        ...params,
+        dateStart: String(router.query?.dateStart),
+      }
     }
     if (router.query?.dateEnd) {
       setDateEnd(moment(router.query?.dateEnd));
+      params = {
+        ...params,
+        dateEnd: String(router.query?.dateEnd),
+      }
     }
     if (router.query?.numberOfAdult) {
       setNumberOfAdult(Number(router.query?.numberOfAdult));
+      params = {
+        ...params,
+        numberOfAdult: String(router.query?.numberOfAdult),
+      }
     }
     if (router.query?.numberOfChild) {
       setNumberOfChild(Number(router.query?.numberOfChild));
+      params = {
+        ...params,
+        numberOfChild: String(router.query?.numberOfChild),
+      }
     }
     if (router.query?.numberOfRoom) {
       setNumberOfRoom(Number(router.query?.numberOfRoom));
+      params = {
+        ...params,
+        numberOfRoom: String(router.query?.numberOfRoom),
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query]);
+    fetchData(params)
+  }
+  
+  useEffect(() => {
+    if(!isFirstConnect) {
+      if (router.query?.keyword || router.query?.dateStart || router.query?.dateEnd || router.query?.numberOfAdult || router.query?.numberOfChild || router.query?.numberOfRoom) {
+        queryUrl()
+      } else {
+        fetchData()
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFirstConnect])
 
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dateStart,
-    dateEnd,
-    stayFilter,
-    numberOfAdult,
-    numberOfChild,
-    numberOfRoom,
-    keyword,
-    router,
-  ]);
+  }, [stayFilter]);
 
   return (
     <>
