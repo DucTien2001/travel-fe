@@ -37,7 +37,7 @@ const EventPage = memo(() => {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(copyCode);
-    dispatch(setSuccessMess("Copy to clipboard"));
+    dispatch(setSuccessMess(t("common_copy_success")));
   };
 
   useEffect(() => {
@@ -88,12 +88,11 @@ const EventPage = memo(() => {
               </Grid>
               <Grid sx={{ paddingBottom: "10px" }}>
                 <InputTextfield
-                  onClick={handleCopyCode}
                   className={classes.inputCode}
                   value={copyCode}
                   disabled
-                  onChange={(e) => setCopyCode("")}
-                  endAdornment={<ContentCopyIcon />}
+                  // onChange={(e) => setCopyCode("")}
+                  endAdornment={<ContentCopyIcon onClick={handleCopyCode} />}
                 />
               </Grid>
               <Grid className={classes.description}>

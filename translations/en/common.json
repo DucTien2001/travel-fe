@@ -1116,6 +1116,7 @@
   "common_delete_success": "Delete successful",
   "common_cancel_success": "Cancel successful",
   "common_send_success": "Send successful",
+  "common_copy_success": "Copy successful",
   "common_view_more": "View more",
   "common_see_all": "See All Photos",
   "common_search": "Search",
