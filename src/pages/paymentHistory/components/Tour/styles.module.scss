@@ -322,3 +322,17 @@
         }
     }
 }
+
+.boxImgTerms {
+    display: flex;
+}
+
+.boxTerms {
+    margin-left: 10px;
+    color: var(--primary-light-color-1);
+    font-weight: 600;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}

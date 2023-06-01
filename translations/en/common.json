@@ -394,6 +394,7 @@
   "payment_history_page_hotel_number_bed": "Number of bed",
   "payment_history_page_hotel_bed": "bed",
   "payment_history_page_room_title": "ROOM INFORMATION",
+  "payment_history_page_tour_bill_terms": "Change and return policy",
 
   "voucher_title_deal": "Deal",
   "voucher_title_max": "Max",
@@ -415,7 +416,7 @@
   "popup_detail_tour_and_terms_conditions_tour_terms_title":"Terms and Condition",
   "popup_detail_tour_and_terms_conditions_tour_info_title":"General Information",
   "popup_detail_tour_and_terms_conditions_tour_reschedule_refund_title":"Reschedule & Refund",
-  "popup_detail_tour_and_terms_conditions_tour_reschedule_title":"Reschedule Policy",
+  "popup_detail_tour_and_terms_conditions_tour_reschedule_title":"Reschedule & Refund Policy",
   "popup_detail_tour_and_terms_conditions_tour_refund_title":"Refund Policy",
   "popup_detail_tour_and_terms_conditions_tour_refund_content":"Request a refund at the latest <span>{{dayRange}} day(s)</span> before your selected visit date to get up to <span>{{moneyRate}}%</span> refund.",
   "popup_detail_tour_and_terms_conditions_tour_reschedule_content":"Request a refund at the latest <span>{{dayRange}} day(s)</span> before your selected visit date to get up to <span>{{moneyRate}}%</span> refund.",

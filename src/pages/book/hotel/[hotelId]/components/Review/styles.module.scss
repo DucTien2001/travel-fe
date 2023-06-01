@@ -169,7 +169,7 @@
     .textContentPolicy {
         text-align: justify;
         line-height: 1.5;
-        font-weight: 500;
+        font-weight: 500 !important;
         ul {
             padding: 0;
         }

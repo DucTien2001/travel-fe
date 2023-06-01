@@ -40,6 +40,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Pagination from "@mui/material/Pagination";
 import PopupDefault from "components/Popup/PopupDefault";
 import UpdateIcon from "@mui/icons-material/Update";
+import PopupTermAndCondition from "./PopupTermAndCondition";
 // eslint-disable-next-line react/display-name
 const Tour = memo(() => {
   const dispatch = useDispatch();
@@ -63,6 +64,8 @@ const Tour = memo(() => {
   const [openPopupWarningReschedule, setOpenPopupWarningReschedule] =
     useState(false);
 
+  const [itemTourBill, setItemTourBill] = useState<TourBill>(null);
+
   const onToggleAddComment = () => setOpenPopupAddComment(!openPopupAddComment);
 
   const onTogglePopupWarningCancel = () =>
@@ -77,6 +80,15 @@ const Tour = memo(() => {
 
   const onTogglePopupConfirmCancel = () => {
     setOpenConfirmCancelBookTour(!openConfirmCancelBookTour);
+  };
+
+  const onTogglePopupTermAndCondition = (e, item) => {
+    setItemTourBill(item);
+  };
+
+  const onClosePopupTermAndCondition = () => {
+    if (!itemTourBill) return;
+    setItemTourBill(null);
   };
 
   const onToggleAddInformation = () => {
@@ -492,7 +504,12 @@ const Tour = memo(() => {
                               <MoreVertIcon />
                             </IconButton>
                           </Grid>
-                          <Grid container item xs={10}>
+                          <Grid
+                            container
+                            item
+                            xs={10}
+                            sx={{ maxWidth: "100% !important" }}
+                          >
                             <Grid>
                               <Grid className={classes.boxTitle} item xs={12}>
                                 <p className={classes.textStatus}>
@@ -518,15 +535,32 @@ const Tour = memo(() => {
                                   </p>
                                 </Grid>
                               )}
-                              <Grid
-                                className={clsx(classes.boxImg, {
-                                  [classes.boxImgNew]: !item?.oldBillId,
-                                })}
-                              >
-                                <img
-                                  src={item?.tourData?.images[0]}
-                                  alt="anh"
-                                ></img>
+                              <Grid className={classes.boxImgTerms}>
+                                <Grid
+                                  className={clsx(classes.boxImg, {
+                                    [classes.boxImgNew]: !item?.oldBillId,
+                                  })}
+                                >
+                                  <img
+                                    src={item?.tourData?.images[0]}
+                                    alt="anh"
+                                  ></img>
+                                </Grid>
+                                <Grid
+                                  className={classes.boxTerms}
+                                  onClick={(e) =>
+                                    onTogglePopupTermAndCondition(e, item)
+                                  }
+                                >
+                                  {t("payment_history_page_tour_bill_terms")}
+                                </Grid>
+                                {itemTourBill?.id === item?.id && (
+                                  <PopupTermAndCondition
+                                    isOpen={!!itemTourBill}
+                                    toggle={onClosePopupTermAndCondition}
+                                    tour={item?.tourData}
+                                  />
+                                )}
                               </Grid>
                             </Grid>
                           </Grid>

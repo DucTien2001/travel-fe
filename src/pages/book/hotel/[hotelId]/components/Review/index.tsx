@@ -437,7 +437,12 @@ const Review = memo(({ dataRoomBook, handleChangeStep }: Props) => {
                         <Grid sx={{ padding: "4px 0 8px 0" }}>
                           <p>{t("book_page_booking_required_doc")}</p>
                         </Grid>
-                        <Collapse in={readMore} timeout="auto" unmountOnExit>
+                        <Collapse
+                          in={readMore}
+                          timeout="auto"
+                          unmountOnExit
+                          sx={{ fontWeight: "500 !important" }}
+                        >
                           <Grid
                             sx={{
                               display: "flex",

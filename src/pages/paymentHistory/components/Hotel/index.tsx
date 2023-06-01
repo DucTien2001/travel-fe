@@ -41,6 +41,7 @@ import PopupConfirmChange from "./PopupConfirmChange";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PopupDefault from "components/Popup/PopupDefault";
+import PopupTermAndCondition from "./PopupTermAndCondition";
 // eslint-disable-next-line react/display-name
 const StayHistory = memo(() => {
   const dispatch = useDispatch();
@@ -61,6 +62,17 @@ const StayHistory = memo(() => {
   const [openPopupWarningRate, setOpenPopupWarningRate] = useState(false);
   const [openPopupWarningReschedule, setOpenPopupWarningReschedule] =
     useState(false);
+
+  const [itemRoomBill, setItemRoomBill] = useState<RoomBill>(null);
+
+  const onTogglePopupTermAndCondition = (e, item) => {
+    setItemRoomBill(item);
+  };
+
+  const onClosePopupTermAndCondition = () => {
+    if (!itemRoomBill) return;
+    setItemRoomBill(null);
+  };
 
   const onToggleAddComment = () => setOpenPopupAddComment(!openPopupAddComment);
 
@@ -585,7 +597,13 @@ const StayHistory = memo(() => {
                               <MoreVertIcon />
                             </IconButton>
                           </Grid>
-                          <Grid container item xs={10}>
+
+                          <Grid
+                            container
+                            item
+                            xs={10}
+                            sx={{ maxWidth: "100% !important" }}
+                          >
                             <Grid>
                               <Grid className={classes.boxTitle} item xs={12}>
                                 <p className={classes.textStatus}>
@@ -611,15 +629,32 @@ const StayHistory = memo(() => {
                                   </p>
                                 </Grid>
                               )}
-                              <Grid
-                                className={clsx(classes.boxImg, {
-                                  [classes.boxImgNew]: !item?.oldBillId,
-                                })}
-                              >
-                                <img
-                                  src={item?.stayData?.images[0]}
-                                  alt="anh"
-                                ></img>
+                              <Grid className={classes.boxImgTerms}>
+                                <Grid
+                                  className={clsx(classes.boxImg, {
+                                    [classes.boxImgNew]: !item?.oldBillId,
+                                  })}
+                                >
+                                  <img
+                                    src={item?.stayData?.images[0]}
+                                    alt="anh"
+                                  ></img>
+                                </Grid>
+                                <Grid
+                                  className={classes.boxTerms}
+                                  onClick={(e) =>
+                                    onTogglePopupTermAndCondition(e, item)
+                                  }
+                                >
+                                  {t("payment_history_page_tour_bill_terms")}
+                                </Grid>
+                                {itemRoomBill?.id === item?.id && (
+                                  <PopupTermAndCondition
+                                    isOpen={!!itemRoomBill}
+                                    toggle={onClosePopupTermAndCondition}
+                                    stay={item?.stayData}
+                                  />
+                                )}
                               </Grid>
                             </Grid>
                           </Grid>
