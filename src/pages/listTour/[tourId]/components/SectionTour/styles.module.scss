@@ -309,8 +309,6 @@
         margin-bottom: 12px;
      }
 .tags {
-    margin-bottom: 12px;
-
     display: flex;
     @media only screen and (max-width: 600px) {
         margin-bottom: 0;
@@ -352,7 +350,7 @@
 .locationStart {
     display: flex;
     font-size: 16px;
-
+    margin-bottom: 12px;
     p {margin: 0;
         font-weight: 700;
         color: var(--primary-color);

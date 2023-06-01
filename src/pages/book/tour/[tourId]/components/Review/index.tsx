@@ -33,7 +33,7 @@ const Review = memo(({ handleChangeStep }: Props) => {
     (state: ReducerType) => state.normal
   );
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [tour, setTour] = useState<Tour>();
 
   const policyType = useMemo(() => {
