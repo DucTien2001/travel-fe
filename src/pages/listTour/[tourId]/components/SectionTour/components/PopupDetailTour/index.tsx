@@ -41,41 +41,6 @@ const PopupDetailTour = memo((props: Props) => {
         <ModalBody className={classes.modalBody}>
           <Container>
             <Grid
-              id={DETAIL_SECTION.section_overview}
-              className={classes.rootOverview}
-            >
-              <Grid className={classes.boxTitle}>
-                <AirplaneTicketIcon />
-                <p>
-                  {t(
-                    "popup_detail_tour_and_terms_conditions_tour_detail_title"
-                  )}
-                </p>
-              </Grid>
-              <Grid className={classes.boxDuration}>
-                <p className={classes.titleDetail}>
-                  -{" "}
-                  {t(
-                    "popup_detail_tour_and_terms_conditions_tour_duration_title"
-                  )}
-                  :{" "}
-                </p>
-                <p>
-                  {t("popup_detail_tour_and_terms_conditions_tour_duration", {
-                    day: tour?.numberOfDays,
-                    night: tour?.numberOfNights,
-                  })}
-                </p>
-              </Grid>
-              <Grid className={classes.boxDuration}>
-                <p className={classes.titleDetail}>
-                  - {t("popup_detail_tour_and_terms_conditions_tour_des_title")}
-                  :{" "}
-                </p>
-                <p dangerouslySetInnerHTML={{ __html: tour?.description }}></p>
-              </Grid>
-            </Grid>
-            <Grid
               id={DETAIL_SECTION.section_term_condition}
               className={classes.rootOverview}
             >

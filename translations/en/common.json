@@ -292,6 +292,7 @@
   "book_page_section_price_detail_choose_voucher": "Choose the voucher",
   "book_page_section_price_detail_add_coupon": "Add Coupon",
   "book_page_section_price_detail_use_coupon_btn": "Use Coupon",
+  "book_page_section_price_detail_use_coupon_btn_title": "Please use the discount code provided at the system event to get more discount",
   "book_page_section_price_detail_use_coupon_error": "Your order must be larger than",
   "book_page_section_price_detail_continue_review": "Continue to Review",
   "book_page_booking_summary_title": "Booking summary",

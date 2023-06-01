@@ -495,9 +495,19 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                           max={
                             priceAndAge?.quantity - priceAndAge.quantityOrdered
                           }
-                          min={1}
+                          min={
+                            priceAndAge?.quantity -
+                              priceAndAge.quantityOrdered ===
+                            0
+                              ? 0
+                              : 1
+                          }
                           onChange={field.onChange}
                           value={field.value}
+                          valueDisable={
+                            watch("numberOfAdult") + watch("numberOfChild") >
+                            priceAndAge?.quantity - priceAndAge.quantityOrdered
+                          }
                         />
                       )}
                     />
@@ -598,7 +608,11 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                       isDot={true}
                       className={classes.btnBookNow}
                       type="submit"
-                      disabled={totalPrice === 0}
+                      disabled={
+                        totalPrice === 0 &&
+                        priceAndAge?.quantity - priceAndAge.quantityOrdered ===
+                          0
+                      }
                     >
                       {t("common_book_now")}
                     </Button>

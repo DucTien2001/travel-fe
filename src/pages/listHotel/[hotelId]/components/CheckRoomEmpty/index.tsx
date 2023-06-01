@@ -1202,6 +1202,9 @@ const CheckRoomEmpty = memo(({ stay }: Props) => {
               <Grid container spacing={2} sx={{ marginTop: "8px" }}>
                 <Grid item xs={8}>
                   <InputTextfield
+                    title={t(
+                      "book_page_section_price_detail_use_coupon_btn_title"
+                    )}
                     placeholder="Example: CHEAPTRAVEL"
                     type="text"
                     onChange={(e) => setInputValueCode(e.target.value)}

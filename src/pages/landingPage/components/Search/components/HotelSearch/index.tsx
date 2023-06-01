@@ -8,9 +8,6 @@ import {
   faMagnifyingGlassArrowRight,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import classes from "./styles.module.scss";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -32,6 +29,18 @@ import ChildFriendlyIcon from "@mui/icons-material/ChildFriendly";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import { useRouter } from "next/router";
 import moment, { Moment } from "moment";
+import * as yup from "yup";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import ErrorMessage from "components/common/texts/ErrorMessage";
+interface SearchHotelForm {
+  stayName?: string;
+  startDate?: Date;
+  endDate?: Date;
+  numberOfAdult?: number;
+  numberOfChild?: number;
+  numberOfRoom?: number;
+}
 // eslint-disable-next-line react/display-name
 const HotelSearch = memo(() => {
   const { t, i18n } = useTranslation("common");
@@ -41,8 +50,61 @@ const HotelSearch = memo(() => {
   const [dateEnd, setDateEnd] = useState<Moment>(null);
   const [numberOfAdult, setNumberOfAdult] = useState(1);
   const [numberOfChild, setNumberOfChild] = useState(0);
-  const [numberOfRoom, setNumberOfRoom] = useState(1);
+  const [numberOfRoom, setNumberOfRoom] = useState(2);
   const router = useRouter();
+
+  const schema = useMemo(() => {
+    return yup.object().shape({
+      stayName: yup.string().notRequired(),
+      startDate: yup
+        .date()
+        .notRequired()
+        .max(
+          yup.ref("endDate"),
+          t(
+            "stay_detail_section_stay_check_room_empty_start_time_validate_error"
+          )
+        ),
+      endDate: yup
+        .date()
+        .notRequired()
+        .min(
+          yup.ref("startDate"),
+          t("stay_detail_section_stay_check_room_empty_end_time_validate_error")
+        ),
+      numberOfRoom: yup
+        .number()
+        .nullable()
+        .notRequired()
+        .positive(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_max_discount_validate_error"
+          )
+        )
+        .transform((_, val) => (val !== "" ? Number(val) : null)),
+      numberOfChild: yup
+        .number()
+        .nullable()
+        .notRequired()
+        .positive(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_max_discount_validate_error"
+          )
+        )
+        .transform((_, val) => (val !== "" ? Number(val) : null)),
+      numberOfAdult: yup
+        .number()
+        .nullable()
+        .notRequired()
+        .positive(
+          t(
+            "enterprise_management_section_add_or_edit_voucher_max_discount_validate_error"
+          )
+        )
+        .transform((_, val) => (val !== "" ? Number(val) : null)),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onFocus = () => {
     setFocus(true);
@@ -60,6 +122,19 @@ const HotelSearch = memo(() => {
     setKeyword(e.target.value);
   };
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    control,
+    watch,
+    clearErrors,
+  } = useForm<SearchHotelForm>({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+  });
+
   const onSubmitSearch = () => {
     router.push({
       pathname: "/listHotel",
@@ -75,7 +150,7 @@ const HotelSearch = memo(() => {
 
   return (
     <>
-      <Grid>
+      <Grid component="form" onSubmit={handleSubmit(onSubmitSearch)}>
         <Grid className={classes.boxItemLocation}>
           <p className={classes.titleInput}>
             {t("landing_page_section_search_stay_input_stay")}
@@ -85,11 +160,12 @@ const HotelSearch = memo(() => {
             placeholder={t(
               "landing_page_section_search_stay_input_stay_placeholder"
             )}
-            name="location"
+            name="stayName"
             startAdornment={<FontAwesomeIcon icon={faLocationDot} />}
             autoComplete="off"
             value={keyword || ""}
             onChange={onSearch}
+            inputRef={register("stayName")}
           />
         </Grid>
         <Grid container className={classes.boxDate}>
@@ -113,6 +189,8 @@ const HotelSearch = memo(() => {
                 _onChange={(e) => {
                   setDateStart(moment(e?._d));
                 }}
+                control={control}
+                errorMessage={errors.startDate?.message}
               />
             </Grid>
             <Grid xs={3} item className={classes.boxItem}>
@@ -134,6 +212,8 @@ const HotelSearch = memo(() => {
                 _onChange={(e) => {
                   setDateEnd(moment(e?._d));
                 }}
+                control={control}
+                errorMessage={errors.endDate?.message}
               />
             </Grid>
             <Grid
@@ -265,7 +345,8 @@ const HotelSearch = memo(() => {
         <Grid className={classes.boxBtnSearch}>
           <Button
             btnType={BtnType.Secondary}
-            onClick={onSubmitSearch}
+            // onClick={onSubmitSearch}
+            type="submit"
             className={classes.btnSearch}
           >
             <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>

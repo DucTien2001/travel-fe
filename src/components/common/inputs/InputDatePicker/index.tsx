@@ -120,7 +120,16 @@ const CustomDatePicker = memo(
               }}
               {...rest}
               renderInput={(props) => {
-                return <input {...props} value={value ? (value as Moment).format(dateFormat || "D/M/YYYY") : ''} />
+                return (
+                  <input
+                    {...props}
+                    value={
+                      value
+                        ? (value as Moment).format(dateFormat || "D/M/YYYY")
+                        : ""
+                    }
+                  />
+                );
               }}
             />
           </>

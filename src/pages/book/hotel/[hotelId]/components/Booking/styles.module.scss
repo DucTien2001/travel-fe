@@ -286,10 +286,12 @@
 .inputCoupon {
     display: flex;
     margin-top: 0px !important;
+    align-items: flex-end;
 }
 
 .btnUseCoupon {
     width: 100%;
+    padding: 14px 24px !important;
 }
 
 .textViewDetail {
