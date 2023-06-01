@@ -483,6 +483,7 @@
   "popup_change_date_payment_history_notification_not_cancel":"Bạn không thể hủy dịch vụ này do bạn đã nằm ngoài thời gian hủy theo chính sách của chúng tôi, vui lòng đọc lại điều khoản điều kiện của dịch vụ tại mục chi tiết dịch vụ",
   "popup_change_date_payment_history_notification_not_rate":"Bạn không thể đánh giá dịch vụ này do bạn chưa sử dụng dịch vụ này. Vui lòng kiểm tra lại",
   "popup_change_date_payment_history_notification_not_reschedule":"Bạn không thể đổi lịch cho dịch vụ này do bạn đã nằm ngoài thời gian đổi theo chính sách của chúng tôi, vui lòng đọc lại điều khoản điều kiện của dịch vụ tại mục chi tiết dịch vụ",
+  "popup_change_date_payment_history_notification_not_change_received":"Bạn không thể gửi tiền doanh thu do ngày diễn ra của dịch vụ này chưa diễn ra",
 
   "popup_confirm_cancel_payment_history_title":"Xác Nhận Hủy Điểm Du Lịch",
   "popup_confirm_cancel_payment_history_total_bill":"Tổng hóa đơn",
@@ -1049,12 +1050,15 @@
   "admin_management_section_tour_bill_header_table_amount": "Số lượng đặt",
   "admin_management_section_tour_bill_header_table_revenue": "Doanh thu",
   "admin_management_section_tour_bill_header_table_commission": "Hoa hồng",
+  "admin_management_section_tour_bill_header_table_status_received": "Trạng thái nhận doanh thu",
   "admin_management_section_tour_bill_header_table_action": "Hành động",
   "admin_management_section_tour_bill_body_table_adult": "người lớn",
   "admin_management_section_tour_bill_body_table_child": "trẻ em",
+  "admin_management_section_tour_bill_body_table_not_book": "Chưa có người đặt",
   "admin_management_section_tour_bill_sort_option_placeholder":" -- SẮP XẾP -- ",
   "admin_management_section_tour_bill_search_placeholder":"Tìm kiếm người dùng (email)",
   "admin_management_section_tour_bill_view_detail" : "Xem chi tiết",
+  "admin_management_section_tour_bill_change_revenue" : "Đánh dấu chuyển doanh thu",
   "admin_management_section_tour_bill_input_date_placeholder": "Chọn tháng",
   "admin_management_section_tour_bill_header_table_tour_name": "Tên điểm du lịch",
   "admin_management_section_tour_bill_header_table_duration": "Thời gian",
@@ -1137,6 +1141,8 @@
   "common_nights": "đêm",
   "common_active": "Hoạt động",
   "common_in_active": "Không hoạt động",
-  "common_not_refund": "Chưa hoàn trả",
-  "common_refund": "Đã hoàn trả"
+  "common_not_refund": "Chưa gửi",
+  "common_refund": "Đã gửi",
+  "common_not_received": "Chưa nhận",
+  "common_received": "Đã nhận"
 }

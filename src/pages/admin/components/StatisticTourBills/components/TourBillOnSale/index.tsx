@@ -59,6 +59,11 @@ const TourRevenue = memo(({ tourOnSaleId }: Props) => {
       sortable: false,
     },
     {
+      name: "name",
+      label: t("enterprise_management_section_tour_bill_title_person_name"),
+      sortable: false,
+    },
+    {
       name: "duration",
       label: t("admin_management_section_tour_bill_header_table_duration"),
       sortable: false,
@@ -161,6 +166,9 @@ const TourRevenue = memo(({ tourOnSaleId }: Props) => {
                     </TableCell>
                     <TableCell className={classes.tableCell} component="th">
                       {item?.tourData?.title}
+                    </TableCell>
+                    <TableCell className={classes.tableCell} component="th">
+                      {item?.firstName} {item?.lastName}
                     </TableCell>
                     <TableCell className={classes.tableCell} component="th">
                       {item?.tourData?.numberOfDays} {t("common_days")}{" "}

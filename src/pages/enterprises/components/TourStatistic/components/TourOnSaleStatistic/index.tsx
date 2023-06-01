@@ -31,6 +31,7 @@ import moment, { Moment } from "moment";
 import { useTranslation } from "react-i18next";
 import { ExpandMoreOutlined } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import StatusRefund from "components/StatusRefund";
 
 interface Props {
   tourId: number;
@@ -89,6 +90,13 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
       name: "profit",
       label: t(
         "enterprise_management_section_tour_statistic_header_table_profit"
+      ),
+      sortable: false,
+    },
+    {
+      name: "status",
+      label: t(
+        "admin_management_section_tour_bill_header_table_status_received"
       ),
       sortable: false,
     },
@@ -263,6 +271,21 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.revenue - item?.commission)} VND
                       </TableCell>
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.numberOfBookings !== 0 ? (
+                          <StatusRefund
+                            statusRefund={
+                              item?.tourOnSaleInfo?.isReceivedRevenue
+                            }
+                            titleTrue={t("common_received")}
+                            titleFalse={t("common_not_received")}
+                          />
+                        ) : (
+                          t(
+                            "admin_management_section_tour_bill_body_table_not_book"
+                          )
+                        )}
+                      </TableCell>
                       <TableCell className="text-center" component="th">
                         <IconButton
                           className={clsx(classes.actionButton)}
@@ -279,7 +302,7 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell align="center" colSpan={9}>
+                  <TableCell align="center" colSpan={10}>
                     <SearchNotFound />
                   </TableCell>
                 </TableRow>

@@ -45,6 +45,7 @@ import { Moment } from "moment";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
 import StatusChip from "components/StatusChip";
 import { fTime } from "utils/formatTime";
+import StatusRefund from "components/StatusRefund";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
@@ -284,7 +285,7 @@ const Tour = memo(({}: Props) => {
                         {fCurrency2VND(item?.moneyRefund)} VND
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <StatusChip statusRefund={item?.isRefunded} />
+                        <StatusRefund statusRefund={item?.isRefunded} />
                       </TableCell>
 
                       <TableCell className="text-center" component="th">

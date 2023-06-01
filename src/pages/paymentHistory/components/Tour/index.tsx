@@ -361,7 +361,10 @@ const Tour = memo(() => {
                                 <p>
                                   {t("payment_history_page_tour_quantity")}:{" "}
                                   <span>
-                                    {item?.amountAdult + item?.amountChild}{" "}
+                                    {item?.amountAdult}{" "}
+                                    {t("payment_history_page_hotel_adult")}{" "}
+                                    {item?.amountChild}{" "}
+                                    {t("payment_history_page_hotel_child")}
                                   </span>
                                 </p>
                               </Grid>
@@ -467,10 +470,10 @@ const Tour = memo(() => {
                                 <Grid className={classes.boxPrice}>
                                   <p>
                                     {t("payment_history_page_tour_quantity")}:{" "}
-                                    <span>
-                                      {item?.amountAdult + item?.amountChild}{" "}
-                                      ticket(s)
-                                    </span>
+                                    {item?.amountAdult}{" "}
+                                    {t("payment_history_page_hotel_adult")}{" "}
+                                    {item?.amountChild}{" "}
+                                    {t("payment_history_page_hotel_child")}
                                   </p>
                                 </Grid>
                               </Grid>

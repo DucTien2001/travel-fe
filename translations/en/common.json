@@ -484,6 +484,7 @@
   "popup_change_date_payment_history_notification_not_cancel":"You cannot cancel this service because you have fallen outside our policy cancellation period, please read the terms and conditions of the service again in the service details section",
   "popup_change_date_payment_history_notification_not_rate":"You cannot rate this service because you have not used it. Please check again",
   "popup_change_date_payment_history_notification_not_reschedule":"You cannot reschedule this service because you are outside of our policy change time, please re-read the terms and conditions of the service in the service details section",
+  "popup_change_date_payment_history_notification_not_change_received":"You cannot deposit revenue because the date of this service has not happened yet",
 
   "popup_confirm_cancel_payment_history_title":"Confirm Cancel Tour",
   "popup_confirm_cancel_payment_history_total_bill":"Total bill",
@@ -1051,12 +1052,15 @@
   "admin_management_section_tour_bill_header_table_amount": "Amount",
   "admin_management_section_tour_bill_header_table_revenue": "Revenue",
   "admin_management_section_tour_bill_header_table_commission": "Commission",
+  "admin_management_section_tour_bill_header_table_status_received": "Status Received",
   "admin_management_section_tour_bill_header_table_action": "Action",
   "admin_management_section_tour_bill_body_table_adult": "adult(s)",
   "admin_management_section_tour_bill_body_table_child": "child(s)",
+  "admin_management_section_tour_bill_body_table_not_book": "No one has booked yet",
   "admin_management_section_tour_bill_sort_option_placeholder":" -- SORT -- ",
   "admin_management_section_tour_bill_search_placeholder":"Search email",
   "admin_management_section_tour_bill_view_detail" : "View detail",
+  "admin_management_section_tour_bill_change_revenue" : "Revenue conversion mark",
   "admin_management_section_tour_bill_input_date_placeholder": "Select month",
   "admin_management_section_tour_bill_header_table_tour_name": "Tour name",
   "admin_management_section_tour_bill_header_table_duration": "Duration",
@@ -1140,5 +1144,7 @@
   "common_active": "Active",
   "common_in_active": "Inactive",
   "common_not_refund": "NOT REFUND YET",
-  "common_refund": "REFUNDED"
+  "common_refund": "REFUNDED",
+  "common_not_received": "NOT RECEIVED YET",
+  "common_received": "RECEIVED"
 }

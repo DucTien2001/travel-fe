@@ -46,6 +46,7 @@ export interface TourPrice {
   childrenPrice: number;
   adultPrice: number;
   currency: string;
+  isReceivedRevenue?: boolean;
 }
 
 export interface TourPolicies {

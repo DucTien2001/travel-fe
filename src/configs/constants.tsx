@@ -249,6 +249,10 @@ export const API = {
       DEFAULT: "/v1.0/admin/commission",
       GET_ID: "/v1.0/admin/commission/:id",
     },
+    TOUR_ON_SALE: {
+      DEFAULT: "/v1.0/admin/tour-on-sale",
+      GET_ID: "/v1.0/admin/tour-on-sale/:id",
+    },
     STATISTIC: {
       TOUR: {
         DEFAULT: "/v1.0/admin/tour-bill/statistic",

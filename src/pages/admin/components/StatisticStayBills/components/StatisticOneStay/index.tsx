@@ -245,8 +245,10 @@ const StayStatistic = memo(({ stayId }: Props) => {
                         {item?.roomInfo?.title}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.roomInfo?.numberOfAdult} adult -{" "}
-                        {item?.roomInfo?.numberOfChildren} children
+                        {item?.roomInfo?.numberOfAdult}{" "}
+                        {t("payment_history_page_hotel_adult")} -{" "}
+                        {item?.roomInfo?.numberOfChildren}{" "}
+                        {t("payment_history_page_hotel_child")}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {item?.roomInfo?.numberOfRoom}
