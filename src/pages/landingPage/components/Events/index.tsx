@@ -111,7 +111,7 @@ const TourSearch = memo(() => {
                   }}
                 >
                   <Grid>
-                    <img src={item?.banner} alt="anh"></img>
+                    <img src={item?.banner} height={90} style={{borderRadius: "10px"}} alt="anh"></img>
                   </Grid>
                 </SwiperSlide>
               ))}
