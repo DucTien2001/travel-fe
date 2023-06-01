@@ -15,6 +15,7 @@ interface InputsProps {
   value: number;
   onChange: (value) => void;
   errorMessage?: string;
+  valueDisable?: any;
 }
 // eslint-disable-next-line react/display-name
 const InputCounter = memo((props: InputsProps) => {
@@ -27,6 +28,7 @@ const InputCounter = memo((props: InputsProps) => {
     value,
     onChange,
     errorMessage,
+    valueDisable,
   } = props;
 
   const add = () => {
@@ -60,7 +62,7 @@ const InputCounter = memo((props: InputsProps) => {
         </Button>
         <div className={classes.numberValue}>
           <input
-            value={value}
+            value={valueDisable ? 0 : value}
             onChange={(e) => {
               let val = parseInt(e.target.value, 10);
               if (isNaN(val)) {

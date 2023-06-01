@@ -3,7 +3,7 @@
 }
 
 .form {
-  position: relative;
+  // position: relative;
 }
 .danger {
   [class~="form-control"] {
@@ -28,7 +28,7 @@
         display: block;
         width: 100%;
         min-width: 100px;
-        background-color: transparent;
+        background-color: white;
         border: 1px solid #c4c4c4;
         border-radius: 4px;
         color: #2c2c2c;

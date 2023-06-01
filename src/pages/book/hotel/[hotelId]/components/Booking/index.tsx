@@ -653,6 +653,9 @@ const BookingComponent = memo(({ onSubmit }: Props) => {
                     <Grid className={classes.inputCoupon} container spacing={2}>
                       <Grid item xs={8}>
                         <InputTextfield
+                          title={t(
+                            "book_page_section_price_detail_use_coupon_btn_title"
+                          )}
                           placeholder="Example: CHEAPTRAVEL"
                           type="text"
                           onChange={(e) => setInputValueCode(e.target.value)}

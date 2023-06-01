@@ -35,13 +35,37 @@ import { TourService } from "services/normal/tour";
 import { Moment } from "moment";
 import useDebounce from "hooks/useDebounce";
 import { useRouter } from "next/router";
-
+interface SearchForm {
+  location?: string;
+  startDate?: Date;
+}
 // eslint-disable-next-line react/display-name
 const TourSearch = memo(() => {
   const { t, i18n } = useTranslation("common");
   const theme = useTheme();
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const schema = useMemo(() => {
+    return yup.object().shape({
+      location: yup.string().notRequired(),
+      startDate: yup.date().notRequired(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    control,
+    watch,
+    clearErrors,
+  } = useForm<SearchForm>({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+  });
 
   const [keyword, setKeyword] = useState<string>("");
   const [dateStart, setDateStart] = useState<Moment>(null);
@@ -70,7 +94,7 @@ const TourSearch = memo(() => {
 
   return (
     <>
-      <Grid>
+      <Grid component="form" onSubmit={handleSubmit(onSubmitSearch)}>
         <Grid container className={classes.root}>
           <Grid item xs={6} className={classes.boxItem}>
             <p className={classes.titleInput}>
@@ -86,6 +110,7 @@ const TourSearch = memo(() => {
               autoComplete="off"
               value={keyword || ""}
               onChange={onSearch}
+              inputRef={register("location")}
             />
           </Grid>
           <Grid xs={6} item className={classes.boxItem}>
@@ -104,11 +129,14 @@ const TourSearch = memo(() => {
               value={dateStart ? dateStart : ""}
               initialValue={dateStart ? dateStart : ""}
               _onChange={(e) => onSearchDate(e)}
+              control={control}
+              name="startDate"
+              errorMessage={errors.startDate?.message}
             />
           </Grid>
         </Grid>
         <Grid className={classes.boxItemButton}>
-          <Button btnType={BtnType.Secondary} onClick={onSubmitSearch}>
+          <Button btnType={BtnType.Secondary} type="submit">
             <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
             {t("common_search")}
           </Button>

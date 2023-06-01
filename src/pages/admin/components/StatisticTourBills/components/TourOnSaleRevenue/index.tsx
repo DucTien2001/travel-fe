@@ -42,8 +42,8 @@ import StatusChip from "components/StatusChip";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import StatusRefund from "components/StatusRefund";
 import PopupDefault from "components/Popup/PopupDefault";
-import PopupConfirmChangeReceived from "../../../../../../components/Popup/PopupConfirmDefault";
 import { TourOnSaleService } from "services/admin/tourOnSale";
+import PopupConfirmDefault from "components/Popup/PopupConfirmDefault";
 interface Props {
   tourId?: number;
 }
@@ -414,7 +414,7 @@ const TourRevenue = memo(({ tourId }: Props) => {
           </MenuItem>
         )}
       </Menu>
-      <PopupConfirmChangeReceived
+      <PopupConfirmDefault
         isOpen={!!itemChangeReceived}
         toggle={onClosePopupConfirmChangeReceived}
         onYes={onChangeReceived}

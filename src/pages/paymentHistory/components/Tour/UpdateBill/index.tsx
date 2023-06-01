@@ -792,6 +792,9 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                     <Grid container spacing={2} sx={{ marginTop: "8px" }}>
                       <Grid item xs={8}>
                         <InputTextfield
+                          title={t(
+                            "book_page_section_price_detail_use_coupon_btn_title"
+                          )}
                           placeholder="Example: CHEAPTRAVEL"
                           type="text"
                           onChange={(e) => setInputValueCode(e.target.value)}
@@ -935,9 +938,20 @@ const BookingComponent = memo(({ tourBillId, onSubmit }: Props) => {
                               priceAndAge?.quantity -
                               priceAndAge.quantityOrdered
                             }
-                            min={tourBill?.amountAdult}
+                            min={
+                              priceAndAge?.quantity -
+                                priceAndAge.quantityOrdered ===
+                              0
+                                ? 0
+                                : 1
+                            }
                             onChange={field.onChange}
                             value={field.value}
+                            valueDisable={
+                              watch("numberOfAdult") + watch("numberOfChild") >
+                              priceAndAge?.quantity -
+                                priceAndAge.quantityOrdered
+                            }
                           />
                         )}
                       />
