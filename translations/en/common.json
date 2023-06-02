@@ -353,6 +353,7 @@
   "review_page_accom_policy": "Accommodation Policies",
   "review_page_check_in_out": "Check-in/Check-out Time",
   "payment_page_step_title_payment": "Payment",
+  "tour_not_enough_quantity": "The number of tickets is not enough, please choose another schedule!",
 
   "payment_history_page_title_hero": "PAYMENT ORDER",
   "payment_history_page_title": "Payment order",
