@@ -258,7 +258,7 @@ const StayStatistic = memo(({ enterpriseId }: Props) => {
                         {item?.numberOfBookings}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.totalNumberOfRoom}
+                        {item?.totalNumberOfRoom || 0}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.revenue)} VND

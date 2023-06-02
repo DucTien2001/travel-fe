@@ -54,24 +54,38 @@ const TourOnSaleStatistic = memo(({ tourOnSaleId }: Props) => {
       ),
       sortable: false,
     },
+    // {
+    //   name: "quantity",
+    //   label: t(
+    //     "enterprise_management_section_tour_statistic_header_table_quantity"
+    //   ),
+    //   sortable: false,
+    // },
+    // {
+    //   name: "number of booking",
+    //   label: t(
+    //     "enterprise_management_section_tour_statistic_header_table_number_booking"
+    //   ),
+    //   sortable: false,
+    // },
+    // {
+    //   name: "number of tickets booked",
+    //   label: t(
+    //     "enterprise_management_section_tour_statistic_header_table_number_of_ticket_booked"
+    //   ),
+    //   sortable: false,
+    // },
     {
-      name: "quantity",
+      name: "number of adult tickets",
       label: t(
-        "enterprise_management_section_tour_statistic_header_table_quantity"
+        "enterprise_management_section_tour_statistic_header_table_number_of_adult_ticket_booked"
       ),
       sortable: false,
     },
     {
-      name: "number of booking",
+      name: "number of child tickets",
       label: t(
-        "enterprise_management_section_tour_statistic_header_table_number_booking"
-      ),
-      sortable: false,
-    },
-    {
-      name: "number of tickets booked",
-      label: t(
-        "enterprise_management_section_tour_statistic_header_table_number_of_ticket_booked"
+        "enterprise_management_section_tour_statistic_header_table_number_of_child_ticket_booked"
       ),
       sortable: false,
     },
@@ -180,14 +194,17 @@ const TourOnSaleStatistic = memo(({ tourOnSaleId }: Props) => {
                           "D/M/YYYY"
                         )}{" "}
                       </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
+                      {/* <TableCell className={classes.tableCell} component="th">
                         {item?.tourOnSaleData?.quantity}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
+                      </TableCell> */}
+                      {/* <TableCell className={classes.tableCell} component="th">
                         {item?.tourOnSaleData?.quantityOrdered}
+                      </TableCell> */}
+                      <TableCell className={classes.tableCell} component="th">
+                        {Number(item?.amountAdult)}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {Number(item?.amountAdult) + Number(item?.amountChild)}
+                        {Number(item?.amountChild)}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.totalBill)} VND
