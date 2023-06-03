@@ -59,7 +59,13 @@ const Review = memo(({ handleChangeStep }: Props) => {
         handleChangeStep();
       })
       .catch((err) => {
-        dispatch(setErrorMess(err));
+        if(err?.detail === "Not enough quantity") {
+          dispatch(setErrorMess({
+            detail: t("tour_not_enough_quantity")
+          }));
+        } else {
+          dispatch(setErrorMess(err));
+        }
       });
   };
 

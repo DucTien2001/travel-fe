@@ -264,7 +264,7 @@ const DetailStayStatistic = memo(({ stayId }: Props) => {
                         {item?.numberOfBookings}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {Number(item?.totalNumberOfRoom)}
+                        {Number(item?.totalNumberOfRoom || 0)}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.revenue)} VND

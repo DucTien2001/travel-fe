@@ -96,7 +96,7 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
     {
       name: "status",
       label: t(
-        "admin_management_section_tour_bill_header_table_status_received"
+        "enterprise_management_section_tour_statistic_header_table_status_received"
       ),
       sortable: false,
     },

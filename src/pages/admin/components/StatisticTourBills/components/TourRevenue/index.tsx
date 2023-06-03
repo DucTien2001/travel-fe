@@ -234,8 +234,14 @@ const TourRevenue = memo(({ enterpriseId }: Props) => {
                       {item?.tourInfo?.title}
                     </TableCell>
                     <TableCell className={classes.tableCell} component="th">
-                      {item?.tourInfo?.numberOfDays} day(s){" "}
-                      {item?.tourInfo?.numberOfNights} night(s)
+                      {item?.tourInfo?.numberOfDays} {t("common_days")}{" "}
+                      {item?.tourInfo?.numberOfNights} {t("common_nights")}
+                      {/* {t("popup_detail_tour_and_terms_conditions_tour_duration", {
+                        day: item?.tourInfo?.numberOfDays,
+                        night: item?.tourInfo?.numberOfNights
+                      })} */}
+                      {/* {item?.tourInfo?.numberOfDays} day(s){" "}
+                      {item?.tourInfo?.numberOfNights} night(s) */}
                     </TableCell>
                     <TableCell className={classes.tableCell} component="th">
                       {item?.numberOfBookings}
