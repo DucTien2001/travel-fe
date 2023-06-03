@@ -82,7 +82,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation("common");
 
-  Geocode.setApiKey("AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI");
+  Geocode.setApiKey("AIzaSyBBOXTK1YVPEGx_7A29Y-emfwvNKcaPsDQ");
 
   const daySchedule = useMemo(() => {
     return _.chain(tourSchedule)
@@ -250,6 +250,8 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
     );
   }, [tour]);
 
+  console.log(coords);
+
   return (
     <>
       <Grid
@@ -416,7 +418,7 @@ const SectionTour = memo(({ tour, tourSchedule, isLoading }: Props) => {
                   <div style={{ height: "30vh", width: "100%" }}>
                     <GoogleMapReact
                       bootstrapURLKeys={{
-                        key: "AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI",
+                        key: "AIzaSyBBOXTK1YVPEGx_7A29Y-emfwvNKcaPsDQ",
                       }}
                       defaultCenter={coords}
                       defaultZoom={11}
