@@ -9,7 +9,6 @@ import {
   setSuccessMess,
 } from "redux/reducers/Status/actionTypes";
 import SearchNotFound from "components/SearchNotFound";
-
 import {
   Box,
   IconButton,
@@ -22,24 +21,12 @@ import {
   TableRow,
   TableCell,
   Paper,
-  FormControlLabel,
-  Checkbox,
   Grid,
 } from "@mui/material";
 import TableHeader from "components/Table/TableHeader";
-import {
-  DataPagination,
-  EBillStatus,
-  EPaymentStatus,
-  OptionItem,
-  TableHeaderLabel,
-  billStatusType,
-} from "models/general";
-import { EditOutlined, ExpandMoreOutlined } from "@mui/icons-material";
-
+import { DataPagination, TableHeaderLabel } from "models/general";
+import { ExpandMoreOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
-import useDebounce from "hooks/useDebounce";
-import InputCheckbox from "components/common/inputs/InputCheckbox";
 import "react-loading-skeleton/dist/skeleton.css";
 import {
   FindAllOrderNeedRefund,
@@ -53,9 +40,9 @@ import InputSelect from "components/common/inputs/InputSelect";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { Moment } from "moment";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
-import StatusChip from "components/StatusChip";
 import StatusRefund from "components/StatusRefund";
-
+import PopupSendMoneyRefund from "./PopupSendMoneyRefund";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 interface Props {}
 // eslint-disable-next-line react/display-name
 const Tour = memo(({}: Props) => {
@@ -65,6 +52,16 @@ const Tour = memo(({}: Props) => {
 
   const tableHeaders: TableHeaderLabel[] = [
     { name: "id", label: "#", sortable: false },
+    {
+      name: "name",
+      label: t("popup_download_view_tour_title_person_name"),
+      sortable: false,
+    },
+    {
+      name: "name",
+      label: t("enterprise_management_section_staff_header_table_phone"),
+      sortable: false,
+    },
     {
       name: "name",
       label: t("enterprise_management_section_tour_bill_header_table_name"),
@@ -126,6 +123,19 @@ const Tour = memo(({}: Props) => {
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [refundFilter, setRefundFilter] = useState<number>(-1);
   const [dateFilter, setDateFilter] = useState<Moment>(null);
+  const [itemSendMoney, setItemSendMoney] = useState(null);
+
+  const onClosePopupSendMoney = () => {
+    if (!itemSendMoney) return;
+    setItemSendMoney(null);
+    onCloseActionMenu();
+  };
+
+  const onShowRefund = () => {
+    if (!itemAction) return;
+    setItemSendMoney(itemAction);
+    onCloseActionMenu();
+  };
 
   useEffect(() => {
     fetchData();
@@ -187,11 +197,12 @@ const Tour = memo(({}: Props) => {
   };
 
   const handleRefund = () => {
-    if (!itemAction) return;
+    if (!itemSendMoney) return;
     dispatch(setLoading(true));
-    TourBillService.updateRefund(itemAction?.id)
+    TourBillService.updateRefund(itemSendMoney?.id)
       .then(() => {
         dispatch(setSuccessMess(t("common_update_success")));
+        onClosePopupSendMoney();
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
@@ -270,6 +281,14 @@ const Tour = memo(({}: Props) => {
                     <TableRow key={index}>
                       <TableCell scope="row" className={classes.tableCell}>
                         {index + 1}
+                      </TableCell>
+
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.userInfo?.firstName} {item?.userInfo?.lastName}
+                      </TableCell>
+
+                      <TableCell className={classes.tableCell} component="th">
+                        {item?.userInfo?.phoneNumber}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         <a
@@ -369,22 +388,34 @@ const Tour = memo(({}: Props) => {
           open={Boolean(actionAnchor)}
           onClose={onCloseActionMenu}
         >
-          {!itemAction?.isRefunded && (
-            <MenuItem
-              sx={{ fontSize: "0.875rem" }}
-              onClick={handleRefund}
-              className={classes.menuItem}
-            >
-              <Box display="flex" alignItems={"center"}>
-                <span>
-                  {t(
-                    "enterprise_management_section_tour_bill_action_view_refund"
-                  )}
-                </span>
-              </Box>
-            </MenuItem>
-          )}
+          {/* {!itemAction?.isRefunded && ( */}
+          <MenuItem
+            sx={{ fontSize: "0.875rem" }}
+            onClick={onShowRefund}
+            className={classes.menuItem}
+          >
+            <Box display="flex" alignItems={"center"}>
+              <CurrencyExchangeIcon
+                sx={{ marginRight: "0.25rem" }}
+                fontSize="small"
+                color="info"
+              />
+              <span>
+                {t(
+                  "enterprise_management_section_tour_bill_action_view_refund"
+                )}
+              </span>
+            </Box>
+          </MenuItem>
+          {/* )} */}
         </Menu>
+        <PopupSendMoneyRefund
+          isOpen={!!itemSendMoney}
+          toggle={onClosePopupSendMoney}
+          onClose={onClosePopupSendMoney}
+          bill={itemSendMoney}
+          onYes={handleRefund}
+        />
       </div>
     </>
   );

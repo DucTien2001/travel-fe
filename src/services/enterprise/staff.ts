@@ -1,6 +1,6 @@
 import { API } from "configs/constants";
 import api from "../configApi";
-import { FindAll, SendOffer} from "models/enterprise/staff";
+import { FindAll, SendOffer, StatisticRoomBill, StatisticTourBill} from "models/enterprise/staff";
 
 export class StaffService {
   static async findAll(data: FindAll): Promise<any> {
@@ -56,6 +56,26 @@ export class StaffService {
   static async delete(id: number): Promise<any> {
     return await api
       .delete(API.ENTERPRISE.STAFF.DELETE_STAFF.replace(":id", `${id}`))
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  static async statisticTourBill(data: StatisticTourBill): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.STAFF.STATISTIC_TOUR, { params: data })
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+  static async statisticRoomBill(data: StatisticRoomBill): Promise<any> {
+    return await api
+      .get(API.ENTERPRISE.STAFF.STATISTIC_ROOM, { params: data })
       .then((res) => {
         return Promise.resolve(res.data);
       })

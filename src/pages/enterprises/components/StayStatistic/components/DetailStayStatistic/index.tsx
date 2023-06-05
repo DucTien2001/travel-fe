@@ -31,9 +31,12 @@ import { ExpandMoreOutlined } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { RoomBillService } from "services/enterprise/roomBill";
 import {
+  IRoomDetailStatistic,
   IStayDetailStatistic,
   StatisticOneStay,
 } from "models/enterprise/roomBill";
+import moment from "moment";
+import StatusRefund from "components/StatusRefund";
 
 interface Props {
   stayId: number;
@@ -49,41 +52,13 @@ const DetailStayStatistic = memo(({ stayId }: Props) => {
     {
       name: "departure day",
       label: t(
-        "enterprise_management_section_tour_statistic_header_table_departure"
-      ),
-      sortable: false,
-    },
-    {
-      name: "quantity",
-      label: t(
-        "enterprise_management_section_stay_statistic_header_table_quantity"
-      ),
-      sortable: false,
-    },
-    {
-      name: "quantity",
-      label: t(
-        "enterprise_management_section_stay_statistic_header_table_room"
-      ),
-      sortable: false,
-    },
-    {
-      name: "quantity",
-      label: t("enterprise_management_section_stay_statistic_header_table_bed"),
-      sortable: false,
-    },
-    {
-      name: "number of booking",
-      label: t(
-        "enterprise_management_section_tour_statistic_header_table_number_booking"
+        "enterprise_management_section_tour_bill_header_table_booking_date"
       ),
       sortable: false,
     },
     {
       name: "number of tickets booked",
-      label: t(
-        "enterprise_management_section_stay_statistic_header_table_total_ticket"
-      ),
+      label: t("landing_page_section_search_stay_input_room_placeholder"),
       sortable: false,
     },
     {
@@ -108,17 +83,17 @@ const DetailStayStatistic = memo(({ stayId }: Props) => {
       sortable: false,
     },
     {
-      name: "actions",
+      name: "status",
       label: t(
-        "enterprise_management_section_tour_statistic_header_table_action"
+        "enterprise_management_section_tour_statistic_header_table_status_received"
       ),
       sortable: false,
     },
   ];
 
-  const [itemAction, setItemAction] = useState<IStayDetailStatistic>();
-  const [dateFilter, setDateFilter] = useState<Moment>(null);
-  const [data, setData] = useState<DataPagination<IStayDetailStatistic>>();
+  const [itemAction, setItemAction] = useState<any>();
+  const [dateFilter, setDateFilter] = useState<Moment>(moment(new Date()));
+  const [data, setData] = useState<DataPagination<any>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
@@ -185,29 +160,13 @@ const DetailStayStatistic = memo(({ stayId }: Props) => {
     setActionAnchor(null);
   };
 
-  const handleAction = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    item: IStayDetailStatistic
-  ) => {
-    setItemAction(item);
-    setActionAnchor(event.currentTarget);
+  const onRedirectEdit = (item: any) => {
+    // router.push({
+    //   pathname: `/enterprises/stayStatistic/${Number(router.query.action)}/${
+    //     item.roomInfo?.id
+    //   }`,
+    // });
   };
-
-  const handleRedirect = () => {
-    if (!itemAction) return;
-    onRedirectEdit(itemAction);
-    onCloseActionMenu();
-  };
-
-  const onRedirectEdit = (item: IStayDetailStatistic) => {
-    router.push({
-      pathname: `/enterprises/stayStatistic/${Number(router.query.action)}/${
-        item.roomInfo?.id
-      }`,
-    });
-  };
-
-  console.log(itemAction);
 
   return (
     <>
@@ -248,43 +207,30 @@ const DetailStayStatistic = memo(({ stayId }: Props) => {
                         {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.roomInfo?.title}
+                        {moment(item?.createdAt).format("DD/MM/YYYY")}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.roomInfo?.numberOfAdult} adult -{" "}
-                        {item?.roomInfo?.numberOfChildren} children
+                        {item?.roomBillDetail?.map((room, index) => (
+                          <>
+                            {room?.title} - {room?.amount} phòng
+                          </>
+                        ))}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.roomInfo?.numberOfRoom}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {item?.roomInfo?.numberOfBed}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {item?.numberOfBookings}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {Number(item?.totalNumberOfRoom || 0)}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {fCurrency2VND(item?.revenue)} VND
+                        {fCurrency2VND(item?.totalBill)} VND
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.commission)} VND
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {fCurrency2VND(item?.revenue - item?.commission)} VND
+                        {fCurrency2VND(item?.totalBill - item?.commission)} VND
                       </TableCell>
-                      <TableCell className="text-center" component="th">
-                        <IconButton
-                          className={clsx(classes.actionButton)}
-                          color="primary"
-                          onClick={(event) => {
-                            handleAction(event, item);
-                          }}
-                        >
-                          <ExpandMoreOutlined />
-                        </IconButton>
+                      <TableCell className={classes.tableCell} component="th">
+                        <StatusRefund
+                          statusRefund={item?.isReceivedRevenue}
+                          titleTrue={t("common_received")}
+                          titleFalse={t("common_not_received")}
+                        />
                       </TableCell>
                     </TableRow>
                   );
@@ -320,33 +266,6 @@ const DetailStayStatistic = memo(({ stayId }: Props) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </TableContainer>
-        <Menu
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          anchorEl={actionAnchor}
-          keepMounted
-          open={Boolean(actionAnchor)}
-          onClose={onCloseActionMenu}
-        >
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            onClick={handleRedirect}
-            className={classes.menuItem}
-          >
-            <Box display="flex" alignItems={"center"}>
-              <VisibilityIcon
-                sx={{ marginRight: "0.25rem" }}
-                fontSize="small"
-                color="info"
-              />
-              <span>
-                {t("enterprise_management_section_tour_statistic_view_detail")}
-              </span>
-            </Box>
-          </MenuItem>
-        </Menu>
       </div>
     </>
   );

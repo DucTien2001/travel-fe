@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { FindAllOrderNeedRefund, GetAllBillOfOneTourOnSale, StatisticByTour, StatisticByTourOnSale, StatisticByUser } from "models/admin/tourBill";
+import { FindAllOrderNeedRefund, GetAllBillOfOneTourOnSale, StatisticAllTourOnSale, StatisticByTour, StatisticByTourOnSale, StatisticByUser } from "models/admin/tourBill";
 import api from "services/configApi";
 
 export class TourBillService {
@@ -66,4 +66,15 @@ export class TourBillService {
         return Promise.reject(e?.response?.data);
       });
   }
+  static async statisticAllTourOnSale(data: StatisticAllTourOnSale): Promise<any>{
+    return await api
+      .get(API.ADMIN.STATISTIC.TOUR.TOUR_ON_SALE, {params: data})
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
 }

@@ -30,6 +30,7 @@ export const API = {
     UPDATE_PROFILE: "/v1.0/user/update-profile/:id",
     CHANGE_PASSWORD: "/v1.0/user/change-password",
     UPDATE_AVATAR: "/v1.0/user/update-avatar",
+    UPDATE_BANK: "/v1.0/user/bank/:id",
   },
   NORMAL: {
     TOUR: {
@@ -167,6 +168,8 @@ export const API = {
       CANCEL_OFFER: "/v1.0/enterprise/staff/cancel-offer/:id",
       GET_OFFERS: "/v1.0/enterprise/staff/get-offers",
       DELETE_STAFF: "/v1.0/enterprise/staff/delete/:id",
+      STATISTIC_TOUR: "/v1.0/enterprise/staff/statistic/tour-bill",
+      STATISTIC_ROOM: "/v1.0/enterprise/staff/statistic/room-bill",
     },
     COMMISSION: {
       DEFAULT: "/v1.0/enterprise/commission",
@@ -214,6 +217,7 @@ export const API = {
       GET_ALL_BILL_STATISTICS:
         "/v1.0/enterprise/tour-bill/statistic/tour-on-sales",
       FILTER: "/v1.0/enterprise/tour-bill/filter",
+      STATISTIC_STAFF_TOUR: "/v1.0/enterprise/tour-bill/statistic/staff/:id",
       GET_TOURS_REVENUE_BY_MONTH: "/v1.0/tour-bill/get-tours-revenue-by-month",
       GET_TOURS_REVENUE_BY_YEAR: "/v1.0/tour-bill/get-tours-revenue-by-year",
       GET_ALL_BILLS_OF_ANY_TOUR: "/v1.0/tour-bill/get-all-tour-bills/:id",
@@ -226,6 +230,7 @@ export const API = {
       STATISTIC_ROOM: "/v1.0/enterprise/room-bill/statistic/room/:id",
       STATISTIC_ONE: "/v1.0/enterprise/room-bill/statistic/:id",
       GET_ONE: "/v1.0/enterprise/room-bill/:id",
+      STATISTIC_STAFF_ROOM: "/v1.0/enterprise/room-bill/statistic/staff/:id",
     },
     ROOMBILL: {
       GET_HOTELS_REVENUE_BY_MONTH:
@@ -259,6 +264,7 @@ export const API = {
         GET_TOUR: "/v1.0/admin/tour-bill/statistic/tour/:id",
         GET_TOUR_ON_SALE_BILL:
           "/v1.0/admin/tour-bill/statistic/tour-on-sale/get-bills/:id",
+        TOUR_ON_SALE: "/v1.0/admin/tour-bill/statistic/tour-on-sale",
         GET_TOUR_ON_SALE: "/v1.0/admin/tour-bill/statistic/tour-on-sale/:id",
         ORDER_REFUND: "/v1.0/admin/tour-bill/order-refund",
         ORDER_REFUND_ONE: "/v1.0/admin/tour-bill/order-refund/:id",
@@ -269,6 +275,7 @@ export const API = {
         STATISTIC: "/v1.0/admin/room-bill/statistic",
         STATISTIC_ROOM: "/v1.0/admin/room-bill/statistic/room/:id",
         STATISTIC_STAY: "/v1.0/admin/room-bill/statistic/stay/:id",
+        FIND_ALL_REVENUE: "/v1.0/admin/room-bill/statistic/stay/",
         STATISTIC_USER: "/v1.0/admin/room-bill/statistic/user/:id",
         ORDER_REFUND: "/v1.0/admin/room-bill/order-refund",
         ORDER_REFUND_ONE: "/v1.0/admin/room-bill/order-refund/:id",

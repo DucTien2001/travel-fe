@@ -25,11 +25,13 @@ import {
   faArrowRightFromBracket,
   faCamera,
 } from "@fortawesome/free-solid-svg-icons";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import UserProfile from "./UserProfile";
 import ChangePassword from "./ChangePassword";
 import { Divider } from "@mui/material";
 import UseAuth from "hooks/useAuth";
 import { useTranslation } from "react-i18next";
+import AccountBank from "./AccountBank";
 interface Props {
   routes: Item[];
 }
@@ -83,6 +85,23 @@ const Profile: NextPage = () => {
                   </div>
                 </NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink
+                  className={clsx(
+                    verticalTabs === "3" ? `${classes.active}` : classes.navLink
+                  )}
+                  href="#pablo"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setVerticalTabs("3");
+                  }}
+                >
+                  <AccountBalanceWalletIcon />
+                  <div>
+                    <span>{t("profile_detail_account_bank_title")}</span>
+                  </div>
+                </NavLink>
+              </NavItem>
               <Divider />
               <NavItem className={classes.navLogout} onClick={logout}>
                 <Link href="/auth/login">
@@ -105,11 +124,9 @@ const Profile: NextPage = () => {
               <TabPane tabId="verticalTabs2">
                 <ChangePassword />
               </TabPane>
-              {/* <TabPane tabId="verticalTabs3">
-                      <Link href="/login">
-                        <a>Login</a>
-                      </Link>
-                    </TabPane> */}
+              <TabPane tabId="verticalTabs3">
+                <AccountBank />
+              </TabPane>
             </TabContent>
           </Col>
         </Row>

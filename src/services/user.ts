@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { IVerifySignup, LoginForm, User, RegisterForm, ChangePassForgotForm, UpdateUserProfile, ChangePassword } from "models/user";
+import { IVerifySignup, LoginForm, User, RegisterForm, ChangePassForgotForm, UpdateUserProfile, ChangePassword, IUpdateUserBank } from "models/user";
 import api from "./configApi";
 
 export class UserService {
@@ -114,6 +114,16 @@ export class UserService {
     return await api.put(API.AUTH.CHANGE_LANGUAGE, {
       language
     })
+      .then((res) => {
+        return Promise.resolve(res.data.data)
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      })
+  }
+
+  static async updateBank(id: number, data: IUpdateUserBank): Promise<any> {
+    return await api.put(API.USER.UPDATE_BANK.replace(":id", `${id}`), data)
       .then((res) => {
         return Promise.resolve(res.data.data)
       })

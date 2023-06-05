@@ -33,6 +33,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useTranslation } from "react-i18next";
 import { IStayStatistic, StatisticAll } from "models/enterprise/roomBill";
 import { RoomBillService } from "services/enterprise/roomBill";
+import moment from "moment";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
@@ -94,7 +95,7 @@ const StayStatistic = memo(({}: Props) => {
   ];
   const [itemAction, setItemAction] = useState<IStayStatistic>();
   const [keyword, setKeyword] = useState<string>("");
-  const [dateFilter, setDateFilter] = useState<Moment>(null);
+  const [dateFilter, setDateFilter] = useState<Moment>(moment(new Date()));
   const [data, setData] = useState<DataPagination<IStayStatistic>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
 

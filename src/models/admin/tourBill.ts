@@ -32,6 +32,15 @@ export interface StatisticByUser {
     month: number;
     year: number;
   }
+
+  export interface StatisticAllTourOnSale {
+    take: number;
+    page: number;
+    keyword?: string;
+    month: number;
+    year: number;
+    isReceivedRevenue: boolean;
+  }
   export interface GetAllBillOfOneTourOnSale {
     take: number;
     page: number;
@@ -84,6 +93,8 @@ export interface StatisticByUser {
     lastName?: string;
     specialRequest?: string;
   }
+
+
 
   export const sortRevenueOption = [
     { id: 0, name: "LOWEST REVENUE", value: -1, translation: "common_select_all" },

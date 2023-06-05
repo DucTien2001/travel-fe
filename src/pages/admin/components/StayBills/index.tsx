@@ -43,9 +43,11 @@ import InputSelect from "components/common/inputs/InputSelect";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { Moment } from "moment";
 import InputDatePicker from "components/common/inputs/InputDatePicker";
-import StatusChip from "components/StatusChip";
+
 import { fTime } from "utils/formatTime";
 import StatusRefund from "components/StatusRefund";
+import PopupSendMoneyRefund from "./PopupSendMoneyRefund";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
@@ -117,6 +119,19 @@ const Tour = memo(({}: Props) => {
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [refundFilter, setRefundFilter] = useState<number>(-1);
   const [dateFilter, setDateFilter] = useState<Moment>(null);
+  const [itemSendMoney, setItemSendMoney] = useState(null);
+
+  const onClosePopupSendMoney = () => {
+    if (!itemSendMoney) return;
+    setItemSendMoney(null);
+    onCloseActionMenu();
+  };
+
+  const onShowRefund = () => {
+    if (!itemAction) return;
+    setItemSendMoney(itemAction);
+    onCloseActionMenu();
+  };
 
   useEffect(() => {
     fetchData();
@@ -178,11 +193,12 @@ const Tour = memo(({}: Props) => {
   };
 
   const handleRefund = () => {
-    if (!itemAction) return;
+    if (!itemSendMoney) return;
     dispatch(setLoading(true));
-    RoomBillService.updateRefund(itemAction?.id)
+    RoomBillService.updateRefund(itemSendMoney?.id)
       .then(() => {
         dispatch(setSuccessMess(t("common_update_success")));
+        onClosePopupSendMoney();
       })
       .catch((e) => {
         dispatch(setErrorMess(e));
@@ -263,7 +279,7 @@ const Tour = memo(({}: Props) => {
                         {index + 1}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        {item?.tourData?.title}
+                        {item?.stayData?.name}
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
                         {fTime(item?.stayData?.checkInTime)}{" "}
@@ -285,7 +301,11 @@ const Tour = memo(({}: Props) => {
                         {fCurrency2VND(item?.moneyRefund)} VND
                       </TableCell>
                       <TableCell className={classes.tableCell} component="th">
-                        <StatusRefund statusRefund={item?.isRefunded} />
+                        <StatusRefund
+                          statusRefund={item?.isRefunded}
+                          titleTrue={t("common_refund")}
+                          titleFalse={t("common_not_refund")}
+                        />
                       </TableCell>
 
                       <TableCell className="text-center" component="th">
@@ -344,22 +364,34 @@ const Tour = memo(({}: Props) => {
           open={Boolean(actionAnchor)}
           onClose={onCloseActionMenu}
         >
-          {!itemAction?.isRefunded && (
-            <MenuItem
-              sx={{ fontSize: "0.875rem" }}
-              onClick={handleRefund}
-              className={classes.menuItem}
-            >
-              <Box display="flex" alignItems={"center"}>
-                <span>
-                  {t(
-                    "enterprise_management_section_tour_bill_action_view_refund"
-                  )}
-                </span>
-              </Box>
-            </MenuItem>
-          )}
+          {/* {!itemAction?.isRefunded && ( */}
+          <MenuItem
+            sx={{ fontSize: "0.875rem" }}
+            onClick={onShowRefund}
+            className={classes.menuItem}
+          >
+            <Box display="flex" alignItems={"center"}>
+              <CurrencyExchangeIcon
+                sx={{ marginRight: "0.25rem" }}
+                fontSize="small"
+                color="info"
+              />
+              <span>
+                {t(
+                  "enterprise_management_section_tour_bill_action_view_refund"
+                )}
+              </span>
+            </Box>
+          </MenuItem>
+          {/* )} */}
         </Menu>
+        <PopupSendMoneyRefund
+          isOpen={!!itemSendMoney}
+          toggle={onClosePopupSendMoney}
+          onClose={onClosePopupSendMoney}
+          bill={itemSendMoney}
+          onYes={handleRefund}
+        />
       </div>
     </>
   );

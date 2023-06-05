@@ -98,9 +98,27 @@ export enum ESortRoomBillOption {
     refundStatus: number;         // refundStatus === -1  --> All
   }                               // refundStatus === 0   --> Not refunded yet
                                   // refundStatus === 1   --> Refunded
+export interface FindAllStayRevenue {
+  take: number;
+  page: number;
+  keyword?: string; // stay name
+  month: number;
+  year: number;
+  section: number; // 1, 2
+  isReceivedRevenue: boolean;
+}
+export enum ESectionRevenue {
+  SECTION_ONE = 1,
+  SECTION_TWO = 2,
+}
 
   export const refundStatusOption = [
     { id: 0, name: "ALL", value: -1, translation: "common_select_all" },
     { id: 1, name: "NOT REFUND YET", value: ERefundStatusOption.NOT_REFUND_YET, translation: "admin_management_section_tour_bill_sort_option_title_refund_yet" },
     { id: 2, name: "REFUND", value: ERefundStatusOption.REFUNDED, translation: "admin_management_section_tour_bill_sort_option_title_refund"},
+  ]       
+  
+  export const sectionRevenue = [
+    { id: 1, name: "SECTION 1", value: ESectionRevenue.SECTION_ONE, translation: "admin_management_section_tour_bill_sort_option_title_section_one" },
+    { id: 2, name: "SECTION 2", value: ESectionRevenue.SECTION_TWO, translation: "admin_management_section_tour_bill_sort_option_title_section_two"},
   ]                         

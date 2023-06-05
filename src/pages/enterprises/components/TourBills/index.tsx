@@ -114,7 +114,7 @@ const Tour = memo(({}: Props) => {
   ];
 
   const [itemAction, setItemAction] = useState<TourBill>();
-  const [keyword, setKeyword] = useState<string>("");
+
   const [data, setData] = useState<DataPagination<TourBill>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
   const [openPopupChangeStatus, setOpenPopupChangeStatus] = useState(false);
@@ -197,22 +197,15 @@ const Tour = memo(({}: Props) => {
       .finally(() => dispatch(setLoading(false)));
   };
 
-  const fetchData = (value?: {
-    take?: number;
-    page?: number;
-    keyword?: string;
-  }) => {
+  const fetchData = (value?: { take?: number; page?: number }) => {
     const params: FindAll = {
       take: value?.take || data?.meta?.take || 10,
       page: value?.page || data?.meta?.page || 1,
-      keyword: keyword,
       tourId: tourFilter || -1,
       tourOnSaleIds: tourOnSalesFilter || [-1],
       status: statusFilter || -1,
     };
-    if (value?.keyword !== undefined) {
-      params.keyword = value.keyword || undefined;
-    }
+
     dispatch(setLoading(true));
 
     TourBillService.findAll(params)
@@ -227,16 +220,6 @@ const Tour = memo(({}: Props) => {
       })
       .finally(() => dispatch(setLoading(false)));
   };
-
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-    _onSearch(e.target.value);
-  };
-
-  const _onSearch = useDebounce(
-    (keyword: string) => fetchData({ keyword, page: 1 }),
-    500
-  );
 
   const onCloseActionMenu = () => {
     setItemAction(null);
@@ -262,7 +245,6 @@ const Tour = memo(({}: Props) => {
   };
 
   const onClear = () => {
-    setKeyword("");
     setTourOnSalesFilter([-1]);
     setStatusFilter(-1);
     setStatusFilter(-1);
@@ -285,79 +267,76 @@ const Tour = memo(({}: Props) => {
             justifyContent: "space-between",
           }}
         >
-          <InputSearch
-            autoComplete="off"
-            placeholder={t("common_search")}
-            value={keyword || ""}
-            onChange={onSearch}
-          />
-          <Button btnType={BtnType.Primary} onClick={onClear}>
-            {t("enterprise_management_section_tour_statistic_btn_clear")}
-          </Button>
-        </Grid>
-        <Grid container columnSpacing={2} xs={12}>
-          <Grid item xs={3}>
-            <InputSelect
-              fullWidth
-              title={t(
-                "enterprise_management_section_tour_bill_title_filter_tour"
-              )}
-              selectProps={{
-                options: tourOption,
-                placeholder: t(
-                  "enterprise_management_section_tour_bill_title_filter_tour_placeholder"
-                ),
-              }}
-              onChange={(e) => setTourFilter(e?.value)}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <InputSelect
-              fullWidth
-              title={t(
-                "enterprise_management_section_tour_bill_title_filter_status"
-              )}
-              bindLabel="translation"
-              selectProps={{
-                options: billStatusType,
-                placeholder: t(
-                  "enterprise_management_section_tour_bill_title_filter_status_placeholder"
-                ),
-              }}
-              onChange={(e) => setStatusFilter(e?.value)}
-            />
-          </Grid>
+          <Grid container columnSpacing={2} xs={10}>
+            <Grid item xs={3}>
+              <InputSelect
+                fullWidth
+                title={t(
+                  "enterprise_management_section_tour_bill_title_filter_tour"
+                )}
+                selectProps={{
+                  options: tourOption,
+                  placeholder: t(
+                    "enterprise_management_section_tour_bill_title_filter_tour_placeholder"
+                  ),
+                }}
+                onChange={(e) => setTourFilter(e?.value)}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <InputSelect
+                fullWidth
+                title={t(
+                  "enterprise_management_section_tour_bill_title_filter_status"
+                )}
+                bindLabel="translation"
+                selectProps={{
+                  options: billStatusType,
+                  placeholder: t(
+                    "enterprise_management_section_tour_bill_title_filter_status_placeholder"
+                  ),
+                }}
+                onChange={(e) => setStatusFilter(e?.value)}
+              />
+            </Grid>
 
-          <Grid item xs={3}>
-            <InputSelect
-              fullWidth
-              title={t(
-                "enterprise_management_section_tour_bill_title_filter_date"
-              )}
-              selectProps={{
-                options: tourOnSaleOption,
-                placeholder: t(
-                  "enterprise_management_section_tour_bill_title_filter_date_placeholder"
-                ),
-              }}
-              onChange={(e) => setTourOnSalesFilter(e?.value)}
-            />
+            <Grid item xs={3}>
+              <InputSelect
+                fullWidth
+                title={t(
+                  "enterprise_management_section_tour_bill_title_filter_date"
+                )}
+                selectProps={{
+                  options: tourOnSaleOption,
+                  placeholder: t(
+                    "enterprise_management_section_tour_bill_title_filter_date_placeholder"
+                  ),
+                }}
+                onChange={(e) => setTourOnSalesFilter(e?.value)}
+              />
+            </Grid>
+            <Grid item sx={{ display: "flex", alignItems: "center" }} xs={3}>
+              <FormControlLabel
+                className={classes.checkBoxTourTaken}
+                control={
+                  <InputCheckbox
+                    checked={isTookPlace}
+                    onChange={() => setIsTookPlace(!isTookPlace)}
+                  />
+                }
+                label={t(
+                  "enterprise_management_section_tour_bill_title_filter_taken_place"
+                )}
+              />
+            </Grid>
           </Grid>
-          <Grid item sx={{ display: "flex", alignItems: "center" }} xs={3}>
-            <FormControlLabel
-              className={classes.checkBoxTourTaken}
-              control={
-                <InputCheckbox
-                  checked={isTookPlace}
-                  onChange={() => setIsTookPlace(!isTookPlace)}
-                />
-              }
-              label={t(
-                "enterprise_management_section_tour_bill_title_filter_taken_place"
-              )}
-            />
+          <Grid>
+            <Button btnType={BtnType.Primary} onClick={onClear}>
+              {t("enterprise_management_section_tour_statistic_btn_clear")}
+            </Button>
           </Grid>
         </Grid>
+
         <TableContainer component={Paper} sx={{ marginTop: "2rem" }}>
           <Table className={classes.table}>
             <TableHeader headers={tableHeaders} />
@@ -429,7 +408,7 @@ const Tour = memo(({}: Props) => {
               ) : (
                 <TableRow>
                   <TableCell align="center" colSpan={10}>
-                    <SearchNotFound searchQuery={keyword} />
+                    <SearchNotFound />
                   </TableCell>
                 </TableRow>
               )}

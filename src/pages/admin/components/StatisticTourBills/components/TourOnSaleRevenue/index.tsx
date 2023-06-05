@@ -38,12 +38,6 @@ import { ExpandMoreOutlined } from "@mui/icons-material";
 import SearchNotFound from "components/SearchNotFound";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import moment from "moment";
-import StatusChip from "components/StatusChip";
-import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
-import StatusRefund from "components/StatusRefund";
-import PopupDefault from "components/Popup/PopupDefault";
-import { TourOnSaleService } from "services/admin/tourOnSale";
-import PopupConfirmDefault from "components/Popup/PopupConfirmDefault";
 interface Props {
   tourId?: number;
 }
@@ -104,13 +98,6 @@ const TourRevenue = memo(({ tourId }: Props) => {
       sortable: false,
     },
     {
-      name: "status",
-      label: t(
-        "admin_management_section_tour_bill_header_table_status_received"
-      ),
-      sortable: false,
-    },
-    {
       name: "actions",
       label: t("admin_management_section_tour_bill_header_table_action"),
       sortable: false,
@@ -142,28 +129,6 @@ const TourRevenue = memo(({ tourId }: Props) => {
         dispatch(setErrorMess(e));
       })
       .finally(() => dispatch(setLoading(false)));
-  };
-
-  const onShowConfirmChangeReceived = () => {
-    if (!itemAction) return;
-    if (
-      (new Date().valueOf() -
-        new Date(itemAction?.tourOnSaleInfo?.startDate).valueOf()) /
-        (1000 * 60 * 60 * 24) >=
-      0
-    ) {
-      setItemChangeReceived(itemAction);
-      onCloseActionMenu();
-    } else {
-      onTogglePopupWarningChangeReceived();
-      onCloseActionMenu();
-    }
-  };
-
-  const onClosePopupConfirmChangeReceived = () => {
-    if (!itemChangeReceived) return;
-    setItemChangeReceived(null);
-    onCloseActionMenu();
   };
 
   const onChangeMonth = (date: Moment) => {
@@ -221,24 +186,6 @@ const TourRevenue = memo(({ tourId }: Props) => {
     router.push({
       pathname: `/admin/statisticTourBills/${enterpriseId}`,
     });
-  };
-
-  const onChangeReceived = () => {
-    dispatch(setLoading(true));
-    TourOnSaleService.updateReceivedRevenue(
-      itemChangeReceived?.tourOnSaleInfo?.id
-    )
-      .then(() => {
-        dispatch(setSuccessMess(t("common_update_success")));
-        setItemChangeReceived(null);
-      })
-      .catch((e) => {
-        dispatch(setSuccessMess(e));
-        fetchData();
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
   };
 
   useEffect(() => {
@@ -313,19 +260,6 @@ const TourRevenue = memo(({ tourId }: Props) => {
                     <TableCell className={classes.tableCell} component="th">
                       {fCurrency2VND(item?.commission)} VND
                     </TableCell>
-                    <TableCell className={classes.tableCell} component="th">
-                      {item?.numberOfBookings !== 0 ? (
-                        <StatusRefund
-                          statusRefund={item?.tourOnSaleInfo?.isReceivedRevenue}
-                          titleTrue={t("common_refund")}
-                          titleFalse={t("common_not_refund")}
-                        />
-                      ) : (
-                        t(
-                          "admin_management_section_tour_bill_body_table_not_book"
-                        )
-                      )}
-                    </TableCell>
                     <TableCell className="text-center" component="th">
                       <IconButton
                         className={clsx(classes.actionButton)}
@@ -395,40 +329,7 @@ const TourRevenue = memo(({ tourId }: Props) => {
             <span>{t("admin_management_section_tour_bill_view_detail")}</span>
           </Box>
         </MenuItem>
-        {itemAction?.numberOfBookings !== 0 && (
-          <MenuItem
-            sx={{ fontSize: "0.875rem" }}
-            onClick={onShowConfirmChangeReceived}
-            className={classes.menuItem}
-          >
-            <Box display="flex" alignItems={"center"}>
-              <PublishedWithChangesIcon
-                sx={{ marginRight: "0.25rem" }}
-                fontSize="small"
-                color="success"
-              />
-              <span>
-                {t("admin_management_section_tour_bill_change_revenue")}
-              </span>
-            </Box>
-          </MenuItem>
-        )}
       </Menu>
-      <PopupConfirmDefault
-        isOpen={!!itemChangeReceived}
-        toggle={onClosePopupConfirmChangeReceived}
-        onYes={onChangeReceived}
-        onClose={onClosePopupConfirmChangeReceived}
-        title={"Xác nhận chuyển tiền cho doanh nghiệp ?"}
-      />
-      <PopupDefault
-        isOpen={openPopupWarningChangeReceived}
-        toggle={onTogglePopupWarningChangeReceived}
-        title={t("popup_change_date_payment_history_notification")}
-        description={t(
-          "popup_change_date_payment_history_notification_not_change_received"
-        )}
-      />
     </div>
   );
 });

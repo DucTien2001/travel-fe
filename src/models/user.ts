@@ -77,3 +77,23 @@ export interface IVerifySignup {
   userId: number
 }
 
+export interface IUpdateUserBank {
+  bankType?: number;
+  bankCode?: {
+    id?: number;
+    name?: string;
+  };
+  bankName?: {
+    id?: number;
+    name?:string;
+  };
+  bankCardNumber?: string;
+  bankUserName?: string;
+  releaseDate?: Date;
+  expirationDate?: Date;
+  cvcOrCvv?: string;
+  bankEmail?: string;
+  bankCountry?: string;
+  bankProvinceOrCity?: string;
+  bankUserAddress?: string;
+}

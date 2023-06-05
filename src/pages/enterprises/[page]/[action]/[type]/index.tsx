@@ -19,6 +19,9 @@ import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import DetailRoomStatistic from "pages/enterprises/components/StayStatistic/components/DetailRoomStatistic";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import StayStatistic from "pages/enterprises/components/StayStatistic";
+import Staff from "pages/enterprises/components/Staffs";
+import DetailTourTransaction from "pages/enterprises/components/Staffs/components/DetailTourTransaction";
+import DetailStayTransaction from "pages/enterprises/components/Staffs/components/DetailStayTransaction";
 
 interface PropTypes {}
 
@@ -77,6 +80,36 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
           <Col xs={10} className={classes.content}>
             <TabContent className={classes.tabContent}>
               <StayStatistic />
+            </TabContent>
+          </Col>
+        );
+      case "staffs":
+        if (action === "tour-transaction") {
+          if (type) {
+            return (
+              <Col xs={10} className={classes.content}>
+                <TabContent className={classes.tabContent}>
+                  <DetailTourTransaction staffId={Number(type)} />
+                </TabContent>
+              </Col>
+            );
+          }
+        }
+        if (action === "stay-transaction") {
+          if (type) {
+            return (
+              <Col xs={10} className={classes.content}>
+                <TabContent className={classes.tabContent}>
+                  <DetailStayTransaction staffId={Number(type)} />
+                </TabContent>
+              </Col>
+            );
+          }
+        }
+        return (
+          <Col xs={10} className={classes.content}>
+            <TabContent className={classes.tabContent}>
+              <Staff />
             </TabContent>
           </Col>
         );

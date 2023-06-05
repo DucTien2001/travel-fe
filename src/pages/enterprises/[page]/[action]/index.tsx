@@ -40,6 +40,8 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import ForumIcon from "@mui/icons-material/Forum";
 import StayRate from "pages/enterprises/components/StayRate";
 import DetailRateStay from "pages/enterprises/components/StayRate/components/DetailRateStay";
+import TourTransaction from "pages/enterprises/components/Staffs/components/TourTransaction";
+import StayTransaction from "pages/enterprises/components/Staffs/components/StayTransaction";
 interface PropTypes {}
 
 const Enterprise = memo(({ ...props }: PropTypes) => {
@@ -167,6 +169,24 @@ const Enterprise = memo(({ ...props }: PropTypes) => {
             <Col xs={10} className={classes.content}>
               <TabContent className={classes.tabContent}>
                 <OfferStaffs />
+              </TabContent>
+            </Col>
+          );
+        }
+        if (action === "tour-transaction") {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <TourTransaction />
+              </TabContent>
+            </Col>
+          );
+        }
+        if (action === "stay-transaction") {
+          return (
+            <Col xs={10} className={classes.content}>
+              <TabContent className={classes.tabContent}>
+                <StayTransaction />
               </TabContent>
             </Col>
           );

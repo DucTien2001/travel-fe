@@ -63,6 +63,7 @@ export interface TourBill {
   participantsInfo?: IParticipantInfo[];
   status?: number;
   paymentStatus?: number;
+  isRefunded?: boolean;
   email?: string;
   phoneNumber?: string;
   firstName?: string;

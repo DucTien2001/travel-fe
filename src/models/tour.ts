@@ -26,12 +26,21 @@ export interface Tour {
   isDeleted?: boolean;
   tourOnSales?: TourPrice[];
   tourPolicies?: TourPolicies[];
+  tourSchedules?: TourSchedules[];
   languages?: Tour[];
   parentLanguage: number,
   language: string;
   numberOfReviewer: number;
   minPrice?: number;
   maxPrice?: number;
+}
+
+export interface TourSchedules {
+  id?: number
+  startTime: number;
+  endTime: number;
+  description: string;
+  day?: number;
 }
 
 export interface TourPrice {

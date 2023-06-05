@@ -37,14 +37,13 @@ const VNPay: NextPage = () => {
   };
 
   useEffect(() => {
-    RoomBillService.update(Number(router?.query.vnp_TxnRef?.toString().split("-")[1]), {
-      paymentStatus: getStatusPayment(router?.query?.vnp_TransactionStatus),
-    })
-      .then(() => {
-        setTimeout(() => {
-          router.push("/paymentHistory/hotel");
-        }, 15000);
-      })
+    RoomBillService.update(
+      Number(router?.query.vnp_TxnRef?.toString().split("-")[1]),
+      {
+        paymentStatus: getStatusPayment(router?.query?.vnp_TransactionStatus),
+      }
+    )
+      .then(() => {})
       .catch((e) => {
         dispatch(setErrorMess(e));
       });

@@ -1,5 +1,5 @@
 import { API } from "configs/constants";
-import { Filter, FindAll, StatisticAll, StatisticTourOnSale, UpdateStatus } from "models/enterprise/tourBill";
+import { Filter, FindAll, FindAllStaffBill, StatisticAll, StatisticTourOnSale, UpdateStatus } from "models/enterprise/tourBill";
 import { EGetAllTourBillsAnyDate, IToursRevenueByMonth, IToursRevenueByYear, IVerifyBookTour, TourBill } from "models/tourBill";
 import api from "services/configApi";
 
@@ -80,7 +80,16 @@ export class TourBillService {
         return Promise.reject(e?.response?.data);
       });
   }
-
+  static async findAllStaffBill(staffId: number, data: FindAllStaffBill): Promise<any>{
+    return await api
+      .get(API.ENTERPRISE.TOUR_BILL.STATISTIC_STAFF_TOUR.replace(":id", `${staffId}`), {params: data})
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
   //**************************************** */
   static async getRevenueOfToursByMonth(data: IToursRevenueByMonth): Promise<any> {
     return await api

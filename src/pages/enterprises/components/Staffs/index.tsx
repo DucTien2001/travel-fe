@@ -38,7 +38,8 @@ import { getRoleUser } from "utils/getOption";
 import StatusChip from "components/StatusChip";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
-
+import TourIcon from "@mui/icons-material/Tour";
+import ApartmentIcon from "@mui/icons-material/Apartment";
 interface Props {
   handleTourEdit?: () => void;
 }
@@ -151,6 +152,14 @@ const Staff = memo(({ handleTourEdit }: Props) => {
     router.push("/enterprises/staffs/list-offers");
   };
 
+  const onRedirectTourTransaction = () => {
+    router.push("/enterprises/staffs/tour-transaction");
+  };
+
+  const onRedirectStayTransaction = () => {
+    router.push("/enterprises/staffs/stay-transaction");
+  };
+
   const onShowConfirmDelete = (
     event: React.MouseEvent<HTMLButtonElement>,
     item: IStaff
@@ -204,6 +213,14 @@ const Staff = memo(({ handleTourEdit }: Props) => {
           <Button btnType={BtnType.Primary} onClick={onOpenPopupSendOffer}>
             <FontAwesomeIcon icon={faPlus} />
             {t("common_create")}
+          </Button>
+          <Button btnType={BtnType.Primary} onClick={onRedirectTourTransaction}>
+            <TourIcon />
+            {t("enterprise_management_section_staff_btn_tour")}
+          </Button>
+          <Button btnType={BtnType.Primary} onClick={onRedirectStayTransaction}>
+            <ApartmentIcon />
+            {t("enterprise_management_section_staff_btn_stay")}
           </Button>
           <Button btnType={BtnType.Outlined} onClick={onRedirectOfferStaff}>
             <ScheduleSendIcon />

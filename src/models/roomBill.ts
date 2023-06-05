@@ -101,6 +101,7 @@ export interface RoomBill {
   status?: number;
   roomBillDetail?: RoomBillDetail[];
   createdAt?: Date;
+  isRefunded?: boolean;
 }
 
 export interface IRoomBillConfirm {

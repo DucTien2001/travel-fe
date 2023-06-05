@@ -1,6 +1,6 @@
 import { API } from "configs/constants";
 import { EGetAllRoomBillsAnyDate } from "models/enterprise";
-import { FindAll, StatisticAll, StatisticOneStay, StatisticRoom, UpdateStatus } from "models/enterprise/roomBill";
+import { FindAll, FindAllStaffBill, StatisticAll, StatisticOneStay, StatisticRoom, UpdateStatus } from "models/enterprise/roomBill";
 import { IHotelsRevenueByMonth, IHotelsRevenueByYear } from "models/roomBill";
 import api from "services/configApi";
 
@@ -82,7 +82,16 @@ export class RoomBillService {
       });
   }
 
-
+  static async findAllStaffBill(staffId: number, data: FindAllStaffBill): Promise<any>{
+    return await api
+      .get(API.ENTERPRISE.ROOM_BILL.STATISTIC_STAFF_ROOM.replace(":id", `${staffId}`), {params: data})
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
   ///////////////////////////////////////////////////////
   static async getRevenueOfHotelsByMonth(data: IHotelsRevenueByMonth): Promise<any> {
     return await api

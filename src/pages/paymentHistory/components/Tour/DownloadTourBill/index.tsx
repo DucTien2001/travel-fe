@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Modal, Row, Col, ModalFooter, ModalHeader } from "reactstrap";
 import classes from "./styles.module.scss";
 import moment from "moment";
@@ -13,6 +13,8 @@ import Button, { BtnType } from "components/common/buttons/Button";
 import QRCode from "react-qr-code";
 import { EPaymentStatus } from "models/general";
 import { useTranslation } from "react-i18next";
+import _ from "lodash";
+import { fTime } from "utils/formatTime";
 interface DownloadTourBillProps {
   onClose: () => void;
   isOpen: boolean;
@@ -23,6 +25,15 @@ const DownloadTourBill = memo(
   ({ onClose, isOpen, tourBill }: DownloadTourBillProps) => {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation("common");
+
+    const daySchedule = useMemo(() => {
+      return _.chain(tourBill?.tourData?.tourSchedules)
+        .groupBy((item) => item?.day)
+        .map((value) => ({ day: value[0].day, schedule: value }))
+        .value();
+    }, [tourBill?.tourData?.tourSchedules]);
+
+    console.log(daySchedule, "---schedule");
 
     const handleDownload = () => {
       const pdfElement = document.getElementById("pdf-component");
@@ -212,6 +223,43 @@ const DownloadTourBill = memo(
               {tourBill?.tourData?.contact}
             </Col>
           </Row>
+          <Row className="mb-3">
+            <Col xs={4} className={classes.titleInfo}>
+              Lịch trình:
+            </Col>
+            {/* {daySchedule?.map((schedule, index) => (
+              <Col xs={8} className={classes.info} key={index}>
+                
+                {schedule?.schedule?.map((item, index) => (
+                  <div key={index}>
+                    {fTime(item?.startTime)}-{fTime(item?.endTime)}:{" "}
+                    <span>{item?.description}</span>
+                  </div>
+                ))}
+              </Col>
+            ))} */}
+          </Row>
+          {daySchedule?.map((schedule, index) => (
+            <Row className="mb-3" key={index}>
+              <Col xs={4} className={classes.titleInfo}>
+                Ngày {schedule?.day} :
+              </Col>
+              <Col xs={8} className={classes.info}>
+                {schedule?.schedule?.map((item, index) => (
+                  <div key={index}>
+                    <span style={{ fontWeight: "600" }}>
+                      {fTime(item?.startTime)}
+                    </span>
+                    -
+                    <span style={{ fontWeight: "600" }}>
+                      {fTime(item?.endTime)}
+                    </span>
+                    : {item?.description}
+                  </div>
+                ))}
+              </Col>
+            </Row>
+          ))}
         </div>
         <ModalFooter className={classes.downloadBtnWrapper}>
           {tourBill?.paymentStatus === EPaymentStatus.PAID ? (

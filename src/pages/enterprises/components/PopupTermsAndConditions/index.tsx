@@ -132,6 +132,11 @@ const TermsAndCondition = memo((props: Props) => {
                   </p>
                 </Grid>
               )}
+              <Grid className={classes.boxDuration}>
+                <p className={classes.titleDetail}>
+                  {t("popup_enterprise_term_and_condition_content_revenue")}
+                </p>
+              </Grid>
             </Grid>
             <Grid className={classes.rootOverview}>
               <Grid className={classes.boxTitle}>
@@ -178,6 +183,13 @@ const TermsAndCondition = memo((props: Props) => {
                   </p>
                 </Grid>
               )}
+              <Grid className={classes.boxDuration}>
+                <p className={classes.titleDetail}>
+                  {t(
+                    "popup_enterprise_term_and_condition_content_revenue_stay"
+                  )}
+                </p>
+              </Grid>
             </Grid>
           </Container>
         </ModalBody>

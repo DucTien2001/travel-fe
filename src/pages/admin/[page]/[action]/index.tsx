@@ -20,6 +20,8 @@ import StatisticOneUser from "pages/admin/components/StatisticStayBills/componen
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 import SwipeDownIcon from "@mui/icons-material/SwipeDown";
+import MarkunreadMailboxIcon from "@mui/icons-material/MarkunreadMailbox";
+import MoveDownIcon from "@mui/icons-material/MoveDown";
 interface PropTypes {}
 
 const Admin = memo(({ ...props }: PropTypes) => {
@@ -207,6 +209,25 @@ const Admin = memo(({ ...props }: PropTypes) => {
           >
             <NavLink className={renderClass("roomBills")}>
               <SwipeDownIcon />
+              <span>{t("enterprise_management_navbar_room_bill")}</span>
+            </NavLink>
+          </NavItem>
+          <span>{t("enterprise_management_navbar_send_money")}</span>
+          <NavItem
+            onClick={() => gotoMenu("tourRevenue")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("tourRevenue")}>
+              <MarkunreadMailboxIcon />
+              <span>{t("enterprise_management_navbar_tour_bill")}</span>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            onClick={() => gotoMenu("stayRevenue")}
+            className={classes.navItem}
+          >
+            <NavLink className={renderClass("stayRevenue")}>
+              <MoveDownIcon />
               <span>{t("enterprise_management_navbar_room_bill")}</span>
             </NavLink>
           </NavItem>

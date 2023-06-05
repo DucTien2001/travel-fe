@@ -13,10 +13,10 @@ export default function UseAuth() {
   const router = useRouter();
   const dispatch = useDispatch();
   const logout = () => {
+    router.push("/auth/login");
     dispatch(userLogoutRequest());
     dispatch(setAllToursReducer([]));
     dispatch(setAllHotelsReducer([]));
-    router.push("/auth/login");
   };
 
   return {

@@ -124,6 +124,11 @@ export const discountType = [
   { id: 2, name: "PERCENT", value: EDiscountType.PERCENT},
 ]
 
+export enum EBankType {
+   INTERNAL = 1,
+   INTERNATIONAL = 2
+}
+
 export enum Lang {
   VI = 'vi',
   EN = 'en'
@@ -193,3 +198,10 @@ export interface TableHeaderLabel {
   | 'right'
 }
 
+export const bankInternational: OptionItem[] = [
+  { id: 1, name: "VISA", value: "VISA" },
+  { id: 2, name: "MASTER CARD", value: "MASTER CARD" },
+  { id: 3, name: "JCB", value: "JCB" },
+  { id: 4, name: "UNION PAY", value: "UNION PAY" },
+  { id: 5, name: "AMERICAN EXPRESS", value: "AMERICAN EXPRESS" },
+];

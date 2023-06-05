@@ -34,7 +34,14 @@ export interface TourBill {
   lastName?: string;
   specialRequest?: string;
 }
-
+export interface FindAllStaffBill {
+  take: number;
+  page: number;
+  month: number;
+  year: number;
+  tourId: number;         // tourId === -1  --> All
+  status: number;         // status === -1  --> All    -   EBillStatus
+}
 export interface UpdateStatus {
   status: number;
 }

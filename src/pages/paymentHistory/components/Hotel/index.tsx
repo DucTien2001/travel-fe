@@ -42,6 +42,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PopupDefault from "components/Popup/PopupDefault";
 import PopupTermAndCondition from "./PopupTermAndCondition";
+import StatusRefund from "components/StatusRefund";
 // eslint-disable-next-line react/display-name
 const StayHistory = memo(() => {
   const dispatch = useDispatch();
@@ -400,22 +401,21 @@ const StayHistory = memo(() => {
                                 </Grid>
                               </Grid>
                             )}
-                            {item?.paymentStatus === EPaymentStatus.CANCEL &&
-                              item?.moneyRefund && (
-                                <Grid item xs={12} className={classes.boxSave}>
-                                  <Grid className={classes.boxPrice}>
-                                    <p>
-                                      {t(
-                                        "payment_history_page_tour_money_refund"
-                                      )}{" "}
-                                      <span>
-                                        {" "}
-                                        {fCurrency2VND(item?.moneyRefund)} VND
-                                      </span>
-                                    </p>
-                                  </Grid>
+                            {item?.moneyRefund && (
+                              <Grid item xs={12} className={classes.boxSave}>
+                                <Grid className={classes.boxPrice}>
+                                  <p>
+                                    {t(
+                                      "payment_history_page_tour_money_refund"
+                                    )}{" "}
+                                    <span>
+                                      {" "}
+                                      {fCurrency2VND(item?.moneyRefund)} VND
+                                    </span>
+                                  </p>
                                 </Grid>
-                              )}
+                              </Grid>
+                            )}
                           </Grid>
 
                           {item?.oldBillId && item?.oldBillData && (
@@ -629,11 +629,34 @@ const StayHistory = memo(() => {
                                   </p>
                                 </Grid>
                               )}
+                              {item?.moneyRefund && (
+                                <Grid className={classes.boxTitle} item xs={12}>
+                                  <p className={classes.textStatus}>
+                                    {t(
+                                      "payment_history_page_tour_status_refund"
+                                    )}{" "}
+                                    <StatusRefund
+                                      statusRefund={item?.isRefunded}
+                                      titleTrue={t(
+                                        "payment_history_page_tour_bill_status_refund"
+                                      )}
+                                      titleFalse={t(
+                                        "payment_history_page_tour_bill_status_not_refund"
+                                      )}
+                                    />
+                                  </p>
+                                </Grid>
+                              )}
                               <Grid className={classes.boxImgTerms}>
                                 <Grid
                                   className={clsx(classes.boxImg, {
                                     [classes.boxImgNew]: !item?.oldBillId,
                                   })}
+                                  onClick={() =>
+                                    router.push(
+                                      `/listHotel/:${item?.stayData?.id}`
+                                    )
+                                  }
                                 >
                                   <img
                                     src={item?.stayData?.images[0]}

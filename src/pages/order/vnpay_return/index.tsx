@@ -50,11 +50,7 @@ const VNPay: NextPage = () => {
     TourBillService.updateTourBill(Number(router?.query.vnp_TxnRef), {
       paymentStatus: getStatusPayment(router?.query?.vnp_TransactionStatus),
     })
-      .then(() => {
-        setTimeout(() => {
-          router.push("/paymentHistory/tour");
-        }, 15000);
-      })
+      .then(() => {})
       .catch((e) => {
         dispatch(setErrorMess(e));
       });

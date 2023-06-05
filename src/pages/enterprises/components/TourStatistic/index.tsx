@@ -32,6 +32,7 @@ import { fCurrency2VND } from "utils/formatNumber";
 import { Moment } from "moment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 
 interface Props {}
 // eslint-disable-next-line react/display-name
@@ -101,7 +102,7 @@ const TourStatistic = memo(({}: Props) => {
   ];
   const [itemAction, setItemAction] = useState<ITourStatistic>();
   const [keyword, setKeyword] = useState<string>("");
-  const [dateFilter, setDateFilter] = useState<Moment>(null);
+  const [dateFilter, setDateFilter] = useState<Moment>(moment(new Date()));
   const [data, setData] = useState<DataPagination<ITourStatistic>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
 

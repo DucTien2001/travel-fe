@@ -36,7 +36,7 @@ const VerifyStaff: NextPage = () => {
           dispatch(setSuccessMess(t("auth_verify_staff_success")));
         })
         .catch((e) => {
-          dispatch(setErrorMess(e));
+          // dispatch(setErrorMess(e));
         })
         .finally(() => {
           dispatch(setLoading(false));

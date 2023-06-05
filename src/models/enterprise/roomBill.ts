@@ -96,3 +96,13 @@ export interface FindAll {
     roomBillDetail?: RoomBillDetail[];
     bookedRoomsInfo?: BookedInfo[];
   }
+
+  export interface FindAllStaffBill {
+    take: number;
+    page: number;
+    stayId: number;
+    month: number;
+    year: number;
+    status: number;         // status === -1  --> All    -   EBillStatus
+  }
+  

@@ -4,6 +4,16 @@ import { Tour } from "models/tour";
 import api from "./configApi";
 
 export class ProvinceService {
+  static async getCountry(): Promise<any> {
+    return await axios
+      .get(`https://restcountries.com/v3.1/all`)
+      .then((res) => {
+        return Promise.resolve(res);
+      })
+      .catch((e) => {
+        return Promise.reject(e);
+      });
+  }
   static async getProvince(): Promise<any> {
     return await axios
       .get(`https://vapi.vnappmob.com/api/province/`)

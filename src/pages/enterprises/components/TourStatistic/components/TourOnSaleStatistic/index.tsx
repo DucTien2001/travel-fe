@@ -110,7 +110,7 @@ const TourOnSaleStatistic = memo(({ tourId }: Props) => {
   ];
 
   const [itemAction, setItemAction] = useState<ITourOnSaleStatistic>();
-  const [dateFilter, setDateFilter] = useState<Moment>(null);
+  const [dateFilter, setDateFilter] = useState<Moment>(moment(new Date()));
   const [data, setData] = useState<DataPagination<ITourOnSaleStatistic>>();
   const [actionAnchor, setActionAnchor] = useState<null | HTMLElement>(null);
 

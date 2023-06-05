@@ -45,7 +45,7 @@ interface Props {
 
 // eslint-disable-next-line react/display-name
 const Comments = memo(({ stay }: Props) => {
-  Geocode.setApiKey("AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI");
+  Geocode.setApiKey("AIzaSyBBOXTK1YVPEGx_7A29Y-emfwvNKcaPsDQ");
   const [coords, setCoords] = useState(null);
   const { t, i18n } = useTranslation("common");
 
@@ -85,7 +85,7 @@ const Comments = memo(({ stay }: Props) => {
           <div style={{ height: "30vh", width: "100%" }}>
             <GoogleMapReact
               bootstrapURLKeys={{
-                key: "AIzaSyDpoA_AeQ9I9bCBLdWDaCWICy-l55bFXpI",
+                key: "AIzaSyBBOXTK1YVPEGx_7A29Y-emfwvNKcaPsDQ",
               }}
               defaultCenter={coords}
               defaultZoom={11}
