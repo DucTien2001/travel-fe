@@ -103,7 +103,7 @@ const ProductPage = memo((Props) => {
         />
         {stay?.isDeleted ? (
           <Container className={classes.boxStopWorking}>
-            <h3>Sorry, our service is temporarily in active use </h3>
+            <h3>{t("service_dont_work")}</h3>
             <FontAwesomeIcon icon={faFaceFrown} />
           </Container>
         ) : (

@@ -1117,6 +1117,8 @@
   "admin_management_section_tour_revenue": "TOUR SEND REVENUE",
   "admin_management_section_stay_revenue": "STAY SEND REVENUE",
 
+  "service_dont_work": "Sorry, our service is temporarily in active use ",
+
   "bill_status_reschedule": "RESCHEDULE",
   "bill_status_canceled":"CANCELED",
   "bill_status_not_contact_yet":"NOT CONTACT YET",

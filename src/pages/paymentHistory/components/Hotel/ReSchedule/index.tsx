@@ -70,7 +70,10 @@ const ReSchedule = memo(({ roomBillId }: Props) => {
   }
 
   function scrollFunction() {
-    if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) {
+    if (
+      document.body.scrollTop > 150 ||
+      document.documentElement.scrollTop > 150
+    ) {
       if (document.getElementById("navbar") !== null) {
         if (isMobile) {
           document.getElementById("navbar").style.top = "53px";
@@ -93,7 +96,7 @@ const ReSchedule = memo(({ roomBillId }: Props) => {
       <div className={clsx("wrapper", classes.root)}>
         {stay?.isDeleted ? (
           <Container className={classes.boxStopWorking}>
-            <h3>Sorry, our service is temporarily in active use </h3>
+            <h3>{t("service_dont_work")}</h3>
             <FontAwesomeIcon icon={faFaceFrown} />
           </Container>
         ) : (
