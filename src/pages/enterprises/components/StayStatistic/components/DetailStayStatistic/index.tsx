@@ -82,13 +82,13 @@ const DetailStayStatistic = memo(({ stayId }: Props) => {
       ),
       sortable: false,
     },
-    {
-      name: "status",
-      label: t(
-        "enterprise_management_section_tour_statistic_header_table_status_received"
-      ),
-      sortable: false,
-    },
+    // {
+    //   name: "status",
+    //   label: t(
+    //     "enterprise_management_section_tour_statistic_header_table_status_received"
+    //   ),
+    //   sortable: false,
+    // },
   ];
 
   const [itemAction, setItemAction] = useState<any>();
@@ -225,13 +225,13 @@ const DetailStayStatistic = memo(({ stayId }: Props) => {
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.totalBill - item?.commission)} VND
                       </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
+                      {/* <TableCell className={classes.tableCell} component="th">
                         <StatusRefund
                           statusRefund={item?.isReceivedRevenue}
                           titleTrue={t("common_received")}
                           titleFalse={t("common_not_received")}
                         />
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   );
                 })

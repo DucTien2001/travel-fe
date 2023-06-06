@@ -57,13 +57,13 @@ const StayStatistic = memo(({}: Props) => {
       ),
       sortable: false,
     },
-    {
-      name: "total number ",
-      label: t(
-        "enterprise_management_section_stay_statistic_header_table_total_ticket"
-      ),
-      sortable: false,
-    },
+    // {
+    //   name: "total number ",
+    //   label: t(
+    //     "enterprise_management_section_stay_statistic_header_table_total_ticket"
+    //   ),
+    //   sortable: false,
+    // },
     {
       name: "revenue",
       label: t(
@@ -239,9 +239,9 @@ const StayStatistic = memo(({}: Props) => {
                       <TableCell className={classes.tableCell} component="th">
                         {item?.numberOfBookings}
                       </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
+                      {/* <TableCell className={classes.tableCell} component="th">
                         {Number(item?.totalNumberOfRoom || 0)}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell className={classes.tableCell} component="th">
                         {fCurrency2VND(item?.revenue)} VND
                       </TableCell>
