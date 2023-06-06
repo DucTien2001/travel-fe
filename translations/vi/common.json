@@ -968,6 +968,9 @@
   "enterprise_management_section_stay_header_table_room_other_price_date":"Ngày",
   "enterprise_management_section_stay_header_table_room_other_price_price":"Giá",
   "enterprise_management_section_stay_header_table_room_other_price_title":"Ngày đặc biệt",
+  "enterprise_management_section_stay_header_table_room_other_price_title_update_room":"Cập nhập số lượng phòng",
+  "enterprise_management_section_stay_header_table_room_other_price_title_action":"Giá phòng khác",
+  "enterprise_management_section_stay_header_table_room_check_action":"Cập nhập số lượng",
 
   "popup_enterprise_term_and_condition": "Điều Khoản và Điều Kiện",
   "popup_enterprise_term_and_condition_tour": "Du lịch",

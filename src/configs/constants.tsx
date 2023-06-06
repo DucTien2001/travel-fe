@@ -191,6 +191,7 @@ export const API = {
     ROOM: {
       DEFAULT: "/v1.0/enterprise/room/",
       GET_ROOM: "/v1.0/enterprise/room/:id",
+      CHECK_ROOM: "/v1.0/enterprise/room/check-room",
 
       CREATE_ROOM: "/v1.0/enterprise/room/",
       GET_ALL_ROOM: "/v1.0/room/get-all-rooms/:id",

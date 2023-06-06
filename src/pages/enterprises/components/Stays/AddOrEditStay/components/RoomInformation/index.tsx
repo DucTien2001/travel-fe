@@ -10,6 +10,7 @@ import { Stay } from "models/enterprise/stay";
 import AddOrEditRoom from "./components/AddOrEditRoom";
 import ListRoom from "./components/ListRoom";
 import RoomOtherPrice from "./components/RoomOtherPrice";
+import UpdateNumberRoom from "./components/UpdateNumberRoom";
 
 interface Props {
   value?: number;
@@ -22,6 +23,7 @@ export enum EActiveNav {
   LIST_ROOM = 1,
   CREATE_ROOM = 2,
   ROOM_OTHER_PRICE = 3,
+  UPDATE_ROOM = 4,
 }
 // eslint-disable-next-line react/display-name
 const RoomInformation = memo(
@@ -44,6 +46,9 @@ const RoomInformation = memo(
           break;
         case EActiveNav.ROOM_OTHER_PRICE:
           setVerticalTabs(EActiveNav.ROOM_OTHER_PRICE);
+          break;
+        case EActiveNav.UPDATE_ROOM:
+          setVerticalTabs(EActiveNav.UPDATE_ROOM);
           break;
         default:
           break;
@@ -116,6 +121,10 @@ const RoomInformation = memo(
                     onChangeTab(EActiveNav.ROOM_OTHER_PRICE);
                     setRoomEdit(item);
                   }}
+                  onChangeUpdateRoom={(item) => {
+                    onChangeTab(EActiveNav.UPDATE_ROOM);
+                    setRoomEdit(item);
+                  }}
                   handleNextStep={handleNextStep}
                 />
               </TabPane>
@@ -135,6 +144,14 @@ const RoomInformation = memo(
                 <RoomOtherPrice
                   room={roomEdit}
                   lang={lang}
+                  handleNextStep={handleNextStep}
+                />
+              </TabPane>
+              <TabPane tabId="verticalTabs4" className={classes.tabPane}>
+                <UpdateNumberRoom
+                  room={roomEdit}
+                  lang={lang}
+                  stay={stay}
                   handleNextStep={handleNextStep}
                 />
               </TabPane>

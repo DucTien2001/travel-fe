@@ -970,6 +970,9 @@
   "enterprise_management_section_stay_header_table_room_other_price_date":"Date",
   "enterprise_management_section_stay_header_table_room_other_price_price":"Price",
   "enterprise_management_section_stay_header_table_room_other_price_title":"Special day",
+  "enterprise_management_section_stay_header_table_room_other_price_title_update_room":"Update number room",
+  "enterprise_management_section_stay_header_table_room_other_price_title_action":"Room other price",
+  "enterprise_management_section_stay_header_table_room_check_action":"Update number",
 
   "popup_enterprise_term_and_condition": "Terms and Conditions",
   "popup_enterprise_term_and_condition_tour": "Tour",

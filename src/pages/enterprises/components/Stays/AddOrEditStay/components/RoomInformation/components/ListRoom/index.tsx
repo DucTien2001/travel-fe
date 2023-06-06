@@ -47,6 +47,7 @@ interface Props {
   stay?: Stay;
   onChangeTab?: (item: Room) => void;
   onChangeRoomOtherPrice?: (item: Room) => void;
+  onChangeUpdateRoom?: (item: Room) => void;
   isFetchData?: boolean;
   handleNextStep?: () => void;
 }
@@ -58,6 +59,7 @@ const ListRoom = memo(
     stay,
     onChangeTab,
     onChangeRoomOtherPrice,
+    onChangeUpdateRoom,
     isFetchData,
     handleNextStep,
   }: Props) => {
@@ -228,6 +230,16 @@ const ListRoom = memo(
 
     const onRedirectRoomOtherPrice = (item: Room) => {
       onChangeRoomOtherPrice(item);
+    };
+
+    const handleRedirectUpdateNumber = () => {
+      if (!itemAction) return;
+      onRedirectUpdateNumber(itemAction);
+      onCloseActionMenu();
+    };
+
+    const onRedirectUpdateNumber = (item: Room) => {
+      onChangeUpdateRoom(item);
     };
 
     const onShowConfirm = () => {
@@ -415,7 +427,7 @@ const ListRoom = memo(
                   sx={{ marginRight: "0.25rem" }}
                   fontSize="small"
                 />
-                <span>Edit</span>
+                <span>{t("common_edit")}</span>
               </Box>
             </MenuItem>
             <MenuItem
@@ -428,7 +440,28 @@ const ListRoom = memo(
                   sx={{ marginRight: "0.25rem" }}
                   fontSize="small"
                 />
-                <span>Room Other Price</span>
+                <span>
+                  {t(
+                    "enterprise_management_section_stay_header_table_room_other_price_title_action"
+                  )}
+                </span>
+              </Box>
+            </MenuItem>
+            <MenuItem
+              sx={{ fontSize: "0.875rem" }}
+              onClick={handleRedirectUpdateNumber}
+              className={classes.menuItem}
+            >
+              <Box display="flex" alignItems={"center"}>
+                <EditOutlined
+                  sx={{ marginRight: "0.25rem" }}
+                  fontSize="small"
+                />
+                <span>
+                  {t(
+                    "enterprise_management_section_stay_header_table_room_check_action"
+                  )}
+                </span>
               </Box>
             </MenuItem>
             <MenuItem

@@ -267,8 +267,12 @@ const RangePriceComponent = memo((props: Props) => {
                 </Grid>
                 <Grid item xs={2} sm={4} md={4}>
                   <InputTextfield
-                    title={"Price"}
-                    placeholder={"Price"}
+                    title={t(
+                      "enterprise_management_section_stay_header_table_room_other_price_price"
+                    )}
+                    placeholder={t(
+                      "enterprise_management_section_stay_header_table_room_other_price_price"
+                    )}
                     autoComplete="off"
                     type="number"
                     inputRef={register(`sale.${index}.price`)}

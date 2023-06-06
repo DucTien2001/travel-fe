@@ -2,7 +2,7 @@ import { API } from "configs/constants";
 import { EGetRoomsAvailable } from "models/enterprise";
 import { ECreateRoomOtherPrice, EditRoomInformation, EditRoomPrice, ICreateRoom } from "models/room";
 import api from "../configApi";
-import { FindAll, FindOne } from "models/enterprise/room";
+import { CreateOrUpdateCheckRoom, FindAll, FindOne } from "models/enterprise/room";
 
 export class RoomService {
   static async findAll(data: FindAll): Promise<any> {
@@ -45,6 +45,17 @@ export class RoomService {
   static async update(roomId: number, data?: FormData): Promise<any> {
     return await api
       .put(API.ENTERPRISE.ROOM.GET_ROOM.replace(":id", `${roomId}`), data)
+      .then((res) => {
+        return Promise.resolve(res.data);
+      })
+      .catch((e) => {
+        return Promise.reject(e?.response?.data);
+      });
+  }
+
+  static async createOrUpdateCheckRoom(data?: CreateOrUpdateCheckRoom): Promise<any> {
+    return await api
+      .put(API.ENTERPRISE.ROOM.CHECK_ROOM, data)
       .then((res) => {
         return Promise.resolve(res.data);
       })

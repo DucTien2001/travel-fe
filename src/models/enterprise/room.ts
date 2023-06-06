@@ -36,3 +36,10 @@ export interface FindAll {
     stayId: number;
     language?: string;
   }
+
+  export interface CreateOrUpdateCheckRoom {
+    date: Date;
+    amount: number;
+    stayId: number;
+    roomId: number;
+  }

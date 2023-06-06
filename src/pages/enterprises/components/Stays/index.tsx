@@ -6,7 +6,11 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Row } from "reactstrap";
 import Button, { BtnType } from "components/common/buttons/Button";
 import { useDispatch } from "react-redux";
-import { setErrorMess, setLoading } from "redux/reducers/Status/actionTypes";
+import {
+  setErrorMess,
+  setLoading,
+  setSuccessMess,
+} from "redux/reducers/Status/actionTypes";
 import SearchNotFound from "components/SearchNotFound";
 import {
   Box,
@@ -256,13 +260,8 @@ const Stay = memo(({}: Props) => {
   };
 
   const onShowConfirm = () => {
-    // if (!itemAction) return;
-    // if (itemAction?.isCanDelete === false) {
-    //   onTogglePopupWarning();
-    // } else {
-    //   setItemDelete(itemAction);
-    // }
-    // onCloseActionMenu();
+    setItemDelete(itemAction);
+    onCloseActionMenu();
   };
 
   const onClosePopupConfirmDelete = () => {
@@ -272,20 +271,20 @@ const Stay = memo(({}: Props) => {
   };
 
   const onYesDelete = () => {
-    // if (!itemDelete) return;
-    // onClosePopupConfirmDelete();
-    // dispatch(setLoading(true));
-    // TourService.delete(itemDelete?.id)
-    //   .then(() => {
-    //     dispatch(setSuccessMess("Delete successfully"));
-    //     fetchData();
-    //   })
-    //   .catch((e) => {
-    //     dispatch(setErrorMess(e));
-    //   })
-    //   .finally(() => {
-    //     dispatch(setLoading(false));
-    //   });
+    if (!itemDelete) return;
+    onClosePopupConfirmDelete();
+    dispatch(setLoading(true));
+    StayService.delete(itemDelete?.id)
+      .then(() => {
+        dispatch(setSuccessMess(t("common_delete_success")));
+        fetchData();
+      })
+      .catch((e) => {
+        dispatch(setErrorMess(e));
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
   };
 
   useEffect(() => {

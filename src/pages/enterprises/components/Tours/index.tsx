@@ -249,7 +249,7 @@ const Tour = memo(({ handleTourEdit }: Props) => {
     dispatch(setLoading(true));
     TourService.delete(itemDelete?.id)
       .then(() => {
-        dispatch(setSuccessMess("Delete successfully"));
+        dispatch(setSuccessMess(t("common_delete_success")));
         fetchData();
       })
       .catch((e) => {
