@@ -219,35 +219,37 @@ const Staff = memo(({}: Props) => {
             <TableHeader headers={tableHeaders} />
             <TableBody>
               {data?.data?.length ? (
-                data.data?.map((item, index) => {
-                  return (
-                    <TableRow key={index}>
-                      <TableCell scope="row" className={classes.tableCell}>
-                        {index + 1}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {item?.staffInfo?.firstName} {item?.staffInfo?.lastName}
-                      </TableCell>
-                      <TableCell className={classes.tableCell} component="th">
-                        {item?.numberOfBills}
-                      </TableCell>{" "}
-                      <TableCell className={classes.tableCell} component="th">
-                        {fCurrency2VND(item?.revenue)} VND
-                      </TableCell>
-                      <TableCell className="text-center" component="th">
-                        <IconButton
-                          className={clsx(classes.actionButton)}
-                          color="primary"
-                          onClick={(event) => {
-                            handleAction(event, item);
-                          }}
-                        >
-                          <ExpandMoreOutlined />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
+                data.data?.map(
+                  (item, index) =>
+                    item?.staffInfo !== null && (
+                      <TableRow key={index}>
+                        <TableCell scope="row" className={classes.tableCell}>
+                          {index + 1}
+                        </TableCell>
+                        <TableCell className={classes.tableCell} component="th">
+                          {item?.staffInfo?.firstName}{" "}
+                          {item?.staffInfo?.lastName}
+                        </TableCell>
+                        <TableCell className={classes.tableCell} component="th">
+                          {item?.numberOfBills}
+                        </TableCell>{" "}
+                        <TableCell className={classes.tableCell} component="th">
+                          {fCurrency2VND(item?.revenue)} VND
+                        </TableCell>
+                        <TableCell className="text-center" component="th">
+                          <IconButton
+                            className={clsx(classes.actionButton)}
+                            color="primary"
+                            onClick={(event) => {
+                              handleAction(event, item);
+                            }}
+                          >
+                            <ExpandMoreOutlined />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    )
+                )
               ) : (
                 <TableRow>
                   <TableCell align="center" colSpan={8}>
