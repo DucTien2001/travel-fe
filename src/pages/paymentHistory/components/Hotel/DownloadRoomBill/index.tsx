@@ -135,7 +135,7 @@ const DownloadTourBill = memo(
           </h3>
           {roomBill?.roomBillDetail?.map((item, index) => (
             <Grid key={index}>
-              <Row className="mb-1">
+              <Row>
                 <Col xs={4} className={classes.titleInfo}>
                   {t("payment_history_page_hotel_room_name")}:
                 </Col>
@@ -143,7 +143,7 @@ const DownloadTourBill = memo(
                   {item?.roomData?.title}
                 </Col>
               </Row>
-              <Row className="mb-1" key={index}>
+              <Row key={index}>
                 <Col xs={4} className={classes.titleInfo}>
                   {t("payment_history_page_hotel_amount_room_booked")}:
                 </Col>
@@ -151,7 +151,7 @@ const DownloadTourBill = memo(
                   {item?.amount} {t("payment_history_page_hotel_room")}
                 </Col>
               </Row>
-              <Row className="mb-1" key={index}>
+              <Row key={index}>
                 <Col xs={4} className={classes.titleInfo}>
                   {t("payment_history_page_hotel_number_adult")}:
                 </Col>
@@ -160,7 +160,7 @@ const DownloadTourBill = memo(
                   {t("payment_history_page_hotel_adult")}
                 </Col>
               </Row>
-              <Row className="mb-1" key={index}>
+              <Row key={index}>
                 <Col xs={4} className={classes.titleInfo}>
                   {t("payment_history_page_hotel_number_child")}:
                 </Col>
@@ -169,7 +169,7 @@ const DownloadTourBill = memo(
                   {t("payment_history_page_hotel_child")}
                 </Col>
               </Row>
-              <Row className="mb-1" key={index}>
+              <Row key={index}>
                 <Col xs={4} className={classes.titleInfo}>
                   {t("payment_history_page_hotel_number_bed")}:
                 </Col>
@@ -178,6 +178,7 @@ const DownloadTourBill = memo(
                   {t("payment_history_page_hotel_bed")}
                 </Col>
               </Row>
+              <hr/>
             </Grid>
           ))}
 

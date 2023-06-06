@@ -313,7 +313,8 @@ const StayHistory = memo(() => {
                                   <span>
                                     {moment(item?.startDate).format(
                                       "DD-MM-YYYY"
-                                    )}
+                                    )}{", "}
+                                    {fTime(item?.stayData?.checkInTime)}
                                   </span>
                                 </p>
                               </div>
@@ -323,12 +324,13 @@ const StayHistory = memo(() => {
                                 <p>
                                   {t("payment_history_page_hotel_end_date")} :{" "}
                                   <span>
-                                    {moment(item?.endDate).format("DD-MM-YYYY")}
+                                    {moment(item?.endDate).format("DD-MM-YYYY")}{", "}
+                                    {fTime(item?.stayData?.checkOutTime)}
                                   </span>
                                 </p>
                               </div>
                             </Grid>
-                            <Grid item className={classes.boxSave} xs={12}>
+                            {/* <Grid item className={classes.boxSave} xs={12}>
                               <div className={classes.boxDate}>
                                 <p>
                                   {t("payment_history_page_hotel_check_in")} :{" "}
@@ -347,7 +349,7 @@ const StayHistory = memo(() => {
                                   </span>
                                 </p>
                               </div>
-                            </Grid>
+                            </Grid> */}
                             {item?.discount !== 0 && (
                               <Grid item className={classes.boxSave}>
                                 <Grid className={classes.boxPrice}>
