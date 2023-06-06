@@ -115,7 +115,7 @@ const Stay = memo(({}: Props) => {
   ];
 
   const stayTypeFilterOption = [
-    { id: 1, name: t("common_all"), value: null },
+    { id: 1, name: t("common__select_all"), value: null },
     {
       id: 1,
       name: t("enterprise_management_section_stay_status_option_hotel"),
